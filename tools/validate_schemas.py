@@ -54,6 +54,7 @@ SIGNAL_TYPE = {"source_value_conflict", "claim_without_resolved_evidence_link",
                # 一期统计取证（tools/statistical_forensics.py），不需要原始数据
                "test_statistic_p_mismatch", "ci_estimate_mismatch",
                "count_percentage_mismatch", "grim_incompatible_mean",
+               "table_total_mismatch",
                # 一期伦理规范库筛查（tools/ethics_compliance_check.py）
                "ethics_requirement_unmet",
                # 一期序列与标识符确定性审计

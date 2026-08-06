@@ -706,6 +706,7 @@ finding id 升序排列。
 | `ci_estimate_mismatch` | 点估计落在其自身报告的置信区间之外，或区间端点不合法 | M4 | 是否构成结果报告错误 |
 | `count_percentage_mismatch` | 计数与百分比不自洽（计数超分母，或百分比超出舍入区间） | M4、M2 | 是否构成数据报告错误 |
 | `grim_incompatible_mean` | 整数量表均值在给定 n 下不存在可行整数总和（GRIM） | M4 | 是否构成汇总统计不可能 |
+| `table_total_mismatch` | 互斥穷尽的分类计数之和不等于声明的分母 | M4、M2 | 是否构成表格计数错误 |
 | `ethics_requirement_unmet` | 规范库某条伦理要求适用，但稿件未见对应报告 | M6 | 是否构成伦理合规问题 |
 | `sequence_identifier_inconsistent` | 变异命名/序列/登录号/基因符号存在明确违规，或表达式超出本地解析子集、需人工复核 | M2、M3 | 是否构成表述或方法学错误 |
 | `figure_integrity_candidate` | 图像审计检出候选重复区域、背景拼接不连续或异常均匀区块 | M5 | 人工核对原图、图注与合法复用说明后，是否构成图像完整性问题 |

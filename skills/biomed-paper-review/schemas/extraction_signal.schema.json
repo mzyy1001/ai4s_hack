@@ -22,6 +22,7 @@
                "ci_estimate_mismatch",
                "count_percentage_mismatch",
                "grim_incompatible_mean",
+               "table_total_mismatch",
                "ethics_requirement_unmet",
                "sequence_identifier_inconsistent",
                "figure_integrity_candidate",
@@ -252,7 +253,8 @@
       "if": {
         "properties": {
           "type": {"enum": ["test_statistic_p_mismatch", "ci_estimate_mismatch",
-                            "count_percentage_mismatch", "grim_incompatible_mean"]}
+                            "count_percentage_mismatch", "grim_incompatible_mean",
+                            "table_total_mismatch"]}
         },
         "required": ["type"]
       },

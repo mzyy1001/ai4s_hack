@@ -11,6 +11,7 @@
 2. `ci_estimate_mismatch`       —— 点估计是否落在自己报告的 95% CI 内
 3. `count_percentage_mismatch`  —— 计数与百分比是否自洽
 4. `grim_incompatible_mean`     —— 整数量表均值在给定 n 下是否可能
+5. `table_total_mismatch`       —— 分类计数之和是否等于声明的分母
 
 设计原则 · 前提不全就不跑
 -------------------------
@@ -400,6 +401,60 @@ def check_grim(item, signal_id="SIG-104"):
                  "n": n, "items_per_subject": k, "reported_mean": mean_text})
 
 
+# ================================================================ 检查 5
+
+def check_table_total(item, signal_id="SIG-F05"):
+    """分类计数之和是否等于声明的分母。
+
+    前提：`counts`（互斥且穷尽的各类别计数）与 `declared_total` 齐备。
+    **只在类别互斥且穷尽时适用** —— 调用方必须确认这一点，
+    否则「合计不等于 n」是正常的（例如可多选的合并症）。
+
+    典型错误：表 1 某特征分两类，12 + 18 = 30，而表头声明该组 n = 28。
+    """
+    counts = item.get("counts")
+    total = item.get("declared_total")
+    target = item.get("target", "table")
+
+    if not counts or total is None:
+        return _sig(signal_id, "partial_extraction", target,
+                    "表格合计自洽性前提不全（缺各类别计数或声明分母），本项未运行。",
+                    {"check": "table_total_mismatch", "ran": False})
+
+    if not item.get("categories_exhaustive", False):
+        return _sig(signal_id, "partial_extraction", target,
+                    "未确认各类别互斥且穷尽（如可多选的合并症），"
+                    "合计不等于分母属正常，本项未运行。",
+                    {"check": "table_total_mismatch", "ran": False})
+
+    try:
+        s_counts = sum(int(c) for c in counts)
+        total_i = int(total)
+    except (TypeError, ValueError):
+        return _sig(signal_id, "partial_extraction", target,
+                    "计数或分母无法解析为整数，本项未运行。",
+                    {"check": "table_total_mismatch", "ran": False})
+
+    missing = item.get("missing_count")
+    if missing is not None:
+        try:
+            s_counts += int(missing)
+        except (TypeError, ValueError):
+            pass
+
+    if s_counts == total_i:
+        return None
+
+    return _sig(signal_id, "table_total_mismatch", target,
+                f"各类别计数合计为 {s_counts}（{' + '.join(str(c) for c in counts)}"
+                + (f" + 缺失 {missing}" if missing is not None else "")
+                + f"），但声明的分母为 {total_i}，相差 {s_counts - total_i}。"
+                f"在类别互斥且穷尽的前提下，这是确定性的计数错误。",
+                {"check": "table_total_mismatch", "ran": True,
+                 "counts": list(counts), "declared_total": total_i,
+                 "observed_sum": s_counts, "difference": s_counts - total_i})
+
+
 # ================================================================ 汇总
 
 CHECKS = {
@@ -407,6 +462,7 @@ CHECKS = {
     "ci_estimate": check_ci_estimate,
     "count_percentage": check_count_percentage,
     "grim": check_grim,
+    "table_total": check_table_total,
 }
 
 
@@ -486,6 +542,22 @@ def _selftest():
     # n 过大 → 不跑
     s = check_grim({"scale_is_integer": True, "n": 500, "mean_text": "3.14"})
     expect("n>200 → partial_extraction", s["type"], "partial_extraction")
+
+    # --- 检查 5 表格合计（来自真实 A/B 实测发现的缺口）---
+    # rct_clinical Table 1：绝经状态 12 + 18 = 30，表头却声明 n = 28
+    s = check_table_total({"counts": [12, 18], "declared_total": 28,
+                           "categories_exhaustive": True})
+    expect("12+18 != 28 -> 报警", s["type"] if s else None, "table_total_mismatch")
+    expect("差值正确", s["forensics"]["difference"] if s else None, 2)
+    s = check_table_total({"counts": [13, 15], "declared_total": 28,
+                           "categories_exhaustive": True})
+    expect("13+15 = 28 -> 无信号", s, None)
+    s = check_table_total({"counts": [12, 14], "declared_total": 28,
+                           "missing_count": 2, "categories_exhaustive": True})
+    expect("计入缺失后相等 -> 无信号", s, None)
+    s = check_table_total({"counts": [12, 18], "declared_total": 28})
+    expect("未确认互斥穷尽 -> 不运行",
+           s["forensics"]["ran"] if s else None, False)
 
     # --- 信号契约：不得带 severity ---
     sigs = check_all([{"check": "grim", "scale_is_integer": True, "n": 10,
