@@ -146,6 +146,12 @@ point | interval | lower_bound | upper_bound | categorical
 
 - `unit` 保留稿件原写法；`unit_normalized` 为归一化形式，**兼容性比较一律用归一化值**。
   无量纲指标 `unit: null`，`unit_normalized: null`。
+- **归一化由 `tools/normalize_biomed_units.py` 执行**（一期能力，只用标准库）。
+  它是 fail-closed 的：只做**同量纲**确定性换算；未登记别名返回 `unknown_unit`，
+  调用方据此判 `ambiguous`，**不得猜**。三条永不合并的量纲边界：
+  剂量 `mg/kg` ≠ 速率 `mg/kg/day`；按体重 `mg/kg` ≠ 按体表面积 `mg/m2`；
+  质量浓度 ↔ 摩尔浓度**必须**同时给出 analyte 与明确分子量，
+  否则返回 `conversion_requires_molecular_weight`，**绝不用近似分子量代换**。
 - `uncertainty.type` 枚举：`SD` / `SEM` / `95CI` / `IQR` / `range` / `none`。
   `SD` / `SEM` 用 `{"type": "SD", "value": 1.2}`；区间型用 `low` / `high`。
 
@@ -591,7 +597,7 @@ reported | compatible_multiple_sources | conflicting | ambiguous
 }
 ```
 
-**`type` 枚举（六值）**
+**`type` 枚举（十值）**
 
 | type | 触发条件 | 路由到 | 下游判定什么 |
 | --- | --- | --- | --- |
@@ -601,6 +607,15 @@ reported | compatible_multiple_sources | conflicting | ambiguous
 | `unresolved_cross_reference` | 正文引用的图/表/补充材料解析不到实体 | M2、M5 | 是否构成引用错误 |
 | `partial_extraction` | 字段部分抽出（有 n 无分组归属、有剂量无单位） | M4、M5 | 是否构成报告不完整 |
 | `ambiguous_extraction` | 字段 `status: ambiguous`，存在文本但读不出唯一解 | M2、M4 | 是否构成表述不清 |
+| `test_statistic_p_mismatch` | 由检验统计量与自由度反算的 p 落在报告值的舍入区间之外 | M4 | 是否构成统计报告错误 |
+| `ci_estimate_mismatch` | 点估计落在其自身报告的置信区间之外，或区间端点不合法 | M4 | 是否构成结果报告错误 |
+| `count_percentage_mismatch` | 计数与百分比不自洽（计数超分母，或百分比超出舍入区间） | M4、M2 | 是否构成数据报告错误 |
+| `grim_incompatible_mean` | 整数量表均值在给定 n 下不存在可行整数总和（GRIM） | M4 | 是否构成汇总统计不可能 |
+
+> 后四种由 `tools/statistical_forensics.py` 在 Stage 2 产出，**不需要原始数据**，
+> 是一期就能做的确定性一致性检验（`produced_by: "stage_2"`，`routed_to: ["M4"]`）。
+> 它们**仍然只是 signal** —— 工具层不下稿件结论，是否构成稿件问题由 M4 判定。
+> 每种检验的适用前提见该脚本文档；**前提不满足一律产出 `partial_extraction` 而不是猜**。
 
 **规则**
 
@@ -981,7 +996,7 @@ review_confidence = extraction_coverage × Q × C
 
 ```
 [ ] 全部 enum 取值合法（source_type 五值 / extraction_method 六值 / status 七值 /
-    applicability 三值 / requiredness 三值 / severity 四值 / signal type 六值 /
+    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十值 /
     system_limitation category 八值 / key_data status 六值 / numeric type 五值）
 [ ] 全部 §x.y 内部引用可解析到本仓库真实存在的小节
 [ ] 全部 evidence_ref / evidence_refs[] 在 evidence_registry 中解析到恰好一个条目

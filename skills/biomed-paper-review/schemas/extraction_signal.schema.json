@@ -17,8 +17,12 @@
                "ambiguous_study_design",
                "unresolved_cross_reference",
                "partial_extraction",
-               "ambiguous_extraction"],
-      "description": "六值。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
+               "ambiguous_extraction",
+               "test_statistic_p_mismatch",
+               "ci_estimate_mismatch",
+               "count_percentage_mismatch",
+               "grim_incompatible_mean"],
+      "description": "十值。后四种为 tools/statistical_forensics.py 的一期确定性一致性检验产出。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
     },
 
     "target": {
@@ -48,6 +52,30 @@
 
     "produced_by": {
       "enum": ["stage_2", "stage_3b"]
+    },
+
+    "forensics": {
+      "type": "object",
+      "description": "仅统计取证类 signal 使用。记录复算输入与结果，使 M4 能独立复现该判定。由 tools/statistical_forensics.py 产出。",
+      "required": ["check", "ran", "rule_version"],
+      "additionalProperties": true,
+      "properties": {
+        "check": {
+          "enum": ["test_statistic_p_mismatch", "ci_estimate_mismatch",
+                   "count_percentage_mismatch", "grim_incompatible_mean"]
+        },
+        "ran": {
+          "type": "boolean",
+          "description": "false 表示适用前提不满足、本项未运行 —— 此时 type 必为 partial_extraction"
+        },
+        "rule_version": {"type": "string"},
+        "recomputed_p": {"type": "number"},
+        "reported_p": {"type": ["string", "number"]},
+        "expected_interval": {
+          "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"},
+          "description": "报告精度对应的舍入区间；比较用区间而非点值相等"
+        }
+      }
     }
   },
 
@@ -70,6 +98,23 @@
       "description": "claim 链接类 signal 必须携带 claim 元数据",
       "if": {"properties": {"type": {"const": "claim_without_resolved_evidence_link"}}, "required": ["type"]},
       "then": {"properties": {"target": {"$ref": "#/$defs/claim_target"}}}
+    },
+    {
+      "description": "统计取证类 signal 必须带 forensics 复算记录，且只能由 Stage 2 产出",
+      "if": {
+        "properties": {
+          "type": {"enum": ["test_statistic_p_mismatch", "ci_estimate_mismatch",
+                            "count_percentage_mismatch", "grim_incompatible_mean"]}
+        },
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["forensics"],
+        "properties": {
+          "produced_by": {"const": "stage_2"},
+          "forensics": {"properties": {"ran": {"const": true}}}
+        }
+      }
     }
   ],
 
