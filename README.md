@@ -14,8 +14,10 @@
 **输出**：
 1. **结构化结果表** —— 研究目标 / 实验方法 / 核心数据 / 初步结论 + 评估矩阵
 2. **图表解读与原图定位** —— 每张图的类型、实验条件、关键数值、页码级定位
-3. **七维审核发现** —— 统一格式的 findings，每条必附论文原文出处
-4. **整体置信度评分** —— 0–100，仅作排序信号
+3. **六维审核发现**（M2–M7）—— 统一格式的 findings，每条必附论文原文出处
+   （M1 是前置抽取层，**不产出 finding**）
+4. **三项独立评分** —— 稿件风险分 / 抽取覆盖率 / 复核置信度；
+   **互不替代，不得合并为单一数字**。未跑审核模块时不输出风险分
 5. **人工复核建议** —— 每条 major 及以上发现对应一条可执行动作
 
 ---
@@ -25,19 +27,25 @@
 ```
 skills/biomed-paper-review/     ← 交付物本体
 ├── SKILL.md                    主文档：流程、模块路由、统一 finding 契约、定位符规范、置信度算法
-├── references/                 七个审核模块的规则库（各自由负责人填充）
-│   ├── 01-structured-extraction.md    M1 结构化抽取         MZYY（陈泓睿）
+├── references/                 一个抽取层 + 六个审核模块的规则库
+│   ├── 00-contracts.md                ★ 共享契约（证据登记表 / 三类记录 / 评分）
+│   ├── 01-structured-extraction.md    M1 结构化抽取（前置层，不产 finding）
 │   ├── 02-macro-logic.md              M2 宏观逻辑与完整性    ZY（卓妍）
 │   ├── 03-experimental-methods.md     M3 实验方法合规性      Peter
-│   ├── 04-statistics.md               M4 统计学方法          JY（蒋运）
+│   ├── 04-statistics.md               M4 统计学方法          ✅ 已填充
 │   ├── 05-figures-and-charts.md       M5 图谱解析与图表规范  MY（敏怡）
-│   ├── 06-ethics-compliance.md        M6 伦理合规            Peter
-│   └── 07-conclusions-discussion.md   M7 结论与讨论          MY（敏怡）
-├── schemas/                    机器可校验的输出模式（模块间的集成契约）
-│   ├── finding.schema.json            ★ 七模块共用，最重要
-│   ├── structured_result.schema.json
-│   ├── figure_record.schema.json
-│   └── review_report.schema.json
+│   ├── 06-ethics-compliance.md        M6 伦理合规            ✅ 已填充（待 Peter 复核）
+│   └── 07-conclusions-discussion.md   M7 结论与讨论          ✅ 已填充
+├── scripts/                    运行时确定性能力（纯标准库）
+│   ├── normalize_biomed_units.py      单位归一化，fail-closed
+│   ├── statistical_forensics.py       p 反算 / CI 自洽 / 计数 / GRIM
+│   └── ethics_compliance_check.py     伦理规范库筛查
+├── resources/ethics_rules.json 伦理规范库：三法域 25 部规范 / 22 条要求
+├── schemas/                    10 份 JSON Schema（模块间集成契约）
+│   ├── finding.schema.json            ★ 六个审核模块共用
+│   ├── evidence.schema.json           证据登记表
+│   ├── key_data.schema.json           观测组
+│   └── …（common / execution_scope / extraction_signal / system_limitation 等）
 └── templates/review_report.md  报告渲染模板
 
 datasets/                       测试语料：10 篇 PLOS 开放获取论文（CC-BY）· 非提交必需
@@ -48,7 +56,12 @@ datasets/                       测试语料：10 篇 PLOS 开放获取论文（
     └── figures/                逐图图像（max 1400px JPEG）
 
 tools/fetch_papers.py           语料抓取脚本（可重跑）
+tools/validate_schemas.py       契约校验器：schema + 四个模拟实例，135 项检查
+tools/fixtures/*.json           四个端到端模拟实例
 docs/architecture.md            架构说明：七个模块如何合成一个 Skill
+docs/schema-migration.md        schema 逐字段迁移方案
+docs/consistency-audit.md       一致性审计结果与 15 项核对表
+docs/proposals/                 codex 评审循环产出的提案
 ```
 
 ## 语料
@@ -77,9 +90,10 @@ python3 tools/fetch_papers.py
 
 ## 使用
 
-遵循 opencode / Anthropic Agent Skill 标准格式。当前 references、schemas、resources 与模板位于
-`skills/biomed-paper-review/`，但四个确定性工具仍在仓库根 `tools/`；因此当前必须以完整仓库运行，
-尚不能声称仅拷贝 skill 目录即可获得工具能力。迁入 `skills/biomed-paper-review/scripts/` 后才自包含。
+遵循 opencode / Anthropic Agent Skill 标准格式。**skill 目录自包含**：
+references、schemas、resources、templates 与三个运行时脚本都在
+`skills/biomed-paper-review/` 之内，拷贝该目录即可获得全部能力，无外部依赖。
+（`tools/validate_schemas.py` 是开发期契约校验器，不参与运行时，故留在仓库根。）
 
 在 Claude Code 中，本仓库已通过 `.claude/skills/` 软链接自动加载。
 
@@ -110,10 +124,15 @@ M4 的 p 值反算、CI 自洽、计数/百分比与 GRIM 已实现为一期离�
 
 ## 当前状态
 
-- ✅ 主框架、模块路由、统一 finding 契约、定位符规范、置信度算法
-- ✅ 10 份 JSON Schema + 报告模板（`external` 证据型尚未写入 schema）
-- ✅ 10 篇测试语料（全文 + PDF + 逐图图像）
-- ✅ M1 结构化抽取规则（字段定义、抽取顺序、缺口登记）
-- ✅ 七个模块的二期扩展规则草案
-- 🚧 M2–M7 一期规则库待各负责人填充（每份文件末尾有 TODO 清单）
-- 🚧 统计学数据库 MCP 接入
+- ✅ 主框架：执行模式依赖图、五阶段流水线、三类记录契约、证据登记表、三项评分
+- ✅ 10 份 JSON Schema + 报告模板；`tools/validate_schemas.py` 135 项检查全通过
+- ✅ 四个端到端模拟实例（RCT 完整审核 / 单图解读 / 定向伦理核查 / IC50 冲突）
+- ✅ M1 结构化抽取规则（字段清单、七张设计路由表、pending 生命周期）
+- ✅ M4 统计学（三步判定法 + 九张检验选择对照表）
+- ✅ M6 伦理合规（三法域规范库 + 离线筛查器，待 Peter 复核）
+- ✅ M7 结论与讨论（证据层级 × 主张层级对照表）
+- ✅ 三个运行时确定性工具，均纯标准库、均带自检
+- ✅ opencode 端到端实测通过（targeted_check 模式，rct_clinical 语料）
+- 🚧 M2（卓妍）、M3（Peter）、M5（敏怡）一期规则库待各负责人填充
+- 🚧 外部验证层 X1：网络已确认可用（白名单），连接器与 `external` 证据型待实现
+- 🚧 uplift 基线实测：官方统一模型为 GLM / Kimi 系列，尚未在该系列上自测
