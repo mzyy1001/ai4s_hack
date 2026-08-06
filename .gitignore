@@ -5,3 +5,7 @@ __pycache__/
 venv/
 *.tar.gz
 .claude/settings.local.json
+
+# 测试用 PDF：仅本地保留，用于验证页码级原图定位
+# 提交包不含（单文件超 10MB 且非必需）；python3 tools/fetch_papers.py 可重建
+datasets/papers/*/paper.pdf
