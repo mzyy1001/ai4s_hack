@@ -1,0 +1,62 @@
+{
+  "slot": "toxicology",
+  "why_selected": "毒理剂量爬坡 + 安全性评价：剂量设计合规性",
+  "doi": "10.1371/journal.pone.0339571",
+  "title": "Functional beverage development from traditional Thai polyherbal tonic: Antioxidant-rich microcapsules and comprehensive sub-chronic toxicity assessment",
+  "journal": "PLOS One",
+  "published": "2025-12-23",
+  "subjects": [
+    "/Biology and life sciences/Biochemistry/Antioxidants",
+    "/Biology and life sciences/Nutrition/Diet/Beverages",
+    "/Biology and life sciences/Nutrition/Diet/Beverages/Tea",
+    "/Biology and life sciences/Toxicology/Toxicity",
+    "/Medicine and health sciences/Nutrition/Diet/Beverages",
+    "/Medicine and health sciences/Nutrition/Diet/Beverages/Tea",
+    "/Medicine and health sciences/Pathology and laboratory medicine/Toxicology/Toxicity",
+    "/Medicine and health sciences/Pharmaceutics/Pharmaceutical processing technology/Drug delivery system preparation/Microencapsulation"
+  ],
+  "license": "CC-BY 4.0 (PLOS)",
+  "url": "https://doi.org/10.1371/journal.pone.0339571",
+  "n_figures": 6,
+  "n_tables": 14,
+  "n_images_downloaded": 6,
+  "has_pdf": true,
+  "figures": [
+    {
+      "label": "Fig 1",
+      "caption": "Schematic workflow illustrating the preparation of Phy-Blica-O decoction (Section 2.1), extraction of its phenolic-rich extract (Section 2.2), and development of its microencapsulation using spray drying (Section 2.3).The process starts with preparing PBO decoction, followed by freeze-drying to produce powdered extract. The phenolic-rich extract is then obtained through a series of solvent partitioning steps involving diethyl ether, chloroform, and ethyl acetate under pH-controlled conditions (upper panel). Both the PBO decoction and its phenolic-rich extract are used as core materials for microencapsulation. Coating materials, including maltodextrin (MD) and gum Arabic (GA), are dissolved in water and mixed with the core materials at different ratios. The feed slurry is spray-dried at inlet temperatures of 140°C and 180°C to produce encapsulated powders, which are then evaluated for their physicochemical and antioxidant properties (lower panel).",
+      "graphic": "info:doi/10.1371/journal.pone.0339571.g001",
+      "image_file": "figures/g001.png"
+    },
+    {
+      "label": "Fig 2",
+      "caption": "Scanning electron micrographs depict the morphology of microencapsulated Phy-Blica-O powders created through spray drying at inlet temperatures of 140°C (A–C) and 180°C (D–F).The powders utilize different maltodextrin (MD) to gum Arabic (GA) ratios: (A, D) MD:GA (10:0), (B, E) MD:GA (8:2), and (C, F) MD:GA (6:4). The scale bars indicate 5 µm with a magnification of ×5000.",
+      "graphic": "info:doi/10.1371/journal.pone.0339571.g002",
+      "image_file": "figures/g002.png"
+    },
+    {
+      "label": "Fig 3",
+      "caption": "Scanning electron micrographs depict the morphology of microencapsulated phenolic-rich fraction of Phy-Blica-O powders created through spray drying at inlet temperatures of 140°C (A–C) and 180°C (D–F).The powders utilize different maltodextrin (MD) to gum Arabic (GA) ratios: (A, D) MD:GA (10:0), (B, E) MD:GA (8:2), and (C, F) MD:GA (6:4). The scale bars indicate 5 µm with a magnification of ×5000.",
+      "graphic": "info:doi/10.1371/journal.pone.0339571.g003",
+      "image_file": "figures/g003.png"
+    },
+    {
+      "label": "Fig 4",
+      "caption": "Changes in body weight (panels A and B) and food consumption (panels C and D) in male and female rats exposed to doses of 5, 50, and 300 mg/kg/day during a 90-day repeated oral dose toxicity study of Phy-Blica-D are presented as mean ± SD (n = 5).* Indicating a significant difference (p &lt; 0.05) among the groups each week, based on one-way ANOVA followed by Bonferroni’s post-hoc comparison tests.",
+      "graphic": "info:doi/10.1371/journal.pone.0339571.g004",
+      "image_file": "figures/g004.png"
+    },
+    {
+      "label": "Fig 5",
+      "caption": "Serum biochemical values of male and female rats were measured at the end of a 90-day repeated oral dose toxicity study of Phy-Blica-D extract.Values are presented as mean ± SD (n = 5). Key parameters include creatinine, ALP (alkaline phosphatase), BUN (blood urea nitrogen), and ALT (alanine aminotransferase). * Indicating a significant difference (p &lt; 0.05) among the groups for each parameter, based on one-way ANOVA followed by Bonferroni’s post-hoc comparison tests.",
+      "graphic": "info:doi/10.1371/journal.pone.0339571.g005",
+      "image_file": "figures/g005.png"
+    },
+    {
+      "label": "Fig 6",
+      "caption": "Photomicrographs of kidney (A-D), liver (E-H), spleen (I-L), and lung (M-P) sections stained with hematoxylin and eosin from a 90-day repeated oral dose toxicity study of Phy-Blica-D extract are displayed.Panels A, E, I, and M show normal histology of kidney, liver, spleen, and lung tissue, respectively, in control rats at the end of the study period. Panels B, F, J, and N depict tissue sections from rats treated with 5 mg/kg of Phy-Blica-D extract; C, G, K, and O with 50 mg/kg; and D, H, L, and P with 300 mg/kg.",
+      "graphic": "info:doi/10.1371/journal.pone.0339571.g006",
+      "image_file": "figures/g006.png"
+    }
+  ]
+}
