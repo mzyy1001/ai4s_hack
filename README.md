@@ -95,7 +95,8 @@ python3 tools/fetch_papers.py
 | `requirements.txt` | ✅ 无需 —— `tools/` 仅用 Python 标准库 |
 | 结构化输入/输出 schema | ✅ `schemas/` 四份 JSON Schema |
 | 无诱导评分 / 注入语句 | ✅ |
-| 沙箱可运行（无网络、无 GPU、900s） | ✅ 一期不调用任何外部数据库 |
+| 沙箱可运行（2 核 / 4GB / 无 GPU / 900s） | ✅ 纯标准库，无需 requirements.txt |
+| 沙箱网络：**白名单制，开放公开科学数据源**（可申请追加） | ✅ 一期离线即可跑通；外部数据源作为**可选增强层**，不可得时降级为 `system_limitation` |
 
 ## 分期范围
 

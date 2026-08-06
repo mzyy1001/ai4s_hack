@@ -60,11 +60,13 @@
                   "family": {"$ref": "#/$defs/design_family"},
                   "type": {"$ref": "#/$defs/design_type"},
                   "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
-                }
+                },
+                "allOf": [{"$ref": "#/$defs/design_pair_constraint"}]
               }
             }
           },
           "allOf": [
+            {"$ref": "#/$defs/design_pair_constraint"},
             {
               "if": {"properties": {"family": {"const": "other"}}, "required": ["family"]},
               "then": {"required": ["other_description"],
@@ -86,7 +88,11 @@
               "type": {"$ref": "#/$defs/design_type"},
               "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
               "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"}
-            }
+            },
+            "allOf": [
+              {"$ref": "#/$defs/design_pair_constraint"},
+              {"properties": {"type": {"not": {"enum": ["preclinical_mixed", "mixed_multi_family"]}}}}
+            ]
           }
         }
       },
@@ -99,6 +105,18 @@
             "required": ["primary_design"]
           },
           "then": {"properties": {"design_components": {"minItems": 2}}}
+        },
+        {
+          "description": "preclinical_mixed 必须展开为至少两个 experimental 实验组件",
+          "if": {
+            "properties": {"primary_design": {"properties": {"type": {"const": "preclinical_mixed"}},
+                                              "required": ["type"]}},
+            "required": ["primary_design"]
+          },
+          "then": {"properties": {"design_components": {
+            "minItems": 2,
+            "items": {"properties": {"family": {"const": "experimental"}}}
+          }}}
         }
       ]
     },
@@ -327,6 +345,31 @@
                "bioinformatics", "prediction_model", "simulation", "method_development",
                "benchmark_study",
                "mixed_multi_family", "other_unclassified"]
+    },
+
+    "design_pair_constraint": {
+      "description": "family/type 必须按 01 §4.1 成对；禁止 human_observational + randomized_controlled_trial 等跨族组合。",
+      "oneOf": [
+        {"properties": {"family": {"const": "experimental"},
+                        "type": {"enum": ["in_vitro", "ex_vivo", "organoid", "in_vivo_animal", "preclinical_mixed"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "human_interventional"},
+                        "type": {"enum": ["randomized_controlled_trial", "nonrandomized_trial", "single_arm_trial"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "human_observational"},
+                        "type": {"enum": ["cohort", "case_control", "cross_sectional", "diagnostic_accuracy", "case_series", "case_report"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "evidence_synthesis"},
+                        "type": {"enum": ["systematic_review", "meta_analysis", "scoping_review"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "computational"},
+                        "type": {"enum": ["bioinformatics", "prediction_model", "simulation", "method_development", "benchmark_study"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "mixed"}, "type": {"const": "mixed_multi_family"}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "other"}, "type": {"const": "other_unclassified"}},
+         "required": ["family", "type"]}
+      ]
     },
 
     "extracted_field": {

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "key_data.schema.json",
   "title": "KeyDataGroup",
-  "description": "key_data 观测组。references/00-contracts.md §5。每个元素是一个观测组，组内保留全部来源观测，组本身承载合并结论。禁止静默覆盖。",
+  "description": "key_data 观测组。references/00-contracts.md §5。先按 metric_family + 规范化 metric_name 分流，再比较 grouping_key 五键。组内保留全部来源观测，组本身承载合并结论。禁止静默覆盖。",
 
   "type": "object",
   "required": ["id", "metric_name", "metric_family", "grouping_key", "status",
@@ -17,7 +17,7 @@
 
     "grouping_key": {
       "type": "object",
-      "description": "五键全部相等才是同一组。null 与 null 相等；一方 null 一方有值视为不等。键不匹配是两个组，不是冲突。",
+      "description": "metric_family 与规范化 metric_name 已相同后，五键全部相等才是同一组。null 与 null 相等；一方 null 一方有值视为不等。指标身份或键不匹配都是两个组，不是冲突。",
       "required": ["experiment_id", "group", "comparison", "timepoint", "endpoint"],
       "additionalProperties": false,
       "properties": {

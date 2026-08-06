@@ -211,7 +211,10 @@ other
 1. 承载 `primary_endpoint` 的那个实验的设计；
 2. 稿件标题或摘要自述的设计（如 "a randomized controlled trial"）；
 3. 占 Results 篇幅最大的实验的设计；
-4. 以上都判不出 → 见 §4.4 `mixed` / `other`。
+4. 以上都判不出时，先区分两种原因：已确认多个设计组件且无单一主设计
+   → 按 §4.4 判 `mixed`；抽取器在多个候选解读间不确定 → 写
+   `primary_design.alternatives[]` 并出 `ambiguous_study_design` signal。
+5. 只有按 §4.1 的全部族与类型均无法归类时，才可判 `other`（§4.4）。
 
 ### 4.3 适用性路由优先级
 
@@ -429,7 +432,8 @@ other
 > **`cross_sectional` 不得要求 `follow_up`。** 横断面研究在单一时点测量，
 > 随访概念不成立，判 `not_applicable` + `na_reason: "横断面设计无随访期"`。
 > 旧契约对整个 `human_observational` 族统一要求 `follow_up` 是错的。
-> `case_control` 同理 —— 它是回顾性配对，不存在前瞻随访。
+> `case_control` 同理 —— 它按结局状态抽样，研究可以回顾也可以嵌套于前瞻队列，
+> 但指标时点后的随访不是该设计的必备概念。
 
 #### 5.3.4 diagnostic_accuracy 专门规则（优先级 2）
 
@@ -449,6 +453,7 @@ other
 | 字段 | applicability | requiredness | na_reason 模板 |
 | --- | --- | --- | --- |
 | `subjects` | `applicable` | `required` | —— |
+| `inclusion_criteria` / `exclusion_criteria` | `case_series`: `applicable`；`case_report`: `not_applicable` | `case_series`: `required`；`case_report`: `optional` | 单一病例无入组与排除标准；病例系列必须抽取病例选择规则 |
 | `interventions` | `applicable` | `required` | —— |
 | `informed_consent` | `applicable` | **`required`** | —— |
 | `ethics_statement` | `applicable` | `recommended` | —— |
@@ -457,7 +462,7 @@ other
 | `randomization` | **`not_applicable`** | `optional` | 无分组，随机化概念不成立 |
 | `allocation_concealment` | **`not_applicable`** | `optional` | 无随机分配 |
 | `controls` | **`not_applicable`** | `optional` | 描述性报告无对照组 |
-| `sample_size_justification` | **`not_applicable`** | `optional` | 病例报告不做样本量推断 |
+| `sample_size_justification` | **`not_applicable`** | `optional` | 描述性病例报告/系列不做预设推断性样本量估计 |
 | `confounders` | **`not_applicable`** | `optional` | 无统计校正 |
 | `follow_up` | `applicable` | `recommended` | —— |
 | `statistical_methods` | 有描述性统计以外的比较时才适用 | `optional` | 纯描述性报告无统计检验 |
@@ -471,17 +476,22 @@ other
 | `controls` | 恒适用 | `required` | 全族 | M3, M4 |
 | `assays` | 恒适用 | `required` | 全族 | M3 |
 | `arms` | 恒适用（含重复数与重复类型） | `required` | 全族 | M4 |
-| `ethics_statement` | **仅 `in_vivo_animal` 与 `ex_vivo`(人源) 适用** | `required` | in_vivo_animal | M6 |
+| `ethics_statement` | `in_vivo_animal` 恒适用；`in_vitro` / `ex_vivo` / `organoid` 仅在使用人体或研究动物新取一级材料时适用；来源不明时为 `applicability_uncertain` | `required` | in_vivo_animal；使用受监管一级材料的 in_vitro, ex_vivo, organoid | M6 |
+| `informed_consent` | 使用人体一级材料时适用，值可为已同意或经批准豁免；稳定商业细胞系与纯动物材料不适用；来源不明时为 `applicability_uncertain` | `required` | 使用人体一级材料的 in_vitro, ex_vivo, organoid | M6 |
 | `randomization` | **仅 `in_vivo_animal` 适用** | `required` | in_vivo_animal | M3, M4 |
 | `blinding` | **仅 `in_vivo_animal` 适用** | `recommended` | in_vivo_animal | M3, M4 |
 | `sample_size_justification` | **仅 `in_vivo_animal` 适用** | `required` | in_vivo_animal | M4, M6 |
-| `inclusion_criteria` / `exclusion_criteria` | 有动物剔除标准时适用 | `recommended` | in_vivo_animal | M3 |
+| `inclusion_criteria` / `exclusion_criteria` | `in_vivo_animal` 恒适用，用于抽取预设纳入与剔除标准 | `recommended` | in_vivo_animal | M3 |
 | `registration` | 实验研究不适用 | `optional` | —— | —— |
 
 > `preclinical_mixed` 不在本表单列 —— 它必须展开为 `design_components[]`，
 > 按实验级类型（`in_vitro` / `in_vivo_animal`）分别路由。
 > 例：`ethics_statement` 对 `EXP-02`(in_vivo_animal) 是 `applicable + required`，
 > 对 `EXP-01`(in_vitro) 是 `not_applicable`。
+
+> 稳定商业细胞系不因“人源”三个字自动触发受试者同意。
+> M1 必须先从 `subjects` 抽取材料来源（稳定细胞系 / 人体一级材料 /
+> 研究动物材料 / 不明），再路由上述两字段；来源不明不得判 `not_applicable`。
 
 #### 5.3.7 evidence_synthesis 族（优先级 3）
 
@@ -491,7 +501,7 @@ other
 | `search_date` | 恒适用 | `required` | 全族 | M2 |
 | `search_strategy` | 恒适用 | `recommended` | 全族 | M3 |
 | `inclusion_criteria` / `exclusion_criteria` | 恒适用 | `required` | 全族 | M2, M3 |
-| `risk_of_bias_method` | 恒适用 | `required` | systematic_review, meta_analysis | M4 |
+| `risk_of_bias_method` | systematic_review / meta_analysis 恒适用；scoping_review 可执行但非强制 | systematic_review, meta_analysis: `required`；scoping_review: `optional` | 全族 | M4 |
 | `synthesis_method` | 恒适用 | `required` | 全族 | M4 |
 | `protocol_registration` | 恒适用 | `recommended` | 全族 | M2, M6 |
 | `subjects` | 指纳入研究的人群 | `required` | 全族 | M3 |
@@ -499,8 +509,8 @@ other
 | `informed_consent` | 二次文献研究不适用 | `optional` | —— | —— |
 | `arms` / `randomization` / `follow_up` | 综述层面不适用 | `optional` | —— | —— |
 
-> `scoping_review` 的 `risk_of_bias_method` 判 `not_applicable`
-> （范围综述按定义不做偏倚评估），`na_reason: "scoping review 不要求偏倚风险评估"`。
+> `scoping_review` 不强制做偏倚风险评估，但该概念仍然成立。因此必须判
+> `applicable + optional`；未报告时是 `not_reported`，不是 `not_applicable`，也不进主覆盖率分母。
 
 #### 5.3.8 computational 族（优先级 3）
 
@@ -574,13 +584,15 @@ other
 
 **M1 绝不删除或覆盖任何观测。**
 
-### 6.2 grouping_key 的五个键
+### 6.2 指标身份 + grouping_key 五键
 
 ```
 experiment_id | group | comparison | timepoint | endpoint
 ```
 
-五键**全部相等**才是同一组（`null` 与 `null` 相等；一方 `null` 一方有值视为不等）。
+先要求 `metric_family` 与规范化后 `metric_name` 相同，再要求五键**全部相等**
+才是同一组（`null` 与 `null` 相等；一方 `null` 一方有值视为不等）。
+`metric_name` 存项目指标词表的规范名，原文别名保留在证据 `quote` 中。
 
 **填键规则**
 
@@ -693,7 +705,10 @@ Stage 3b **必须**把每个 `unresolved` 解析为 `reported` / `not_reported` 
 | 图中读出且与既有观测不兼容 | `conflicting` | `source_value_conflict` signal |
 | 图可读，但确认图中并不承载该值 | `not_reported` | 补 `absence` 证据（检索范围含该图） |
 | 图不可读 / 面板缺失 | `parse_failed` | `system_limitation`（`figure_unreadable`）+ `system_limitation_ref` |
-| Stage 3 未执行（模式跳过） | `not_reported` 或 `parse_failed` | 见 `SKILL.md §1.4` |
+| 模式以 v1 为终态，Stage 3 / 3b 均未执行 | 保留 `unresolved`（仅 v1 合法） | 计入 `coverage_breakdown.unresolved_required_fields[]` |
+
+要求 v2 的模式中，若 scope 内存在 `unresolved`，则 scoped Stage 3 不可跳过。
+Stage 3b 不得在未尝试 `expected_sources[]` 时将其收敛为 `not_reported` 或 `parse_failed`。
 
 ---
 
@@ -715,7 +730,8 @@ v1 顶层必须带 `"version": "v1"` 与 `"stage_3b_executed": false`，
 ## 9. extraction_signals
 
 M1 产出的数组名为 **`m1_extraction_signals[]`**（阶段本地，Stage 5 聚合）。
-**signal 不带 `severity`，不是结论。** 结构与全部六种 type 见 `00-contracts.md §6.2`。
+**signal 不带 `severity`，不是结论。** 结构与当前全部十一种 type 见
+`00-contracts.md §6.2`；本节只列 M1 核心抽取流程直接涉及的子集。
 
 ### 9.1 M1 可产出的五种 signal
 

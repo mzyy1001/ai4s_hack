@@ -337,8 +337,9 @@ M1 在 Stage 2 遇到「文本没有、但图里可能有」的字段时，**不
 **规则**
 
 1. `status: "unresolved"` **只允许出现在 `structured_result_v1`**。
-2. 它**不是** `system_limitation`，**不得**填 `system_limitation_ref`，**不降低**覆盖率
-   —— 覆盖率在 Stage 3b 之后才结算。
+2. 它**不是** `system_limitation`，**不得**填 `system_limitation_ref`。尚将执行
+   Stage 3b 的模式不提前结算覆盖率；若 `structured_extraction` 以 v1 为终态输出，
+   则按本节末的规则把它计入 `unresolved_required_fields[]`。
 3. `resolution_state.state` 一期只有一个值：`pending_visual_resolution`。
    `pending_stage` 恒为 `stage_3`。`expected_sources[]` 至少一项，形如 `fig:2C` / `table:3`。
 4. **Stage 3b 必须把每个 `unresolved` 解析为**下列之一：
@@ -351,6 +352,11 @@ M1 在 Stage 2 遇到「文本没有、但图里可能有」的字段时，**不
 **Stage 3b 未执行时**（如 `structured_extraction` 无视觉需求模式）：
 输出停在 v1，`unresolved` 合法保留，但该字段计入
 `coverage_breakdown.unresolved_required_fields[]`，且输出必须标注 `stage_3b_executed: false`。
+
+**要求 v2 的模式**：若 v1 的当前 scope 内存在 `unresolved`，编排器必须先执行
+覆盖其 `expected_sources[]` 的 Stage 3，再进入 Stage 3b。Stage 3 未执行时，
+Stage 3b 不得把该项改为 `not_reported` 或 `parse_failed`：前者缺完整检索，
+后者缺真实解析尝试，两者均违反状态机。
 
 ---
 
@@ -446,10 +452,13 @@ reported | compatible_multiple_sources | conflicting | ambiguous
 
 ### 5.4 分组与兼容性判定（Stage 3b 执行）
 
-**第一步 · 分组。** 两个 observation 属于同一组，当且仅当 `grouping_key` 的
-**五个键全部相等**：`experiment_id` / `group` / `comparison` / `timepoint` / `endpoint`
+**第一步 · 分组。** 先要求两个 observation 的 `metric_family` 与规范化后
+`metric_name` 相同，再比较 `grouping_key` 的**五个键全部相等**：
+`experiment_id` / `group` / `comparison` / `timepoint` / `endpoint`
 （`null` 与 `null` 视为相等；一方为 `null` 另一方有值视为**不相等**）。
-分组键不匹配 → 是两个不同的 `key_data`，**不是冲突**。
+指标身份或分组键不匹配 → 是两个不同的 `key_data`，**不是冲突**。
+`metric_name` 使用本项目指标词表的规范名（如 `IC50`）；原文写法保留在
+observation 的证据与 `quote`，不用原始大小写或别名参与分组。
 
 **第二步 · 可比性。** 同组内对全部无序 observation 对逐对判定，顺序固定；
 每一对必须得到 `compatible` / `conflicting` / `ambiguous` 中的恰好一个结果：

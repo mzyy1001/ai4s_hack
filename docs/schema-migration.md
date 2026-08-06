@@ -94,7 +94,9 @@ evaluation_matrix, coverage_inputs
 | 多设计塞进 `alternatives[]` | `article_design.design_components[]`（事实层多设计） |
 | —— | `primary_design.alternatives[]` 仅用于**抽取器不确定** |
 
-条件约束：`primary_design.family = "mixed"` ⇒ `design_components` 至少 2 项；
+条件约束：`family/type` 必须按 7 族 × 24 型成对；
+`primary_design.family = "mixed"` ⇒ `design_components` 至少 2 项；
+`primary_design.type = "preclinical_mixed"` ⇒ 至少 2 个 `experimental` 实验组件；
 `family = "other"` ⇒ `other_description` 必填非空。
 
 **c. `methods` 拆为 `population` / `design` / `measurement`**

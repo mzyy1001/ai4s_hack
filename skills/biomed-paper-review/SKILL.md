@@ -128,7 +128,7 @@ Stage 1
 ```
 Stage 1
 → Stage 2
-→ [条件] scoped Stage 3    仅当问题依赖图或表
+→ [条件] scoped Stage 3    问题依赖图表，或 v1 的 scope 内存在 `unresolved`
 → scoped Stage 3b
 → Stage 4: 仅选定模块
 → Stage 5 (partial aggregation)
@@ -136,8 +136,9 @@ Stage 1
 
 **规则**
 
-- scoped Stage 3b 始终执行（哪怕 Stage 3 未跑）—— 它同时负责把 v1 的
-  `status: "unresolved"` 收敛掉；无视觉输入时一律收敛为 `not_reported` 或 `parse_failed`。
+- scoped Stage 3b 始终执行。若 v1 的 scope 内存在 `unresolved`，必须先执行
+  覆盖其 `expected_sources[]` 的 scoped Stage 3；仅当 scope 内没有 `unresolved` 时才可跳过
+  Stage 3。**未尝试视觉来源不得把 pending 收敛为 `not_reported` 或 `parse_failed`。**
 - 输出**必须**列明 `executed_stages[]` / `executed_modules[]` / `skipped_modules[]` /
   `execution_scope`。
 - `manuscript_risk_score.partial = true`，禁止与 `full_review` 分数并列比较。
@@ -262,8 +263,9 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 1. **收敛 pending** —— 每个 `status: "unresolved"` 必须解析为 `reported` /
    `not_reported` / `ambiguous` / `conflicting` / `parse_failed`。
    **v2 中不得残留 `unresolved`。**
-2. **观测分组** —— 按 `grouping_key` 五键（`experiment_id` / `group` / `comparison` /
-   `timepoint` / `endpoint`）归组。键不匹配是两个组，**不是冲突**。
+2. **观测分组** —— 先按 `metric_family + metric_name` 分流，再按
+   `grouping_key` 五键（`experiment_id` / `group` / `comparison` / `timepoint` /
+   `endpoint`）归组。指标身份或五键不匹配都是两个组，**不是冲突**。
 3. **兼容性判定** —— 单位归一化 → 变体兼容 → 区间重叠 → 四舍五入容差 → 单边界。
    **四舍五入差异不得判为冲突**；无法建立可比性判 `ambiguous`，不判 `conflicting`。
 4. **canonical 选择** —— `explicit_reported` 优先于 `visually_derived`；其内部按

@@ -37,7 +37,8 @@ M2 据**独立稿件证据**（EV-003）立 minor finding，M4 据 absence 证�
 
 ### ③ 定向伦理核查 + 补充材料不可得
 
-阶段序列 `1→2→3b→4→5`（Stage 3 未跑，但 3b 仍执行以收敛 pending 并合并证据；
+阶段序列 `1→2→3b→4→5`（Stage 3 未跑；本例 scope 内的 v1 没有 `unresolved`，
+3b 仅物化 v2 并确认无 pending；
 `stage_3b` 的前置 `stage_2` 已在 `executed_stages` 中，依赖图合法）。
 `S1` 不可得 → `SYS-001 (supplement_inaccessible)`；依赖它的五个字段一律
 `parse_failed` + `system_limitation_ref`，**没有一个判 `not_reported`** ——
@@ -86,7 +87,7 @@ M2 与 M7 各自据**独立稿件证据**立 finding，`derived_from_signals` �
 
 | 审计点 | 旧问题 | 修法 |
 | --- | --- | --- |
-| 1 执行依赖图 | `figure_analysis` 跑 3b 却不跑 2；`targeted_check` 跑 3b 未必跑 3；图解读与图审核混为一谈 | `SKILL.md §1` 五张依赖图；`figure_analysis` 拆 `interpretation_only` / `figure_review` 两 submode；`execution_scope` 成为消费白名单并在 schema 层强制阶段依赖 |
+| 1 执行依赖图 | `figure_analysis` 跑 3b 却不跑 2；图解读与图审核混为一谈 | `SKILL.md §1` 五张依赖图；`figure_analysis` 拆 `interpretation_only` / `figure_review` 两 submode；`execution_scope` 成为消费白名单并在 schema 层强制阶段依赖。Round 3 进一步收紧：`targeted_check` 的 v1 若有 pending，必须先跑覆盖 `expected_sources[]` 的 scoped Stage 3；无 pending 时才可直接跑 3b |
 | 2 三记录契约 | `extraction_quality_findings[]` 实为第四类记录 | 整体废除：`ambiguous_extraction` → signal；`required_field_unresolved` → `coverage_breakdown.unresolved_required_fields[]`（非记录） |
 | 3 适用性 vs 必填性 | 「不在条件必填表内」一律判 `not_applicable` | 拆为 `applicability` × `requiredness` 两个独立枚举；`01 §5.3` 七张路由表六列重写；默认规则改为 `applicable + optional` 而非 `not_applicable` |
 | 4 key_data 合并 | 扁平单值，无法表达多来源 / 冲突 / canonical | 改为观测组，新增 `observations[]` / `canonical_observation` / `canonical_rationale` / 兼容与冲突分组 |
