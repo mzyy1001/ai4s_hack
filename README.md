@@ -77,8 +77,9 @@ python3 tools/fetch_papers.py
 
 ## 使用
 
-遵循 opencode / Anthropic Agent Skill 标准格式。把 `skills/biomed-paper-review/`
-整个目录拷贝到目标环境的 skills 目录即可 —— 目录自包含，无外部依赖、无需联网。
+遵循 opencode / Anthropic Agent Skill 标准格式。当前 references、schemas、resources 与模板位于
+`skills/biomed-paper-review/`，但四个确定性工具仍在仓库根 `tools/`；因此当前必须以完整仓库运行，
+尚不能声称仅拷贝 skill 目录即可获得工具能力。迁入 `skills/biomed-paper-review/scripts/` 后才自包含。
 
 在 Claude Code 中，本仓库已通过 `.claude/skills/` 软链接自动加载。
 
@@ -88,32 +89,29 @@ python3 tools/fetch_papers.py
 | --- | --- |
 | `skills/` 下有且仅有一个 skill 目录 | ✅ `biomed-paper-review` |
 | `SKILL.md` frontmatter 含合法 `name` / `description` | ✅ name 19 字符（≤64，小写连字符）；description 200 字符（≤1024，第三人称） |
-| SKILL.md 正文 <500 行 | ✅ 444 行；契约细节拆入 `references/00-contracts.md` |
+| SKILL.md 正文建议 <500 行 | ✅ 正文 496 行（文件含 frontmatter 共 501 行）；契约细节已拆入 `references/00-contracts.md` |
 | 文件引用只一层深（渐进披露） | ✅ SKILL.md → `references/*.md`，无二层跳转 |
-| 单文件 ≤10MB | ✅ 最大文件 <3MB |
-| 提交包体积 | ✅ 工作区 ~8MB（历史体积见下方待办） |
-| `requirements.txt` | ✅ 无需 —— `tools/` 仅用 Python 标准库 |
-| 结构化输入/输出 schema | ✅ `schemas/` 四份 JSON Schema |
+| 单文件 ≤10MB | ✅ skill 本体内满足；⚠️ 若误打包 `datasets/`，其中一份 PDF 为 18,677,256 bytes，会超限 |
+| 提交包体积 | ✅ `skills/biomed-paper-review/` 约 396 KiB；完整工作区约 200 MiB，不得整仓提交 |
+| `requirements.txt` | ✅ 无需额外安装 —— 已实现工具使用标准库或评测环境预装科学栈 |
+| 结构化输入/输出 schema | ✅ `schemas/` 10 份 JSON Schema |
 | 无诱导评分 / 注入语句 | ✅ |
-| 沙箱可运行（2 核 / 4GB / 无 GPU / 900s） | ✅ 纯标准库，无需 requirements.txt |
+| 沙箱可运行（2 核 / 4GB / 无 GPU / 单任务 12 小时） | ✅ 已实现工具均可 CPU 运行，无需 requirements.txt |
 | 沙箱网络：**白名单制，开放公开科学数据源**（可申请追加） | ✅ 一期离线即可跑通；外部数据源作为**可选增强层**，不可得时降级为 `system_limitation` |
 
 ## 分期范围
 
-**一期（黑客松交付）**：仅基于**论文自身内容 + 通用规范库**完成校验，不调用外部数据库。
+**一期（黑客松交付）**：离线核心必须仅凭**论文自身内容 + 通用规范库**跑通；公开科学数据源
+作为可选增强层。连接器不可得、超时或返回不可解析响应时降级为 `system_limitation`，不得据此判稿件有问题。
 
-**二期**：结论科学真伪、领域创新性、常识校验、统计复算、图像取证、注册与批件核验。
-这些**不是做不到，是本期先不做** —— 都需要外部数据接入或更长的规则打磨周期。
-每一项都已指派给对应模块，规则写在该模块 reference 文件的「二期扩展」一节，
-二期直接启用，无需改动主框架。见 [`SKILL.md §0`](skills/biomed-paper-review/SKILL.md)。
-
-二期建议的起点是**不依赖外部数据库的两组**：M4 的统计一致性检验（GRIM / p 值反算 / CI 自洽）
-和 M5 的论文内图像取证。判定确定、无召回率风险、且现有大模型普遍查不出来。
+当前外部证据契约与连接器尚未落地，不能声称已经完成数据库核验。原先统一推到“二期”的注册核验、
+标识符核验与数据登录号核验应按 `docs/proposals/round-4-external-data-components.md` 重新排期；
+M4 的 p 值反算、CI 自洽、计数/百分比与 GRIM 已实现为一期离线能力，图像取证仍未实现。
 
 ## 当前状态
 
 - ✅ 主框架、模块路由、统一 finding 契约、定位符规范、置信度算法
-- ✅ 四份 JSON Schema + 报告模板（`external_source` 字段已为二期预留）
+- ✅ 10 份 JSON Schema + 报告模板（`external` 证据型尚未写入 schema）
 - ✅ 10 篇测试语料（全文 + PDF + 逐图图像）
 - ✅ M1 结构化抽取规则（字段定义、抽取顺序、缺口登记）
 - ✅ 七个模块的二期扩展规则草案
