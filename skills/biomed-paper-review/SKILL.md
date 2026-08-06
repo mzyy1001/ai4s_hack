@@ -25,6 +25,9 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 `evidence_registry`，一切引用位置只存 `evidence_refs[]`（`references/00-contracts.md §1`）。
 给不出上述任一种证据的判断一律丢弃 —— 这是本 Skill 与「大模型泛泛点评」的根本区别。
 
+**但要注意方向**：证据要求是用来**验证**发现的，不是用来**减少**发现的。
+先按 §2.0 通读列全问题，再逐条取证；**不得**因为取证麻烦就不提。
+
 ### 0.2 当前实现边界与联网增强原则
 
 执行环境允许访问白名单内的公开科学数据源，网络与 12 小时超时**不再构成分期依据**。
@@ -160,6 +163,33 @@ Stage 1
 `execution_scope`、`coverage_breakdown`、`extraction_coverage`、`all_system_limitations[]`。
 
 ## 2. 流水线
+
+### 2.0 Stage 0 · 专家通读（**先做这一步，再碰契约**）
+
+**这是本 Skill 最容易被做反的地方，也是 uplift 的关键。**
+
+在读任何 reference、套任何 schema 之前，**先以资深审稿人的身份把论文通读一遍**，
+把你会在审稿意见里提的问题**全部列出来**（自由文本即可，不要求格式）。
+
+**为什么必须先做**：实测表明，先读契约再读论文会让结构化取代发现 ——
+同一模型在挂载本 Skill 后反而比裸模型少报了三分之一的实质问题，
+漏掉的都是需要跨表核对、需要联系临床常识才能看出来的那类。
+契约是用来**组织和取证**你的发现的，**不是用来限定你能发现什么的**。
+
+**Stage 0 的输出是一份「候选问题清单」**，后续阶段只做三件事：
+① 为每条候选找到可审计证据；② 归入对应模块并定 severity；
+③ 剔除找不到证据的条目。
+
+**硬性规则：Stage 0 列出的问题，若在后续阶段被丢弃，必须在
+`system_limitations[]` 或人工复核建议中说明原因。**
+不得因为「不好套进 schema」而静默丢弃 —— 那正是 uplift 变负的机制。
+
+通读时至少覆盖这些裸模型也该看出来的问题类型：
+表格分母与计数是否自洽、同一结局在不同位置的数值/P 值是否一致、
+结论是否超出数据、纳入标准与基线表是否矛盾、盲法是否可能被识破、
+安全性结论与随访时长是否匹配。
+
+---
 
 ### 2.1 模块关系（不要说错）
 
@@ -478,6 +508,49 @@ critical 及直接阻断核心解释的 major）；P1=给出修改要求前核�
 机器消费时同时输出符合 schema 且内含完整 `evidence_registry` 的 JSON。八节不得省略；
 `structured_extraction`/`interpretation_only` 明示未审核，`figure_review` 明示仅 M5，
 `targeted_check` 明示仅 `executed_modules[]`；零 finding 只能写「已执行范围内未产出」。
+
+## 6.5 确定性脚本：**要运行，不要只读**
+
+`scripts/` 下的五个脚本是**可执行工具**，不是参考资料。
+实测发现模型倾向于把它们当源码阅读而从不执行 —— 那样它们贡献为零。
+
+**正确用法：用 Bash 直接调用。** 每个脚本都可 `import` 后调用，也都带 `--selftest`：
+
+```bash
+# 单位归一化：判断两个数值能否比较（Stage 3b 兼容性判定）
+python3 -c "import sys; sys.path.insert(0,'scripts'); \
+from normalize_biomed_units import compare_units; print(compare_units('mg/mL','g/L'))"
+
+# 统计取证：p 值反算 / CI 自洽 / 计数-百分比 / GRIM
+python3 -c "import sys; sys.path.insert(0,'scripts'); \
+from statistical_forensics import check_all; \
+print(check_all([{'check':'count_percentage','count':30,'n':28, \
+'reported_percent':107.1,'reported_percent_text':'107.1'}]))"
+
+# 伦理规范库筛查（传入 structured_result）
+python3 -c "import sys; sys.path.insert(0,'scripts'); \
+from ethics_compliance_check import screen; print(len(screen(sr)))"
+
+# 序列与标识符：HGVS / 位点越界 / 登录号 / 基因符号 / 引物
+python3 -c "import sys; sys.path.insert(0,'scripts'); \
+from sequence_identifier_audit import audit; \
+print(audit([{'check':'accession','accession':'NCT123','database':'clinicaltrials'}]))"
+
+# 论文内图像完整性（需要图像文件）
+python3 scripts/figure_integrity_audit.py <图像目录>
+```
+
+**什么时候必须运行**：
+- 论文报告了「计数 + 百分比」或「均值 + 整数量表 + n」→ 跑统计取证
+- 论文报告了检验统计量与自由度 → 跑 p 值反算
+- 出现两个不同单位的同一指标 → 跑单位归一化
+- 出现变异命名、登录号、引物序列、基因符号 → 跑序列审计
+- 有图像文件可读 → 跑图像完整性
+
+**这些是裸模型做不到的确定性判定，是本 Skill 的 uplift 主要来源。
+不运行它们，本 Skill 相对裸模型就没有增量。**
+
+---
 
 ## 7. 参考文件索引（按需读取，不要一次性全部载入）
 
