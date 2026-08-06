@@ -91,8 +91,9 @@
         },
         "comparable_to_full_review": {"type": "boolean"},
         "band": {
-          "enum": ["routine_review", "clarification_needed", "major_revision_suggested"],
-          "description": "0–19 / 20–49 / 50+。仅为筛查信号，不构成录用或退稿决定。"
+          "enum": ["routine_review", "clarification_needed", "major_revision_suggested",
+                   "partial_not_classified"],
+          "description": "partial=true 时固定为 partial_not_classified；仅完整审核使用 0–19 / 20–49 / 50+ 分段。"
         },
         "priority_manual_review": {
           "type": "boolean",
@@ -107,12 +108,20 @@
         {
           "description": "未跑满六个审核模块时必须标 partial 且不可比",
           "if": {"properties": {"partial": {"const": true}}, "required": ["partial"]},
-          "then": {"properties": {"comparable_to_full_review": {"const": false}}},
-          "else": {"properties": {"comparable_to_full_review": {"const": true}}}
+          "then": {"properties": {
+            "comparable_to_full_review": {"const": false},
+            "band": {"const": "partial_not_classified"}
+          }},
+          "else": {"properties": {
+            "comparable_to_full_review": {"const": true},
+            "band": {"enum": ["routine_review", "clarification_needed",
+                               "major_revision_suggested"]}
+          }}
         },
         {
           "if": {"properties": {"executed_modules": {"maxItems": 5}}, "required": ["executed_modules"]},
-          "then": {"properties": {"partial": {"const": true}}}
+          "then": {"properties": {"partial": {"const": true}}},
+          "else": {"properties": {"partial": {"const": false}}}
         }
       ]
     },

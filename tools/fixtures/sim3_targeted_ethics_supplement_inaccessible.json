@@ -300,7 +300,7 @@
     "executed_modules": ["M6"],
     "skipped_modules": ["M2", "M3", "M4", "M5", "M7"],
     "comparable_to_full_review": false,
-    "band": "routine_review",
+    "band": "partial_not_classified",
     "priority_manual_review": false,
     "threshold_caveat": "分段阈值未经实证验证，是初始经验值，不得表述为自动化的录用/退稿决定。"
   },

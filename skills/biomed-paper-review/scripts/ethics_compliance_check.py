@@ -12,8 +12,8 @@
 为什么能离线
 ------------
 规范库是**结构化要求索引**，不是外部数据库查询。这正好落在一期的定义里
-（`SKILL.md §0.2`：论文自身内容 + 通用规范库）。批件号真伪、注册号时序等
-**需要外部数据源**的核验属二期，本模块不做，也不假装做。
+并构成无网络时的离线保底。批件号真伪、注册号时序等需要统一外部证据层；
+该层尚未接入本组件，本模块不做，也不假装做。
 
 三条防误报设计
 --------------
@@ -31,7 +31,7 @@
     signals = screen(structured_result, evaluation_matrix_facts)
 
 命令行自检：
-    python3 tools/ethics_compliance_check.py --selftest
+    python3 skills/biomed-paper-review/scripts/ethics_compliance_check.py --selftest
 """
 
 import json
@@ -169,7 +169,6 @@ def _sig(sid, stype, rule, detail, extra=None):
         out["ethics"] = {
             "rule_id": rule["rule_id"],
             "domain": rule["domain"],
-            "severity_hint": rule["severity_hint"],
             "citations": rule.get("citations", []),
             "manuscript_must_report": rule.get("manuscript_must_report", []),
             "rulebase_version": extra.get("rulebase_version") if extra else None,
@@ -177,7 +176,7 @@ def _sig(sid, stype, rule, detail, extra=None):
     return out
 
 
-def screen(structured_result, rulebase=None, id_prefix="SIG-E"):
+def screen(structured_result, rulebase=None, signal_start=600):
     """主入口。返回 extraction_signal 列表。
 
     合规（要求已满足）的规则**不产出信号** —— 沉默即通过。
@@ -204,7 +203,7 @@ def screen(structured_result, rulebase=None, id_prefix="SIG-E"):
             continue
 
         n += 1
-        sid = f"{id_prefix}{n:02d}"
+        sid = f"SIG-{signal_start + n:03d}"
 
         if rule["check"] == "manual_only":
             if applicable is None:
@@ -354,6 +353,12 @@ def _selftest():
     expect("RCT 有批件不报 ETH-HUM-001", "ETH-HUM-001" in ids4, False)
 
     # --- 契约：信号无 severity，路由到 M6 ---
+    expect("信号 id 符合 schema",
+           all(re.match(r"^SIG-[0-9]{3,}$", s["id"]) for s in sigs), True)
+    expect("伦理命中带规则轨迹",
+           all("ethics" in s for s in sigs if s["type"] == "ethics_requirement_unmet"), True)
+    expect("伦理 signal 不携带 severity hint",
+           all("severity_hint" not in s.get("ethics", {}) for s in sigs), True)
     expect("信号无 severity", all("severity" not in s for s in sigs), True)
     expect("路由到 M6", all(s["routed_to"] == ["M6"] for s in sigs), True)
 

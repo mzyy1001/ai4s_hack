@@ -30,7 +30,7 @@
     compare_units("mg/kg", "mg/kg/day")  # -> ('incomparable_dimension', None)
 
 命令行自检：
-    python3 tools/normalize_biomed_units.py --selftest
+    python3 skills/biomed-paper-review/scripts/normalize_biomed_units.py --selftest
 """
 
 import re

@@ -38,12 +38,13 @@
 | `source_value_conflict` | Stage 3b | 数值矛盾是否影响统计结论 |
 | `partial_extraction` | Stage 2 | 报告是否不完整（如有 n 无重复类型） |
 | `ambiguous_extraction` | Stage 2 | 统计方法表述是否含糊到无法判定 |
-| **`test_statistic_p_mismatch`** | `tools/statistical_forensics.py` | 是否构成 p 值报告错误 |
+| **`test_statistic_p_mismatch`** | `skills/biomed-paper-review/scripts/statistical_forensics.py` | 是否构成 p 值报告错误 |
 | **`ci_estimate_mismatch`** | 同上 | 是否构成区间报告错误 |
 | **`count_percentage_mismatch`** | 同上 | 是否构成数据报告错误 |
 | **`grim_incompatible_mean`** | 同上 | 是否构成汇总统计不可能 |
 
-> **加粗的四种是一期已实现的确定性取证**（`tools/statistical_forensics.py`），
+> **加粗的四种是一期已实现的确定性取证**
+>（`skills/biomed-paper-review/scripts/statistical_forensics.py`），
 > 不需要原始数据，只用论文自己印出来的数字。它们**已从二期提前到一期**
 > —— 本文件旧版把它们列在「§5 二期扩展」，现已更正。
 > 工具层只产 signal，**M4 决定是否构成 finding 以及 severity**。
@@ -295,7 +296,7 @@
 | `pseudoreplication` | 技术重复/亚样本被当作统计学 n | critical | §4.9 |
 | `assumption_unchecked` | 未验证正态性/方差齐性/球形性/比例风险/过离散 | major | §3.3 `assumption_unstated` |
 | `no_multiple_comparison_correction` | 多重比较未校正 | major | §8 |
-| `sample_size` | 低于领域惯例或无效能分析 | major | §5 |
+| `sample_size` | 低于领域惯例或无效能分析 | minor / major | §5 |
 | `agreement_by_correlation` | 用相关系数证明测量一致性 | major | §4.6 |
 | `censoring_ignored` | 生存数据忽略删失 | critical | §4.5 |
 | `cutoff_not_validated` | 最佳截断值未在独立数据验证 | major | §4.7 |
@@ -306,14 +307,25 @@
 | `missing_data_unhandled` | 缺失数据处理未说明 | minor | §7 |
 | `over_precision` | 报告位数超出测量精度 | info | §7 |
 | `selective_reporting` | 疑似选择性报告 / 终点更换 | critical | 与 M2 联动 |
-| **`p_value_inconsistent`** | p 与统计量/自由度对不上 | critical | 由 `test_statistic_p_mismatch` signal 判定 |
+| **`p_value_inconsistent`** | p 与统计量/自由度对不上 | major；满足下述升级条件才为 critical | 由 `test_statistic_p_mismatch` signal 判定 |
 | **`ci_self_inconsistent`** | 点估计与自身 CI 不自洽 | major | 由 `ci_estimate_mismatch` signal 判定 |
-| **`percentage_mismatch`** | 百分比与分子分母算不出来 | major | 由 `count_percentage_mismatch` signal 判定 |
-| **`grim_violation`** | 均值在给定 n 下数学上不可能 | critical | 由 `grim_incompatible_mean` signal 判定 |
+| **`percentage_mismatch`** | 百分比与分子分母算不出来 | minor；改变关键分母或主要效应量时为 major | 由 `count_percentage_mismatch` signal 判定 |
+| **`grim_violation`** | 均值在给定 n 下数学上不可能 | major；人工排除口径差异后才可升级 critical | 由 `grim_incompatible_mean` signal 判定 |
 
 > 加粗四项由 §2 的一期取证 signal 触发。**据 signal 立 finding 时，
 > 必须在 `evidence_refs[]` 中独立给出稿件证据**（报告该数值的原文位置），
 > 不得仅引用 signal id（`00-contracts.md §6.1` 规则 5）。
+
+**四类取证 finding 的 severity 算法**：
+
+1. `p_value_inconsistent` 默认 `major`。仅当它属于预设主要终点、反算 p 与报告 p 位于
+   预设 α 的两侧，且正文结论明确依赖“显著 / 不显著”分类时，才标 `critical`。
+2. `ci_self_inconsistent` 固定为 `major`；当前工具只能证明内部不自洽，不能确定点估计还是
+   CI 哪一个抄错，因此不得自动升级 `critical`。
+3. `percentage_mismatch` 默认 `minor`。只有舍入区间不相交，且更正后会改变主要终点的事件
+   分母、效应量或受试者流判断时，才标 `major`；不得自动标 `critical`。
+4. `grim_violation` 默认 `major`。只有人工回查确认它是主要结果、原文确为等权整数原始均值、
+   n 与报告精度均无抄录歧义，且该结果是核心结论的必要支撑时，才标 `critical`。
 
 ---
 

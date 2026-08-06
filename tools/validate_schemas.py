@@ -631,7 +631,8 @@ def check_instance(rep, name, inst):
         expected_risk = min(100, sum(min(30, value) for value in category_scores.values()))
         if risk.get("value") != expected_risk:
             score_bad.append(f"risk value={risk.get('value')} expected={expected_risk}")
-        expected_band = ("routine_review" if expected_risk <= 19 else
+        expected_band = ("partial_not_classified" if risk.get("partial") else
+                         "routine_review" if expected_risk <= 19 else
                          "clarification_needed" if expected_risk <= 49 else
                          "major_revision_suggested")
         if risk.get("band") != expected_band:

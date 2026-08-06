@@ -255,7 +255,7 @@ all_extraction_signals, all_system_limitations, extraction_coverage, disclaimer
 | 旧 | 新 |
 | --- | --- |
 | `confidence_score.score`（0–100，越高越好） | `manuscript_risk_score.value`（0–100，**越高风险越大**，方向相反） |
-| `confidence_score.band`（中文三值） | `manuscript_risk_score.band`（英文三值） |
+| `confidence_score.band`（中文三值） | `manuscript_risk_score.band`（完整审核英文三值；partial 固定 `partial_not_classified`） |
 | `confidence_score.breakdown.extraction_gap_penalty` | **删除** —— 抽取缺口不再降低稿件分，改由 `extraction_coverage` 承载 |
 | —— | `extraction_coverage`（**新增**，三子率各带显式分子分母） |
 | —— | `review_confidence` / `output_confidence`（**新增**，二者互斥） |
@@ -267,7 +267,9 @@ all_extraction_signals, all_system_limitations, extraction_coverage, disclaimer
 
 ```
 partial = true                  ⇒ comparable_to_full_review = false
+partial = true                  ⇒ band = partial_not_classified
 len(executed_modules) ≤ 5       ⇒ partial = true
+len(executed_modules) = 6       ⇒ partial = false
 ```
 
 **c. 置信度互斥（顶层 allOf）**

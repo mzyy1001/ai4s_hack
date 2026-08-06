@@ -29,7 +29,7 @@
     signals = check_all(claims)
 
 命令行自检：
-    python3 tools/statistical_forensics.py --selftest
+    python3 skills/biomed-paper-review/scripts/statistical_forensics.py --selftest
 """
 
 import math
@@ -199,7 +199,7 @@ def _sig(signal_id, stype, target, detail, extra):
 
 # ================================================================ 检查 1
 
-def check_test_statistic_p(item, signal_id="SIG-F01"):
+def check_test_statistic_p(item, signal_id="SIG-101"):
     """反算 p 值并与报告值比对。
 
     前提（缺一不跑）：test_family ∈ {t,F,chi2,z}、statistic、df（z 除外）、
@@ -274,7 +274,7 @@ def check_test_statistic_p(item, signal_id="SIG-F01"):
 
 # ================================================================ 检查 2
 
-def check_ci_estimate(item, signal_id="SIG-F02"):
+def check_ci_estimate(item, signal_id="SIG-102"):
     """点估计是否落在自己报告的 CI 内。
 
     前提：estimate、ci_low、ci_high 齐备且 ci_low < ci_high。
@@ -309,7 +309,7 @@ def check_ci_estimate(item, signal_id="SIG-F02"):
 
 # ================================================================ 检查 3
 
-def check_count_percentage(item, signal_id="SIG-F03"):
+def check_count_percentage(item, signal_id="SIG-103"):
     """计数与百分比自洽。前提：count、n、reported_percent 齐备且 n > 0。"""
     count, n, pct = item.get("count"), item.get("n"), item.get("reported_percent")
     if count is None or n is None or pct is None:
@@ -345,7 +345,7 @@ def check_count_percentage(item, signal_id="SIG-F03"):
 
 # ================================================================ 检查 4
 
-def check_grim(item, signal_id="SIG-F04"):
+def check_grim(item, signal_id="SIG-104"):
     """GRIM：整数量表的等权算术均值在给定 n 下是否可能。
 
     **严格前提**（任一不满足即不跑）：
@@ -410,7 +410,7 @@ CHECKS = {
 }
 
 
-def check_all(items):
+def check_all(items, signal_start=100):
     """items 是 [{check: <名>, ...参数}]，返回 extraction_signal 列表。
 
     一致的项**不产出信号**（沉默即通过）；只有不一致或前提不全才产出。
@@ -420,7 +420,7 @@ def check_all(items):
         fn = CHECKS.get(item.get("check"))
         if fn is None:
             continue
-        sig = fn(item, signal_id=f"SIG-F{i:02d}")
+        sig = fn(item, signal_id=f"SIG-{signal_start + i:03d}")
         if sig is not None:
             out.append(sig)
     return out
@@ -490,6 +490,7 @@ def _selftest():
     # --- 信号契约：不得带 severity ---
     sigs = check_all([{"check": "grim", "scale_is_integer": True, "n": 10,
                        "mean_text": "3.14"}])
+    expect("信号 id 符合 schema", bool(re.match(r"^SIG-[0-9]{3,}$", sigs[0]["id"])), True)
     expect("信号无 severity", all("severity" not in x for x in sigs), True)
     expect("信号路由到 M4", sigs[0]["routed_to"], ["M4"])
 

@@ -146,7 +146,8 @@ point | interval | lower_bound | upper_bound | categorical
 
 - `unit` 保留稿件原写法；`unit_normalized` 为归一化形式，**兼容性比较一律用归一化值**。
   无量纲指标 `unit: null`，`unit_normalized: null`。
-- **归一化由 `tools/normalize_biomed_units.py` 执行**（一期能力，只用标准库）。
+- **归一化由 `skills/biomed-paper-review/scripts/normalize_biomed_units.py` 执行**
+  （一期能力，只用标准库）。
   它是 fail-closed 的：只做**同量纲**确定性换算；未登记别名返回 `unknown_unit`，
   调用方据此判 `ambiguous`，**不得猜**。三条永不合并的量纲边界：
   剂量 `mg/kg` ≠ 速率 `mg/kg/day`；按体重 `mg/kg` ≠ 按体表面积 `mg/m2`；
@@ -630,7 +631,8 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 | `grim_incompatible_mean` | 整数量表均值在给定 n 下不存在可行整数总和（GRIM） | M4 | 是否构成汇总统计不可能 |
 | `ethics_requirement_unmet` | 规范库某条伦理要求适用，但稿件未见对应报告 | M6 | 是否构成伦理合规问题 |
 
-> 后四种由 `tools/statistical_forensics.py` 在 Stage 2 产出，**不需要原始数据**，
+> 后四种由 `skills/biomed-paper-review/scripts/statistical_forensics.py` 在 Stage 2 产出，
+> **不需要原始数据**，
 > 是一期就能做的确定性一致性检验（`produced_by: "stage_2"`，`routed_to: ["M4"]`）。
 > 它们**仍然只是 signal** —— 工具层不下稿件结论，是否构成稿件问题由 M4 判定。
 > 每种检验的适用前提见该脚本文档；**前提不满足一律产出 `partial_extraction` 而不是猜**。
@@ -764,6 +766,9 @@ parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
 
 三项指标**互不替代，分别输出**，报告中不得合并为单一数字。
 **禁止**把稿件风险分称作「置信度」。
+当前权重、category 上限、分段阈值、惩罚系数与 `0.5` 提示阈值均为**未经语料标定的
+初始专家参数**。本节保证的是确定性复算，不是经验校准；报告不得把分值表述为概率、
+经验证的稿件质量测量或录用/退稿界值。
 
 ### 8.1 manuscript_risk_score · 稿件风险分（0–100）
 
@@ -796,10 +801,14 @@ manuscript_risk_score = min(100, Σ_category min(30, Σ_cluster w))
 
 - `executed_modules` 未覆盖全部六个审核模块时，`partial` **必须**为 `true`。
 - `partial: true` 的分数**禁止**与 `full_review` 的分数并列比较或排序；
-  报告与 JSON 均须带 `comparable_to_full_review: false`。
+  报告与 JSON 均须带 `comparable_to_full_review: false`，且 `band` 固定为
+  `partial_not_classified`，不得套用完整审核分段。
+- 仅当 `executed_modules` 恰好覆盖 M2–M7 时，`partial` 才能为 `false`、
+  `comparable_to_full_review` 才能为 `true`，并按下表生成 `band`。
 - `executed_modules` 为空数组时**不得输出本项**（见 SKILL.md §1 模式约束）。
 
-**分段仅为筛查信号**（阈值未经实证验证，报告中必须注明）：
+**下列分段仅用于 `partial: false` 的完整审核，且仅为筛查信号**
+（阈值未经实证验证，报告中必须注明）：
 
 | 分数 | 标签 |
 | --- | --- |

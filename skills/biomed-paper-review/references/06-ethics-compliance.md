@@ -23,14 +23,14 @@
 | `structured_result_v2.declarations.*` | 伦理声明、知情同意、资助、利益冲突、数据可及性 |
 | `structured_result_v2.design.registration` | 临床试验注册号 |
 | `evaluation_matrix.{has_animal_experiment, has_human_subjects, ethics_statement, informed_consent}` | 路由 |
-| **`ethics_requirement_unmet` signals** | 由 `tools/ethics_compliance_check.py` 产出，见 §2 |
+| **`ethics_requirement_unmet` signals** | 由 `skills/biomed-paper-review/scripts/ethics_compliance_check.py` 产出，见 §2 |
 | `all_system_limitations[]` | 补充材料不可得时**不得**判缺失 |
 
 ## 2. 规范库与筛查工具
 
 ```
 resources/ethics_rules.json          规范库（数据）
-tools/ethics_compliance_check.py     筛查器（产 signal，不产 finding）
+skills/biomed-paper-review/scripts/ethics_compliance_check.py     筛查器（产 signal，不产 finding）
         ↓  ethics_requirement_unmet
 M6（本模块）                          判定是否构成 finding、定 severity
 ```

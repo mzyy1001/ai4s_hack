@@ -23,7 +23,7 @@
                "count_percentage_mismatch",
                "grim_incompatible_mean",
                "ethics_requirement_unmet"],
-      "description": "十一值。其中四种统计取证类由 tools/statistical_forensics.py 产出、ethics_requirement_unmet 由 tools/ethics_compliance_check.py 产出，均为一期离线能力。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
+      "description": "十一值。其中四种统计取证类由 skills/biomed-paper-review/scripts/statistical_forensics.py 产出、ethics_requirement_unmet 由 skills/biomed-paper-review/scripts/ethics_compliance_check.py 产出，均为一期离线能力。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
     },
 
     "target": {
@@ -57,7 +57,7 @@
 
     "forensics": {
       "type": "object",
-      "description": "仅统计取证类 signal 使用。记录复算输入与结果，使 M4 能独立复现该判定。由 tools/statistical_forensics.py 产出。",
+      "description": "仅统计取证类 signal 使用。记录复算输入与结果，使 M4 能独立复现该判定。由 skills/biomed-paper-review/scripts/statistical_forensics.py 产出。",
       "required": ["check", "ran", "rule_version"],
       "additionalProperties": true,
       "properties": {
@@ -76,6 +76,41 @@
           "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"},
           "description": "报告精度对应的舍入区间；比较用区间而非点值相等"
         }
+      }
+    },
+
+    "ethics": {
+      "type": "object",
+      "description": "仅 ethics_requirement_unmet 使用的规范库命中轨迹；不携带 severity，严重度完全由 M6 判定。",
+      "required": ["rule_id", "domain", "citations",
+                   "manuscript_must_report", "rulebase_version"],
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": {"type": "string", "pattern": "^ETH-[A-Z]+-[0-9]{3}$"},
+        "domain": {
+          "enum": ["animal", "biosafety", "cell_line_general",
+                   "clinical_trial_registration", "data_privacy", "genetic_resources",
+                   "human_clinical", "human_derived_cells_tissue", "stem_cell_embryo"]
+        },
+        "citations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["instrument", "locus", "citation_confidence"],
+            "additionalProperties": false,
+            "properties": {
+              "instrument": {"type": "string", "minLength": 1},
+              "locus": {"type": "string", "minLength": 1},
+              "citation_confidence": {"enum": ["high", "medium", "low"]}
+            }
+          }
+        },
+        "manuscript_must_report": {
+          "type": "array", "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "rulebase_version": {"type": "string", "minLength": 1}
       }
     }
   },
@@ -115,6 +150,17 @@
           "produced_by": {"const": "stage_2"},
           "forensics": {"properties": {"ran": {"const": true}}}
         }
+      }
+    },
+    {
+      "description": "伦理规范库命中必须带可审计的规则轨迹",
+      "if": {
+        "properties": {"type": {"const": "ethics_requirement_unmet"}},
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["ethics"],
+        "properties": {"produced_by": {"const": "stage_2"}}
       }
     }
   ],

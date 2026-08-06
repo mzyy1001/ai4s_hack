@@ -25,22 +25,22 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 `evidence_registry`，一切引用位置只存 `evidence_refs[]`（`references/00-contracts.md §1`）。
 给不出上述任一种证据的判断一律丢弃 —— 这是本 Skill 与「大模型泛泛点评」的根本区别。
 
-### 0.2 一期能力边界
+### 0.2 当前实现边界与联网增强原则
 
-一期仅基于**论文自身内容 + 通用规范库**校验，**不调用外部数据库**。
-下列四项**不是做不到，是一期先不做**，规则写在对应模块 reference 的「二期扩展」一节。
+执行环境允许访问白名单内的公开科学数据源，网络与 12 小时超时**不再构成分期依据**。
+当前提交包已实现论文内部证据与通用规范库的离线流程；外部 evidence 契约与解析层尚未落地，
+因此本版本**不得声称已完成外部数据库核验**。后续一期可加入可选联网增强；外部源不可达、
+限流或无权访问时必须产 `system_limitation`，不得据此判稿件有问题，离线流程仍须完整结束。
 
-| 能力 | 一期做法 | 二期归属 | 二期前置条件 |
+| 能力 | 当前离线做法 | 一期联网增强归属 | 接入前置条件 |
 | --- | --- | --- | --- |
 | 判断结论在科学上是否**为真** | 只做 claim↔evidence 对齐 | M7 | 文献库 MCP（PubMed / Europe PMC） |
 | 判断领域**创新性 / 重要性** | 不判断 | M7 | 文献库 + 引用网络；需先定义可量化新颖度判据 |
 | 判断违背基础常识的结论 | 标记「结论超出证据支持范围」交人工 | M7 | 领域常识规则库；先积累一期误判样本 |
-| 复现统计计算 | 只校验方法选择与报告完整性 | M4 | 需原始数据；可先做不依赖原始数据的一致性检验 |
+| 复现统计计算 | 已做 p/CI/计数/GRIM 四类无需原始数据的一致性取证 | M4 | 原始数据可得时重跑主要分析 |
 
-二期应**扩展**而非重构主框架：新增 `database` / `query` / `retrieval_date` / `record_id` / `version` /
+联网增强应**扩展**而非重构主框架：新增 `database` / `query` / `retrieval_date` / `record_id` / `version` /
 `retraction_or_correction_status` / `relation_to_claim` 等元数据。接入方案见 `docs/proposals/round-1-contracts-consistency.md`；提案未采纳前不得声称已核验外部数据库。
-
----
 
 ## 1. 执行模式与依赖图
 
@@ -156,8 +156,6 @@ Stage 1
 
 `review_confidence` 与 `output_confidence` **互斥，不得同时输出**。任何模式都必须输出
 `execution_scope`、`coverage_breakdown`、`extraction_coverage`、`all_system_limitations[]`。
-
----
 
 ## 2. 流水线
 
@@ -309,8 +307,6 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 5. **渲染**：按 `templates/review_report.md` 输出 Markdown；需要机器消费时同时输出
    符合 `schemas/review_report.schema.json` 的 JSON（含完整 `evidence_registry`）。
 
----
-
 ## 3. 契约总览（详见 `references/00-contracts.md`）
 
 **需要输出任何结构化内容前必须先读该文件。** 此处只列必须随时记住的要点。
@@ -364,8 +360,6 @@ visually_derived   = axis_readable | pixel_estimated
 下游据 signal 立 finding 时，必须在 `evidence_refs[]` 中独立给出稿件证据，
 不得仅引用 signal id。
 
----
-
 ## 4. 结构化结果与路由
 
 ### 4.1 v1 与 v2
@@ -403,12 +397,13 @@ extraction_confidence}`，见 `01-structured-extraction.md §11`）：
 `alternatives[]` **只**用于「抽取器在几种解读之间不确定」。二者不得混用。
 完整枚举、字段清单与各设计的适用性规则见 `references/01-structured-extraction.md` §4–§5。
 
----
-
 ## 5. 三项评分（互不替代）
 
 **禁止**把稿件风险分称作「置信度」。三项分别输出，不得合并为单一数字。
 完整公式与可计算性证明见 `references/00-contracts.md` §8。
+当前权重、category 上限、分段阈值、惩罚系数与 `0.5` 提示阈值均为**未经语料标定的
+初始专家参数**；公式可复算不等于参数已有实证效度。报告不得把这些数值表述为概率、
+校准后的质量测量或录用/退稿界值。
 
 ### 5.1 manuscript_risk_score（0–100，越高风险越大）
 
@@ -421,10 +416,11 @@ manuscript_risk_score = min(100, Σ_category min(30, Σ_cluster w))    每 categ
 ```
 
 未跑满六个审核模块时**必须**标 `partial: true` + `comparable_to_full_review: false`，
-并列出 `executed_modules[]` / `skipped_modules[]`；partial 分数**禁止**与完整分数比较。
+并列出 `executed_modules[]` / `skipped_modules[]`；partial 分数**禁止**与完整分数比较，
+其 `band` 固定为 `partial_not_classified`，不得套用完整审核的三个分段。
 `executed_modules` 为空时**不输出本项**。分段（`routine_review` 0–19 /
 `clarification_needed` 20–49 / `major_revision_suggested` 50+）**仅为筛查信号，
-阈值未经实证验证**，报告中必须注明，不得表述为录用/退稿决定。
+且只适用于 `partial: false`；阈值未经实证验证，报告中必须注明，不得表述为录用/退稿决定。
 出现任一 `critical` 簇时 `priority_manual_review = true`。
 
 ### 5.2 extraction_coverage（0.0–1.0）
@@ -462,8 +458,6 @@ scope 内 observation 由 `execution_scope.observations[]` 唯一圈定；变量
 `provenance.derivation.ocr_used`、`finding.evidence_refs[]`、`finding.review_confidence`、`key_data.status` 直接算出（`00-contracts.md §8.3`）。
 `review_confidence < 0.5` 时，报告首屏必须提示「本次审核证据基础较弱，结论仅供参考」。
 
----
-
 ## 6. 输出规范
 
 主输出为 `templates/review_report.md` 渲染的 Markdown，固定八节：
@@ -480,8 +474,6 @@ scope 内 observation 由 `execution_scope.observations[]` 唯一圈定；变量
 **必须**内含完整 `evidence_registry` 以保证 ref 自洽可校验。
 非 `full_review` 模式下，未执行阶段对应的节写明「本模式未执行」，
 **不得**省略节标题（避免读者误以为该维度无问题）。
-
----
 
 ## 7. 参考文件索引（按需读取，不要一次性全部载入）
 
