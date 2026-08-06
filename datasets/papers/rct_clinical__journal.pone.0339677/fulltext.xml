@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.3 20210610//EN" "http://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd">
+<article article-type="research-article" dtd-version="1.3" xml:lang="en" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink">
+<processing-meta>
+<custom-meta-group content-type="composition">
+<custom-meta specific-use="newgen" xlink:href="https://www.newgen.co/">
+<meta-name>Composition Vendor</meta-name>
+<meta-value>Newgen KnowledgeWorks (P) Ltd.</meta-value>
+</custom-meta>
+</custom-meta-group>
+</processing-meta>
+<front>
+<journal-meta>
+<journal-id journal-id-type="nlm-ta">PLoS One</journal-id>
+<journal-id journal-id-type="publisher-id">plos</journal-id>
+<journal-id journal-id-type="pmc">plosone</journal-id>
+<journal-title-group>
+<journal-title>PLOS One</journal-title>
+</journal-title-group>
+<issn pub-type="epub">1932-6203</issn>
+<publisher>
+<publisher-name>Public Library of Science</publisher-name>
+<publisher-loc>San Francisco, CA USA</publisher-loc>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="doi">10.1371/journal.pone.0339677</article-id>
+<article-id pub-id-type="publisher-id">PONE-D-25-40747</article-id>
+<article-categories>
+<subj-group subj-group-type="heading">
+<subject>Research Article</subject>
+</subj-group>
+<subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Clinical medicine</subject><subj-group><subject>Signs and symptoms</subject><subj-group><subject>Pain</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Surgical and invasive medical procedures</subject><subj-group><subject>Laparoscopy</subject></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Surgical and invasive medical procedures</subject></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Surgical and invasive medical procedures</subject><subj-group><subject>Gynecologic surgery</subject></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Physiology</subject><subj-group><subject>Sensory physiology</subject><subj-group><subject>Somatosensory system</subject><subj-group><subject>Pain sensation</subject></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Neuroscience</subject><subj-group><subject>Sensory systems</subject><subj-group><subject>Somatosensory system</subject><subj-group><subject>Pain sensation</subject></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Surgical and invasive medical procedures</subject><subj-group><subject>Reproductive system procedures</subject><subj-group><subject>Hysterectomy</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Surgical and invasive medical procedures</subject><subj-group><subject>Surgical excision</subject><subj-group><subject>Hysterectomy</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Anesthesiology</subject><subj-group><subject>Anesthesia</subject><subj-group><subject>Local and regional anesthesia</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Pharmaceutics</subject><subj-group><subject>Drug therapy</subject><subj-group><subject>Anesthesia</subject><subj-group><subject>Local and regional anesthesia</subject></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Pharmacology</subject><subj-group><subject>Drugs</subject><subj-group><subject>Analgesics</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Pain management</subject><subj-group><subject>Analgesics</subject></subj-group></subj-group></subj-group></article-categories>
+<title-group>
+<article-title>Ultrasound-guided stellate ganglion block attenuates early postoperative visceral pain after laparoscopic hysterectomy: A prospective randomized controlled trial</article-title>
+<alt-title alt-title-type="running-head">None</alt-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author" equal-contrib="yes" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0009-0003-1176-1278</contrib-id>
+<name name-style="western">
+<surname>Lin</surname>
+<given-names>Jing</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-original-draft/">Writing – original draft</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+</contrib>
+<contrib contrib-type="author" equal-contrib="yes" xlink:type="simple">
+<name name-style="western">
+<surname>Huang</surname>
+<given-names>Yue</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/data-curation/">Data curation</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Wen</surname>
+<given-names>Yaling</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/data-curation/">Data curation</role>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-original-draft/">Writing – original draft</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+<xref ref-type="aff" rid="aff002"><sup>2</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Yang</surname>
+<given-names>Wanli</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+</contrib>
+<contrib contrib-type="author" corresp="yes" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0001-9742-056X</contrib-id>
+<name name-style="western">
+<surname>Zuo</surname>
+<given-names>Youbo</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/funding-acquisition/">Funding acquisition</role>
+<role content-type="http://credit.niso.org/contributor-roles/project-administration/">Project administration</role>
+<role content-type="http://credit.niso.org/contributor-roles/supervision/">Supervision</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+<xref ref-type="corresp" rid="cor001">*</xref>
+</contrib>
+</contrib-group>
+<aff id="aff001"><label>1</label> <addr-line>Department of Anesthesiology, Affiliated Hospital of North Sichuan Medical College, Nanchong, Sichuan, China</addr-line></aff>
+<aff id="aff002"><label>2</label> <addr-line>Department of Pain Medicine, Mianyang 404 Hospital, Mianyang, Sichuan, China</addr-line></aff>
+<contrib-group>
+<contrib contrib-type="editor" xlink:type="simple">
+<name name-style="western">
+<surname>Wani</surname>
+<given-names>Imtiaz</given-names>
+</name>
+<role>Editor</role>
+<xref ref-type="aff" rid="edit1"/></contrib>
+</contrib-group>
+<aff id="edit1"><addr-line>Government Gousia Hospital, DHS, Srinagar, INDIA</addr-line></aff>
+<author-notes>
+<corresp id="cor001">* E-mail: <email xlink:type="simple">zuoyb2519@163.com</email></corresp>
+<fn fn-type="conflict" id="coi001">
+<p>The authors have declared that no competing interests exist.</p>
+</fn>
+<fn fn-type="other" id="fn001">
+<p>☯ These authors have contributed equally to this work and share first authorship.</p>
+</fn>
+</author-notes>
+<pub-date pub-type="epub"><day>30</day><month>12</month><year>2025</year></pub-date>
+<pub-date pub-type="collection"><year>2025</year></pub-date>
+<volume>20</volume>
+<issue>12</issue>
+<elocation-id>e0339677</elocation-id>
+<history>
+<date date-type="received"><day>21</day><month>8</month><year>2025</year></date>
+<date date-type="accepted"><day>7</day><month>12</month><year>2025</year></date>
+</history>
+<permissions>
+<copyright-year>2025</copyright-year>
+<copyright-holder>Lin et al</copyright-holder>
+<license xlink:href="http://creativecommons.org/licenses/by/4.0/" xlink:type="simple">
+<license-p>This is an open access article distributed under the terms of the <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/licenses/by/4.0/" xlink:type="simple">Creative Commons Attribution License</ext-link>, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p></license>
+</permissions>
+<self-uri content-type="pdf" xlink:href="info:doi/10.1371/journal.pone.0339677"/>
+<abstract>
+<sec id="sec001">
+<title>Background</title>
+<p>Postoperative visceral pain remains a major challenge following laparoscopic hysterectomy. While stellate ganglion block (SGB) is increasingly utilized for acute and chronic pain management, limited evidence exists regarding its efficacy in modulating visceral pain after gynecologic laparoscopy. This study aimed to evaluate whether ultrasound-guided SGB could reduce early postoperative visceral pain intensity and opioid consumption.</p>
+</sec>
+<sec id="sec002">
+<title>Methods</title>
+<p>In this prospective, randomized controlled trial, 90 patients undergoing laparoscopic hysterectomy were allocated (1:1:1) to receive ultrasound-guided SGB combined with transversus abdominis plane block (TAPB) (SGB group), TAPB alone (TAP group), or no nerve block (control group). The primary outcome was visceral pain intensity, assessed using visual analog scale (VAS) scores at rest and during movement at 1, 3, 6, 24, and 48 hours postoperatively. Secondary outcomes included rescue analgesia requirements and complications.</p>
+</sec>
+<sec id="sec003">
+<title>Results</title>
+<p>The linear mixed-effects model revealed that the SGB group exhibited a significantly greater reduction in visceral pain intensity at rest and during movement at 1, 3, and 6 hours compared to the TAP and control groups (<italic>P</italic> &lt; 0.05). Notably, the percentage of patients requiring rescue analgesia was significantly lower in the SGB group compared to the TAP and control groups (14.3% vs. 32.1% and 48.1%, respectively, <italic>P</italic> &lt; 0.05). No statistically significant differences in incisional pain were detected among the three groups at any time point (<italic>P</italic> &gt; 0.05).</p>
+</sec>
+<sec id="sec004">
+<title>Conclusion</title>
+<p>Ultrasound-guided SGB effectively alleviates early postoperative visceral pain and reduces opioid demand, supporting its role as a valuable addition to multimodal analgesia protocols in laparoscopic hysterectomy.</p>
+</sec>
+</abstract>
+<funding-group>
+<award-group id="award001">
+<funding-source><institution>the First-class Undergraduate Courses in Sichuan Province</institution>
+</funding-source><award-id>YLKC02223</award-id>
+<principal-award-recipient><contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0001-9742-056X</contrib-id><name name-style="western">
+<surname>Zuo</surname><given-names>Youbo</given-names></name></principal-award-recipient></award-group>
+<funding-statement>The study was funded by the First-class Undergraduate Courses in Sichuan Province (YLKC02223).The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.</funding-statement>
+</funding-group>
+<counts>
+<fig-count count="3"/>
+<table-count count="3"/>
+<page-count count="12"/>
+</counts>
+<custom-meta-group>
+<custom-meta id="data-availability">
+<meta-name>Data Availability</meta-name>
+<meta-value>All relevant data are within the paper and its <xref ref-type="sec" rid="sec025">Supporting Information</xref> files.</meta-value>
+</custom-meta>
+</custom-meta-group>
+</article-meta>
+</front>
+<body>
+<sec id="sec005" sec-type="intro">
+<title>Introduction</title>
+<p>Laparoscopic hysterectomy has become a common surgical approach for treating various gynecological disorders. Over 600,000 hysterectomies are performed annually in the United States alone, with 60–70% now using laparoscopic approaches [<xref ref-type="bibr" rid="pone.0339677.ref001">1</xref>]. Although minimally invasive, laparoscopic hysterectomy can cause moderate-to-severe postoperative pain [<xref ref-type="bibr" rid="pone.0339677.ref002">2</xref>,<xref ref-type="bibr" rid="pone.0339677.ref003">3</xref>]. Pain associated with laparoscopic gynecological surgery mainly consists of incisional pain and visceral pain [<xref ref-type="bibr" rid="pone.0339677.ref004">4</xref>]. Visceral pain, in particular, can persist for up to 72 hours postoperatively [<xref ref-type="bibr" rid="pone.0339677.ref002">2</xref>]. Currently, TAP block primarily targets incisional pain, leaving postoperative visceral pain management largely dependent on opioids [<xref ref-type="bibr" rid="pone.0339677.ref004">4</xref>,<xref ref-type="bibr" rid="pone.0339677.ref005">5</xref>]. However, the side effects of opioids often limit their use, which may hinder patients’ postoperative recovery and increase the risk of chronic pain [<xref ref-type="bibr" rid="pone.0339677.ref006">6</xref>,<xref ref-type="bibr" rid="pone.0339677.ref007">7</xref>].</p>
+<p>Visceral pain is associated with autonomic nerve instability and elevated levels of norepinephrine and inflammatory mediators. Visceral sensation is intricately modulated by autonomic neural inputs, with significant involvement of both parasympathetic and sympathetic pathways [<xref ref-type="bibr" rid="pone.0339677.ref008">8</xref>]. Norepinephrine (NE), which is synthesized and secreted by postganglionic sympathetic neurons and central adrenergic nerve endings, plays a pivotal role in the genesis of postoperative visceral pain [<xref ref-type="bibr" rid="pone.0339677.ref009">9</xref>]. Surgical intervention and tissue inflammation may precipitately heighten the sensitivity of pain-sensing nerves, while the release of inflammatory mediators can augment the transmission of visceral pain signals. A recent trial also demonstrated that SGB could reduce visceral pain after cholecystectomy [<xref ref-type="bibr" rid="pone.0339677.ref010">10</xref>]. The analgesic effect of SGB may stem from its dual modulation of sympathetic hyperactivity and proinflammatory cytokine release. By blocking cervical sympathetic fibers, SGB likely attenuates NE-driven visceral sensitization while suppressing surgical stress-induced elevation of IL-6 and TNF-α, as evidenced in prior studies [<xref ref-type="bibr" rid="pone.0339677.ref011">11</xref>]. In addition, SGB can also accelerate the metabolism of substances such as 5-hydroxytryptamine [<xref ref-type="bibr" rid="pone.0339677.ref012">12</xref>]. Based on these mechanisms, SGB is extensively utilized in managing multiple symptoms and diseases, such as acute and chronic pain, refractory arrhythmia, postoperative discomfort, menopause symptoms, post-traumatic stress disorder (PTSD), long coronavirus disease (COVID) syndrome, intractable hiccups, and excessive daytime sleepiness [<xref ref-type="bibr" rid="pone.0339677.ref013">13</xref>]. In recent years, numerous studies have also utilized SGB for postoperative pain management [<xref ref-type="bibr" rid="pone.0339677.ref014">14</xref>]. However, few randomized controlled trials have evaluated the role of SGB in visceral pain management after laparoscopic hysterectomy.</p>
+<p>This randomized controlled trial (RCT) aimed to evaluate the efficacy of ultrasound-guided SGB in visceral pain management after laparoscopic hysterectomy.</p>
+</sec>
+<sec id="sec006" sec-type="materials|methods">
+<title>Methods</title>
+<sec id="sec007">
+<title>Patients</title>
+<p>This single-center RCT was approved by the Ethics Committee of the Affiliated Hospital of North Sichuan Medical College (2023ER004−1), and registered on the Chinese Clinical Trial Registry (ChiCTR, <ext-link ext-link-type="uri" xlink:href="http://www.chictr.org.cn" xlink:type="simple">http://www.chictr.org.cn</ext-link>) with registration number ChiCTR2300069134. The study was conducted in accordance with the Declaration of Helsinki, and written informed consent was obtained from all participants.</p>
+<p>A total of 90 patients scheduled for laparoscopic hysterectomy were enrolled from March 9th 2023 to July 30th 2023 at the Affiliated Hospital of North Sichuan Medical College (<xref ref-type="fig" rid="pone.0339677.g001">Fig 1</xref>). Inclusion criteria were patients aged 18–65 years, belonging to the American Society of Anesthesiologists (ASA) physical status I to III, body mass index (BMI) between 18.0 and 30.0 kg/m<sup>2</sup>. Exclusion criteria included chronic opioid use (&gt;3 days/week for ≥1 month preoperatively), history of chronic abdominal/pelvic pain, major organ dysfunction (e.g., heart failure, cirrhosis), inability to cooperate with VAS assessment, and allergy to lidocaine or ropivacaine. Failed nerve block (defined below), changed surgical approach (switch from laparoscopic to open hysterectomy) were also excluded.</p>
+<fig id="pone.0339677.g001" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0339677.g001</object-id><label>Fig 1</label><caption><title>CONSORT diagram of the trial.</title></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.g001" xlink:type="simple"/></fig>
+<p>SGB failure: Ultrasound-confirmed absence of solution spread superficial to the longus colli muscle (<xref ref-type="fig" rid="pone.0339677.g002">Fig 2A</xref>-<xref ref-type="fig" rid="pone.0339677.g002">2B</xref>) immediately post-injection, or no clinical signs of sympathetic blockade (e.g., no skin warming of the ipsilateral upper extremity) within 15 min.</p>
+<fig id="pone.0339677.g002" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0339677.g002</object-id><label>Fig 2</label><caption><title>Ultrasound-guided SGB and TAPB.</title><p><bold>Notes:</bold> A and B, Sonographic image of SGB (the transverse short-axis view at the C6 level). C and D, Sonographic image of the lateral TAP block. White arrows show the subfascial spread of local anesthetics. Asterisk represents the layer of target. CA, carotid artery; IJV, internal jugular vein; PVF, prevertebral fascia; SCM, sternocleidomastoid muscle; LCo, longus colli; Thy, thyroid gland; T, anterior tubercle of C6 transverse process; EO, external oblique muscle; IO, internal oblique muscle; TA, transversus abdominis muscle; med, medial; lat, lateral.</p></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.g002" xlink:type="simple"/></fig>
+<p>TAP failure: Ultrasound-confirmed absence of solution spread in the transversus abdominis plane (<xref ref-type="fig" rid="pone.0339677.g002">Fig 2C</xref>-<xref ref-type="fig" rid="pone.0339677.g002">2D</xref>) immediately post-injection.</p>
+</sec>
+<sec id="sec008">
+<title>Randomization</title>
+<p>Eligible patients were randomly assigned (1:1:1) to three groups on the day before surgery using a computer-generated random number table and sealed envelope method, all envelopes were prepared by an independent statistician not involved in patient recruitment or outcome assessment. The three groups were: (1) SGB group: ultrasound-guided SGB combined with TAP block; (2) TAP group: ultrasound-guided TAP block alone; (3) Control group: no nerve block.</p>
+</sec>
+<sec id="sec009">
+<title>Intervention and blinding</title>
+<p>All nerve blocks were performed by a single experienced anesthesiologist with over two years of clinical practice in ultrasound-guided regional anesthesia. Blocks were administered at the end of surgery (before extubation). The SGB group received ultrasound-guided right-sided SGB using 6 mL of 1% lidocaine and bilateral TAPB with 30 mL of 0.33% ropivacaine, 15 mL per side. The TAP group received ultrasound-guided bilateral TAPB with 30 mL of 0.33% ropivacaine alone, 15 mL per side. The control group received no nerve block.</p>
+<p>Blinding was maintained as follows: (1) The anesthesiologist performing the blocks did not participate in follow-up or outcome assessment; (2) Outcome assessors (responsible for VAS scoring and data collection) were physically separated from the operating room, unaware of group allocation, and used standardized scripts for pain assessment; (3) Patients were blinded to their group allocation, being informed only that they might receive one or more regional blocks for pain relief; (4) Patient records were sealed in an envelope until the trial was completed.</p>
+</sec>
+<sec id="sec010">
+<title>General anesthesia and monitoring</title>
+<p>All patients fasted for 8 hours preoperatively without premedication. Standard monitoring included pulse oximetry, electrocardiography and noninvasive blood pressure. Anesthesia was induced with intravenous sufentanil 0.3–0.5 µg/kg, propofol 1.5–2 mg/kg and cisatracurium 0.15 mg/kg. Tracheal intubation was performed 3–5 min after induction.</p>
+<p>Anesthesia was maintained with inhalational sevoflurane and intermittent intravenous injection of sufentanil and cisatracurium. Mechanical ventilation was initiated with a tidal volume of 6-8mL/kg and the respiratory rate was adjusted to maintain the end-tidal carbon dioxide partial pressure (PetCO<sub>2</sub>) between 35 and 45 mmHg. Patients in the SGB and TAP groups received ultrasound-guided TAPB with or without SGB after the surgery, while the control group received no regional block. The endotracheal tube was extubated after recovery of spontaneous breathing, adequate tidal volume, swallowing reflex and consciousness. Anesthetic dosage was continuously adjusted to maintain a bispectral index (BIS) value between 40 and 60 and mean arterial pressure within 20% of baseline. Ephedrine was administrated if the blood pressure was more than 20% below the baseline, and atropine was administered if the heart rate was lower than 50 beats per minute.</p>
+</sec>
+<sec id="sec011">
+<title>Ultrasound-guided block procedures</title>
+<p>All blocks were performed by an experienced anesthesiologist using a high-frequency (5–10 MHz) linear ultrasound probe (Mindray M9). A 22 G sterile nerve stimulation needle (0.71 × 80 mm, B. Melsungen, Germany) was used in-plane short-axis technique. The SGB group received ultrasound-guided SGB combined with TAPB, the TAP group received ultrasound-guided TAPB.</p>
+</sec>
+<sec id="sec012">
+<title>SGB</title>
+<p>For the SGB group, a right-sided block was performed using the paratracheal, in-plane approach [<xref ref-type="bibr" rid="pone.0339677.ref015">15</xref>]. The patients were placed in the supine position with thin pads placed beneath both shoulders. After skin sterilization, the C7 level was first identified under ultrasound guidance using a lateral approach to the right interscalene space. The ultrasound probe was then slowly moved cephalad until the C6 level was identified, corresponding to the first transverse process with anterior and posterior tubercles. The needle was inserted from the lateral aspect of the neck, avoiding major nerves and vessels, until the tip reached the C6 transverse process, 6 mL of 1% lidocaine (Shiyao, China) was injected beneath the prevertebral fascia superficial to the longus colli muscle after confirming the absence of blood, gas or cerebrospinal ﬂuid during withdrawing. Vital signs were monitored throughout. Successful SGB was confirmed by doppler imaging of needle-tip placement and visualization of injected solution spreading superficial to the longus colli muscle (<xref ref-type="fig" rid="pone.0339677.g002">Fig 2A</xref>-<xref ref-type="fig" rid="pone.0339677.g002">2B</xref>).</p>
+</sec>
+<sec id="sec013">
+<title>TAPB</title>
+<p>Ultrasound-guided bilateral TAPB was performed with 30 mL of ropivacaine 0.33% (Ropivacaine, Molteni, Italy) in supine position [<xref ref-type="bibr" rid="pone.0339677.ref016">16</xref>]. For the lateral TAPB, the ultrasound probe was placed in the midaxillary line between the iliac crest and the costal margin to identify the external oblique muscle, internal oblique muscle and transversus abdominis muscle. After sterilization, the needle was inserted using an in-plane technique, when the tip reached the level of the transversus abdominis muscle plane, 15 mL of 0.33% ropivacaine was injected after confirming the absence of blood or gas during withdrawing. The same procedure was repeated on the opposite side. The appearance of a widely dispersed oval-shaped ultrasound image at the transversus abdominis muscle plane indicated a successful injection (<xref ref-type="fig" rid="pone.0339677.g002">Fig 2C</xref>-<xref ref-type="fig" rid="pone.0339677.g002">2D</xref>).</p>
+</sec>
+<sec id="sec014">
+<title>Data collection</title>
+<p>The anesthesiologist responsible for postoperative data collection was blinded to group allocation and was not present in the operating room during administration of anesthesia or performance of block. The demographic characteristics of the patients, including age, BMI, ASA, menopause, the duration of surgery and anesthesia were recorded.</p>
+<p>The day before surgery, the patients were trained to use the visual analogue scale (VAS, ranging from 0 cm [no pain] to 10 cm [worst imaginable pain]) to assess the intensity of acute postoperative pain. Meanwhile, the two main pain components after laparoscopic surgery were explained to the patients in detail. Incisional pain was defined as superficial, well-localized pain in the abdominal wall; visceral pain was defined as pain inside the abdomen, which may be deep, dull, and difficult to localize. The VAS scores for postoperative incision pain and visceral pain were evaluated at rest and movement (cough and deep breathing) respectively at 1, 3, 6, 24, and 48 hours postoperatively to capture the peak and trajectory of early postoperative pain. Each patient was supplied with a questionnaire consisting of VAS score forms. Intramuscular pethidine was administered as rescue analgesic if VAS &gt; 4, the number of doses and total amount were recorded. Other variables were also recorded, including the time of first flatulence and the incidence of postoperative nausea and vomiting (PONV).</p>
+</sec>
+<sec id="sec015">
+<title>Sample size</title>
+<p>The sample size of this study was calculated based on the visceral pain VAS scores at 6 hours postoperatively obtained from a pilot study, 20 patients were assigned to compare the SGB and TAP groups (n = 10). Using the StatBox-online statistical computing system, we compare the VAS scores of the two groups (1.5 ± 1.65 vs 2.7 ± 1.3) with a Student’s t-test. Assuming a type I error (α) of 0.05 and statistical power (1 − β) of 0.80, a sample size of 27 patients per group was required. Accounting for a potential 10% dropout rate, 30 patients per group were enrolled.</p>
+</sec>
+<sec id="sec016">
+<title>Statistical analysis</title>
+<p>All data were analyzed by SPSS 26.0 (IBM Corp., NY, USA). The normal distribution of continuous variables was assessed by the Shapiro-Wilk test, normal distribution were expressed as mean ± SD and use F-test to test for homogeneity of variances and were compared using analysis of variance (ANOVA), for all multiple hypothesis testing, a correction for multiple comparisons using the Bonferroni method was applied to control for Type Ⅰ error inflation, ensuring that significant findings across multiple time points and variables were robust and not due to chance. Non-normally distributed data are presented as median (interquartile range, IQR), with the Kruskal-Wallis H test for overall comparisons; Bonferroni-corrected Mann-Whitney U tests were used for post-hoc pairwise comparisons. Categorical variables were presented as frequencies (n, %) and analyzed using the chi-square test; Fisher’s exact test was used when expected cell frequencies were &lt;5. All tests were two-sided, and a <italic>P</italic> &lt; 0.05 was considered statistically significant.</p>
+</sec>
+</sec>
+<sec id="sec017" sec-type="results">
+<title>Results</title>
+<sec id="sec018">
+<title>Patient flow and baseline characteristics</title>
+<p>From March 9 to July 30, 2023, 97 patients were screened in our trial, 7 patients were excluded (5 with chronic abdominal pain, 2 unable to complete questionnaires). The remaining 90 patients were randomly assigned to the SGB, TAP, and control groups (n = 30 each). Seven patients were lost to follow-up, resulting in 83 patients for final analysis (<xref ref-type="fig" rid="pone.0339677.g001">Fig 1</xref>). There were no significant differences among the three groups in terms of demographic and intraoperative characteristics including age, BMI, ASA, menopause, duration of surgery, anesthesia time, fluid infusion, blood loss, and sufentanil consumption (<italic>P</italic> &gt; 0.05, <xref ref-type="table" rid="pone.0339677.t001">Table 1</xref>).</p>
+<table-wrap id="pone.0339677.t001" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0339677.t001</object-id><label>Table 1</label><caption><title>Demographic and intraoperative characteristics.</title></caption>
+<alternatives><graphic id="pone.0339677.t001g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.t001" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left">Variables</th>
+<th align="left">SGB group (n = 28)</th>
+<th align="left">TAP group (n = 28)</th>
+<th align="left">Control group (n = 27)</th>
+<th align="left"><italic>P</italic> value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Age (years)</td>
+<td align="left">49.6 ± 4.7</td>
+<td align="left">51.9 ± 5.4</td>
+<td align="left">51.1 ± 5.2</td>
+<td align="left">0.186</td>
+</tr>
+<tr>
+<td align="left">BMI (kg/m2)</td>
+<td align="left">23.0 ± 2.3</td>
+<td align="left">24.0 ± 2.2</td>
+<td align="left">24.2 ± 1.9</td>
+<td align="left">0.069</td>
+</tr>
+<tr>
+<td align="left">ASA (Ⅱ/Ⅲ, n)</td>
+<td align="left">24/4</td>
+<td align="left">21/7</td>
+<td align="left">22/5</td>
+<td align="left">0.592</td>
+</tr>
+<tr>
+<td align="left">Menopause (Yes/No, n)</td>
+<td align="left">12/18</td>
+<td align="left">18/12</td>
+<td align="left">9/16</td>
+<td align="left">0.149</td>
+</tr>
+<tr>
+<td align="left">Duration of surgery (min)</td>
+<td align="left">133.5 (68.3,159.3)</td>
+<td align="left">145 (92.5,178.8)</td>
+<td align="left">127 (105,170)</td>
+<td align="left">0.803</td>
+</tr>
+<tr>
+<td align="left">Anesthesia time (min)</td>
+<td align="left">180 (136.3,205)</td>
+<td align="left">180 (135,215)</td>
+<td align="left">180 (160,225)</td>
+<td align="left">0.778</td>
+</tr>
+<tr>
+<td align="left">Sufentanil consumption (ug)</td>
+<td align="left">45.0 (40.0,50.0)</td>
+<td align="left">50.0 (45.0,58.8)</td>
+<td align="left">50.0 (45.0,60.0)</td>
+<td align="left">0.162</td>
+</tr>
+<tr>
+<td align="left">Total fluid infusion (ml)</td>
+<td align="left">1600 (1400,1775)</td>
+<td align="left">1600 (1400,2175)</td>
+<td align="left">1600 (1600,2100)</td>
+<td align="left">0.155</td>
+</tr>
+<tr>
+<td align="left">Blood loss (ml)</td>
+<td align="left">50.0 (50.0-100.0)</td>
+<td align="left">50.0 (30.0-100.0)</td>
+<td align="left">80.0 (40.0-200.0)</td>
+<td align="left">0.577</td>
+</tr>
+</tbody>
+</table>
+</alternatives><table-wrap-foot>
+<fn id="t001fn001"><p><bold>Notes:</bold> Variables are expressed as mean ± SD, number or Median (interquartile range) as appropriated. <bold>Abbreviations:</bold> BMI, body mass index; ASA, American Society of Anesthesiology.</p></fn>
+</table-wrap-foot>
+</table-wrap>
+</sec>
+<sec id="sec019">
+<title>Postoperative pain scores</title>
+<p>The SGB group had significantly lower visceral pain VAS scores at rest and during movement compared to the TAP and control groups at 1, 3, and 6 hours postoperatively (<italic>P</italic> &lt; 0.05, <xref ref-type="fig" rid="pone.0339677.g003">Fig 3A</xref>-<xref ref-type="fig" rid="pone.0339677.g003">3B</xref>). No significant differences were observed at 24 and 48 hours (<italic>P</italic> &gt; 0.05). No significant differences in incisional pain VAS scores were detected among the three groups at any time point (<italic>P</italic> &gt; 0.05, <xref ref-type="fig" rid="pone.0339677.g003">Fig 3C</xref>-<xref ref-type="fig" rid="pone.0339677.g003">3D</xref>).</p>
+<fig id="pone.0339677.g003" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0339677.g003</object-id><label>Fig 3</label><caption><title>VAS scores for all time points.</title><p><bold>Notes: A.</bold> Visceral pain when resting. <bold>B.</bold> Visceral pain when moving. <bold>C.</bold> Incision pain when resting. <bold>D.</bold> Incision pain when moving. SGB group, SGB and lateral TAPB. TAP group, lateral TAPB. C group (control group), no nerve block. *<italic>P </italic>&lt; 0.05, SGB group vs TAP group and control group; **<italic>P</italic> &lt; 0.01, SGB group vs TAP group and control group.</p></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.g003" xlink:type="simple"/></fig>
+</sec>
+<sec id="sec020">
+<title>Postoperative analgesic consumption</title>
+<p>The percentage of patients requiring rescue analgesia was significantly lower in the SGB group compared to the TAP and control groups (14.3% vs. 32.1% and 48.1%, respectively, <italic>P</italic> &lt; 0.05), as well as a lower total dose of pethidine consumed (<italic>P</italic> &lt; 0.05, <xref ref-type="table" rid="pone.0339677.t002">Table 2</xref>).</p>
+<table-wrap id="pone.0339677.t002" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0339677.t002</object-id><label>Table 2</label><caption><title>Cumulative number of rescue analgesic and postoperative pethidine consumption.</title></caption>
+<alternatives><graphic id="pone.0339677.t002g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.t002" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left">Variables</th>
+<th align="left">SGB group (n = 28)</th>
+<th align="left">TAP group (n = 28)</th>
+<th align="left">Control group (n = 27)</th>
+<th align="left"><italic>P</italic> value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Cumulative number of rescue analgesic (n)</td>
+<td align="left"/>
+<td align="left"/>
+<td align="left"/>
+<td align="left">0.025</td>
+</tr>
+<tr>
+<td align="left">None</td>
+<td align="left">23</td>
+<td align="left">15</td>
+<td align="left">16</td>
+<td align="left"/>
+</tr>
+<tr>
+<td align="left">Once</td>
+<td align="left">4</td>
+<td align="left">8</td>
+<td align="left">11</td>
+<td align="left"/>
+</tr>
+<tr>
+<td align="left">Twice</td>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="left"/>
+</tr>
+<tr>
+<td align="left">Postoperative pethidine consumption (n)</td>
+<td align="left">4</td>
+<td align="left">9</td>
+<td align="left">13</td>
+<td align="left">0.025</td>
+</tr>
+</tbody>
+</table>
+</alternatives><table-wrap-foot>
+<fn id="t002fn001"><p><bold>Notes:</bold> Data are presented as number of patients.</p></fn>
+</table-wrap-foot>
+</table-wrap>
+</sec>
+<sec id="sec021">
+<title>Postoperative recovery outcomes</title>
+<p>No significant differences were found in postoperative recovery indicators, including PONV, first flatulence after surgery, and length of postoperative hospital stay (<italic>P </italic>&gt; 0.05, <xref ref-type="table" rid="pone.0339677.t003">Table 3</xref>). No severe complications were reported, minor complications related to SGB included transient Horner syndrome, which was observed in 2 patients and resolved spontaneously within 24 hours. No hoarseness or TAP block-related complications (e.g., peritoneal puncture, local hematoma) were observed (<italic>P</italic> &gt; 0.05, Table 3).</p>
+<table-wrap id="pone.0339677.t003" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0339677.t003</object-id><label>Table 3</label><caption><title>Incidence of complications during the first two postoperative days.</title></caption>
+<alternatives><graphic id="pone.0339677.t003g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.t003" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left">Variables</th>
+<th align="left">SGB group (n = 28)</th>
+<th align="left">TAP group (n = 28)</th>
+<th align="left">Control group (n = 27)</th>
+<th align="left"><italic>P</italic> value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">PONV (Yes/No, n)</td>
+<td align="left">16/12</td>
+<td align="left">20/8</td>
+<td align="left">21/6</td>
+<td align="left">0.238</td>
+</tr>
+<tr>
+<td align="left">First flatus after surgery (h)</td>
+<td align="left">33.0 (29.5-38.2)</td>
+<td align="left">35.5 (28.6-39.0)</td>
+<td align="left">34.0 (30.0-38.0)</td>
+<td align="left">0.856</td>
+</tr>
+<tr>
+<td align="left">Postoperative hospital stay (d)</td>
+<td align="left">6.0 (5.0-7.8)</td>
+<td align="left">6.0 (6.0-8.8)</td>
+<td align="left">6.0 (5.0-7.0)</td>
+<td align="left">0.222</td>
+</tr>
+<tr>
+<td align="left">SGB-Related complications, n (%)</td>
+<td align="left"/>
+<td align="left"/>
+<td align="left"/>
+<td align="left"/>
+</tr>
+<tr>
+<td align="left">Transient horner syndrome</td>
+<td align="left">2 (7.1)</td>
+<td align="left">0 (0)</td>
+<td align="left">0 (0)</td>
+<td align="left">0.083</td>
+</tr>
+<tr>
+<td align="left">Hoarseness</td>
+<td align="left">0 (0)</td>
+<td align="left">0 (0)</td>
+<td align="left">0 (0)</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">TAP-related complications, n (%)</td>
+<td align="left"/>
+<td align="left"/>
+<td align="left"/>
+<td align="left"/>
+</tr>
+<tr>
+<td align="left">Local hematoma</td>
+<td align="left">0 (0)</td>
+<td align="left">0 (0)</td>
+<td align="left">0 (0)</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">Peritoneal puncture</td>
+<td align="left">0 (0)</td>
+<td align="left">0 (0)</td>
+<td align="left">0 (0)</td>
+<td align="left">1.000</td>
+</tr>
+</tbody>
+</table>
+</alternatives><table-wrap-foot>
+<fn id="t003fn001"><p><bold>Notes:</bold> Data are presented as median (interquartile range) or number of patients. <bold>Abbreviations:</bold> PONV, postoperative nausea and vomiting.</p></fn>
+</table-wrap-foot>
+</table-wrap>
+</sec>
+</sec>
+<sec id="sec022" sec-type="conclusions">
+<title>Discussion</title>
+<p>In summary, our study found that ultrasound-guided SGB effectively suppresses early postoperative visceral pain and reduces analgesic consumption after laparoscopic hysterectomy, but has no effect on incisional pain.</p>
+<p>Laparoscopic hysterectomy is a minimally invasive gynecological surgery, that significantly reduces surgical trauma from the incision. Local incisional infiltration and peripheral nerve blocks further effectively alleviated incision pain of laparoscopic abdominal surgery [<xref ref-type="bibr" rid="pone.0339677.ref016">16</xref>]. However, visceral pain remains difficult to control after laparoscopic gynecological surgery [<xref ref-type="bibr" rid="pone.0339677.ref004">4</xref>]. In our study, the VAS of incision pain and visceral pain, the times and dose of rescue analgesic showed no difference between the TAP and C groups, which also indicated that incision pain is not the main problem of laparoscopic hysterectomy [<xref ref-type="bibr" rid="pone.0339677.ref017">17</xref>]. This finding is consistent with SGB’s mechanism of action that SGB modulates sympathetic pathways involved in visceral pain, not the somatic sensory nerves. Previous studies have reported that SGB can play an analgesic role in early postoperative pain [<xref ref-type="bibr" rid="pone.0339677.ref005">5</xref>,<xref ref-type="bibr" rid="pone.0339677.ref018">18</xref>]. Those results confirmed that SGB could effectively inhibit visceral pain for 24 hours after laparoscopic hysterectomy and reduce the consumption of postoperative analgesics, this is consistent with our study. The reduced postoperative pethidine consumption in the SGB group underscores its clinical relevance, as opioid-sparing effects are strongly associated with decreased risks of opioid-related adverse events (e.g., respiratory depression, ileus) and enhanced recovery [<xref ref-type="bibr" rid="pone.0339677.ref019">19</xref>]. Although the cumulative rescue analgesia count showed only a marginal trend (<italic>P </italic>= 0.098), this may reflect insufficient statistical power due to the small sample size or variability in individual pain thresholds. Notably, the lack of significant differences in shoulder or incisional pain across groups further supports the specificity of SGB in targeting visceral pain mechanisms rather than generalized analgesia.</p>
+<p>Laparoscopic surgery trauma and CO<sub>2</sub> pneumoperitoneum can lead to increased sympathetic nerve activity, imbalance of sympathetic and parasympathetic branches of autonomic nervous system, and increased NE synthesis and secretion of postganglionic neurons of sympathetic nerve and adrenergic nerve endings in brain, resulting in stress-related internal environment disorder and pain [<xref ref-type="bibr" rid="pone.0339677.ref009">9</xref>]. Postoperative visceral pain may originate from pneumoperitoneum-induced diaphragmatic irritation and CO₂ retention, as observed in 71% of laparoscopic cases, and the operation of internal tissues during surgery may lead to local tissue damage and trigger inflammation [<xref ref-type="bibr" rid="pone.0339677.ref020">20</xref>]. Various inflammatory mediators such as cytokines, growth factors, and prostaglandins are released at the site of tissue injury, which can activate the surrounding sensory nerve endings and cause pain [<xref ref-type="bibr" rid="pone.0339677.ref011">11</xref>]. In addition, surgical procedures may affect the blood supply to internal organs, leading to ischemia. Ischemia can not only directly damage tissues, but also activate pain receptors by releasing pain sensitizing substances such as lactic acid and ATP [<xref ref-type="bibr" rid="pone.0339677.ref021">21</xref>]. Visceral pain is associated with autonomic nerve instability, elevated inflammatory factors and ischemia of local visceral organs.</p>
+<p>To our knowledge, this is the first RCT evaluating SGB in gynecologic laparoscopy, extending previous cholecystectomy findings [<xref ref-type="bibr" rid="pone.0339677.ref011">11</xref>]. SGB inhibits the excitability of the sympathetic-adrenal system. Blood NE levels decrease significantly after SGB in surgical patients but not in healthy individuals, indicating that SGB primarily modulates pathologically increased sympathetic activity to restore autonomic balance [<xref ref-type="bibr" rid="pone.0339677.ref022">22</xref>,<xref ref-type="bibr" rid="pone.0339677.ref023">23</xref>]. This is why our trial chose to perform ultrasound guided SGB at the end of surgery. Zhu et al. [<xref ref-type="bibr" rid="pone.0339677.ref013">13</xref>] reported that SGB promoted the recovery of gastrointestinal function in patients undergoing laparoscopic colorectal surgery, alleviated stress response, and reduced the levels of NE, cortisol, interleukin-6 (IL-6) and C-reactive protein (CRP). Our study demonstrates that SGB significantly reduces early postoperative visceral pain and opioid requirements compared to TAP block and conventional analgesia in patients undergoing gynecological surgery. The superior analgesic efficacy of SGB at 1, 3, and 6 hours postoperatively, both at rest and during movement, aligns with the hypothesis that visceral pain is predominantly mediated by sympathetic pathways [<xref ref-type="bibr" rid="pone.0339677.ref021">21</xref>]. By modulating sympathetic tone and attenuating nociceptive signaling from visceral afferents, SGB may disrupt central sensitization and reduce pain intensity during the critical early postoperative period [<xref ref-type="bibr" rid="pone.0339677.ref015">15</xref>,<xref ref-type="bibr" rid="pone.0339677.ref021">21</xref>]. In contrast, TAP block primarily targets somatic pain pathways via blockade of abdominal wall sensory nerves, which explains its limited efficacy in alleviating visceral pain [<xref ref-type="bibr" rid="pone.0339677.ref024">24</xref>]. These findings are consistent with prior studies which emphasized the distinct neuroanatomical pathways of visceral versus somatic pain [<xref ref-type="bibr" rid="pone.0339677.ref025">25</xref>].</p>
+<p>There were no significant differences in postoperative incisional pain among the three groups, this may be the incisional pain was not the main complaint after the minimally invasive gynecological surgery. Choi et al. [<xref ref-type="bibr" rid="pone.0339677.ref003">3</xref>] also reported visceral pain dominated over incisional pain constantly for 72 hours after total laparoscopic hysterectomy. The overall incidence of PONV was high in three groups, but the incidence of postoperative PONV was lower in the SGB group (57.1%) compared to the TAP group (71.4%) and the control group (77.8%), primarily attributed to reduced postoperative opioid utilization and diminished opioid-related adverse effects, this may be attributed to several risk factors in this population, including female gender, laparoscopic gynecological surgery, use of volatile anesthesia, and non-smoking status [<xref ref-type="bibr" rid="pone.0339677.ref026">26</xref>]. Furthermore, a substantial body of literature has documented the beneficial impact of SGB on gastrointestinal tract recovery in surgical patients [<xref ref-type="bibr" rid="pone.0339677.ref013">13</xref>,<xref ref-type="bibr" rid="pone.0339677.ref027">27</xref>]. Therefore, we hypothesize that SGB might mitigate PONV. Although not statistically significant, the time to first flatus was numerically shorter in the SGB group. SGB could reduce opioid requirements, but its limited impact on recovery metrics highlights the need for multimodal strategies integrating pain management, early enteral nutrition, and physiotherapy to optimize postoperative rehabilitation, further rigorous clinical trials are warranted to substantiate these findings [<xref ref-type="bibr" rid="pone.0339677.ref028">28</xref>].</p>
+<p>We considered that Horner syndrome, which can be caused by SGB, might increase the discomfort of patients, so a low concentration and small volume of lidocaine were used. Due to the influence of anatomical factors, the right stellate ganglion block is less likely to damage other organs and blood vessels, so we choose the right side block [<xref ref-type="bibr" rid="pone.0339677.ref029">29</xref>].</p>
+<sec id="sec023">
+<title>Limitations</title>
+<p>The study has several limitations. First, the single-center and modest sample size may limit generalizability, particularly regarding rare complications, and the results require confirmation by further research. Second, the absence of inflammatory biomarker analysis precludes definitive mechanistic conclusions, future biomarker-embedded studies should verify this immunomodulatory pathway in gynecologic populations. Third, The 48-hour follow-up window precludes evaluation of long-term outcomes like chronic postsurgical pain (CPSP) development. Future multicenter trials with larger cohorts and extended follow-up are needed to validate these findings and explore SGB’s potential synergistic effects with enhanced recovery after surgery (ERAS) protocols.</p>
+</sec>
+<sec id="sec024" sec-type="conclusions">
+<title>Conclusion</title>
+<p>In summary, our study found that ultrasound-guided SGB could effectively suppress visceral pain in the early postoperative period of laparoscopic hysterectomy and reduce the postoperative analgesic consumption. However, SGB has no effects on incisional pain after surgery.</p>
+</sec>
+</sec>
+<sec id="sec025" sec-type="supplementary-material">
+<title>Supporting information</title>
+<supplementary-material id="pone.0339677.s001" mimetype="application/pdf" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.s001" xlink:type="simple">
+<label>S1 File</label>
+<caption>
+<title>Clinical trial protocol.</title>
+<p>(PDF)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pone.0339677.s002" mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.s002" xlink:type="simple">
+<label>S2 File</label>
+<caption>
+<title>CONSORT checklist.</title>
+<p>(DOCX)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pone.0339677.s003" mimetype="application/vnd.ms-excel" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.s003" xlink:type="simple">
+<label>S3 File</label>
+<caption>
+<title>Data of study.</title>
+<p>(XLS)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pone.0339677.s004" mimetype="application/pdf" position="float" xlink:href="info:doi/10.1371/journal.pone.0339677.s004" xlink:type="simple">
+<label>S4 File</label>
+<caption>
+<title>Clinical trial protocol-chinese.</title>
+<p>(PDF)</p>
+</caption>
+</supplementary-material>
+</sec>
+</body>
+<back>
+<ack>
+<p>We thank all the patients and researchers who participated in this study.</p>
+</ack>
+<ref-list>
+<title>References</title>
+<ref id="pone.0339677.ref001"><label>1</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Plante</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Mahner</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Sebastianelli</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Bessette</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Lambaudie</surname> <given-names>E</given-names></name>, <name name-style="western"><surname>Guyon</surname> <given-names>F</given-names></name>, <etal>et al</etal>. <article-title>Minimally invasive compared to open surgery in patients with low-risk cervical cancer following simple hysterectomy: an exploratory analysis from the Gynegologic Cancer Intergroup/Canadian Cancer Trials Group CX.5/SHAPE trial</article-title>. <source>Int J Gynecol Cancer</source>. <year>2025</year>;<volume>35</volume>(<issue>1</issue>):<fpage>100001</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.ijgc.2024.100001" xlink:type="simple">10.1016/j.ijgc.2024.100001</ext-link></comment> <object-id pub-id-type="pmid">39878257</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref002"><label>2</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Qi</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Xiao</surname> <given-names>W</given-names></name>, <name name-style="western"><surname>Yang</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Wang</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Zhou</surname> <given-names>L</given-names></name>, <name name-style="western"><surname>Wan</surname> <given-names>A</given-names></name>, <etal>et al</etal>. <article-title>Pre-incisional preventive precise multimodal analgesia may enhance the rehabilitation process of acute postoperative pain following total laparoscopic hysterectomy: a randomized controlled trial</article-title>. <source>Pain Physician</source>. <year>2023</year>;<volume>26</volume>(<issue>3</issue>):E123–<lpage>31</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.36076/ppj.2023.26.e123" xlink:type="simple">10.36076/ppj.2023.26.e123</ext-link></comment> <object-id pub-id-type="pmid">37192230</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref003"><label>3</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Choi</surname> <given-names>JB</given-names></name>, <name name-style="western"><surname>Kang</surname> <given-names>K</given-names></name>, <name name-style="western"><surname>Song</surname> <given-names>MK</given-names></name>, <name name-style="western"><surname>Seok</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Kim</surname> <given-names>YH</given-names></name>, <name name-style="western"><surname>Kim</surname> <given-names>JE</given-names></name>. <article-title>Pain characteristics after total laparoscopic hysterectomy</article-title>. <source>Int J Med Sci</source>. <year>2016</year>;<volume>13</volume>(<issue>8</issue>):<fpage>562</fpage>–<lpage>8</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.7150/ijms.15875" xlink:type="simple">10.7150/ijms.15875</ext-link></comment> <object-id pub-id-type="pmid">27499688</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref004"><label>4</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Yang</surname> <given-names>G-W</given-names></name>, <name name-style="western"><surname>Cheng</surname> <given-names>H</given-names></name>, <name name-style="western"><surname>Song</surname> <given-names>X-Y</given-names></name>, <name name-style="western"><surname>Yang</surname> <given-names>Y-F</given-names></name>, <name name-style="western"><surname>Liu</surname> <given-names>H</given-names></name>, <name name-style="western"><surname>Ji</surname> <given-names>F-H</given-names></name>, <etal>et al</etal>. <article-title>Effect of oxycodone-based multimodal analgesia on visceral pain after major laparoscopic gastrointestinal surgery: a randomised, double-blind, controlled trial</article-title>. <source>Drug Des Devel Ther</source>. <year>2024</year>;<volume>18</volume>:<fpage>1799</fpage>–<lpage>810</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.2147/DDDT.S464518" xlink:type="simple">10.2147/DDDT.S464518</ext-link></comment> <object-id pub-id-type="pmid">38828025</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref005"><label>5</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Raina</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Costello</surname> <given-names>C</given-names></name>, <name name-style="western"><surname>Suarthana</surname> <given-names>E</given-names></name>, <name name-style="western"><surname>Tulandi</surname> <given-names>T</given-names></name>. <article-title>Postoperative discharge opioid consumption, leftover, and disposal after obstetric and gynecologic procedures: a systematic review</article-title>. <source>J Minim Invasive Gynecol</source>. <year>2022</year>;<volume>29</volume>(<issue>7</issue>):823-831.e7. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.jmig.2022.04.017" xlink:type="simple">10.1016/j.jmig.2022.04.017</ext-link></comment> <object-id pub-id-type="pmid">35513302</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref006"><label>6</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Covotta</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Claroni</surname> <given-names>C</given-names></name>, <name name-style="western"><surname>Costantini</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Torregiani</surname> <given-names>G</given-names></name>, <name name-style="western"><surname>Pelagalli</surname> <given-names>L</given-names></name>, <name name-style="western"><surname>Zinilli</surname> <given-names>A</given-names></name>, <etal>et al</etal>. <article-title>The effects of ultrasound-guided transversus abdominis plane block on acute and chronic postsurgical pain after robotic partial nephrectomy: a prospective randomized clinical trial</article-title>. <source>Pain Med</source>. <year>2020</year>;<volume>21</volume>(<issue>2</issue>):<fpage>378</fpage>–<lpage>86</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1093/pm/pnz214" xlink:type="simple">10.1093/pm/pnz214</ext-link></comment> <object-id pub-id-type="pmid">31504875</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref007"><label>7</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Wu</surname> <given-names>Q</given-names></name>, <name name-style="western"><surname>Zhou</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Sun</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Li</surname> <given-names>H</given-names></name>, <name name-style="western"><surname>Cao</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Shou</surname> <given-names>H</given-names></name>. <article-title>Clinical analysis of acute postoperative pain after total laparoscopic hysterectomy for adenomyosis and uterine fibroids - a prospective observational study</article-title>. <source>Ann Med</source>. <year>2023</year>;<volume>55</volume>(<issue>2</issue>):<fpage>2281510</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1080/07853890.2023.2281510" xlink:type="simple">10.1080/07853890.2023.2281510</ext-link></comment> <object-id pub-id-type="pmid">37994446</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref008"><label>8</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Vorenkamp</surname> <given-names>K</given-names></name>, <name name-style="western"><surname>Yi</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Kemp</surname> <given-names>A</given-names></name>. <article-title>Sympathetic Blocks for Visceral Pain</article-title>. <source>Phys Med Rehabil Clin N Am</source>. <year>2022</year>;<volume>33</volume>(<issue>2</issue>):<fpage>475</fpage>–<lpage>87</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.pmr.2022.01.010" xlink:type="simple">10.1016/j.pmr.2022.01.010</ext-link></comment> <object-id pub-id-type="pmid">35526980</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref009"><label>9</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Rahimzadeh</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Mahmoudi</surname> <given-names>K</given-names></name>, <name name-style="western"><surname>Khodaverdi</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Faiz</surname> <given-names>SHR</given-names></name>. <article-title>Effects of ultrasound guided ganglion stellate blockade on intraoperative and postoperative hemodynamic responses in laparoscopic gynecologic surgery</article-title>. <source>Wideochir Inne Tech Maloinwazyjne</source>. <year>2020</year>;<volume>15</volume>(<issue>2</issue>):<fpage>351</fpage>–<lpage>7</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.5114/wiitm.2019.89653" xlink:type="simple">10.5114/wiitm.2019.89653</ext-link></comment> <object-id pub-id-type="pmid">32489497</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref010"><label>10</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Methods In Medicine</surname> <given-names>CAM</given-names></name>. <article-title>Retracted: effect of stellate ganglion block combined with lidocaine at different concentrations for preemptive analgesia on postoperative pain relief and adverse reactions of patients undergoing laparoscopic cholecystectomy</article-title>. <source>Comput Math Methods Med</source>. <year>2022</year>;<volume>2022</volume>:<fpage>9804601</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1155/2022/9804601" xlink:type="simple">10.1155/2022/9804601</ext-link></comment> <object-id pub-id-type="pmid">36466555</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref011"><label>11</label><mixed-citation publication-type="book" xlink:type="simple"><name name-style="western"><surname>Li</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Loshak</surname> <given-names>H</given-names></name>. <source>Stellate ganglion block for the treatment of post-traumatic stress disorder, depression, and anxiety</source>. <publisher-loc>Ottawa (ON)</publisher-loc>: <publisher-name>Canadian Agency for Drugs and Technologies in Health</publisher-name>; <year>2021</year>.</mixed-citation></ref>
+<ref id="pone.0339677.ref012"><label>12</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Zhu</surname> <given-names>G</given-names></name>, <name name-style="western"><surname>Kang</surname> <given-names>Z</given-names></name>, <name name-style="western"><surname>Chen</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Zeng</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Su</surname> <given-names>C</given-names></name>, <name name-style="western"><surname>Li</surname> <given-names>S</given-names></name>. <article-title>Ultrasound-guided stellate ganglion block alleviates stress responses and promotes recovery of gastrointestinal function in patients</article-title>. <source>Dig Liver Dis</source>. <year>2021</year>;<volume>53</volume>(<issue>5</issue>):<fpage>581</fpage>–<lpage>6</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.dld.2020.11.028" xlink:type="simple">10.1016/j.dld.2020.11.028</ext-link></comment> <object-id pub-id-type="pmid">33303314</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref013"><label>13</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Ren</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Zhang</surname> <given-names>Z</given-names></name>, <name name-style="western"><surname>Li</surname> <given-names>H-P</given-names></name>, <name name-style="western"><surname>Zhang</surname> <given-names>P-J</given-names></name>, <name name-style="western"><surname>Duo</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Kong</surname> <given-names>H</given-names></name>. <article-title>A comprehensive overview of the stellate ganglion block throughout the past three decades: a bibliometric analysis</article-title>. <source>Pain Physician</source>. <year>2024</year>;<volume>27</volume>(<issue>5</issue>):E597–<lpage>610</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.36076/ppj.2024.7.e597" xlink:type="simple">10.36076/ppj.2024.7.e597</ext-link></comment> <object-id pub-id-type="pmid">39087973</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref014"><label>14</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Xiang</surname> <given-names>X-B</given-names></name>, <name name-style="western"><surname>Wu</surname> <given-names>Y-Y</given-names></name>, <name name-style="western"><surname>Fang</surname> <given-names>Z</given-names></name>, <name name-style="western"><surname>Tang</surname> <given-names>X</given-names></name>, <name name-style="western"><surname>Wu</surname> <given-names>Y-L</given-names></name>, <name name-style="western"><surname>Zhou</surname> <given-names>J</given-names></name>, <etal>et al</etal>. <article-title>Stellate ganglion block for visceral pain in elderly patients undergoing video-assisted thoracoscopic lung cancer surgery: a randomized, controlled trial</article-title>. <source>Int J Surg</source>. <year>2024</year>;<volume>110</volume>(<issue>11</issue>):<fpage>6996</fpage>–<lpage>7002</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1097/JS9.0000000000001867" xlink:type="simple">10.1097/JS9.0000000000001867</ext-link></comment> <object-id pub-id-type="pmid">38913440</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref015"><label>15</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Pinarbaşi</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Altiparmak</surname> <given-names>B</given-names></name>, <name name-style="western"><surname>Korkmaz Toker</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Pirinççi</surname> <given-names>F</given-names></name>, <name name-style="western"><surname>Uğur</surname> <given-names>B</given-names></name>. <article-title>Ultrasound-guided transversalis fascia plane block or transversus abdominis plane block for recovery after caesarean section: a randomised clinical trial</article-title>. <source>Eur J Anaesthesiol</source>. <year>2024</year>;<volume>41</volume>(<issue>10</issue>):<fpage>769</fpage>–<lpage>78</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1097/EJA.0000000000002041" xlink:type="simple">10.1097/EJA.0000000000002041</ext-link></comment> <object-id pub-id-type="pmid">39039833</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref016"><label>16</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Wageh</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Sultan</surname> <given-names>MA</given-names></name>, <name name-style="western"><surname>Moawad</surname> <given-names>HES</given-names></name>, <name name-style="western"><surname>Mokbel</surname> <given-names>EM</given-names></name>, <name name-style="western"><surname>Alseoudy</surname> <given-names>MM</given-names></name>. <article-title>Ultrasound guided quadratus lumborum block versus interlaminar epidural block for analgesia in pediatric abdominal surgery: a randomized controlled trial</article-title>. <source>BMC Anesthesiol</source>. <year>2024</year>;<volume>24</volume>(<issue>1</issue>):<fpage>180</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1186/s12871-024-02548-z" xlink:type="simple">10.1186/s12871-024-02548-z</ext-link></comment> <object-id pub-id-type="pmid">38773360</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref017"><label>17</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Schnabel</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Carstensen</surname> <given-names>VA</given-names></name>, <name name-style="western"><surname>Lohmöller</surname> <given-names>K</given-names></name>, <name name-style="western"><surname>Vilz</surname> <given-names>TO</given-names></name>, <name name-style="western"><surname>Willis</surname> <given-names>MA</given-names></name>, <name name-style="western"><surname>Weibel</surname> <given-names>S</given-names></name>, <etal>et al</etal>. <article-title>Perioperative pain management with regional analgesia techniques for visceral cancer surgery: a systematic review and meta-analysis</article-title>. <source>J Clin Anesth</source>. <year>2024</year>;<volume>95</volume>:<fpage>111438</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.jclinane.2024.111438" xlink:type="simple">10.1016/j.jclinane.2024.111438</ext-link></comment> <object-id pub-id-type="pmid">38484505</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref018"><label>18</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Hirai</surname> <given-names>R</given-names></name>, <name name-style="western"><surname>Uesawa</surname> <given-names>Y</given-names></name>. <article-title>Analysis of opioid-related adverse events in Japan using FAERS database</article-title>. <source>Pharmaceuticals (Basel)</source>. <year>2023</year>;<volume>16</volume>(<issue>11</issue>):<fpage>1541</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.3390/ph16111541" xlink:type="simple">10.3390/ph16111541</ext-link></comment> <object-id pub-id-type="pmid">38004407</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref019"><label>19</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Ruiz-Tovar</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Garcia</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Ferrigni</surname> <given-names>C</given-names></name>, <name name-style="western"><surname>Duran</surname> <given-names>M</given-names></name>. <article-title>Application of Vitamin E acetate on staple lines and anastomoses of Roux-en-Y gastric bypass: impact on postoperative pain and acute phase reactants</article-title>. <source>Obes Surg</source>. <year>2020</year>;<volume>30</volume>(<issue>8</issue>):<fpage>2988</fpage>–<lpage>93</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1007/s11695-020-04635-9" xlink:type="simple">10.1007/s11695-020-04635-9</ext-link></comment> <object-id pub-id-type="pmid">32342266</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref020"><label>20</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Yin</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Li</surname> <given-names>Z-H</given-names></name>, <name name-style="western"><surname>Wang</surname> <given-names>C</given-names></name>, <name name-style="western"><surname>Li</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Zhang</surname> <given-names>H</given-names></name>, <name name-style="western"><surname>Du</surname> <given-names>H-B</given-names></name>, <etal>et al</etal>. <article-title>Stellate ganglion blockade repairs intestinal mucosal barrier through suppression of endoplasmic reticulum stress following hemorrhagic shock</article-title>. <source>Int J Med Sci</source>. <year>2020</year>;<volume>17</volume>(<issue>14</issue>):<fpage>2147</fpage>–<lpage>54</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.7150/ijms.47662" xlink:type="simple">10.7150/ijms.47662</ext-link></comment> <object-id pub-id-type="pmid">32922175</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref021"><label>21</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Lee</surname> <given-names>M-C</given-names></name>, <name name-style="western"><surname>Bartuska</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Chen</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Kim</surname> <given-names>RK</given-names></name>, <name name-style="western"><surname>Jaradeh</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Mihm</surname> <given-names>F</given-names></name>. <article-title>Stellate ganglion block catheter for paroxysmal sympathetic hyperactivity: calming the “neuro-storm”</article-title>. <source>Reg Anesth Pain Med</source>. <year>2023</year>;<volume>48</volume>(<issue>10</issue>):<fpage>522</fpage>–<lpage>5</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1136/rapm-2023-104399" xlink:type="simple">10.1136/rapm-2023-104399</ext-link></comment> <object-id pub-id-type="pmid">37230754</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref022"><label>22</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Geng</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Wang</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Zhang</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Song</surname> <given-names>W</given-names></name>, <name name-style="western"><surname>Zhu</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Chen</surname> <given-names>J</given-names></name>, <etal>et al</etal>. <article-title>The effect of a combined modified pectoral and stellate ganglion block on stress and inflammatory response in patients undergoing modified radical mastectomy</article-title>. <source>Int J Breast Cancer</source>. <year>2022</year>;<volume>2022</volume>:<fpage>3359130</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1155/2022/3359130" xlink:type="simple">10.1155/2022/3359130</ext-link></comment> <object-id pub-id-type="pmid">35707316</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref023"><label>23</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Lee</surname> <given-names>M-C</given-names></name>, <name name-style="western"><surname>Bartuska</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Chen</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Kim</surname> <given-names>RK</given-names></name>, <name name-style="western"><surname>Jaradeh</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Mihm</surname> <given-names>F</given-names></name>. <article-title>Stellate ganglion block catheter for paroxysmal sympathetic hyperactivity: calming the “neuro-storm”</article-title>. <source>Reg Anesth Pain Med</source>. <year>2023</year>;<volume>48</volume>(<issue>10</issue>):<fpage>522</fpage>–<lpage>5</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1136/rapm-2023-104399" xlink:type="simple">10.1136/rapm-2023-104399</ext-link></comment> <object-id pub-id-type="pmid">37230754</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref024"><label>24</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Boezaart</surname> <given-names>AP</given-names></name>, <name name-style="western"><surname>Smith</surname> <given-names>CR</given-names></name>, <name name-style="western"><surname>Chembrovich</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Zasimovich</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Server</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Morgan</surname> <given-names>G</given-names></name>, <etal>et al</etal>. <article-title>Visceral versus somatic pain: an educational review of anatomy and clinical implications</article-title>. <source>Reg Anesth Pain Med</source>. <year>2021</year>;<volume>46</volume>(<issue>7</issue>):<fpage>629</fpage>–<lpage>36</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1136/rapm-2020-102084" xlink:type="simple">10.1136/rapm-2020-102084</ext-link></comment> <object-id pub-id-type="pmid">34145074</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref025"><label>25</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Kienbaum</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Schaefer</surname> <given-names>MS</given-names></name>, <name name-style="western"><surname>Weibel</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Schlesinger</surname> <given-names>T</given-names></name>, <name name-style="western"><surname>Meybohm</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Eberhart</surname> <given-names>LH</given-names></name>, <etal>et al</etal>. <article-title>Update on PONV-What is new in prophylaxis and treatment of postoperative nausea and vomiting? : summary of recent consensus recommendations and Cochrane reviews on prophylaxis and treatment of postoperative nausea and vomiting</article-title>. <source>Anaesthesist</source>. <year>2022</year>;<volume>71</volume>(<issue>2</issue>):<fpage>123</fpage>–<lpage>8</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1007/s00101-021-01045-z" xlink:type="simple">10.1007/s00101-021-01045-z</ext-link></comment> <object-id pub-id-type="pmid">34596699</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref026"><label>26</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Yang</surname> <given-names>X</given-names></name>, <name name-style="western"><surname>Wu</surname> <given-names>Q</given-names></name>, <name name-style="western"><surname>Wang</surname> <given-names>H</given-names></name>, <name name-style="western"><surname>Zhang</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Peng</surname> <given-names>X</given-names></name>, <name name-style="western"><surname>Chen</surname> <given-names>L</given-names></name>. <article-title>Effects of ultrasound-guided stellate ganglion block on postoperative quality of recovery in patients undergoing breast cancer surgery: a randomized controlled clinical trial</article-title>. <source>J Healthc Eng</source>. <year>2022</year>;<volume>2022</volume>:<fpage>7628183</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1155/2022/7628183" xlink:type="simple">10.1155/2022/7628183</ext-link></comment> <object-id pub-id-type="pmid">36046011</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref027"><label>27</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Gan</surname> <given-names>TJ</given-names></name>, <name name-style="western"><surname>Belani</surname> <given-names>KG</given-names></name>, <name name-style="western"><surname>Bergese</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Chung</surname> <given-names>F</given-names></name>, <name name-style="western"><surname>Diemunsch</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Habib</surname> <given-names>AS</given-names></name>, <etal>et al</etal>. <article-title>Fourth consensus guidelines for the management of postoperative nausea and vomiting</article-title>. <source>Anesth Analg</source>. <year>2020</year>;<volume>131</volume>(<issue>2</issue>):<fpage>411</fpage>–<lpage>48</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1213/ANE.0000000000004833" xlink:type="simple">10.1213/ANE.0000000000004833</ext-link></comment> <object-id pub-id-type="pmid">32467512</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref028"><label>28</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Fan</surname> <given-names>Z</given-names></name>, <name name-style="western"><surname>Zheng</surname> <given-names>X</given-names></name>, <name name-style="western"><surname>Li</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>Chen</surname> <given-names>H</given-names></name>, <name name-style="western"><surname>Li</surname> <given-names>L</given-names></name>. <article-title>Comparison of lidocaine and ropivacaine stellate ganglion blockade in treating upper limb postherpetic neuralgia</article-title>. <source>Medicine (Baltimore)</source>. <year>2022</year>;<volume>101</volume>(<issue>23</issue>):e29394. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1097/MD.0000000000029394" xlink:type="simple">10.1097/MD.0000000000029394</ext-link></comment> <object-id pub-id-type="pmid">35687777</object-id></mixed-citation></ref>
+<ref id="pone.0339677.ref029"><label>29</label><mixed-citation publication-type="journal" xlink:type="simple">Jiang W, Yang L, Zheng X. A prospective randomized clinical trial on the differential effect of left versus right stellate ganglion block on perioperative stress response. BMC Anesthesiol. 2025;25(1):380. https://doi.org/10.1186/s12871-025-03272-y <object-id pub-id-type="pmid">40739539</object-id></mixed-citation></ref>
+</ref-list>
+</back>
+</article>

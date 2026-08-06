@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "structured_result.schema.json",
+  "title": "StructuredResult",
+  "description": "M1 结构化抽取的产物，是 M2–M7 全部模块的输入。null = 未抽取到（我们的缺口）；\"not_reported\" = 论文确实没写（论文的问题）。二者不得混用。",
+  "type": "object",
+  "required": ["meta", "objective", "methods", "key_data", "conclusion", "evaluation_matrix", "gaps"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "title": {"type": "string"},
+        "journal": {"type": ["string", "null"]},
+        "year": {"type": ["integer", "null"]},
+        "doi": {"type": ["string", "null"]},
+        "article_type": {"type": ["string", "null"]},
+        "input_format": {"enum": ["jats_xml", "pdf", "plain_text"]},
+        "page_count": {"type": ["integer", "null"]}
+      }
+    },
+
+    "objective": {
+      "type": "object",
+      "required": ["research_question", "study_type", "primary_endpoint"],
+      "properties": {
+        "research_question": {"type": ["string", "null"]},
+        "hypothesis": {"type": ["string", "null"]},
+        "study_type": {
+          "enum": ["in_vitro", "in_vivo_animal", "clinical_trial", "observational",
+                   "meta_analysis", "computational", "mixed", null],
+          "description": "路由字段：M3 用它决定是否查动物必要性，M4 用它选统计规范表，M6 用它决定是否要伦理批件"
+        },
+        "primary_endpoint": {"type": ["string", "null"]},
+        "secondary_endpoints": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"$ref": "finding.schema.json#/$defs/evidence"}
+      }
+    },
+
+    "methods": {
+      "type": "object",
+      "required": ["subjects", "groups", "control_type", "randomization", "blinding",
+                   "assays", "stats_methods", "sample_size_justification"],
+      "properties": {
+        "subjects": {"type": ["string", "null"]},
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "n": {"type": ["integer", "null"]},
+              "intervention": {"type": ["string", "null"]},
+              "dose": {"type": ["string", "null"]},
+              "route": {"type": ["string", "null"]},
+              "duration": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "control_type": {"enum": ["vehicle", "sham", "placebo", "untreated", "historical", "none", "not_reported", null]},
+        "randomization": {"type": ["string", "null"]},
+        "blinding": {"enum": ["none", "single", "double", "not_reported", null]},
+        "assays": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "purpose": {"type": ["string", "null"]},
+              "reference_citation": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "stats_methods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "test": {"type": "string"},
+              "applied_to": {"type": ["string", "null"]},
+              "software": {"type": ["string", "null"]},
+              "correction": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "sample_size_justification": {"type": ["string", "null"]}
+      }
+    },
+
+    "key_data": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/data_point"}
+    },
+
+    "conclusion": {
+      "type": "object",
+      "properties": {
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["statement", "supported_by"],
+            "properties": {
+              "statement": {"type": "string"},
+              "scope": {"type": ["string", "null"]},
+              "supported_by": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "key_data.id 或 locator。为空数组即触发 M7 unsupported_claim"
+              }
+            }
+          }
+        },
+        "limitations_stated": {"type": "array", "items": {"type": "string"}},
+        "generalization_scope": {"type": ["string", "null"]}
+      }
+    },
+
+    "evaluation_matrix": {
+      "type": "object",
+      "description": "供 M2–M7 快速查表，避免每个模块重读全文",
+      "properties": {
+        "has_animal_experiment": {"type": ["boolean", "null"]},
+        "has_human_subjects": {"type": ["boolean", "null"]},
+        "has_ethics_statement": {"type": ["boolean", "null"]},
+        "has_ml_model": {"type": ["boolean", "null"]},
+        "has_randomization": {"type": ["boolean", "null"]},
+        "has_blinding": {"type": ["boolean", "null"]},
+        "has_power_analysis": {"type": ["boolean", "null"]},
+        "has_multiple_comparison_correction": {"type": ["boolean", "null"]},
+        "min_group_n": {"type": ["integer", "null"]},
+        "has_data_availability": {"type": ["boolean", "null"]},
+        "has_conflict_of_interest": {"type": ["boolean", "null"]},
+        "figure_count": {"type": "integer"},
+        "table_count": {"type": "integer"},
+        "all_figures_cited_in_text": {"type": ["boolean", "null"]}
+      }
+    },
+
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "reason"],
+        "properties": {
+          "field": {"type": "string", "description": "点号路径，如 methods.sample_size_justification"},
+          "reason": {"enum": ["not_found_in_text", "ambiguous", "conflicting_values", "parse_failed"]},
+          "searched": {"type": "array", "items": {"type": "string"}},
+          "impact": {"type": "string", "description": "哪个下游模块因此受阻"}
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "data_point": {
+      "type": "object",
+      "required": ["id", "metric", "value", "source", "evidence", "confidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^KD-[0-9]{3}$"},
+        "metric": {"type": "string"},
+        "value": {"type": ["number", "string", "null"], "description": "figure_pixel 来源时必须为区间字符串，如 \"12–15\""},
+        "unit": {"type": ["string", "null"]},
+        "ci": {
+          "type": ["object", "null"],
+          "properties": {
+            "type": {"enum": ["95CI", "SD", "SEM", "IQR", "range"]},
+            "low": {"type": ["number", "null"]},
+            "high": {"type": ["number", "null"]}
+          }
+        },
+        "n": {"type": ["integer", "null"]},
+        "replicate_type": {"enum": ["biological", "technical", "not_reported", null]},
+        "group": {"type": ["string", "null"]},
+        "p_value": {"type": ["number", "string", "null"]},
+        "test": {"type": ["string", "null"]},
+        "source": {
+          "enum": ["text", "table", "figure_caption", "figure_axis", "figure_pixel"],
+          "description": "figure_pixel 强制 confidence=low 且 value 为区间"
+        },
+        "evidence": {"$ref": "finding.schema.json#/$defs/evidence"},
+        "confidence": {"enum": ["high", "medium", "low"]}
+      }
+    }
+  }
+}

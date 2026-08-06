@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.3 20210610//EN" "http://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd">
+<article article-type="research-article" dtd-version="1.3" xml:lang="en" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink">
+<processing-meta>
+<custom-meta-group content-type="composition">
+<custom-meta specific-use="newgen" xlink:href="https://www.newgen.co/">
+<meta-name>Composition Vendor</meta-name>
+<meta-value>Newgen KnowledgeWorks (P) Ltd.</meta-value>
+</custom-meta>
+</custom-meta-group>
+</processing-meta>
+<front>
+<journal-meta>
+<journal-id journal-id-type="nlm-ta">PLoS One</journal-id>
+<journal-id journal-id-type="publisher-id">plos</journal-id>
+<journal-id journal-id-type="pmc">plosone</journal-id>
+<journal-title-group>
+<journal-title>PLOS One</journal-title>
+</journal-title-group>
+<issn pub-type="epub">1932-6203</issn>
+<publisher>
+<publisher-name>Public Library of Science</publisher-name>
+<publisher-loc>San Francisco, CA USA</publisher-loc>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="doi">10.1371/journal.pone.0337215</article-id>
+<article-id pub-id-type="publisher-id">PONE-D-25-20117</article-id>
+<article-categories>
+<subj-group subj-group-type="heading">
+<subject>Research Article</subject>
+</subj-group>
+<subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Anatomy</subject><subj-group><subject>Musculoskeletal system</subject><subj-group><subject>Skeleton</subject><subj-group><subject>Bone</subject><subj-group><subject>Growth plate</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Anatomy</subject><subj-group><subject>Musculoskeletal system</subject><subj-group><subject>Skeleton</subject><subj-group><subject>Bone</subject><subj-group><subject>Growth plate</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Anatomy</subject><subj-group><subject>Biological tissue</subject><subj-group><subject>Connective tissue</subject><subj-group><subject>Bone</subject><subj-group><subject>Growth plate</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Anatomy</subject><subj-group><subject>Biological tissue</subject><subj-group><subject>Connective tissue</subject><subj-group><subject>Bone</subject><subj-group><subject>Growth plate</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Physiology</subject><subj-group><subject>Physiological parameters</subject><subj-group><subject>Body weight</subject><subj-group><subject>Obesity</subject></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Endocrinology</subject><subj-group><subject>Diabetic endocrinology</subject><subj-group><subject>Insulin</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Biochemistry</subject><subj-group><subject>Hormones</subject><subj-group><subject>Insulin</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Biochemistry</subject><subj-group><subject>Hormones</subject><subj-group><subject>Estrogens</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Physiology</subject><subj-group><subject>Physiological parameters</subject><subj-group><subject>Body weight</subject><subj-group><subject>Obesity</subject><subj-group><subject>Childhood obesity</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Nutrition</subject><subj-group><subject>Diet</subject></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Nutrition</subject><subj-group><subject>Diet</subject></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Anatomy</subject><subj-group><subject>Biological tissue</subject><subj-group><subject>Connective tissue</subject><subj-group><subject>Cartilage</subject><subj-group><subject>Chondrocytes</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Anatomy</subject><subj-group><subject>Biological tissue</subject><subj-group><subject>Connective tissue</subject><subj-group><subject>Cartilage</subject><subj-group><subject>Chondrocytes</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Cell biology</subject><subj-group><subject>Cellular types</subject><subj-group><subject>Animal cells</subject><subj-group><subject>Connective tissue cells</subject><subj-group><subject>Chondrocytes</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Anatomy</subject><subj-group><subject>Biological tissue</subject><subj-group><subject>Connective tissue</subject><subj-group><subject>Connective tissue cells</subject><subj-group><subject>Chondrocytes</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Anatomy</subject><subj-group><subject>Biological tissue</subject><subj-group><subject>Connective tissue</subject><subj-group><subject>Connective tissue cells</subject><subj-group><subject>Chondrocytes</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Clinical medicine</subject><subj-group><subject>Signs and symptoms</subject><subj-group><subject>Hyperinsulinemia</subject></subj-group></subj-group></subj-group></subj-group></article-categories>
+<title-group>
+<article-title>Investigating insulin’s role in regulating local aromatase in growth plate development</article-title>
+<alt-title alt-title-type="running-head">Insulin’s role in regulating local aromatase in growth plate</alt-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Hu</surname>
+<given-names>Sicui</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+<xref ref-type="aff" rid="aff002"><sup>2</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Xue</surname>
+<given-names>MinMin</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/data-curation/">Data curation</role>
+<xref ref-type="aff" rid="aff003"><sup>3</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Dong</surname>
+<given-names>Yao</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/project-administration/">Project administration</role>
+<xref ref-type="aff" rid="aff004"><sup>4</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Li</surname>
+<given-names>Cheng</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<xref ref-type="aff" rid="aff002"><sup>2</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Qiao</surname>
+<given-names>Lingyan</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<xref ref-type="aff" rid="aff002"><sup>2</sup></xref>
+</contrib>
+<contrib contrib-type="author" corresp="yes" xlink:type="simple">
+<name name-style="western">
+<surname>Zheng</surname>
+<given-names>Rongxiu</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/supervision/">Supervision</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+<xref ref-type="corresp" rid="cor001">*</xref>
+</contrib>
+</contrib-group>
+<aff id="aff001"><label>1</label> <addr-line>Department of Pediatrics, General Hospital of Tianjin Medical University, Tianjin, China</addr-line></aff>
+<aff id="aff002"><label>2</label> <addr-line>Department of Paediatric Endocrinology and Metabolism, Qingdao Women and Children’s Hospital, Qingdao, China</addr-line></aff>
+<aff id="aff003"><label>3</label> <addr-line>Health Medicine Department, 983 Hospital of Joint Logistics Support Force, PLA, Tianjin, China</addr-line></aff>
+<aff id="aff004"><label>4</label> <addr-line>Department of Pharmacy, Qingdao Shinan District People’s Hospital, Qingdao, China</addr-line></aff>
+<contrib-group>
+<contrib contrib-type="editor" xlink:type="simple">
+<name name-style="western">
+<surname>Ogunlakin</surname>
+<given-names>Akingbolabo Daniel</given-names>
+</name>
+<role>Editor</role>
+<xref ref-type="aff" rid="edit1"/></contrib>
+</contrib-group>
+<aff id="edit1"><addr-line>Bowen University, NIGERIA</addr-line></aff>
+<author-notes>
+<corresp id="cor001">* E-mail: <email xlink:type="simple">rzheng@tmu.edu.cn</email></corresp>
+<fn fn-type="conflict" id="coi001">
+<p>The authors have declared that no competing interests exist.</p>
+</fn>
+</author-notes>
+<pub-date pub-type="epub"><day>2</day><month>12</month><year>2025</year></pub-date>
+<pub-date pub-type="collection"><year>2025</year></pub-date>
+<volume>20</volume>
+<issue>12</issue>
+<elocation-id>e0337215</elocation-id>
+<history>
+<date date-type="received"><day>16</day><month>4</month><year>2025</year></date>
+<date date-type="accepted"><day>5</day><month>11</month><year>2025</year></date>
+</history>
+<permissions>
+<copyright-year>2025</copyright-year>
+<copyright-holder>Hu et al</copyright-holder>
+<license xlink:href="http://creativecommons.org/licenses/by/4.0/" xlink:type="simple">
+<license-p>This is an open access article distributed under the terms of the <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/licenses/by/4.0/" xlink:type="simple">Creative Commons Attribution License</ext-link>, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p></license>
+</permissions>
+<self-uri content-type="pdf" xlink:href="info:doi/10.1371/journal.pone.0337215"/>
+<abstract>
+<sec id="sec001">
+<title>Introduction</title>
+<p>Obesity-associated hyperinsulinemia is hypothesized to disrupt linear growth trajectories, though the mechanisms remain unclear. This study investigates these mechanisms using a high-fat diet-induced rat model.</p>
+</sec>
+<sec id="sec002">
+<title>Methods</title>
+<p>Twelve healthy 1-week-old Sprague-Dawley rats (60–80 g) were randomized into two groups: a control group fed a standard diet and an obese group fed a high-fat diet. After 6 weeks of dietary intervention, weekly body weight and naso-anal length were recorded. At the end of the study, all rats were euthanized, and blood samples were collected for further analysis. Serum biochemical parameters, including insulin levels, were measured by ELISA. Tibiae and humeri were harvested for bone length measurement. Growth plates were isolated for histological analysis, immunohistochemistry, radioimmunoassay, PCR, and Western blotting.</p>
+</sec>
+<sec id="sec003">
+<title>Results</title>
+<p>Higher serum insulin levels were observed in the obese group than in the control group (36.46 ± 1.69 mU/L, vs 22.96 ± 1.99 mU/L, p &lt; 0.01). The obese group showed higher growth plate length (426.63 ± 6.28 μm, vs 331.13 ± 28.93 μm, p &lt; 0.01), especially in proliferative and hypertrophic areas than the control group. Immunohistochemistry analysis revealed positive staining for brownish-yellow granules in these regions. Higher aromatase levels and insulin receptor (IR) expression were observed in the growth plates, primarily in the hypertrophic region. Immunohistochemical staining indicated that aromatase expression was primarily localized to the hypertrophic zone in obese rats.Moreover, the aromatase activity in the obese group was significantly higher than that in the control group (47.29 ± 0.87 U, vs 41.12 ± 1.50 U,p ＜ 0.01). The relative mRNA expression of CYP19A1 and insulin receptors (IR) in the growth plates of obese rats was significantly higher than that in the control group (0.0039 ± 0.0026-, vs 0.0001 ± 0.00025, p &lt; 0.01 and 0.15- ± 0.07, vs 0.03 ± 0.02, p &lt; 0.01). Western blot analysis revealed higher expression of CYP19A1 and IR in the growth plates of obese rats (1.81 ± 0.12-, vs 1.02 ± 0.04-, p &lt; 0.01 and 2.05 ± 0.34, vs 1.04 ± 0.13-, p &lt; 0.01).</p>
+</sec>
+<sec id="sec004">
+<title>Conclusion</title>
+<p>In this study, we found a significant increase in the expression of insulin receptors, indicating that insulin signaling regulates aromatase expression, thereby affecting epiphyseal growth plate development. However, the molecular mechanisms by which insulin receptors regulate aromatase expression remain unclear.</p>
+</sec>
+</abstract>
+<funding-group>
+<funding-statement>The author(s) received no specific funding for this work.</funding-statement>
+</funding-group>
+<counts>
+<fig-count count="4"/>
+<table-count count="6"/>
+<page-count count="10"/>
+</counts>
+<custom-meta-group>
+<custom-meta id="data-availability">
+<meta-name>Data Availability</meta-name>
+<meta-value>All relevant data are within the manuscript and its <xref ref-type="sec" rid="sec022">Supporting information</xref> files.</meta-value>
+</custom-meta>
+</custom-meta-group>
+</article-meta>
+</front>
+<body>
+<sec id="sec006" sec-type="intro">
+<title>Introduction</title>
+<p>Childhood obesity has emerged as a global issue, linked to lifetime adverse health consequences, with its prevalence increasing sharply in recent years [<xref ref-type="bibr" rid="pone.0337215.ref001">1</xref>]. Obese children often exhibit taller stature due to accelerated BA maturation, which may ultimately limit their optimal adult height<sup>2</sup>. Mounting evidence has reported that childhood obesity is often associated with an improper increase in growth rate and BA, leading to premature maturation of epiphyseal growth plates [<xref ref-type="bibr" rid="pone.0337215.ref002">2</xref>–<xref ref-type="bibr" rid="pone.0337215.ref004">4</xref>]. The influence of obesity on advanced BA is associated with factors such as BMI or total body fat mass, increased levels of estrogen, insulin-like growth factor-1 (IGF-1), etc [<xref ref-type="bibr" rid="pone.0337215.ref003">3</xref>].</p>
+<p>Skeletal development is often considered an important factor during childhood and adolescence, which is influenced by complex hormonal interactions including estrogen, androgen, thyroidal and growth hormones. Among them, estrogen is reported to play a crucial role in skeletal homeostasis, regulating the senescence of the growth plate, via estrogen receptor-α (ER-α) [<xref ref-type="bibr" rid="pone.0337215.ref003">3</xref>,<xref ref-type="bibr" rid="pone.0337215.ref005">5</xref>]. Mounting evidence suggests that sexual steroids (estrogen or androgens) which have a dual effect on growth, stimulate rapid growth and are also responsible for the fusion of growth plates [<xref ref-type="bibr" rid="pone.0337215.ref005">5</xref>–<xref ref-type="bibr" rid="pone.0337215.ref007">7</xref>]. Notably, a study reported that estrogen can lead to irreversible depletion of progenitor cells in the resting zone, thereby accelerating epiphyseal fusion [<xref ref-type="bibr" rid="pone.0337215.ref008">8</xref>,<xref ref-type="bibr" rid="pone.0337215.ref009">9</xref>].Aromatase (cytochrome P450 19A1), a cytochrome P450 enzyme facilitating the conversion of androgens to estrogens and is expressed in various tissues including the ovary, testis, adipose tissue and others [<xref ref-type="bibr" rid="pone.0337215.ref010">10</xref>]. Its activity is primarily influenced by insulin. A study by Gibb et al reported that inhibiting aromatase reduced insulin sensitivity in humans [<xref ref-type="bibr" rid="pone.0337215.ref011">11</xref>,<xref ref-type="bibr" rid="pone.0337215.ref012">12</xref>], implying the relationship between insulin and aromatase. The expression of aromatase in epiphyseal chondrocytes was found to be upregulated during growth plate maturation in rats, suggesting its significant role in this process.</p>
+<p>Prepubertal obese children were reported to have higher serum insulin levels, which were strongly correlated with their increased height [<xref ref-type="bibr" rid="pone.0337215.ref013">13</xref>]. Although the above studies describing an association between insulin resistance and height growth in humans, they did not demonstrate the interlink among insulin resistance, hyperinsulinemia and accelerated growth. Children in their prepubertal and pubertal stages have higher sexual steroids (estrogen or androgens), which have a dual effect on growth:stimulating rapid growth and promoting growth plate fusion [<xref ref-type="bibr" rid="pone.0337215.ref009">9</xref>,<xref ref-type="bibr" rid="pone.0337215.ref014">14</xref>]. For instance, a study reported that estrogen causes irreversible depletion of progenitor cells in the resting zone, thus accelerating growth plate fusion [<xref ref-type="bibr" rid="pone.0337215.ref007">7</xref>]. To explore the mechanistic relationship between insulin, aromatase and obesity-linked accelerated growth, we aim to investigate whether the binding of insulin to its receptor, while promoting linear bone growth, leads to advanced bone age through upregulation of aromatase expression.</p>
+</sec>
+<sec id="sec007" sec-type="materials|methods">
+<title>Materials and methods</title>
+<sec id="sec008">
+<title>Animals</title>
+<p>For the in vivo study, 1-week-old, healthy Spargue-Dawley (SD) rats (n = 12), weighing 60-80g were procured from the Animal center laboratory of China Three Gorges university, and were housed in standard laboratory conditions (22 ± 2℃, light: dark cycle of 12:12 h; Relative humidity: 30–70%) with standard pellet diet. After one week of adaptive feeding, all the rats were marked (via ear-tagging) and were randomized into an obese group (n = 6) and a control group (n = 6).The obese group received a high-fat diet (HFD) whereas the control group received a standard rodent diet.The control group received a standard rodent diet (4% fat, 54.6% carbohydrate, 18.2% protein; 2.9 kcal/g; Proton Bio-Technology Co., Ltd., China), while the high-fat diet (HFD) group was fed a lard-based purified diet (60% fat, 20% carbohydrate, 20% protein;5.25kcal/g; Proton Bio-Technology Co., Ltd., China).Whole-body length and weight were measured weekly, during the 6-week induction period and after its completion. Following the 6-week induction period, all the animals were euthanized using the AVMA-approved carbon dioxide asphyxiation procedure. Blood was collected to assess the serum insulin levels using ELISA, whereas bones such as the tibia and humerus were harvested to measure bone length. Growth plates were isolated and stained with hematoxylin and eosin (Wuhan Baiqiandu Biotechnology Co., Ltd., China) for analysis. All the samples were cryopreserved for PCR analysis, immunohistochemistry, radioimmunoassay and western blot analysis.</p>
+</sec>
+<sec id="sec009">
+<title>Ethics statement</title>
+<p>The study was approved by the Ethics Committee of the General Hospital of Tianjin Medical University(Approval no.IRB2025-DW-30).</p>
+</sec>
+<sec id="sec010">
+<title>Immunohistopathological analysis</title>
+<p>Histological evaluations were performed using an upright light microscope (Nikon, Japan) on pathological sections prepared with a microtome (Leica Instruments Co., Ltd., Shanghai, China).. At the end of the study, tibia and humerus were isolated and dissected to harvest growth plates. Three 5–7 mm-thick longitudinal sections were obtained from rat tibiae, which were deparaffinized in xylene and rehydrated in graded ethanol. Sections were incubated in citric acid antigen retrieval the buffer (pH 6) and heated for 5 min to prevent excessive evaporation of buffer. Slides were washed three times with PBS (pH 7.4) and shaken for 5 min. Subsequently, the slides were incubated with 3% H<sub>2</sub>O<sub>2</sub> in the dark for 25 min and washed three times with PBS (pH 7.4) for 5 min each. After pre-incubation with 3% blocking serum for 30 min at room temperature (RT), sections were incubated for 30 min at RT with monoclonal antibodies against rabbit CYP19A1 (1:100) and IR (1:100).The secondary antibody was an HRP-conjugated anti-mouse antibody (SeraCare, Beijing, China), applied for 30 min at a dilution of 1:500. The slides were washed three times with PBS for 5 minutes at RT and slightly dried. The sections were visualized with a chromogenic agent for 5 minutes and mounted.</p>
+</sec>
+<sec id="sec011">
+<title>Assessment of serum insulin levels</title>
+<p>Serum was collected and stored at −70℃ before analysis. Insulin levels were determined by ultrasensitive rat-specific ELISA (Enzyme-free Biotechnology, China) following the instructions present in the ELISA kit. Briefly, all the reagents were left for 30 minutes to equilibrate to room temperature (i.e.,18–25℃). Standard reagents were prepared by serially diluting (1:20) the reagents with distilled water. All the wells of a 96-well plate were filled with 50 μL of the appropriate liquid according to their respective wells (i.e., blank wells, standard wells, and samples). Standard reagents were prepared by serial 5-fold dilution (starting from 1:20) with distilled water. Each well received 50 μL of the diluted standards.. The microplate was firmly sealed and incubated at 37℃ for 30 min. After incubation, the microplate was thoroughly washed 5 times and 50 μL of chromogenic agent A and chromogenic agent B were added. The microplate was gently shaken and mixed well for 10 minutes at 37℃ in a dark room. After 10 minutes, 50 μL of stop reagent was added to terminate the reaction and the absorbance was measured at 450nm using the microplate reader (USCNK, Wuhan, Hubei).</p>
+</sec>
+<sec id="sec012">
+<title>Assessment of growth plate aromatase activity</title>
+<p>Assessments of aromatase in both the obese and control groups were performed as described previously [<xref ref-type="bibr" rid="pone.0337215.ref015">15</xref>]. Briefly, sufficient quantity of growth plate tissue was weighed, mixed with 3x L-1 PBS (pH 7.4, 0.1 M.), homogenized and centrifuged at 10000 × g for 15 minutes at 4 °C. Further, 250 μL of the supernatant was collected.Testosterone (2 μg/mL) and NADPH (3 mg/mL) were added, and the mixture was incubated at 37 °C for 30 minutes. The reaction was terminated in a cold bath. The mixture was then centrifuged at 10000 × g for 30 minutes, and estradiol in the supernatant was estimated by radioimmunoassay and protein content was determined by Bradford assay. The enzyme activity is expressed as the amount of estradiol produced per milligram of tissue protein per hour (pg·mg-¹·h-¹).</p>
+</sec>
+<sec id="sec013">
+<title>Quantitative real-time PCR</title>
+<p>At the end of the culture period, total RNA was extracted from chondrocytes using Quantagene Q225 Real-Time PCR Detection System (Kubo Technology, Beijing, China). The recovered RNA was reverse-transcribed into cDNA. All primers (listed in <xref ref-type="table" rid="pone.0337215.t001">Table 1</xref>) were designed by the NCBI website and synthesized by Wuhan Tianyi Huayu Gene Technology Co., Ltd.1 μg of total RNA and 1 μL of oligo (dT)18 primer were incubated for 5 min at 25℃, followed by incubation for 30 min at 42℃ in the presence of reverse transcriptase. Real-time quantitative PCR was carried out using the same system in a final volume of 25 μL containing 1 μL cDNA, 12.5 μL 2XSYBR Green master mix (Shanghai,Yeasen BioTechnologies) and 0.1μM primers in deoxyribonuclease-free water. The qRT-PCR cycling process was conducted as follows: initial denaturation at 95℃ for 30 s followed by 40 cycles of denaturation at 95℃ for 15 s, annealing at 60℃ for 30 s and further by single cycle of melting curve at 65–105℃.</p>
+<table-wrap id="pone.0337215.t001" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.t001</object-id><label>Table 1</label><caption><title>Sequence of the primers used in this study.</title></caption>
+<alternatives><graphic id="pone.0337215.t001g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.t001" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left">Primer name</th>
+<th align="left">Sequence (5’ to 3’)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">R-GAPDH-F</td>
+<td align="left">AGACAGCCGCATCTTCTTGT</td>
+</tr>
+<tr>
+<td align="left">R-GAPDH-R</td>
+<td align="left">CTTGCCGTGGGTAGAGTCAT</td>
+</tr>
+<tr>
+<td align="left">R-CYP19A1-F</td>
+<td align="left">GACGAGATCGAAATTCTGGTGG</td>
+</tr>
+<tr>
+<td align="left">R-CYP19A1-R</td>
+<td align="left">CAGGTCTCCACGTCTCTCAG</td>
+</tr>
+<tr>
+<td align="left">R-IR-F</td>
+<td align="left">CCTTCTCGCGGAGTATGTCC</td>
+</tr>
+<tr>
+<td align="left">R-IR-R</td>
+<td align="left">ATTCCCGGGCACACCTCTC</td>
+</tr>
+</tbody>
+</table>
+</alternatives><table-wrap-foot>
+<fn id="t001fn001"><p>CYP19A1, Cytochrome P450 Family 19 Subfamily A Member 1; F, forward; GAPDH,Glyceraldehyde-3-phosphate dehydrogenase; IR, insulin receptors; R, reverse.</p></fn>
+</table-wrap-foot>
+</table-wrap>
+</sec>
+<sec id="sec014">
+<title>Western Blot analysis</title>
+<p>Cultured adherent chondrocytes were washed twice with TBS buffer, lysed with appropriate total cell protein extraction solution, centrifuged at 13,000 g at 4℃ for 5 min, and the supernatant was collected. To evaluate the expression of aromatase and insulin receptors in cultured chondrocytes, whole-cell lysates were solubilized with 1% sodium dodecyl sulfate (SDS) sample buffer and electrophoresed on a 4–15% SDS-PAGE gel. At the end of the in vivo study, proteins were extracted from the tibial growth plates, solubilized with 1% SDS sample buffer, and electrophoresed on a 4–15% SDS-PAGE gel. Proteins were transferred onto a nitrocellulose membrane and probed with monoclonal anti-mouse IR antibody. The blots were developed using a horseradish peroxidase-conjugated polyclonal IgG, and images were captured using the ECL SensiCapture image analysis system on the Peiqing JS-1070P Fluorescent &amp; Chemiluminescence Gel Imaging System (JS-1070P, Shanghai Peiqing Technology Co., Ltd).</p>
+</sec>
+<sec id="sec015">
+<title>Statistical analysis</title>
+<p>The experimental results are presented as mean ± standard error of the mean (mean ± SEM). Statistical analysis was performed using SPSS V16.0 software. Independent samples were compared using Student’s t-test, and comparisons among multiple groups were conducted using one-way ANOVA or two-way ANOVA. A p-value &lt; 0.05 was considered statistically significant. The Shapiro-Wilk test was used to verify the normality assumption of the data, and the Levene test was employed to assess the homogeneity of variances of the data.</p>
+</sec>
+</sec>
+<sec id="sec016" sec-type="results">
+<title>Results</title>
+<sec id="sec017">
+<title>Alterations in morphological characteristics,growth plate aromatase activity and serum insulin levels</title>
+<p>At week 6 of induction, the mean body weight and length were almost similar. By the end of the 6-week induction period, HFD-induced rats showed significant improvement in body weight and length compared to control rats. The results of growth plates and auxological analysis of different areas of growth plates are depicted in <xref ref-type="table" rid="pone.0337215.t002">Table 2</xref>. The height or length of growth plates was significantly greater in obese rats than in control rats. In addition, the proliferative and hypertrophy areas showed significant improvement, while the changes in the rest zone were minimal (<xref ref-type="fig" rid="pone.0337215.g001">Fig 1</xref>). Elevated levels of growth plate aromatase activity were prominent in the obese group compared to control group (<xref ref-type="table" rid="pone.0337215.t003">Table 3</xref>.The results of the comparison of serum insulin in obese and control groups are presented in <xref ref-type="table" rid="pone.0337215.t004">Table 4</xref>. Higher levels of serum insulin were observed in the obese group compared to the control group (P &lt; 0.01).</p>
+<table-wrap id="pone.0337215.t002" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.t002</object-id><label>Table 2</label><caption><title>Measurement of growth plate and analysis of growth zones.</title></caption>
+<alternatives><graphic id="pone.0337215.t002g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.t002" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left">Growth plates and zones</th>
+<th align="left">Obese group (μm)</th>
+<th align="left">Control group (μm)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Growth plates</td>
+<td align="left">426.63 ± 6.28**</td>
+<td align="left">331.13 ± 28.93</td>
+</tr>
+<tr>
+<td align="left">Rest zone</td>
+<td align="left">98.21 ± 9.14</td>
+<td align="left">94.43 ± 27.45</td>
+</tr>
+<tr>
+<td align="left">Proliferative zone</td>
+<td align="left">181.06 ± 23.39*</td>
+<td align="left">120.43 ± 19.98</td>
+</tr>
+<tr>
+<td align="left">Hypertrophy area</td>
+<td align="left">147.36 ± 20.94</td>
+<td align="left">116.27 ± 21.11</td>
+</tr>
+</tbody>
+</table>
+</alternatives><table-wrap-foot>
+<fn id="t002fn001"><p>*p &lt; 0.05, **p &lt; 0.01.</p></fn>
+</table-wrap-foot>
+</table-wrap>
+<table-wrap id="pone.0337215.t003" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.t003</object-id><label>Table 3</label><caption><title>Comparison of growth plate aromatase activity between obese and control.</title></caption>
+<alternatives><graphic id="pone.0337215.t003g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.t003" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left">Groups</th>
+<th align="left">Aromatase activity (U)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Control group</td>
+<td align="left">41.1161 ± 1.50235</td>
+</tr>
+<tr>
+<td align="left">Obese group</td>
+<td align="left">47.2885 ± 0.86523**</td>
+</tr>
+</tbody>
+</table>
+</alternatives><table-wrap-foot>
+<fn id="t003fn001"><p>*p &lt; 0.05, **p &lt; 0.01.</p></fn>
+</table-wrap-foot>
+</table-wrap>
+<table-wrap id="pone.0337215.t004" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.t004</object-id><label>Table 4</label><caption><title>Comparison of serum insulin levels between obese and control.</title></caption>
+<alternatives><graphic id="pone.0337215.t004g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.t004" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left">Groups</th>
+<th align="left">INS concentration (mU/L)<sup>#</sup></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Control group</td>
+<td align="left">22.96 ± 1.98</td>
+</tr>
+<tr>
+<td align="left">Obese group</td>
+<td align="left">36.46 ± 1.68**</td>
+</tr>
+</tbody>
+</table>
+</alternatives></table-wrap>
+<fig id="pone.0337215.g001" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.g001</object-id><label>Fig 1</label><caption><title>Histology of chondrocytes (A) based on their growth plates and zones (B) control group and (C) obese group. Magnification 200x.</title></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.g001" xlink:type="simple"/></fig>
+</sec>
+<sec id="sec018">
+<title>Immunohistopathological analysis</title>
+<p>Immunohistochemistry results revealed that compared with the control group, the growth plates of obese rats showed higher expression of aromatase and strong positive insulin receptor expression in hypertrophic regions (<xref ref-type="fig" rid="pone.0337215.g002">Figure 2</xref>).This was further confirmed by a highly significant difference in average OD values in the growth plates of the obese group compared to the control group.</p>
+<fig id="pone.0337215.g002" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.g002</object-id><label>Fig 2</label><caption><title>Immunohistochemistry results of aromatase (a.control group,b.obese group) and insulin receptor (c. control group,d.obese group) in SD rats. Magnification of 200x (scale – 50μm).</title></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.g002" xlink:type="simple"/></fig>
+</sec>
+<sec id="sec019">
+<title>qPCR and western blot analysis of growth plates for detecting the expression of CYP19A1 and insulin receptors</title>
+<p>The total RNA purity at OD260/280 was 1.88–1.97 and OD260/230 was 1.94–2, indicating that purity was in the standard range. The solubility curves of endogenous reference and target genes showed a good unimodal peak with good specificity.The relative mRNA expression of CYP19A1 and insulin receptors (IR) in the growth plates of obese rats was significantly higher than that in the control group (<xref ref-type="table" rid="pone.0337215.t005">Table 5</xref> and <xref ref-type="fig" rid="pone.0337215.g003">Fig 3</xref>). All data from the western blot were presented and analyzed after chemiphotometer exposure. The results showed that significantly higher expression of aromatase and insulin receptors was observed in the growth plates of the obese group compared with the control group (<xref ref-type="table" rid="pone.0337215.t006">Table 6</xref> and <xref ref-type="fig" rid="pone.0337215.g004">Fig 4</xref>).</p>
+<table-wrap id="pone.0337215.t005" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.t005</object-id><label>Table 5</label><caption><title>The results of qPCR for CYP19A1 and IR in two groups.</title></caption>
+<alternatives><graphic id="pone.0337215.t005g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.t005" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left"/>
+<th align="left">Obese group</th>
+<th align="left">Control group</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">CYP19A1</td>
+<td align="left">1.8062 ± 0.12176**</td>
+<td align="left">1.0181 ± 0.0436</td>
+</tr>
+<tr>
+<td align="left">IR</td>
+<td align="left">2.0466 ± 0.33507**</td>
+<td align="left">1.0387 ± 0.1314</td>
+</tr>
+</tbody>
+</table>
+</alternatives></table-wrap>
+<table-wrap id="pone.0337215.t006" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.t006</object-id><label>Table 6</label><caption><title>The results of Western blot analysis for CYP19A1 and IR in t two groups.</title></caption>
+<alternatives><graphic id="pone.0337215.t006g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.t006" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left"/>
+<th align="left">Obese group</th>
+<th align="left">Control group</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">CYP19A1</td>
+<td align="left">0.4544 ± 0.13336*</td>
+<td align="left">0.1857 ± 0.07214</td>
+</tr>
+<tr>
+<td align="left">IR</td>
+<td align="left">0.4069 ± 0.08919*</td>
+<td align="left">0.1697 ± 0.07768</td>
+</tr>
+</tbody>
+</table>
+</alternatives></table-wrap>
+<fig id="pone.0337215.g003" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.g003</object-id><label>Fig 3</label><caption><title>(A) Amplication and melt curves (B) Relative mRNA expression of IR and CYP19A1.</title></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.g003" xlink:type="simple"/></fig>
+<fig id="pone.0337215.g004" position="float"><object-id pub-id-type="doi">10.1371/journal.pone.0337215.g004</object-id><label>Fig 4</label><caption><title>(A) electrophoresis results (B) quantification of IR and CYP19A1.</title></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.g004" xlink:type="simple"/></fig>
+</sec>
+</sec>
+<sec id="sec020" sec-type="conclusions">
+<title>Discussion</title>
+<p>Clinical observations have revealed that obese children often exhibit advanced bone age, which consequently impairs their adult height potential. To investigate the underlying mechanism, this study established an obese animal model. While analyzing serum insulin levels, we focused on examining the effects of obesity on the expression of aromatase and insulin receptors in the epiphyseal growth plate.This study established a high-fat diet (HFD)-induced obese rat model to investigate the mechanistic links between obesity-related hyperinsulinemia, growth plate development, and local aromatase expression. The key findings—elevated serum insulin, increased growth plate length (especially in proliferative and hypertrophic zones), and upregulated insulin receptor (IR) and aromatase (CYP19A1) expression in the growth plate—provide critical insights into how obesity may accelerate bone maturation and potentially compromise adult height, while also highlighting unresolved questions for future research.</p>
+<p>Consistent with clinical observations in obese children, HFD-fed rats exhibited accelerated linear growth (reflected by greater body length and tibial/humeral bone length) and advanced growth plate maturation at 6 weeks post-induction. Notably, the growth plate in obese rats was significantly longer (426.63 ± 6.28 μm vs. 331.13 ± 28.93 μm in controls, p &lt; 0.01), with the most prominent changes in the proliferative (181.06 ± 23.39 μm vs. 120.43 ± 19.98 μm, p &lt; 0.01) and hypertrophic zones (147.36 ± 20.94 μm vs. 116.27 ± 21.11 μm). This regional specificity aligns with prior studies indicating that the proliferative zone drives longitudinal bone growth via chondrocyte cloning, while the hypertrophic zone mediates terminal differentiation and matrix mineralization—two processes central to growth plate senescence and fusion [<xref ref-type="bibr" rid="pone.0337215.ref016">16</xref>–<xref ref-type="bibr" rid="pone.0337215.ref018">18</xref>]. The minimal change in the resting zone (98.21 ± 9.14 μm vs. 94.43 ± 27.45 μm) is particularly intriguing: as the “progenitor reserve” of the growth plate, the resting zone’s stability suggests that obesity may initially amplify the activity of existing proliferative/hypertrophic chondrocytes rather than depleting stem-like cells—a pattern distinct from estrogen-induced irreversible resting zone exhaustion reported in rabbits [<xref ref-type="bibr" rid="pone.0337215.ref019">19</xref>,<xref ref-type="bibr" rid="pone.0337215.ref020">20</xref>]. This difference may reflect the early stage of obesity in our model (6 weeks) or species-specific responses to metabolic stress.A critical novel observation was the coordinated upregulation of serum insulin, growth plate IR, and aromatase in obese rats. Serum insulin levels were 58.8% higher in the obese group (36.46 ± 1.69 mU/L vs. 22.97 ± 1.99 mU/L, p &lt; 0.01), while IR expression (at both mRNA and protein levels) was significantly elevated in the growth plate—with immunohistochemical staining localizing IR to the hypertrophic zone. Concurrently, aromatase activity (47.29 ± 0.87 U vs. 41.12 ± 1.50 U, p &lt; 0.01) and CYP19A1 expression were markedly increased, and aromatase was also concentrated in the hypertrophic zone. These data support a working model where obesity-induced hyperinsulinemia activates IR-mediated signaling in growth plate chondrocytes, which in turn upregulates aromatase—ultimately accelerating estrogen synthesis locally. This aligns with prior reports that insulin can stimulate aromatase activity in human endometrial stroma [<xref ref-type="bibr" rid="pone.0337215.ref012">12</xref>] and that aromatase expression in rat growth plates increases with sexual maturation [<xref ref-type="bibr" rid="pone.0337215.ref021">21</xref>], but extends these findings to link metabolic (insulin) and endocrine (estrogen) pathways in obesity-related bone maturation.</p>
+<p>The colocalization of IR and aromatase in the hypertrophic zone further suggests a cell-specific regulatory axis. Hypertrophic chondrocytes are not only responsible for matrix calcification but also secrete factors like vascular endothelial growth factor (VEGF) that mediate vascular invasion and bone replacement [<xref ref-type="bibr" rid="pone.0337215.ref022">22</xref>,<xref ref-type="bibr" rid="pone.0337215.ref023">23</xref>]. By upregulating aromatase in these cells, insulin may enhance local estrogen production to promote terminal chondrocyte differentiation and matrix mineralization—two steps that precede growth plate fusion. This is consistent with clinical studies showing that obese children with hyperinsulinemia have advanced bone age [<xref ref-type="bibr" rid="pone.0337215.ref024">24</xref>,<xref ref-type="bibr" rid="pone.0337215.ref025">25</xref>] and that estrogen is the primary driver of growth plate closure in both sexes [<xref ref-type="bibr" rid="pone.0337215.ref026">26</xref>]. However, our study cannot definitively confirm that insulin-induced aromatase upregulation is the direct cause of accelerated growth plate maturation: future studies using aromatase inhibitors (e.g., letrozole) or IR antagonists in obese rats would be needed to establish causality.</p>
+<p>HFD-induced obese rats exhibited persistent hyperinsulinemia, and insulin resistance along with increased aromatase levels is associated with accelerated growth plates growth. We observed a significant increase in serum insulin levels and insulin receptor expression, indicating that insulin signaling regulates aromatase expression, thereby affecting growth plate development. However, the molecular mechanisms by which insulin receptors modulate aromatase expression remain unclear.This study only investigated growth plate changes in the early stage of obesity (6 weeks) and did not track growth plate closure after puberty. Additionally, the upstream-downstream relationship between insulin and aromatase has not been verified through knockout or inhibitor experiments. Future studies should combine cell models (e.g., primary chondrocyte cultures) and gene editing techniques to clarify the specific regulatory network of the insulin-IR-aromatase pathway in growth plate homeostasis.</p>
+</sec>
+<sec id="sec021" sec-type="conclusions">
+<title>Conclusion</title>
+<p>This study demonstrates that obesity-induced hyperinsulinemia accelerates epiphyseal growth plate maturation through aromatase upregulation, highlighting the insulin-aromatase axis as a key regulator of skeletal growth. While further research is needed to elucidate how insulin receptors control aromatase expression, these findings identify novel therapeutic targets for obesity-related growth disorders.</p>
+</sec>
+<sec id="sec022" sec-type="supplementary-material">
+<title>Supporting information</title>
+<supplementary-material id="pone.0337215.s001" mimetype="application/pdf" position="float" xlink:href="info:doi/10.1371/journal.pone.0337215.s001" xlink:type="simple">
+<label>S1 File</label>
+<caption>
+<title>The original images and manipulated images of this article.</title>
+<p>(PDF)</p>
+</caption>
+</supplementary-material>
+</sec>
+</body>
+<back>
+<ack>
+<p>We want to thank the Shandong Provincial Medical and Health Science and Technology Project (202106010760) and theGeneral Hospital of Tianjin Medical University for their assistance.</p>
+</ack>
+<ref-list>
+<title>References</title>
+<ref id="pone.0337215.ref001"><label>1</label><mixed-citation publication-type="journal" xlink:type="simple">NCD Risk Factor Collaboration (NCD-RisC). Worldwide trends in body-mass index, underweight, overweight, and obesity from 1975 to 2016: a pooled analysis of 2416 population-based measurement studies in 128·9 million children, adolescents, and adults. Lancet. 2017;390(10113):2627–42. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/S0140-6736(17)32129-3" xlink:type="simple">10.1016/S0140-6736(17)32129-3</ext-link></comment> <object-id pub-id-type="pmid">29029897</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref002"><label>2</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Shalitin</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Gat-Yablonski</surname> <given-names>G</given-names></name>. <article-title>Associations of Obesity with Linear Growth and Puberty</article-title>. <source>Horm Res Paediatr</source>. <year>2022</year>;<volume>95</volume>(<issue>2</issue>):<fpage>120</fpage>–<lpage>36</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1159/000516171" xlink:type="simple">10.1159/000516171</ext-link></comment> <object-id pub-id-type="pmid">34130293</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref003"><label>3</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Pinhas-Hamiel</surname> <given-names>O</given-names></name>, <name name-style="western"><surname>Benary</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>Mazor-Aronovich</surname> <given-names>K</given-names></name>, <name name-style="western"><surname>Ben-Ami</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Levy-Shraga</surname> <given-names>Y</given-names></name>, <name name-style="western"><surname>Boyko</surname> <given-names>V</given-names></name>, <etal>et al</etal>. <article-title>Advanced Bone Age and Hyperinsulinemia in Overweight and Obese Children</article-title>. <source>Endocrine Practice</source>. <year>2014</year>;<volume>20</volume>(<issue>1</issue>):<fpage>62</fpage>–<lpage>7</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.4158/ep13193.or" xlink:type="simple">10.4158/ep13193.or</ext-link></comment></mixed-citation></ref>
+<ref id="pone.0337215.ref004"><label>4</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Sopher</surname> <given-names>AB</given-names></name>, <name name-style="western"><surname>Jean</surname> <given-names>AM</given-names></name>, <name name-style="western"><surname>Zwany</surname> <given-names>SK</given-names></name>, <name name-style="western"><surname>Winston</surname> <given-names>DM</given-names></name>, <name name-style="western"><surname>Pomeranz</surname> <given-names>CB</given-names></name>, <name name-style="western"><surname>Bell</surname> <given-names>JJ</given-names></name>, <etal>et al</etal>. <article-title>Bone age advancement in prepubertal children with obesity and premature adrenarche: possible potentiating factors</article-title>. <source>Obesity (Silver Spring)</source>. <year>2011</year>;<volume>19</volume>(<issue>6</issue>):<fpage>1259</fpage>–<lpage>64</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1038/oby.2010.305" xlink:type="simple">10.1038/oby.2010.305</ext-link></comment> <object-id pub-id-type="pmid">21311512</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref005"><label>5</label><mixed-citation publication-type="journal" xlink:type="simple">Manolagas SC, O’Brien CA, Almeida M. The role of estrogen and androgen receptors in bone health and disease. Nat Rev Endocrinol. 2013;9(12):699–712. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1038/nrendo.2013.179" xlink:type="simple">10.1038/nrendo.2013.179</ext-link></comment> <object-id pub-id-type="pmid">24042328</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref006"><label>6</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Juul</surname> <given-names>A</given-names></name>. <article-title>The effects of oestrogens on linear bone growth</article-title>. <source>Hum Reprod Update</source>. <year>2001</year>;<volume>7</volume>(<issue>3</issue>):<fpage>303</fpage>–<lpage>13</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1093/humupd/7.3.303" xlink:type="simple">10.1093/humupd/7.3.303</ext-link></comment> <object-id pub-id-type="pmid">11392377</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref007"><label>7</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Nilsson</surname> <given-names>O</given-names></name>, <name name-style="western"><surname>Weise</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Landman</surname> <given-names>EBM</given-names></name>, <name name-style="western"><surname>Meyers</surname> <given-names>JL</given-names></name>, <name name-style="western"><surname>Barnes</surname> <given-names>KM</given-names></name>, <name name-style="western"><surname>Baron</surname> <given-names>J</given-names></name>. <article-title>Evidence that estrogen hastens epiphyseal fusion and cessation of longitudinal bone growth by irreversibly depleting the number of resting zone progenitor cells in female rabbits</article-title>. <source>Endocrinology</source>. <year>2014</year>;<volume>155</volume>(<issue>8</issue>):<fpage>2892</fpage>–<lpage>9</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1210/en.2013-2175" xlink:type="simple">10.1210/en.2013-2175</ext-link></comment> <object-id pub-id-type="pmid">24708243</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref008"><label>8</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Satoh</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Hasegawa</surname> <given-names>Y</given-names></name>. <article-title>Factors affecting prepubertal and pubertal bone age progression</article-title>. <source>Front Endocrinol (Lausanne)</source>. <year>2022</year>;<volume>13</volume>:<fpage>967711</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.3389/fendo.2022.967711" xlink:type="simple">10.3389/fendo.2022.967711</ext-link></comment> <object-id pub-id-type="pmid">36072933</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref009"><label>9</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>van der Eerden</surname> <given-names>BCJ</given-names></name>, <name name-style="western"><surname>Löwik</surname> <given-names>CWGM</given-names></name>, <name name-style="western"><surname>Wit</surname> <given-names>JM</given-names></name>, <name name-style="western"><surname>Karperien</surname> <given-names>M</given-names></name>. <article-title>Expression of estrogen receptors and enzymes involved in sex steroid metabolism in the rat tibia during sexual maturation</article-title>. <source>J Endocrinol</source>. <year>2004</year>;<volume>180</volume>(<issue>3</issue>):<fpage>457</fpage>–<lpage>67</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1677/joe.0.1800457" xlink:type="simple">10.1677/joe.0.1800457</ext-link></comment> <object-id pub-id-type="pmid">15012600</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref010"><label>10</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Burul-Bozkurt</surname> <given-names>N</given-names></name>, <name name-style="western"><surname>Pekiner</surname> <given-names>C</given-names></name>, <name name-style="western"><surname>Kelicen</surname> <given-names>P</given-names></name>. <article-title>Diabetes alters aromatase enzyme levels in gonadal tissues of rats</article-title>. <source>Naunyn Schmiedebergs Arch Pharmacol</source>. <year>2010</year>;<volume>382</volume>(<issue>1</issue>):<fpage>33</fpage>–<lpage>41</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1007/s00210-010-0518-5" xlink:type="simple">10.1007/s00210-010-0518-5</ext-link></comment> <object-id pub-id-type="pmid">20428845</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref011"><label>11</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Gibb</surname> <given-names>FW</given-names></name>, <name name-style="western"><surname>Homer</surname> <given-names>NZM</given-names></name>, <name name-style="western"><surname>Faqehi</surname> <given-names>AMM</given-names></name>, <name name-style="western"><surname>Upreti</surname> <given-names>R</given-names></name>, <name name-style="western"><surname>Livingstone</surname> <given-names>DE</given-names></name>, <name name-style="western"><surname>McInnes</surname> <given-names>KJ</given-names></name>, <etal>et al</etal>. <article-title>Aromatase Inhibition Reduces Insulin Sensitivity in Healthy Men</article-title>. <source>J Clin Endocrinol Metab</source>. <year>2016</year>;<volume>101</volume>(<issue>5</issue>):<fpage>2040</fpage>–<lpage>6</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1210/jc.2015-4146" xlink:type="simple">10.1210/jc.2015-4146</ext-link></comment> <object-id pub-id-type="pmid">26967690</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref012"><label>12</label><mixed-citation publication-type="journal" xlink:type="simple">Randolph JF Jr, Kipersztok S, Ayers JW, Ansbacher R, Peegel H, Menon KM. The effect of insulin on aromatase activity in isolated human endometrial glands and stroma. Am J Obstet Gynecol. 1987;157(6):1534–9. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/s0002-9378(87)80258-2" xlink:type="simple">10.1016/s0002-9378(87)80258-2</ext-link></comment> <object-id pub-id-type="pmid">3322018</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref013"><label>13</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Martín-Rivada</surname> <given-names>Á</given-names></name>, <name name-style="western"><surname>Martos-Moreno</surname> <given-names>GÁ</given-names></name>, <name name-style="western"><surname>Guerra-Cantera</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Campillo-Calatayud</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Oxvig</surname> <given-names>C</given-names></name>, <name name-style="western"><surname>Frystyk</surname> <given-names>J</given-names></name>, <etal>et al</etal>. <article-title>Prepubertal Children With Obesity Have High Free IGF-1 Levels and Accelerated Growth Despite Reduced Pappalysin Levels</article-title>. <source>J Clin Endocrinol Metab</source>. <year>2025</year>;<volume>110</volume>(<issue>3</issue>):e622–<lpage>9</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1210/clinem/dgae288" xlink:type="simple">10.1210/clinem/dgae288</ext-link></comment> <object-id pub-id-type="pmid">38662803</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref014"><label>14</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Dominici</surname> <given-names>FP</given-names></name>, <name name-style="western"><surname>Balbis</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Bartke</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Turyn</surname> <given-names>D</given-names></name>. <article-title>Role of hyperinsulinemia on hepatic insulin receptor concentration and autophosphorylation in the presence of high growth hormone levels in transgenic mice overexpressing growth hormone gene</article-title>. <source>J Endocrinol</source>. <year>1998</year>;<volume>159</volume>(<issue>1</issue>):<fpage>15</fpage>–<lpage>25</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1677/joe.0.1590015" xlink:type="simple">10.1677/joe.0.1590015</ext-link></comment> <object-id pub-id-type="pmid">9795337</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref015"><label>15</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Ma</surname> <given-names>H</given-names></name>, <name name-style="western"><surname>Han</surname> <given-names>Z</given-names></name>, <name name-style="western"><surname>Wang</surname> <given-names>G</given-names></name>, <name name-style="western"><surname>Zou</surname> <given-names>S</given-names></name>. <article-title>Effects of isoflavone on aromatase activity and muscle growth in male rat</article-title>. <source>Journal of Nanjing Agricultural University</source>. <year>2005</year>;<volume>28</volume>:<fpage>76</fpage>–<lpage>9</lpage>.</mixed-citation></ref>
+<ref id="pone.0337215.ref016"><label>16</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Myllyharju</surname> <given-names>J</given-names></name>. <article-title>Extracellular matrix and developing growth plate</article-title>. <source>Curr Osteoporos Rep</source>. <year>2014</year>;<volume>12</volume>(<issue>4</issue>):<fpage>439</fpage>–<lpage>45</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1007/s11914-014-0232-1" xlink:type="simple">10.1007/s11914-014-0232-1</ext-link></comment> <object-id pub-id-type="pmid">25212565</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref017"><label>17</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Emons</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Chagin</surname> <given-names>AS</given-names></name>, <name name-style="western"><surname>Sävendahl</surname> <given-names>L</given-names></name>, <name name-style="western"><surname>Karperien</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Wit</surname> <given-names>JM</given-names></name>. <article-title>Mechanisms of growth plate maturation and epiphyseal fusion</article-title>. <source>Horm Res Paediatr</source>. <year>2011</year>;<volume>75</volume>(<issue>6</issue>):<fpage>383</fpage>–<lpage>91</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1159/000327788" xlink:type="simple">10.1159/000327788</ext-link></comment> <object-id pub-id-type="pmid">21540578</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref018"><label>18</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Rickert</surname> <given-names>KD</given-names></name>, <name name-style="western"><surname>Arrigoni</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Guzel</surname> <given-names>CR</given-names></name>, <name name-style="western"><surname>Barber</surname> <given-names>HF</given-names></name>, <name name-style="western"><surname>Alman</surname> <given-names>BA</given-names></name>, <name name-style="western"><surname>Lark</surname> <given-names>RK</given-names></name>. <article-title>Growth Modulation by Stimulating the Growth Plate: A Pilot Study</article-title>. <source>Ultrasound Med Biol</source>. <year>2021</year>;<volume>47</volume>(<issue>8</issue>):<fpage>2339</fpage>–<lpage>45</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.ultrasmedbio.2021.03.036" xlink:type="simple">10.1016/j.ultrasmedbio.2021.03.036</ext-link></comment> <object-id pub-id-type="pmid">34016487</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref019"><label>19</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Nilsson</surname> <given-names>O</given-names></name>, <name name-style="western"><surname>Baron</surname> <given-names>J</given-names></name>. <article-title>Fundamental limits on longitudinal bone growth: growth plate senescence and epiphyseal fusion</article-title>. <source>Trends Endocrinol Metab</source>. <year>2004</year>;<volume>15</volume>(<issue>8</issue>):<fpage>370</fpage>–<lpage>4</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.tem.2004.08.004" xlink:type="simple">10.1016/j.tem.2004.08.004</ext-link></comment> <object-id pub-id-type="pmid">15380808</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref020"><label>20</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Hajdu</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Schwendenwein</surname> <given-names>E</given-names></name>, <name name-style="western"><surname>Kaltenecker</surname> <given-names>G</given-names></name>, <name name-style="western"><surname>László</surname> <given-names>I</given-names></name>, <name name-style="western"><surname>Lang</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Vécsei</surname> <given-names>V</given-names></name>, <etal>et al</etal>. <article-title>Growth potential of different zones of the growth plate-an experimental study in rabbits</article-title>. <source>J Orthop Res</source>. <year>2012</year>;<volume>30</volume>(<issue>1</issue>):<fpage>162</fpage>–<lpage>8</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1002/jor.21506" xlink:type="simple">10.1002/jor.21506</ext-link></comment> <object-id pub-id-type="pmid">21796676</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref021"><label>21</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Masarwi</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Shamir</surname> <given-names>R</given-names></name>, <name name-style="western"><surname>Phillip</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Gat-Yablonski</surname> <given-names>G</given-names></name>. <article-title>Leptin stimulates aromatase in the growth plate: limiting catch-up growth efficiency</article-title>. <source>J Endocrinol</source>. <year>2018</year>;<volume>237</volume>(<issue>3</issue>):<fpage>229</fpage>–<lpage>42</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1530/JOE-18-0028" xlink:type="simple">10.1530/JOE-18-0028</ext-link></comment> <object-id pub-id-type="pmid">29615477</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref022"><label>22</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Komori</surname> <given-names>T</given-names></name>. <article-title>Whole Aspect of Runx2 Functions in Skeletal Development</article-title>. <source>Int J Mol Sci</source>. <year>2022</year>;<volume>23</volume>(<issue>10</issue>):<fpage>5776</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.3390/ijms23105776" xlink:type="simple">10.3390/ijms23105776</ext-link></comment> <object-id pub-id-type="pmid">35628587</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref023"><label>23</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Kodama</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Wilkinson</surname> <given-names>KJ</given-names></name>, <name name-style="western"><surname>Iwamoto</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Otsuru</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Enomoto-Iwamoto</surname> <given-names>M</given-names></name>. <article-title>The role of hypertrophic chondrocytes in regulation of the cartilage-to-bone transition in fracture healing</article-title>. <source>Bone Rep</source>. <year>2022</year>;<volume>17</volume>:<fpage>101616</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.bonr.2022.101616" xlink:type="simple">10.1016/j.bonr.2022.101616</ext-link></comment> <object-id pub-id-type="pmid">36105852</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref024"><label>24</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Chagin</surname> <given-names>AS</given-names></name>, <name name-style="western"><surname>Chrysis</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>Takigawa</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Ritzen</surname> <given-names>EM</given-names></name>, <name name-style="western"><surname>Sävendahl</surname> <given-names>L</given-names></name>. <article-title>Locally produced estrogen promotes fetal rat metatarsal bone growth; an effect mediated through increased chondrocyte proliferation and decreased apoptosis</article-title>. <source>J Endocrinol</source>. <year>2006</year>;<volume>188</volume>(<issue>2</issue>):<fpage>193</fpage>–<lpage>203</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1677/joe.1.06364" xlink:type="simple">10.1677/joe.1.06364</ext-link></comment> <object-id pub-id-type="pmid">16461546</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref025"><label>25</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Börjesson</surname> <given-names>AE</given-names></name>, <name name-style="western"><surname>Windahl</surname> <given-names>SH</given-names></name>, <name name-style="western"><surname>Karimian</surname> <given-names>E</given-names></name>, <name name-style="western"><surname>Eriksson</surname> <given-names>EE</given-names></name>, <name name-style="western"><surname>Lagerquist</surname> <given-names>MK</given-names></name>, <name name-style="western"><surname>Engdahl</surname> <given-names>C</given-names></name>, <etal>et al</etal>. <article-title>The role of estrogen receptor-α and its activation function-1 for growth plate closure in female mice</article-title>. <source>Am J Physiol Endocrinol Metab</source>. <year>2012</year>;<volume>302</volume>(<issue>11</issue>):E1381-9. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1152/ajpendo.00646.2011" xlink:type="simple">10.1152/ajpendo.00646.2011</ext-link></comment> <object-id pub-id-type="pmid">22414805</object-id></mixed-citation></ref>
+<ref id="pone.0337215.ref026"><label>26</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Börjesson</surname> <given-names>AE</given-names></name>, <name name-style="western"><surname>Lagerquist</surname> <given-names>MK</given-names></name>, <name name-style="western"><surname>Windahl</surname> <given-names>SH</given-names></name>, <name name-style="western"><surname>Ohlsson</surname> <given-names>C</given-names></name>. <article-title>The role of estrogen receptor α in the regulation of bone and growth plate cartilage</article-title>. <source>Cell Mol Life Sci</source>. <year>2013</year>;<volume>70</volume>(<issue>21</issue>):<fpage>4023</fpage>–<lpage>37</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1007/s00018-013-1317-1" xlink:type="simple">10.1007/s00018-013-1317-1</ext-link></comment> <object-id pub-id-type="pmid">23516016</object-id></mixed-citation></ref>
+</ref-list>
+</back>
+</article>

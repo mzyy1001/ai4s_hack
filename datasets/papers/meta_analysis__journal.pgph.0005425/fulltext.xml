@@ -1,0 +1,1510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.3 20210610//EN" "http://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd">
+<article article-type="research-article" dtd-version="1.3" xml:lang="en" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink">
+<processing-meta>
+<custom-meta-group content-type="composition">
+<custom-meta specific-use="newgen" xlink:href="https://www.newgen.co/">
+<meta-name>Composition Vendor</meta-name>
+<meta-value>Newgen KnowledgeWorks (P) Ltd.</meta-value>
+</custom-meta>
+</custom-meta-group>
+</processing-meta>
+<front>
+<journal-meta>
+<journal-id journal-id-type="nlm-ta">PLOS Glob Public Health</journal-id>
+<journal-id journal-id-type="publisher-id">plos</journal-id>
+<journal-id journal-id-type="pmc">plosgph</journal-id>
+<journal-title-group>
+<journal-title>PLOS Global Public Health</journal-title>
+</journal-title-group>
+<issn pub-type="epub">2767-3375</issn>
+<publisher>
+<publisher-name>Public Library of Science</publisher-name>
+<publisher-loc>San Francisco, CA USA</publisher-loc>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="doi">10.1371/journal.pgph.0005425</article-id>
+<article-id pub-id-type="publisher-id">PGPH-D-24-01540</article-id>
+<article-categories>
+<subj-group subj-group-type="heading">
+<subject>Research Article</subject>
+</subj-group>
+<subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Medical conditions</subject><subj-group><subject>Congenital disorders</subject><subj-group><subject>Birth defects</subject><subj-group><subject>Microcephaly</subject></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Developmental biology</subject><subj-group><subject>Morphogenesis</subject><subj-group><subject>Birth defects</subject><subj-group><subject>Microcephaly</subject></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>People and places</subject><subj-group><subject>Population groupings</subject><subj-group><subject>Age groups</subject><subj-group><subject>Children</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>People and places</subject><subj-group><subject>Population groupings</subject><subj-group><subject>Families</subject><subj-group><subject>Children</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>People and places</subject><subj-group><subject>Geographical locations</subject><subj-group><subject>South America</subject><subj-group><subject>Brazil</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Medical conditions</subject><subj-group><subject>Congenital disorders</subject><subj-group><subject>Congenital anomalies</subject></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Organisms</subject><subj-group><subject>Viruses</subject><subj-group><subject>RNA viruses</subject><subj-group><subject>Flaviviruses</subject><subj-group><subject>Zika virus</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Microbiology</subject><subj-group><subject>Medical microbiology</subject><subj-group><subject>Microbial pathogens</subject><subj-group><subject>Viral pathogens</subject><subj-group><subject>Flaviviruses</subject><subj-group><subject>Zika virus</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Medicine and health sciences</subject><subj-group><subject>Pathology and laboratory medicine</subject><subj-group><subject>Pathogens</subject><subj-group><subject>Microbial pathogens</subject><subj-group><subject>Viral pathogens</subject><subj-group><subject>Flaviviruses</subject><subj-group><subject>Zika virus</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Organisms</subject><subj-group><subject>Viruses</subject><subj-group><subject>Viral pathogens</subject><subj-group><subject>Flaviviruses</subject><subj-group><subject>Zika virus</subject></subj-group></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Physiology</subject><subj-group><subject>Physiological parameters</subject><subj-group><subject>Body weight</subject><subj-group><subject>Birth weight</subject></subj-group></subj-group></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Research and analysis methods</subject><subj-group><subject>Imaging techniques</subject><subj-group><subject>Neuroimaging</subject></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Neuroscience</subject><subj-group><subject>Neuroimaging</subject></subj-group></subj-group></subj-group><subj-group subj-group-type="Discipline-v3">
+<subject>Biology and life sciences</subject><subj-group><subject>Neuroscience</subject><subj-group><subject>Reflexes</subject></subj-group></subj-group></subj-group></article-categories>
+<title-group>
+<article-title>Characterization of 843 children with Zika-related microcephaly in the first three years of life: An individual participant data meta-analysis of 12 cohorts in the Zika Brazilian Cohorts consortium</article-title>
+<alt-title alt-title-type="running-head">Zika-related microcephaly: IPD-MA of 12 cohorts in the ZBC consortium</alt-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author" corresp="yes" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0003-2537-1476</contrib-id>
+<name name-style="western">
+<surname>Miranda-Filho</surname>
+<given-names>Demócrito de Barros</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-original-draft/">Writing – original draft</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+<xref ref-type="corresp" rid="cor001">*</xref>
+<xref ref-type="fn" rid="econtrib001"><sup>‡</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Ximenes</surname>
+<given-names>Ricardo Arraes de Alencar</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-original-draft/">Writing – original draft</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+<xref ref-type="aff" rid="aff002"><sup>2</sup></xref>
+<xref ref-type="fn" rid="econtrib001"><sup>‡</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Ramos Montarroyos</surname>
+<given-names>Ulisses</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff001"><sup>1</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Rosa Abtibol-Bernardino</surname>
+<given-names>Marília</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-original-draft/">Writing – original draft</role>
+<xref ref-type="aff" rid="aff003"><sup>3</sup></xref>
+<xref ref-type="aff" rid="aff004"><sup>4</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Brickley</surname>
+<given-names>Elizabeth B.</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff005"><sup>5</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Turchi Martelli</surname>
+<given-names>Celina Maria</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff006"><sup>6</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Cunha Rodrigues</surname>
+<given-names>Laura</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff005"><sup>5</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Velho Barreto de Araújo</surname>
+<given-names>Thália</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff007"><sup>7</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Ventura</surname>
+<given-names>Liana O.</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff008"><sup>8</sup></xref>
+<xref ref-type="aff" rid="aff009"><sup>9</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Leal</surname>
+<given-names>Mariana Carvalho</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff010"><sup>10</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Neves Santos</surname>
+<given-names>Darci</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff011"><sup>11</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Marques dos Santos</surname>
+<given-names>Letícia</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff011"><sup>11</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-4832-7059</contrib-id>
+<name name-style="western">
+<surname>Monteiro Santos</surname>
+<given-names>Lucas</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff011"><sup>11</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Rabelo Gomes</surname>
+<given-names>Mariana</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff011"><sup>11</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>de Siqueira</surname>
+<given-names>Isadora Cristina</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff012"><sup>12</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-0146-2210</contrib-id>
+<name name-style="western">
+<surname>Serra</surname>
+<given-names>Letícia</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff012"><sup>12</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Rios</surname>
+<given-names>Débora Patrícia Medeiros Santos</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff012"><sup>12</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Carvalho</surname>
+<given-names>Alessandra</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff013"><sup>13</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Silva</surname>
+<given-names>Antônio Moura</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff014"><sup>14</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-0717-2388</contrib-id>
+<name name-style="western">
+<surname>Silva Sousa</surname>
+<given-names>Patrícia</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff015"><sup>15</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Ribeiro</surname>
+<given-names>Marizélia Costa</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff016"><sup>16</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0001-8924-1203</contrib-id>
+<name name-style="western">
+<surname>Campos</surname>
+<given-names>Marcos Garcia</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff014"><sup>14</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Passos</surname>
+<given-names>Saulo Duarte</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff017"><sup>17</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-2244-1523</contrib-id>
+<name name-style="western">
+<surname>Bertozzi</surname>
+<given-names>Ana Paula Paschoalicchio</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff017"><sup>17</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0003-2527-9880</contrib-id>
+<name name-style="western">
+<surname>Gazeta</surname>
+<given-names>Rosa Estela</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff017"><sup>17</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Catalan</surname>
+<given-names>Daniel T.</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff017"><sup>17</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0001-9651-3713</contrib-id>
+<name name-style="western">
+<surname>Queiroz Gurgel</surname>
+<given-names>Ricardo</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff018"><sup>18</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-3254-3793</contrib-id>
+<name name-style="western">
+<surname>Lopes</surname>
+<given-names>Aline de Siqueira Alves</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff018"><sup>18</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Medeiros</surname>
+<given-names>Andrea Monteiro Correia</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff019"><sup>19</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Brasil</surname>
+<given-names>Patrícia</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff020"><sup>20</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-1742-5211</contrib-id>
+<name name-style="western">
+<surname>Nielsen-Saines</surname>
+<given-names>Karin</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff021"><sup>21</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Vasconcelos</surname>
+<given-names>Zilton</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff022"><sup>22</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Zin</surname>
+<given-names>Andrea Araújo</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff022"><sup>22</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Mussi-Pinhata</surname>
+<given-names>Marisa Márcia</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff023"><sup>23</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-4961-0534</contrib-id>
+<name name-style="western">
+<surname>Negrini</surname>
+<given-names>Silvia Fabiana Biason de Moura</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff023"><sup>23</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Negrini</surname>
+<given-names>Bento Vidal de Moura</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff023"><sup>23</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Caldas</surname>
+<given-names>Carla Andrea Cardoso Tanuri</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff024"><sup>24</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Vivacqua</surname>
+<given-names>Daniela</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff025"><sup>25</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Coelho</surname>
+<given-names>Bernadete Perez</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff026"><sup>26</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Peixoto</surname>
+<given-names>Lucíola de Fátima Albuquerque de Almeida</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff003"><sup>3</sup></xref>
+<xref ref-type="aff" rid="aff004"><sup>4</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Bôtto-Menezes</surname>
+<given-names>Camila</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff003"><sup>3</sup></xref>
+<xref ref-type="aff" rid="aff004"><sup>4</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Benzecry</surname>
+<given-names>Silvana Gomes</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff003"><sup>3</sup></xref>
+<xref ref-type="aff" rid="aff004"><sup>4</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>de Oliveira</surname>
+<given-names>Consuelo Silva</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff027"><sup>27</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Paschoal</surname>
+<given-names>Joelma Karin Sagica Fernandes</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff028"><sup>28</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0002-2670-5805</contrib-id>
+<name name-style="western">
+<surname>Serra</surname>
+<given-names>Emilene Monteiro Furtado</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff027"><sup>27</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Gomes</surname>
+<given-names>Luna Thais Sousa</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing – review &amp; editing</role>
+<xref ref-type="aff" rid="aff027"><sup>27</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<name name-style="western">
+<surname>Moreira</surname>
+<given-names>Maria Elisabeth</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-original-draft/">Writing – original draft</role>
+<xref ref-type="aff" rid="aff022"><sup>22</sup></xref>
+<xref ref-type="fn" rid="econtrib001"><sup>‡</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0001-8633-0913</contrib-id>
+<name name-style="western">
+<surname>Hofer</surname>
+<given-names>Cristina Barroso</given-names>
+</name>
+<role content-type="http://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+<role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+<role content-type="http://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+<role content-type="http://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+<role content-type="http://credit.niso.org/contributor-roles/validation/">Validation</role>
+<role content-type="http://credit.niso.org/contributor-roles/writing-original-draft/">Writing – original draft</role>
+<xref ref-type="aff" rid="aff025"><sup>25</sup></xref>
+<xref ref-type="fn" rid="econtrib001"><sup>‡</sup></xref>
+</contrib>
+<contrib contrib-type="author" xlink:type="simple">
+<collab>on behalf of Zika Brazilian Cohorts Consortium (ZBC Consortium)</collab>
+<xref ref-type="fn" rid="fn001"><sup>¶</sup></xref>
+</contrib>
+</contrib-group>
+<aff id="aff001"><label>1</label> <addr-line>Postgraduate Program in Health Sciences, University of Pernambuco, Recife, Pernambuco, Brazil,</addr-line></aff>
+<aff id="aff002"><label>2</label> <addr-line>Postgraduate Program in Tropical Medicine, Federal University of Pernambuco, Recife, Pernambuco, Brazil,</addr-line></aff>
+<aff id="aff003"><label>3</label> <addr-line>Postgraduate Program in Tropical Medicine, Tropical Medicine Foundation Doctor Heitor Vieira Dourado, Manaus, Amazonas, Brazil</addr-line></aff>
+<aff id="aff004"><label>4</label> <addr-line>Amazon State University, Manaus, Amazonas, Brazil</addr-line></aff>
+<aff id="aff005"><label>5</label> <addr-line>Department of Infectious Disease Epidemiology, London School of Hygiene &amp; Tropical Medicine, London, United Kingdom</addr-line></aff>
+<aff id="aff006"><label>6</label> <addr-line>Department of Collective Health, Aggeu Magalhaes Institute/Fiocruz, Recife, Pernambuco, Brazil</addr-line></aff>
+<aff id="aff007"><label>7</label> <addr-line>Postgraduate Program in Collective Health, Federal University of Pernambuco, Recife, Pernambuco, Brazil</addr-line></aff>
+<aff id="aff008"><label>8</label> <addr-line>Altino Ventura Foundation, Recife, Pernambuco, Brazil</addr-line></aff>
+<aff id="aff009"><label>9</label> <addr-line>Pernambuco Eyes Hospital, Recife, Pernambuco, Brazil</addr-line></aff>
+<aff id="aff010"><label>10</label> <addr-line>Medical Sciences Center, Postgraduate Program in Human Communication Health, Federal University of Pernambuco, Recife, Pernambuco, Brazil</addr-line></aff>
+<aff id="aff011"><label>11</label> <addr-line>Institute of Collective Health, Federal University of Bahia, Salvador, Bahia, Brazil</addr-line></aff>
+<aff id="aff012"><label>12</label> <addr-line>Laboratory of Investigation in Global Health and Neglected Diseases, Goncalo Moniz Institute – Fiocruz, Salvador, Bahia, Brazil</addr-line></aff>
+<aff id="aff013"><label>13</label> <addr-line>Child Rehabilitation Center, SARAH Salvador Hospital, Salvador, Bahia, Brazil</addr-line></aff>
+<aff id="aff014"><label>14</label> <addr-line>Department of Public Health, Federal University of Maranhão, São Luís, Maranhão, Brazil</addr-line></aff>
+<aff id="aff015"><label>15</label> <addr-line>Reference Center on Neurodevelopment, Assistance and Rehabilitation of Children, São Luís, Maranhão, Brazil</addr-line></aff>
+<aff id="aff016"><label>16</label> <addr-line>Department of Medicine, Federal University of Maranhão, São Luís, Maranhão, Brazil</addr-line></aff>
+<aff id="aff017"><label>17</label> <addr-line>Pediatrics Department, Jundiaí Medical School, Jundiaí, São Paulo, Brazil</addr-line></aff>
+<aff id="aff018"><label>18</label> <addr-line>Department of Medicine and Graduate Program in Health Sciences, Federal University of Sergipe, Aracaju, Sergipe, Brazil</addr-line></aff>
+<aff id="aff019"><label>19</label> <addr-line>Department of Speech Therapy and Graduate Program in Health Sciences, Federal University of Sergipe, Aracaju, Sergipe, Brazil</addr-line></aff>
+<aff id="aff020"><label>20</label> <addr-line>National Institute of Infectious Diseases/Fiocruz, Rio de Janeiro, Brazil</addr-line></aff>
+<aff id="aff021"><label>21</label> <addr-line>Pediatric Infectious Disease, University of California, Los Angeles, California, United States of America</addr-line></aff>
+<aff id="aff022"><label>22</label> <addr-line>Clinical Research Unit, Fernandes Figueira Institute/Fiocruz, Rio de Janeiro, Brazil</addr-line></aff>
+<aff id="aff023"><label>23</label> <addr-line>Department of Pediatrics, Ribeirão Preto Medical School - University of São Paulo, Ribeirão Preto, São Paulo, Brazil</addr-line></aff>
+<aff id="aff024"><label>24</label> <addr-line>Department of Neurosciences and Behavioral Sciences, Ribeirão Preto Medical School - University of São Paulo, Ribeirão Preto, São Paulo, Brazil</addr-line></aff>
+<aff id="aff025"><label>25</label> <addr-line>Department of Infectious Diseases, Federal University of Rio de Janeiro, Rio de Janeiro, Brazil</addr-line></aff>
+<aff id="aff026"><label>26</label> <addr-line>Department of Public Health of the Medical Sciences Center, Federal University of Pernambuco, Recife, Pernambuco, Brazil</addr-line></aff>
+<aff id="aff027"><label>27</label> <addr-line>Department of Arbovirology and Hemorrhagic Fevers, Evandro Chagas Institute, Belém, Pará, Brazil</addr-line></aff>
+<aff id="aff028"><label>28</label> <addr-line>Department of Neurology, Federal University of Pará Medical School, Belém, Pará, Brazil</addr-line></aff>
+<contrib-group>
+<contrib contrib-type="editor" xlink:type="simple">
+<name name-style="western">
+<surname>Siqueira</surname>
+<given-names>André Machado</given-names>
+</name>
+<role>Editor</role>
+<xref ref-type="aff" rid="edit1"/></contrib>
+</contrib-group>
+<aff id="edit1"><addr-line>Fundacao Oswaldo Cruz, BRAZIL</addr-line></aff>
+<author-notes>
+<fn fn-type="conflict" id="coi001">
+<p>The authors have declared that no competing interests exist.</p>
+</fn>
+<fn fn-type="other" id="econtrib001">
+<p>‡ DBMF and RAAX contributed equally to this work. MEM and CBH are Joint Senior Authors.</p>
+</fn>
+<fn fn-type="other" id="fn001">
+<p>¶ Membership of Zika Brazilian Cohorts Consortium (ZBC Consortium) is provided in the Acknowledgments.</p>
+</fn>
+<corresp id="cor001">* E-mail: <email xlink:type="simple">demofilho@gmail.com</email></corresp>
+</author-notes>
+<pub-date pub-type="epub"><day>29</day><month>12</month><year>2025</year></pub-date>
+<pub-date pub-type="collection"><year>2025</year></pub-date>
+<volume>5</volume>
+<issue>12</issue>
+<elocation-id>e0005425</elocation-id>
+<history>
+<date date-type="received"><day>21</day><month>10</month><year>2024</year></date>
+<date date-type="accepted"><day>20</day><month>10</month><year>2025</year></date>
+</history>
+<permissions>
+<copyright-year>2025</copyright-year>
+<copyright-holder>Miranda-Filho et al</copyright-holder>
+<license xlink:href="http://creativecommons.org/licenses/by/4.0/" xlink:type="simple">
+<license-p>This is an open access article distributed under the terms of the <ext-link ext-link-type="uri" xlink:href="http://creativecommons.org/licenses/by/4.0/" xlink:type="simple">Creative Commons Attribution License</ext-link>, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.</license-p></license>
+</permissions>
+<self-uri content-type="pdf" xlink:href="info:doi/10.1371/journal.pgph.0005425"/>
+<abstract>
+<p>One of the main gaps in characterizing the congenital Zika syndrome (CZS) up to now is the small number of participants in individual studies. Pooling the data together overcomes the sample size-related limitations of individual studies and provides an opportunity for investigating heterogeneity between studies and, as appropriate, to better characterize the CZS<bold>.</bold> This study aims to describe adverse anthropometric, clinical, and neuroimaging outcomes in Brazilian children with Zika-related microcephaly.Individual participant data meta-analysis of 12 cohorts of the Zika Brazilian Cohorts Consortium (ZBC-Consortium), using primary data from children with Zika-related microcephaly, born between January/2015 and July/2018. We included 843 children with microcephaly at birth, at first evaluation, or over follow-up. Of 601 children with microcephaly at birth, 217 (36.1%) had moderate and 384 (63.9%) had severe microcephaly. Postnatal microcephaly occurred in 172 (20.4%) children. There was heterogeneity across studies. Severe microcephaly ranged from 11-87.5%; prematurity from 10-20% in most sites; low birth weight from 10-43.8%. Deficit of social attention, hyperreflexia, and persistence of primitive reflexes were reported in at least 50% of the children in the larger cohorts. Epilepsy ranged from 30-80% of the children and dysphagia, from 22.2-67.7%. Calcifications and ventriculomegaly were the most consistent and frequent abnormality (around 80%). Cortical atrophy or other development disorders were reported in around 50% of the children. The frequency of fundal, optical nerve and hearing abnormalities ranged from 0-67.1%, 0-36.5% and 0–50%, respectively. This large sample size allowed us to describe the spectrum of severity and of manifestations of Congenital Zika Syndrome.</p>
+</abstract>
+<funding-group>
+<award-group id="award001">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>404861/2018-0</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Ximenes</surname><given-names>Ricardo Arraes de Alencar</given-names></name></principal-award-recipient></award-group>
+<award-group id="award002">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/100010269</institution-id>
+<institution>Wellcome Trust</institution>
+</institution-wrap>
+</funding-source><award-id>205377/Z/16/Z</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Ximenes</surname><given-names>Ricardo Arraes de Alencar</given-names></name></principal-award-recipient></award-group>
+<award-group id="award003">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100000278</institution-id>
+<institution>Department for International Development, UK Government</institution>
+</institution-wrap>
+</funding-source><award-id>201870/Z/16/Z</award-id>
+<principal-award-recipient><contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0003-2537-1476</contrib-id>
+<name name-style="western">
+<surname>Miranda-Filho</surname>
+<given-names>Demócrito de Barros</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award004">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100007601</institution-id>
+<institution>Horizon 2020</institution>
+</institution-wrap>
+</funding-source><award-id>734584</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Moreira</surname><given-names>Maria Elisabeth</given-names></name></principal-award-recipient></award-group>
+<award-group id="award005">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/100010269</institution-id>
+<institution>Wellcome Trust</institution>
+</institution-wrap>
+</funding-source><award-id>107779/Z/15/Z</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Ximenes</surname><given-names>Ricardo Arraes de Alencar</given-names></name></principal-award-recipient></award-group>
+<award-group id="award006">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/100010269</institution-id>
+<institution>Wellcome Trust</institution>
+</institution-wrap>
+</funding-source><award-id>ER1505 &amp; ER1601</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Ximenes</surname><given-names>Ricardo Arraes de Alencar</given-names></name></principal-award-recipient></award-group>
+<award-group id="award007">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100000265</institution-id>
+<institution>Medical Research Council</institution>
+</institution-wrap>
+</funding-source><award-id>MC_PC_15088</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Ximenes</surname><given-names>Ricardo Arraes de Alencar</given-names></name></principal-award-recipient></award-group>
+<award-group id="award008">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/100000060</institution-id>
+<institution>National Institute of Allergy and Infectious Diseases</institution>
+</institution-wrap>
+</funding-source><award-id>RO1/AI140718</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Moreira</surname><given-names>Maria Elisabeth</given-names></name></principal-award-recipient></award-group>
+<award-group id="award009">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>443875/2018-9</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>de Siqueira</surname><given-names>Isadora Cristina</given-names></name></principal-award-recipient></award-group>
+<award-group id="award010">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100002322</institution-id>
+<institution>Coordenação de Aperfeiçoamento de Pessoal de Nível Superior</institution>
+</institution-wrap>
+</funding-source><award-id>88881.130813/2016-01</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Silva</surname>
+<given-names>Antônio Moura</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award011">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100006506</institution-id>
+<institution>Ministério da Saúde</institution>
+</institution-wrap>
+</funding-source><award-id>837058/2016</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Ximenes</surname><given-names>Ricardo Arraes de Alencar</given-names></name></principal-award-recipient></award-group>
+<award-group id="award012">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003772</institution-id>
+<institution>Secretaria de Desenvolvimento Econômico, Ciência, Tecnologia e Inovação</institution>
+</institution-wrap>
+</funding-source><award-id>25000.072811/2016-19</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Brasil</surname>
+<given-names>Patrícia</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award013">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100001807</institution-id>
+<institution>Fundação de Amparo à Pesquisa do Estado de São Paulo</institution>
+</institution-wrap>
+</funding-source><award-id>2016/08578-0</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Passos</surname><given-names>Saulo Duarte</given-names></name></principal-award-recipient></award-group>
+<award-group id="award014">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100004586</institution-id>
+<institution>Fundação Carlos Chagas Filho de Amparo à Pesquisa do Estado do Rio de Janeiro</institution>
+</institution-wrap>
+</funding-source><award-id>E-26/201.351/2016</award-id>
+<principal-award-recipient><contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0001-8633-0913</contrib-id><name name-style="western">
+<surname>Hofer</surname><given-names>Cristina Barroso</given-names></name></principal-award-recipient></award-group>
+<award-group id="award015">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100006506</institution-id>
+<institution>Ministério da Saúde</institution>
+</institution-wrap>
+</funding-source><award-id>929698560001160-02</award-id>
+<principal-award-recipient><contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0003-2537-1476</contrib-id>
+<name name-style="western">
+<surname>Miranda-Filho</surname>
+<given-names>Demócrito de Barros</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award016">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100008353</institution-id>
+<institution>Fundação de Apoio ao Ensino, Pesquisa e Assistência do Hospital das Clínicas da Faculdade de Medicina de Ribeirão Preto da Universidade de São Paulo</institution>
+</institution-wrap>
+</funding-source><principal-award-recipient><name name-style="western">
+<surname>Mussi-Pinhata</surname>
+<given-names>Marisa Márcia</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award017">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100006162</institution-id>
+<institution>Fundação de Amparo à Ciência e Tecnologia do Estado de Pernambuco</institution>
+</institution-wrap>
+</funding-source><award-id>APQ-0172-4.01/16; APQ-0192-4.01/17</award-id>
+<principal-award-recipient><contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0003-2537-1476</contrib-id>
+<name name-style="western">
+<surname>Miranda-Filho</surname>
+<given-names>Demócrito de Barros</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award018">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/100010269</institution-id>
+<institution>Wellcome Trust</institution>
+</institution-wrap>
+</funding-source><award-id>224494/B/21/Z</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Brickley</surname><given-names>Elizabeth B.</given-names></name></principal-award-recipient></award-group>
+<award-group id="award019">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/100010269</institution-id>
+<institution>Wellcome Trust</institution>
+</institution-wrap>
+</funding-source><award-id>ER1605</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Passos</surname><given-names>Saulo Duarte</given-names></name></principal-award-recipient></award-group>
+<award-group id="award020">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100006506</institution-id>
+<institution>Ministério da Saúde</institution>
+</institution-wrap>
+</funding-source><award-id>861306/2016</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Passos</surname><given-names>Saulo Duarte</given-names></name></principal-award-recipient></award-group>
+<award-group id="award021">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100006506</institution-id>
+<institution>Ministério da Saúde</institution>
+</institution-wrap>
+</funding-source><award-id>881705/2018</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Passos</surname><given-names>Saulo Duarte</given-names></name></principal-award-recipient></award-group>
+<award-group id="award022">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003772</institution-id>
+<institution>Secretaria de Desenvolvimento Econômico, Ciência, Tecnologia e Inovação</institution>
+</institution-wrap>
+</funding-source><award-id>440839/2016-5</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Ximenes</surname><given-names>Ricardo Arraes de Alencar</given-names></name></principal-award-recipient></award-group>
+<award-group id="award023">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100006162</institution-id>
+<institution>Fundação de Amparo à Ciência e Tecnologia do Estado de Pernambuco</institution>
+</institution-wrap>
+</funding-source><award-id>APQ-0793-4.01/17</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Coelho</surname><given-names>Bernadete Perez</given-names></name></principal-award-recipient></award-group>
+<award-group id="award024">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>440573/2016-5</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Silva</surname>
+<given-names>Antônio Moura</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award025">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>441098/2016-9; 305090/2016-0</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Moreira</surname><given-names>Maria Elisabeth</given-names></name></principal-award-recipient></award-group>
+<award-group id="award026">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>307282/2017-1</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Brasil</surname>
+<given-names>Patrícia</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award027">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>304476/2018-8</award-id>
+<principal-award-recipient><contrib-id authenticated="true" contrib-id-type="orcid">https://orcid.org/0000-0001-8633-0913</contrib-id><name name-style="western">
+<surname>Hofer</surname><given-names>Cristina Barroso</given-names></name></principal-award-recipient></award-group>
+<award-group id="award028">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>309722/2017-9</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Ximenes</surname><given-names>Ricardo Arraes de Alencar</given-names></name></principal-award-recipient></award-group>
+<award-group id="award029">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>306708/2014-0</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Turchi Martelli</surname><given-names>Celina Maria</given-names></name></principal-award-recipient></award-group>
+<award-group id="award030">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003593</institution-id>
+<institution>Conselho Nacional de Desenvolvimento Científico e Tecnológico</institution>
+</institution-wrap>
+</funding-source><award-id>440577/2016-0</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Neves Santos</surname><given-names>Darci</given-names></name></principal-award-recipient></award-group>
+<award-group id="award031">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100002322</institution-id>
+<institution>Coordenação de Aperfeiçoamento de Pessoal de Nível Superior</institution>
+</institution-wrap>
+</funding-source><award-id>88887.116627/2016-01</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Brasil</surname>
+<given-names>Patrícia</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award032">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100004586</institution-id>
+<institution>Fundação Carlos Chagas Filho de Amparo à Pesquisa do Estado do Rio de Janeiro</institution>
+</institution-wrap>
+</funding-source><award-id>E-18/2015TXB</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Moreira</surname><given-names>Maria Elisabeth</given-names></name></principal-award-recipient></award-group>
+<award-group id="award033">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100004586</institution-id>
+<institution>Fundação Carlos Chagas Filho de Amparo à Pesquisa do Estado do Rio de Janeiro</institution>
+</institution-wrap>
+</funding-source><award-id>E-26/202.862/2018</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Brasil</surname>
+<given-names>Patrícia</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award034">
+<funding-source>
+<institution-wrap>
+<institution-id institution-id-type="funder-id">http://dx.doi.org/10.13039/501100003758</institution-id>
+<institution>Fundação de Amparo à Pesquisa e ao Desenvolvimento Científico e Tecnológico do Maranhão</institution>
+</institution-wrap>
+</funding-source><award-id>008/2016</award-id>
+<principal-award-recipient><name name-style="western">
+<surname>Silva</surname>
+<given-names>Antônio Moura</given-names>
+</name></principal-award-recipient>
+</award-group>
+<award-group id="award035">
+<funding-source><institution>Fondation Christophe et Rodolphe Mérieux</institution>
+</funding-source><principal-award-recipient><name name-style="western">
+<surname>Brasil</surname>
+<given-names>Patrícia</given-names>
+</name></principal-award-recipient>
+</award-group>
+<funding-statement>The Zika Brazilian Cohorts Consortium was supported by the Conselho Nacional de Desenvolvimento Científico e Tecnológico – CNPq (grant number 404861/2018-0 RAAX). The individual studies participating in the ZBC-Consortium were funded by: Wellcome Trust and the United Kingdom’s Department for International Development (grant numbers: 205377/Z/16/Z RAAX; 201870/Z/16/Z DBMF). European Union’s Horizon 2020 research and innovation programme under ZikaPLAN (grant number 734584 MEM). Wellcome Trust - Research Enrichment in Epidemic Situation (grant number 107779/Z/15/Z RAAX; ER1505 &amp; ER1601 RAAX; ER1605 SDP). Medical Research Council on behalf of the Newton Fund and Wellcome Trust (grant number MC_PC_15088 RAAX). National Institutes of Health/National Institute of Allergy and Infectious Diseases (grant number RO1/AI140718 MEM). Conselho Nacional de Desenvolvimento Científico e Tecnológico – CNPq (grant numbers 443875/2018-9 IS; 440573/2016-5 AAMS; 441098/2016-9 MEM; 305090/2016-0 MEM; 307282/2017-1 PB; 304476/2018-8 CBH; 309722/2017-9 RAAX; 306708/2014-0 CMTM; 440577/2016-0 DNS). Coordenação de Aperfeiçoamento de Pessoal de Nível Superior – Capes (grant numbers 88881.130813/2016-01 AAMS; 88887.116627/2016-01 PB). Ministério da Saúde de Brasil - Resposta à Emergência em Saúde Pública – Zika virus e Microcefalia) (grant number 837058/2016 RAAX; 861306/2016 SDP; 881705/2018 SDP). Departamento de Ciência e Tecnologia - DECIT (grant numbers 25000.072811/2016-19 PB; 440839/2016-5 RAAX). Fundação de Amparo à Pesquisa do Estado de São Paulo – FAPESP) (grant number 2016/08578-0 SDP). Fundação de Amparo à Pesquisa do Estado do Rio de Janeiro – FAPERJ) (grant numbers E-26/201.351/2016 CBH; E-18/2015TXB MEM; E-26/202.862/2018 PB). Fundação de Amparo à Pesquisa e ao Desenvolvimento Científico e Tecnológico do Maranhão – FAPEMA) (grant number 008/2016 AAMS). Fundação de Apoio ao Ensino, Pesquisa e Assistência do Hospital das Clínicas da Faculdade de Medicina de Ribeirão Preto-FAEPA and Secretaria de Saúde do Estado de São Paulo (MMP). Fundação de Amparo à Ciência e Tecnologia de Pernambuco – FACEPE (grant numbers APQ-0172-4.01/16 DBMF; APQ-0192-4.01/17 DBMF; APQ-0793-4.01/17 BPC). Fondation Christophe et Rodolphe Mérieux – PB. Wellcome Collaborative Award entitled ’Long-term consequences of Zika virus infections during pregnancy for school-aged children and their families in Brazil (grant number 224494/B/21/Z EBB). The funders had no role in the design of the study; collection, management, analysis, and interpretation of the data; preparation, review, or approval of the manuscript; and decision to submit the manuscript for publication.</funding-statement>
+</funding-group>
+<counts>
+<fig-count count="4"/>
+<table-count count="1"/>
+<page-count count="17"/>
+</counts>
+<custom-meta-group>
+<custom-meta id="data-availability">
+<meta-name>Data Availability</meta-name>
+<meta-value>Data Availability Statement: Data generated and analyzed during this study is included in the article and its supplementary information files. As our underlying data could be stratified geographically and includes sensitive health information and other personal characteristics, there is a risk that individual children and their families could be identified if the data were shared publicly. While we cannot share the data publicly, de-identified data can be made available upon reasonable request from qualified investigators by contacting the Programa de Pós-Graduação em Ciências da Saúde (PPGCS) da Universidade de Pernambuco (UPE) at <email>ppg.cienciasdasaude@upe.br</email>.</meta-value>
+</custom-meta>
+</custom-meta-group>
+</article-meta>
+</front>
+<body>
+<sec id="sec001" sec-type="intro">
+<title>Introduction</title>
+<p>The Zika virus (ZIKV) epidemic in Brazil, and its consequences for perinatal and childhood health outcomes, have presented lasting challenges for affected families, local health authorities, and the scientific community. In May 2015, ZIKV transmission was confirmed in Brazil [<xref ref-type="bibr" rid="pgph.0005425.ref001">1</xref>]. Later that year, an unexpected rise in microcephaly cases among newborns prompted the identification of a link between congenital ZIKV infection and the observed birth defects [<xref ref-type="bibr" rid="pgph.0005425.ref002">2</xref>]. Since then, researchers provided evidence showing that the full spectrum of Congenital Zika Syndrome (CZS) extends beyond the initially described characteristics of microcephaly and brain malformations to also include other structural abnormalities and functional deficits [<xref ref-type="bibr" rid="pgph.0005425.ref003">3</xref>, <xref ref-type="bibr" rid="pgph.0005425.ref004">4</xref>]. In total 1,828 congenital ZIKV cases have been confirmed in Brazil, with a peak in 2015–2016 followed by a decline in 2017–2018, with sporadic cases in subsequent years, just 4 cases being reported in 2023 [<xref ref-type="bibr" rid="pgph.0005425.ref005">5</xref>]. Zika transmission remains in several countries but has generally been at low levels throughout 2018 to the present [<xref ref-type="bibr" rid="pgph.0005425.ref006">6</xref>].</p>
+<p>Genomic analyses have revealed that the Asian lineage of ZIKV predominated during the Brazilian outbreak [<xref ref-type="bibr" rid="pgph.0005425.ref007">7</xref>]. However, data on viral sequences from congenital ZIKV infections remain limited, and the contribution of specific viral mutations to microcephaly pathogenesis remains unclear [<xref ref-type="bibr" rid="pgph.0005425.ref008">8</xref>].</p>
+<p>Since their initiation in late 2015, individual studies in Brazil have confirmed the link between microcephaly and congenital ZIKV infection and provided evidence showing that the full spectrum of Congenital Zika Syndrome (CZS) extends beyond the initially described characteristics of microcephaly and brain malformations to also include other structural abnormalities and functional deficits [<xref ref-type="bibr" rid="pgph.0005425.ref003">3</xref>, <xref ref-type="bibr" rid="pgph.0005425.ref004">4</xref>, <xref ref-type="bibr" rid="pgph.0005425.ref009">9</xref>].</p>
+<p>Although the Brazilian cohorts were developed independently at the height of the epidemic, the principal investigators of the studies organized meetings, which were supported by PAHO/WHO, to harmonize protocols and data collection instruments for future pooled analyses [<xref ref-type="bibr" rid="pgph.0005425.ref010">10</xref>]. The resultant Zika Brazilian Cohorts-Consortium (ZBC-Consortium) now brings together individual-level data from 12 cohorts of children with CZS and Zika-related microcephaly born between 2015 and 2018 in the North, Northeast and the Southeast regions of Brazil [<xref ref-type="bibr" rid="pgph.0005425.ref011">11</xref>]. One of the main gaps in characterizing the CZS up to now is the small number of participants in individual studies. Pooling the data together overcomes the sample size-related limitations of individual studies and provides unique opportunities for investigating heterogeneity between studies and, as appropriate, to better characterize the CZS. This study focuses on the subset of children with Zika-related microcephaly in the ZBC-Consortium and conducts individual-participant data meta-analyses to describe adverse anthropometric, clinical, and neuroimaging outcomes occurring in the first three years of life.</p>
+</sec>
+<sec id="sec002" sec-type="materials|methods">
+<title>Methods</title>
+<sec id="sec003">
+<title>Ethics statement</title>
+<p>All participating cohort studies had ethical approval by local ethics committees: Hospital Universitário Oswaldo Cruz (CAAE 52803316.8.0000.5192); Universidade Federal de Pernambuco (CAAE 54734316.5.0000.5208); University of Sergipe (CAAE 53611316.0.0000.5546); Instituto Gonçalo Moniz/Fiocruz-BA (CAAE 51889315.7.0000.0040); Fundação de Medicina Tropical Dr Heitor Vieira Dourado (CAAE 60168216.2.0000.0005); Hospital Universitário do Maranhão (CAAE 65897317.1.0000.5086); Instituto Evandro Chagas (CAAE 56969516.8.0000.0019; CAAE 68067217.0.0000.0019; CAAE 29124920.6.0000.0019); Instituto Fernandes Figueira/Fiocruz-RJ (CAAE 52675616.0.0000.5269); Instituto de Puericultura e Pediatria Martagão Gesteira (CAAE 54497216.2.1001.5264); Hospital das Clínicas da Faculdade de Medicina de Ribeirão Preto da USP (CAAE 56522216.0.0000.5440); and Faculdade de Medicina de Jundiaí (CAAE 53248616.2.0000.5412). All participating pregnant women and persons responsible for participating children provided a written informed consent form.</p>
+</sec>
+<sec id="sec004">
+<title>Data sources, study population, and inclusion criteria</title>
+<p>The ZBC-Consortium identified potentially eligible cohort studies from those that: (i) received funding from one of the major Brazilian research granting institutions; (ii) had participated in the protocol and instrument harmonization meetings held in Recife/Brazil, Mexico City/Mexico, and Geneva/Switzerland; or (iii) were suggested by participating cohorts. All eligible studies, which had or were continuing to follow up children with CZS in Brazil, were invited to participate.</p>
+<p>This study included individual participant data from children in the ZBC-Consortium with a definitive, highly probable, or moderately probable diagnosis of CZS and moderate or severe microcephaly; no exclusion criteria were applied.</p>
+<p>The diagnosis of CZS was based on the study of França et al. [<xref ref-type="bibr" rid="pgph.0005425.ref010">10</xref>], and categorized as (i) ‘definitive’ with laboratory evidence, i.e., immunoglobulin-M enzyme-linked immunosorbent assay (IgM ELISA), plaque reduction neutralization test (PRNT), or quantitative real-time polymerase chain reaction (qRT-PCR) [<xref ref-type="bibr" rid="pgph.0005425.ref012">12</xref>] of a ZIKV infection during pregnancy based on maternal or child samples, regardless of other findings; (ii) ‘highly probable’ with brain imaging features suggestive of ZIKV infection (i.e., calcifications, cerebral atrophy, ventriculomegaly, cortical development disorder, cerebellum hypoplasia/atrophy, brainstem hypoplasia/atrophy and agenesis/dysgenesis of the corpus callosum [<xref ref-type="bibr" rid="pgph.0005425.ref004">4</xref>]) and negative serological results for syphilis, toxoplasmosis and cytomegalovirus; and (iii) ‘moderately probable’ with brain imaging features suggestive of ZIKV infection but without results or with inconclusive results for one or more of the three alternative congenital infections (i.e., syphilis, toxoplasmosis and cytomegalovirus).</p>
+<p>Microcephaly was defined as (i) moderate with a head circumference (HC) z-score of&gt;-3 SD to ≤-2SD below the mean or (ii) severe with a HC z-score of ≤-3SD below the mean. To assure standardization across studies, we recalculated head circumference z-scores for all children in the ZBC-Consortium using the following approach. When data were available from the time of birth, we calculated the sex and gestational age-specific HC z-score for both preterm and term newborns using the INTERGROWTH-21st curves [<xref ref-type="bibr" rid="pgph.0005425.ref013">13</xref>]. When the first measurement of HC was performed after birth for preterm children, we calculated the sex and gestational age-specific HC z-score using INTERGROWTH-21st curves until the completion of 64 weeks of gestational age and, thereafter, using the sex-specific WHO-Anthro curves [<xref ref-type="bibr" rid="pgph.0005425.ref014">14</xref>]. Microcephaly cases were further classified as disproportionate based on the relationship of HC to length [<xref ref-type="bibr" rid="pgph.0005425.ref015">15</xref>].</p>
+</sec>
+<sec id="sec005">
+<title>Data abstraction and categorization</title>
+<p>Due to protocol harmonization initiatives, most cohorts in the ZBC-Consortium have collected data in a similar way. The studies included children born from 2015 onwards and the latest evaluation was on October 17, 2019. Following comparisons between questionnaires from individual studies, a common questionnaire with a standardized codebook was developed and distributed to participating studies. Participating studies securely transferred the individual participant data relevant to the common questionnaire to a data center established at the Oswaldo Cruz Foundation’s (Fiocruz-Recife, Pernambuco/Brazil). Data for the ZBC-Consortium were securely stored on a single platform built using GeneXus-X development and aspx code.</p>
+<p>In the current study we evaluated: severity of microcephaly, proportionality, prematurity (gestational age of &lt;37 weeks at delivery), low birth weight (birth weight of &lt;2500g at delivery), small for gestational age (z-score for birth weight of &lt;-1.28 at delivery for sex and gestational age), large for gestational age (z-score for birth weight of &gt;1.28 at delivery for sex and gestational age).</p>
+<p>Congenital malformations included: congenital clubfoot, distal arthrogryposis, generalized arthrogryposis, umbilical hernia, inguinal hernia, congenital hip dislocation, prominent occiput, girata skin, overlapping cranial bones (palpable sutures), excess frontal skin, excess skin on the neck, excess skin on the back, epicantus, strabismus, nystagmus, microphthalmos, eyelid ptosis, absence of lingual frenulum, retrognathia, nevus in the face.</p>
+<p>Neurological disorders were grouped and categorized as: social attention deficits (e.g., lack of a responsive social smile, referred irritability, does not fixe gaze and does not follow with eyes, or lack of auditory or visual response), persistence of primitive reflexes (Moro, asymmetrical tonic neck reflex, palmar grasp, plantar grasp, gait, Babkin, and Galant reflexes) [<xref ref-type="bibr" rid="pgph.0005425.ref016">16</xref>], spastic hypertonia (at &gt;3 months of age), osteotendinous hyperreflexia (bicipital, triceps, radial, patellar, and Achilles tendons), abnormalities of the Landau reflex (extensor tonus of the neck and trunk), cranial nerve syndrome [grouped into three classes: Group 1 (deficit in II, III, IV, or VI cranial nerves), Group 2 (deficits in VII and VIII cranial nerves), and Group 3 (deficits in X, XI, or XII cranial nerves)], motor deficit syndrome (motor underactivity, abnormal movements, abnormal ocular motricity), and epilepsy (seizure identified by caregiver report, home video, or attending physician observation and/or EEG abnormalities [<xref ref-type="bibr" rid="pgph.0005425.ref017">17</xref>–<xref ref-type="bibr" rid="pgph.0005425.ref019">19</xref>]. Neuroimaging abnormalities included the overall abnormal imaging results based on ultrasound (US), computerized tomography (CT), or magnetic resonance imaging (MRI) as well as the specific outcomes of calcifications, ventriculomegaly, agenesis/dysgenesis of the corpus callosum, and hypoplasia/atrophy of the cerebellum.</p>
+<p>Structural ocular abnormalities, detected either by fundoscopy or RetCam, included fundal, optical nerve, and retinal abnormalities. For those sites (Rio de Janeiro-Universidade Federal do Rio de Janeiro-UFRJ; Recife-Microcephaly Epidemic Research Group-MERG; São Luis) which specified the retinal abnormalities (104 children), the findings described were focal pigment mottling, chorioretinal atrophy/scars and vascular abnormalities. As some sites did not detail the type of structural ocular abnormality but informed that there was an abnormality, the term fundal abnormality included this group in addition to the others in which the type of abnormality was described. Audiologic abnormalities (by auditory brainstem response (ABR) test), and dysphagia (based on caregiver report and/or clinical assessment by specialists).</p>
+</sec>
+<sec id="sec006">
+<title>Statistical analysis</title>
+<p>In the analysis we used a logistic-normal model with the command Metaprop_one in Stata to explore heterogeneity and estimate the study specific proportions with 95% Wilson score confidence intervals, the pooled estimate and respective confidence interval and the tau-squared (<italic>τ</italic><sup>2</sup>), on the logit scale [<xref ref-type="bibr" rid="pgph.0005425.ref020">20</xref>]. We also conducted a sensitivity analysis, shown in the supplement, using the Freeman-Tukey double arcsine transformation with the command Metaprop, estimating the same parameters plus the I-squared (I<sup>2</sup>) statistics. The logistic-normal model does model the true binomial distribution of the data and therefore, it is good for all proportions. The Freeman-Tukey is designed to stabilize the variance of proportions, especially when handling small sample sizes orextreme proportions near 0 or 1, which occurred for some variables in our study. The I<sup>2</sup> is a relative measure, expressing the percentage of the total variation in study estimates that is due to heterogeneity, and <italic>τ</italic><sup>2</sup> is an absolute measure of heterogeneity which represents the between-study variance. <italic>τ</italic><sup>2</sup> provides information of how the effectsize varies across populations. Using Metaprop_one, we also calculated the Chi-squared statistic which is related to <italic>τ</italic><sup>2</sup>; the Likelihood Ratio test: Random effect vs Fixed effect Model Chi-squared (LR test: RE vs FE Model chi^2) tests the null hypothesis that <italic>τ</italic> <sup>2</sup> = 0, i.e., that there is no between-study variance, meaning that there is no heterogeneity. With Metaprop, the Chi-squared calculated tests the null hypothesis that all studies have a common effect size using the Cochran’s Q statistic. Descriptive analysis was performed using mean and standard deviations for continuous variables with normal distributions and using median and interquartile ranges for variables without normal distributions. Categorical data were presented by absolute and relative frequencies. All analyses were performed using STATA, version 14 (College Station, TX, USA).</p>
+</sec>
+<sec id="sec007">
+<title>Data availability policy</title>
+<p>Data generated and analyzed during this study is included in the article and its supplementary information files. As our underlying data could be stratified geographically and includes sensitive health information and other personal characteristics, there is a risk that individual children and their families could be identified if the data were shared publicly. While we cannot share the data publicly, de-identified data can be made available upon reasonable request from qualified investigators by contacting the Programa de Pós-Graduação em Ciências da Saúde (PPGCS) da Universidade de Pernambuco (UPE) at ppg.cienciasdasaude@upe.br.</p>
+</sec>
+</sec>
+<sec id="sec008" sec-type="results">
+<title>Results</title>
+<p>We included 843 children, of which 542 (64.3%) with definitive CZS diagnoses, 127 (15.1%) highly probable, and 35 (4.1%) moderately probable, based on França et al. criteria. It was not possible to classify 139/843 (16.5%) children with microcephaly according to these criteria. Microcephaly was diagnosed at birth in 601 of the 843 (71.3%) children. A total of 58 of the 843 (6.9%) children were diagnosed with microcephaly at first evaluation as there was no measure of HC at birth; the median age of evaluation was 31.6 months (IQR 0.4-40.1). From the 843 children, 172 (20.4%) that had no microcephaly at birth, developed microcephaly over follow-up, i.e., postnatal microcephaly. For the remaining 12 of the 843 (1.4%) children there was information on the presence of microcephaly but the HC measure was not provided. In the group of children with microcephaly diagnosed at birth 217 (36.1%) were classified as having moderate and 384 (63.9%) as having severe microcephaly. In those diagnosed at first evaluation, 8 (13.8%) had moderate and 50 (86.3%) had severe microcephaly. In the group with postnatal microcephaly, 63 (36.6%) had moderate and 109 (63.4%) had severe microcephaly. Microcephaly was not classified according the severity for the 12 children for which the HC measure was not informed.</p>
+<p>The study participants originated from cohorts in three out of the five Brazilian Regions. The North Region comprised 2.3% of the total sample, with 19 participants, being 9 from Belém and 10 from Manaus. The Northeast Region comprised 73.5% of the total sample, with 620 participants, being 76 from Aracaju; 181 from MERG [<xref ref-type="bibr" rid="pgph.0005425.ref021">21</xref>] and 15 from Saúde Coletiva-Universidade Federal de Pernambuco both in Recife; 106 from São Luis; 129 from Instituto de Saúde Coletiva-Universidade Federal da Bahia and 113 from Instituto Gonçalo Moniz-Fiocruz both in Salvador. The Southeast Region comprised 24.2% of the total sample, with 204 participants, being 80 from Jundiaí [<xref ref-type="bibr" rid="pgph.0005425.ref022">22</xref>]; 34 from Ribeirão Preto; 74 from Instituto Fernandes Figueira-Fiocruz and 16 from UFRJ both in Rio de Janeiro (<xref ref-type="fig" rid="pgph.0005425.g001">Fig 1</xref>).</p>
+<fig id="pgph.0005425.g001" position="float"><object-id pub-id-type="doi">10.1371/journal.pgph.0005425.g001</object-id><label>Fig 1</label><caption><title>Participating cohorts of the ZBC-Consortium and severity of microcephaly per site.</title><p>A. Distribution of the cohorts participating in the ZBC-Consortium by Brazilian Regions. Note: Link to the base layer of the map: <ext-link ext-link-type="uri" xlink:href="https://pixabay.com/pt/vectors/brasil-geografia-mapa-estados-153881/" xlink:type="simple">https://pixabay.com/pt/vectors/brasil-geografia-mapa-estados-153881/</ext-link>; Link of the terms of use/license information for the base layer of the map: <ext-link ext-link-type="uri" xlink:href="https://pixabay.com/pt/service/license-summary/" xlink:type="simple">https://pixabay.com/pt/service/license-summary/</ext-link>. B. Frequency of severe microcephaly in the ZBC-Consortium per site, city, and Brazilian Region.</p></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.g001" xlink:type="simple"/></fig>
+<p>The p-value of the LR test (RE vs FE Model) for the frequency of severe microcephaly was 0,000 suggesting heterogeneity between sites. The pooled estimate of the frequency of severe microcephaly was 47.1% across study sites, ranging from 11.1 to 87.5% (<xref ref-type="fig" rid="pgph.0005425.g001">Fig 1B</xref>).</p>
+<p>The frequency of disproportionate microcephaly (i.e., classified in n = 601 children evaluated at birth) ranged from 15.8 to 93.3% overall, being 10.4 to 88.9% in children with moderate microcephaly and 64.2 to 92.8% in children with severe microcephaly. (Overall:LR test: RE vs FE Model p = 0.000, τ<sup>2 </sup>= 1.376<bold>)</bold>; Moderate: LR test: RE vs FE Model p = 0.000, τ<sup>2 </sup>= 1.211; Severe: LR test: RE vs FE Model p = 0.000, τ<sup>2 </sup>= 1.130). The site Recife-SC UFPE was excluded of the analysis for disproportionate microcephaly overall and moderate microcephaly because of the low number of children with severe microcephaly. For the analysis of disproportionate microcephaly in children with severe microcephaly the sites Manaus, Belém, Recife-SC UFPE and Ribeirão Preto were excluded because of the low number.</p>
+<p>Although, there was heterogeneity between sites in relation to the occurrence of microcephaly at birth, severity of microcephaly, and abnormal CNS image exam, the overall pooled estimated frequency of these variables was higher in children with disproportionate than in those with proportionate microcephaly. The overall pooled estimated frequency of microcephaly at birth in children with disproportionate and proportionate microcephaly was respectively 95.7% (95% CI 84.2–98.9) and 63.6% (95% CI 42.1–80.8); of severe microcephaly in children with disproportionate and proportionate microcephaly was 66.6% (95% CI 51.8–78.7) and 25.0% (95% CI 16.9-35.3 respectively. The frequency of neurological disorders in children with disproportionate and proportionate microcephaly was 72.8% (95% CI 59.6–82.9) and 64.2% (95% CI 57.6–70.3), respectively.</p>
+<p>Among the 680 microcephalic children with available data on congenital malformations (<xref ref-type="table" rid="pgph.0005425.t001">Table 1</xref>), more than one-fifth presented with: epicantus (40.1%), prominent occiput (39.2%), excess skin on the neck (26.7%), overlapping cranial bones (24.2%), strabismus (23.7%), retrognathia (23.5%), girata skin (22.4%).</p>
+<table-wrap id="pgph.0005425.t001" position="float"><object-id pub-id-type="doi">10.1371/journal.pgph.0005425.t001</object-id><label>Table 1</label><caption><title>Congenital malformations in children with Zika-related microcephaly participating in the ZBC-Consortium.</title></caption>
+<alternatives><graphic id="pgph.0005425.t001g" mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.t001" xlink:type="simple"/><table><colgroup>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+<col align="left" valign="middle"/>
+</colgroup>
+<thead>
+<tr>
+<th align="left" rowspan="2">Malformation</th>
+<th align="left" colspan="3">Microcephaly at birth or later (n = 680 congenital malformations of children with microcephaly)</th>
+<th align="left" rowspan="2">Lower frequency</th>
+<th align="left" rowspan="2">Higher frequency</th>
+<th align="left" rowspan="2">τ<sup>2</sup></th>
+<th align="left" rowspan="2">RE<break/><break/><italic>versus</italic> FE model</th>
+</tr>
+<tr>
+<th align="left">Case/total*</th>
+<th align="left">%**</th>
+<th align="left">95% CI**</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Congenital clubfoot</td>
+<td align="left">44/322</td>
+<td align="left">8.8%</td>
+<td align="left">4.0 – 18.4</td>
+<td align="left">0%</td>
+<td align="left">28.6%</td>
+<td align="left">0.528</td>
+<td align="left">0.001</td>
+</tr>
+<tr>
+<td align="left">Distal arthrogryposis</td>
+<td align="left">64/295</td>
+<td align="left">15.4%</td>
+<td align="left">6.4 – 32.9</td>
+<td align="left">0%</td>
+<td align="left">31.1%</td>
+<td align="left">0.595</td>
+<td align="left">0.001</td>
+</tr>
+<tr>
+<td align="left">Generalized arthrogryposis</td>
+<td align="left">30/304</td>
+<td align="left">3.6%</td>
+<td align="left">0.0 – 20.8</td>
+<td align="left">0%</td>
+<td align="left">15.1%</td>
+<td align="left">1.446</td>
+<td align="left">0.004</td>
+</tr>
+<tr>
+<td align="left">Umbilical hernia</td>
+<td align="left">36/310</td>
+<td align="left">5.0%</td>
+<td align="left">0.0 – 38.8</td>
+<td align="left">0%</td>
+<td align="left">100%</td>
+<td align="left">5.225</td>
+<td align="left">0.006</td>
+</tr>
+<tr>
+<td align="left">Inguinal hernia</td>
+<td align="left">15/319</td>
+<td align="left">1.8%</td>
+<td align="left">0.0 – 20.6</td>
+<td align="left">0%</td>
+<td align="left">76.9%</td>
+<td align="left">8.521</td>
+<td align="left">0.001</td>
+</tr>
+<tr>
+<td align="left">Congenital hip dislocation</td>
+<td align="left">37/305</td>
+<td align="left">6.5%</td>
+<td align="left">2.3 – 17.2</td>
+<td align="left">0%</td>
+<td align="left">18.7%</td>
+<td align="left">0.584</td>
+<td align="left">0.002</td>
+</tr>
+<tr>
+<td align="left">Prominent occiput</td>
+<td align="left">107/273</td>
+<td align="left">39.2%</td>
+<td align="left">33.6 – 45.1</td>
+<td align="left">35.9%</td>
+<td align="left">44.9%</td>
+<td align="left">0.000</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">Girata skin</td>
+<td align="left">55/270</td>
+<td align="left">22.4%</td>
+<td align="left">8.2 – 48.3</td>
+<td align="left">0%</td>
+<td align="left">71.4%</td>
+<td align="left">1.060</td>
+<td align="left">0.320</td>
+</tr>
+<tr>
+<td align="left">Overlapping cranial bones (palpable sutures)</td>
+<td align="left">67/283</td>
+<td align="left">(24.2%</td>
+<td align="left">18.2 – 31.4</td>
+<td align="left">14.3%</td>
+<td align="left">42.9%</td>
+<td align="left">0.032</td>
+<td align="left">0.274</td>
+</tr>
+<tr>
+<td align="left">Excess frontal skin</td>
+<td align="left">31/182</td>
+<td align="left">17.0%</td>
+<td align="left">12.2 – 23.2</td>
+<td align="left">0%</td>
+<td align="left">18.2%</td>
+<td align="left">0.000</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">Excess skin on the neck</td>
+<td align="left">72/270</td>
+<td align="left">26.7%</td>
+<td align="left">21.7 – 32.3</td>
+<td align="left">22.7%</td>
+<td align="left">71.4%</td>
+<td align="left">0.000</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">Excess skin on the back</td>
+<td align="left">22/182</td>
+<td align="left">12.1%</td>
+<td align="left">8.1 – 17.7</td>
+<td align="left">0%</td>
+<td align="left">30.0%</td>
+<td align="left">0.000</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">Epicantus</td>
+<td align="left">73/182</td>
+<td align="left">40.1%</td>
+<td align="left">33.2 – 47.4</td>
+<td align="left">0%</td>
+<td align="left">50.0%</td>
+<td align="left">0.000</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">Strabismus</td>
+<td align="left">106/334</td>
+<td align="left">23.7%</td>
+<td align="left">12.2 – 40.9</td>
+<td align="left">7.9%</td>
+<td align="left">44.3%</td>
+<td align="left">0.581</td>
+<td align="left">0.001</td>
+</tr>
+<tr>
+<td align="left">Nystagmus</td>
+<td align="left">69/350</td>
+<td align="left">13.1%</td>
+<td align="left">4.9 – 30.6</td>
+<td align="left">0%</td>
+<td align="left">37.2%</td>
+<td align="left">0.745</td>
+<td align="left">0.001</td>
+</tr>
+<tr>
+<td align="left">Microphthalmos</td>
+<td align="left">13/253</td>
+<td align="left">3.5%</td>
+<td align="left">0 – 13.5</td>
+<td align="left">0%</td>
+<td align="left">7.4%</td>
+<td align="left">0.395</td>
+<td align="left">0.183</td>
+</tr>
+<tr>
+<td align="left">Eyelid ptosis</td>
+<td align="left">12/181</td>
+<td align="left">6.6%</td>
+<td align="left">0.4 – 11.3</td>
+<td align="left">0%</td>
+<td align="left">7.3%</td>
+<td align="left">0.000</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">Absence of lingual frenulum</td>
+<td align="left">29/286</td>
+<td align="left">2.4%</td>
+<td align="left">0 – 21.1</td>
+<td align="left">0%</td>
+<td align="left">17.2%</td>
+<td align="left">2.510</td>
+<td align="left">0.001</td>
+</tr>
+<tr>
+<td align="left">Retrognathia</td>
+<td align="left">43/183</td>
+<td align="left">23.5%</td>
+<td align="left">17.9 – 30.2</td>
+<td align="left">0%</td>
+<td align="left">30.0%</td>
+<td align="left">0.000</td>
+<td align="left">1.000</td>
+</tr>
+<tr>
+<td align="left">Nevus in the face</td>
+<td align="left">9/228</td>
+<td align="left">2.4%</td>
+<td align="left">0 – 34.0</td>
+<td align="left">0%</td>
+<td align="left">5.5%</td>
+<td align="left">0.496</td>
+<td align="left">0.354</td>
+</tr>
+</tbody>
+</table>
+</alternatives><table-wrap-foot>
+<fn id="t001fn001"><p>* Differences in denominators are due to missing values</p></fn>
+<fn id="t001fn002"><p>** Random pooled estimative</p></fn>
+</table-wrap-foot>
+</table-wrap>
+<p>The frequency of low birth weight was 33.2% varying from 10 to 43.8%, but for most of the sites it was between 20 and 40% (LR test: RE vs FE Model p = 0.449) (<xref ref-type="fig" rid="pgph.0005425.g002">Fig 2A</xref>). For small for gestational age and large for gestational age there was also no heterogeneity (<xref ref-type="supplementary-material" rid="pgph.0005425.s001">S1B Fig</xref> and <xref ref-type="supplementary-material" rid="pgph.0005425.s001">S1C</xref>), while prematurity, and dysphagia presented with heterogeneity and a high variability through sites (<xref ref-type="supplementary-material" rid="pgph.0005425.s001">S1A Fig</xref> and <xref ref-type="supplementary-material" rid="pgph.0005425.s001">S1D</xref>).</p>
+<fig id="pgph.0005425.g002" position="float"><object-id pub-id-type="doi">10.1371/journal.pgph.0005425.g002</object-id><label>Fig 2</label><caption><title>Frequency of low birth weight and neurological abnormalities of children with Zika-related microcephaly of the ZBC-Consortium.</title><p>Frequency of low birth weight (A), epilepsy (B), deficit of social attention (C) and persistence of primitive reflexes (D) in children with Zika-related microcephaly of the ZBC-Consortium.</p></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.g002" xlink:type="simple"/></fig>
+<p>The neurological manifestations among the children considered each site reported. Several neurological findings, including those that are proxy of severe injury were very frequent through studies sites; deficit of social attention (lack of social interactions) was reported in at least 50% of the children in the cohort studies with higher number of participants (<xref ref-type="fig" rid="pgph.0005425.g002">Fig 2C</xref>). The same was observed on spastic hypertonia (<xref ref-type="supplementary-material" rid="pgph.0005425.s002">S2B Fig</xref>). Epilepsy was reported in 30–80% (LR test: RE vs FE Model p = 0.000, overall pooled estimate = 58.3, 95% CI 44.5-71.0) (<xref ref-type="fig" rid="pgph.0005425.g002">Fig 2B</xref>). Persistence of primitive reflexes (<xref ref-type="fig" rid="pgph.0005425.g002">Fig 2D</xref>) was investigated in five sites and there was homogeneity between sites with an overall pooled estimate of 63.1 (CI 56.5-69.3).</p>
+<p>The frequency of eye fundal abnormality among the children ranged from 0 to 67.1% (LR test: RE vs FE Model p = 0.000, overall pooled estimate = 49.8, 95% CI 39.0-60.7) (<xref ref-type="supplementary-material" rid="pgph.0005425.s002">S2A Fig</xref>) and the frequency of optical nerve abnormality varied from 0 to 36.5% (LR test: RE vs FE Model p = 0.111, overall pooled estimate = 26.6, 95% CI 19.9-34.6) (<xref ref-type="fig" rid="pgph.0005425.g003">Fig 3A</xref>), and the frequency of retinal abnormality varied from 0 to 100% (LR test: RE vs FE Model p = 1.000, overall pooled estimate = 31.1, 95% CI 26.4-36.3) (<xref ref-type="fig" rid="pgph.0005425.g003">Fig 3B</xref>).</p>
+<fig id="pgph.0005425.g003" position="float"><object-id pub-id-type="doi">10.1371/journal.pgph.0005425.g003</object-id><label>Fig 3</label><caption><title>Frequency of ocular abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium.</title><p>Frequency of optical nerve (A) and retinal (B) abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium.</p></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.g003" xlink:type="simple"/></fig>
+<p>In <xref ref-type="fig" rid="pgph.0005425.g004">Fig 4A</xref> we observe that for five sites, all studied children had at least one abnormal CNS image exam, and for the other six, at least 80%. Calcifications and ventriculomegaly were the most consistent and frequent described abnormality, calcification ranging from 26.7 to 100% (LR test: RE vs FE Model p = 0.000, overall pooled estimate = 81.7, 95% CI 68.4-90.2) (<xref ref-type="fig" rid="pgph.0005425.g004">Fig 4B</xref>) and for ventriculomegaly, the frequency was above 55% for 10 of the 11 sites (LR test: RE vs FE Model p = 0.000, overall pooled estimate = 76.8, 95% CI 57.8-88.9) (<xref ref-type="fig" rid="pgph.0005425.g004">Fig 4C</xref>). Spastic hypertonia was found in seven sites in which they were investigated, with a frequency of 100% in four sites (<xref ref-type="supplementary-material" rid="pgph.0005425.s002">S2B Fig</xref>). For cerebellum hypoplasia/atrophy and agenesis/dysgenesis of the corpus callosum there was heterogeneity, and the frequency of cerebellum hypoplasia/atrophy varied from 0 to 50% and of agenesis/dysgenesis of the corpus callosum, varied from 0 to 100% (<xref ref-type="supplementary-material" rid="pgph.0005425.s002">S2C Fig</xref> and <xref ref-type="supplementary-material" rid="pgph.0005425.s002">S2D Fig</xref>).</p>
+<fig id="pgph.0005425.g004" position="float"><object-id pub-id-type="doi">10.1371/journal.pgph.0005425.g004</object-id><label>Fig 4</label><caption><title>Frequency of imaging and audiologic abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium.</title><p>Frequency of abnormal cerebral ultrasonography, or tomography, or magnetic resonance imaging (A), calcification (B), ventriculomegaly (C) and abnormal ABR test (D) in children with Zika-related microcephaly participating in the ZBC-Consortium.</p></caption>
+<graphic mimetype="image" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.g004" xlink:type="simple"/></fig>
+<p>Although an audiology exam was not performed in all the cohort studies, abnormalities were not as common as CNS or eye disease. The frequency of abnormal ABR test was 0% in six out of 10 sites (<xref ref-type="fig" rid="pgph.0005425.g004">Fig 4D</xref>).</p>
+<p>The forest plot graphics with a sensitive analysis, using the Freeman-Tukey double arcsine transformation, estimating the same parameters plus the I-squared (I<sup>2</sup>) statistics, are shown in supplement (<xref ref-type="supplementary-material" rid="pgph.0005425.s003">S3 Fig</xref> to <xref ref-type="supplementary-material" rid="pgph.0005425.s007">S7 Fig</xref>). The results of the pooled estimates were very similar in both approaches and for most of the variables the I<sup>2</sup> was above 75%, suggesting high heterogeneity.</p>
+</sec>
+<sec id="sec009" sec-type="conclusions">
+<title>Discussion</title>
+<p>This study brings together individual participant data from 12 prospectively followed pediatric cohorts from three regions of Brazil that were started during the ZIKV epidemic. Although the frequencies of individual abnormalities were generally heterogeneous across the studies, most children with Zika-related microcephaly presented with a very similar spectrum of signs and symptoms, regardless of geographic origin, with the most common abnormalities related to neurologic function, ocular structure, and hearing. Similar to our findings from Brazil, previous research from the French territories in the Americas, the United States territories, and Colombia reported neurological, ophthalmological, and hearing abnormalities as the most frequent outcomes in children with prenatal ZIKV exposure [<xref ref-type="bibr" rid="pgph.0005425.ref023">23</xref>, <xref ref-type="bibr" rid="pgph.0005425.ref024">24</xref>].</p>
+<p>We observed a notable overlap between microcephaly and other congenital malformations, with the most frequent being epicantus, prominent occiput, excess skin on the neck and overlapping cranial bones. Prominent occiput and excess skin on the neck are due to the skull deformity associated with the severity of microcephaly. The other malformations appear to be part of the spectrum of manifestations of CZS.</p>
+<p>We also observed a high frequency of children who were born with low birth weight (20–40%) and/or small for gestational age (30–65%). These findings align with a large body of evidence suggesting that congenital infection from pathogens, such as <italic>Toxoplasma gondii</italic>, rubella virus, cytomegalovirus (CMV), herpes simplex virus (HSV), and <italic>Treponema pallidum</italic> (syphilis), may result in intrauterine growth restriction (IUGR) [<xref ref-type="bibr" rid="pgph.0005425.ref025">25</xref>]. Strikingly, a high number of children (n = 394) in this study presented with disproportionate microcephaly. As the frequency of severe microcephaly and abnormal CNS image exam was higher among children with disproportionate microcephaly compared to those proportionate microcephaly, we hypothesize that brain damage may have been the main cause of the disproportion.</p>
+<p>A range of neurological signs/symptoms were also very frequent in children with Zika-related microcephaly. In the pooled analyses, we observed high frequencies of social attention deficits, the persistence of primitive reflexes, and epilepsy. The occurrence of neurologic abnormalities likely represents both direct (e.g., ZIKV’s tropism for neural progenitor stem cells) and indirect (e.g., inflammatory responses that compromise neurogenesis) consequences of the presence of ZIKV in the CNS during fetal development [<xref ref-type="bibr" rid="pgph.0005425.ref026">26</xref>]. Further research is warranted to better understand the underlying mechanisms and how factors associated with vertical transmission, such as the timing of infection and/or the viral load, may influence the frequency of ZIKV-related neurologic abnormalities. Further investigation is also necessary to clarify if attention deficits in these children is due to development delay and/or autism and/or if they are sensory impaired with low vision or hearing loss.</p>
+<p>Consistent with the high frequency of neurologic abnormalities, postnatal brain assessments based on US, CT, and/or MRI imaging found abnormalities in several sectors of the brain. In the pooled analyses, we observed high frequencies of calcifications, ventriculomegaly, and cerebral atrophy. These results are broadly consistent with MRI-based animal model studies, which showed that ZIKV-infected infant rhesus macaques had ventriculomegaly, hypotrophy/atrophy, and altered functional connectivity between brain areas (e.g., amygdala, hippocampus, cerebellum). Further, the neuropathological alterations corresponded with neuroimaging results and were consistent with the behavioral and memory deficits [<xref ref-type="bibr" rid="pgph.0005425.ref027">27</xref>]. This type of finding is consistent with that we observed in the children exposed to ZIKV [<xref ref-type="bibr" rid="pgph.0005425.ref028">28</xref>].</p>
+<p>Ocular structural abnormalities were similar to those reported by other authors in Brazil and elsewhere, mainly optic nerve pallor/hypoplasia, focal pigment mottling and chorioretinal scars [<xref ref-type="bibr" rid="pgph.0005425.ref029">29</xref>]. The hearing evaluations we showed were based just on ABR test. More detailed by Cortical Auditory Evoked Potentials in a small number of children suggested that regardless of changes in the CNS, this population appears to have, to some extent, the cortical ability to process sound stimuli, however, the presence of microcephaly may interfere with the attention capacity and auditory discrimination [<xref ref-type="bibr" rid="pgph.0005425.ref030">30</xref>].</p>
+<p>In the pooled analyses, dysphagia was common and observed in 46.9% of children. The substantial heterogeneity is likely to be due to differences in case ascertainment approaches across the study sites.</p>
+<p>The findings described in this study were those that were investigated in most of the sites, as they were part of the manifestations of the CZS initially described. However, the broader description of the CZS spectrum must be complemented by the findings of specific studies that used more sophisticated instruments to investigate some abnormalities, such as manifestations of the urogenital system [<xref ref-type="bibr" rid="pgph.0005425.ref031">31</xref>], endocrinological [<xref ref-type="bibr" rid="pgph.0005425.ref032">32</xref>], cardiorespiratory [<xref ref-type="bibr" rid="pgph.0005425.ref033">33</xref>, <xref ref-type="bibr" rid="pgph.0005425.ref034">34</xref>] and gastrointestinal [<xref ref-type="bibr" rid="pgph.0005425.ref035">35</xref>]. Additional and equally important information should come from studies evaluating the neurodevelopment of these children as they reach different age groups [<xref ref-type="bibr" rid="pgph.0005425.ref036">36</xref>].</p>
+<p>Although there was heterogeneity for most of the variables, it does not seem that there is likely to be a biological difference (e.g., in relation to underlying comorbidities or consequences of congenital infection) between the children in the different cohorts within the ZBC-Consortium. There are several possible study design-related explanations for the heterogeneity in the frequency of some characteristics across studies. First, each study used different recruitment criteria (e.g., some recruited antenatally, such as from pregnancy cohorts, while others recruited from outpatient pediatric clinics, primary care settings, or from the Municipal Health Surveillance database which were subsequently contacted by the local primary care teams). These different recruitment criteria could introduce selection biases (e.g., sites recruiting as part of surveillance efforts may have had a higher sensitivity for recruiting children with milder CZS). Of note, the frequency of severe microcephaly varied from 11 to 87.5% across cohorts. We believe that this variation is probably related to different inclusion criteria among sites, as some sites primarily recruited children with phenotypes more typical for severe rather than moderate microcephaly. Second, since data were collected from studies conducted concurrently, without a previous standardization, and retrospectively harmonized, outcome definitions may have differed to some extent. Notably, each study relied on the expertise of local evaluators, and potentially differing techniques and instruments, to diagnose the abnormalities in the context of a new congenital syndrome never before described. In addition to differences between studies, the learning curve over the duration of follow-up within a given site must be considered.</p>
+<p>An important strength of this study was the large sample size, pooling the individual primary data of 843 children with Zika-related microcephaly, a large proportion of the 1,828 confirmed CZS cases notified between 2015 and 2023 in Brazil [<xref ref-type="bibr" rid="pgph.0005425.ref005">5</xref>]. This study has some limitations: i) children were enrolled since the start of the epidemic, and therefore the laboratory confirmation was not possible for all of them. This is the reason why we worked with different levels of evidence of ZIKV infection, the criteria adopted by Brazilian researchers [<xref ref-type="bibr" rid="pgph.0005425.ref010">10</xref>]; ii) there may have been some degree of misclassification of CZS, but it is not likely that it may have affected substantially our results as only 4.1% of the children had a level of evidence of moderately probable. In relation to the fact that children with microcephaly born to mothers who presented ZIKV infection during pregnancy had the diagnosis of CZS categorized as ‘definitive’, it may not be excluded that they had microcephaly of another aetiology, but if it occurred was probably in a very small proportion as microcephaly is a rare event and again it is not likely that it would bias our results.</p>
+<p>In conclusion, this study presents the findings from the largest ever analysis of children with Zika-related microcephaly. This relatively large sample size allowed us to observe that, among children with microcephaly, there exists a spectrum in the severity and types of manifestations of CZS. Despite the heterogeneity found across the different sites, structural abnormalities of the central nervous system, detected by neuroimaging, and abnormalities in neurological and ophthalmological examination were the most frequently reported outcomes. This severe CNS damage demands multidisciplinary care and assistance from different medical and other health specialties.</p>
+</sec>
+<sec id="sec010" sec-type="supplementary-material">
+<title>Supporting information</title>
+<supplementary-material id="pgph.0005425.s001" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.s001" xlink:type="simple">
+<label>S1 Fig</label>
+<caption>
+<title>Frequency of prematurity, small for gestational age and large for gestational age and dysphagia of children with Zika-related microcephaly of the ZBC-Consortium.</title>
+<p>Frequency of prematurity (A), small for gestational age (B), large for gestational age (C), dysphagia (D) in children with Zika-related microcephaly of the ZBC-Consortium.</p>
+<p>(TIF)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pgph.0005425.s002" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.s002" xlink:type="simple">
+<label>S2 Fig</label>
+<caption>
+<title>Frequency of fundal abnormality among the children, spastic hypertonia, cerebellum hypoplasia/atrophy and agenesis/dysgenesis of the corpus callosum of children with Zika-related microcephaly of the ZBC-Consortium.</title>
+<p>Frequency of fundal abnormality among the children (A) spastic hypertonia (B), cerebellum hypoplasia/atrophy (C) and agenesis/dysgenesis of the corpus callosum (D) in children with Zika-related microcephaly of the ZBC-Consortium.</p>
+<p>(TIF)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pgph.0005425.s003" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.s003" xlink:type="simple">
+<label>S3 Fig</label>
+<caption>
+<title>Frequency of low birth weight and neurological abnormalities of children with Zika-related microcephaly of the ZBC-Consortium (using Freeman-Tukey Double Arcsine Transformation).</title>
+<p>Frequency of low birth weight (A), epilepsy (B), deficit of social attention (C) and persistence of primitive reflexes (D) in children with Zika-related microcephaly of the ZBC-Consortium.</p>
+<p>(TIF)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pgph.0005425.s004" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.s004" xlink:type="simple">
+<label>S4 Fig</label>
+<caption>
+<title>Frequency of ocular abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium (using Freeman-Tukey Double Arcsine Transformation).</title>
+<p>Frequency of optical nerve (A) and retinal (B) abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium.</p>
+<p>(TIF)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pgph.0005425.s005" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.s005" xlink:type="simple">
+<label>S5 Fig</label>
+<caption>
+<title>Frequency of imaging and audiologic abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium (using Freeman-Tukey Double Arcsine Transformation).</title>
+<p>Frequency of abnormal cerebral ultrasonography, or tomography, or magnetic resonance imaging (A), calcification (B), ventriculomegaly (C) and abnormal ABR test (D) in children with Zika-related microcephaly participating in the ZBC-Consortium.</p>
+<p>(TIF)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pgph.0005425.s006" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.s006" xlink:type="simple">
+<label>S6 Fig</label>
+<caption>
+<title>Frequency of prematurity, small for gestational age and large for gestational age and dysphagia of children with Zika-related microcephaly of the ZBC-Consortium (using Freeman-Tukey Double Arcsine Transformation).</title>
+<p>Frequency of prematurity (A), small for gestational age (B), large for gestational age (C), dysphagia (D) in children with Zika-related microcephaly of the ZBC-Consortium.</p>
+<p>(TIF)</p>
+</caption>
+</supplementary-material>
+<supplementary-material id="pgph.0005425.s007" mimetype="image/tiff" position="float" xlink:href="info:doi/10.1371/journal.pgph.0005425.s007" xlink:type="simple">
+<label>S7 Fig</label>
+<caption>
+<title>Frequency of fundal abnormality among the children, spastic hypertonia, cerebellum hypoplasia/atrophy and agenesis/dysgenesis of the corpus callosum of children with Zika-related microcephaly of the ZBC-Consortium (using Freeman-Tukey Double Arcsine Transformation).</title>
+<p>Frequency of fundal abnormality among the children (A) spastic hypertonia (B), cerebellum hypoplasia/atrophy (C) and agenesis/dysgenesis of the corpus callosum (D) in children with Zika-related microcephaly of the ZBC-Consortium.</p>
+<p>(TIF)</p>
+</caption>
+</supplementary-material>
+</sec>
+</body>
+<back>
+<ack>
+<p>The authors also would like to acknowledge all researchers and fieldworkers who contributed to the conduction of all studies participating in the ZBC-Consortium.</p>
+<p><bold>The members of the Zika Brazilian Cohorts Consortium (ZBC Consortium) are:</bold> Maria de Fátima P M de Albuquerque, Maria das Graças Costa Alecrim, Melania Maria Ramos de Amorim, Marcia da Costa Castilho, Antonio Ledo A Cunha, Geraldo Duarte, Sophie H Eickmann, Flor Ernestina Martinez Espinosa, Cássia Fernanda Estofolete, Juliana Herrero-Silva, Adriana Suely de Oliveira Melo, Marisa Marcia Mussi-Pinhata, Maurício Nogueira, Arnaldo Prata-Barbosa, Deolinda Maria Felin Scalabrin, Lavínia Schuler-Faccini, Wayner Vieira de Souza, Marilia Dalva Turchi, and Ana Laura de Sene Amâncio Zara.</p>
+</ack>
+<ref-list>
+<title>References</title>
+<ref id="pgph.0005425.ref001"><label>1</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Zanluca</surname> <given-names>C</given-names></name>, <name name-style="western"><surname>Campos Andrade de Melo</surname> <given-names>V</given-names></name>, <name name-style="western"><surname>Mosimann</surname> <given-names>LP</given-names></name>. <article-title>First report of autochthonous transmission of Zika virus in Brazil</article-title>. <source>Mem Inst Oswaldo Cruz</source>. <year>2015</year>;<volume>110</volume>:<fpage>569</fpage>–<lpage>72</lpage>.</mixed-citation></ref>
+<ref id="pgph.0005425.ref002"><label>2</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Albuquerque</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>de Souza</surname> <given-names>WV</given-names></name>, <name name-style="western"><surname>Araújo</surname> <given-names>TVB</given-names></name>. <article-title>The microcephaly epidemic and Zika virus: Building knowledge in epidemiology</article-title>. <source>Cad Saude Publica</source>. <volume>34</volume>.</mixed-citation></ref>
+<ref id="pgph.0005425.ref003"><label>3</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Brasil</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Pereira</surname> <given-names>JP</given-names></name>, <name name-style="western"><surname>Moreira</surname> <given-names>ME</given-names></name>, <name name-style="western"><surname>Ribeiro Nogueira</surname> <given-names>RM</given-names></name>, <name name-style="western"><surname>Damasceno</surname> <given-names>L</given-names></name>, <name name-style="western"><surname>Wakimoto</surname> <given-names>M</given-names></name>, <etal>et al</etal>. <article-title>Zika Virus Infection in Pregnant Women in Rio de Janeiro</article-title>. <source>N Engl J Med</source>. <year>2016</year>;<volume>375</volume>:<fpage>2321</fpage>–<lpage>34</lpage>.</mixed-citation></ref>
+<ref id="pgph.0005425.ref004"><label>4</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Del Campo</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Feitosa</surname> <given-names>IML</given-names></name>, <name name-style="western"><surname>Ribeiro</surname> <given-names>EM</given-names></name>, <name name-style="western"><surname>Horovitz</surname> <given-names>DDG</given-names></name>, <name name-style="western"><surname>Pessoa</surname> <given-names>ALS</given-names></name>, <name name-style="western"><surname>França</surname> <given-names>GVA</given-names></name>, <etal>et al</etal>. <article-title>The phenotypic spectrum of congenital Zika syndrome</article-title>. <source>Am J Med Genet A</source>. <year>2017</year>;<volume>173</volume>(<issue>4</issue>):<fpage>841</fpage>–<lpage>57</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1002/ajmg.a.38170" xlink:type="simple">10.1002/ajmg.a.38170</ext-link></comment> <object-id pub-id-type="pmid">28328129</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref005"><label>5</label><mixed-citation publication-type="other" xlink:type="simple">Brasil. Situação epidemiológica da síndrome congênita associada à infecção pelo vírus Zika: Brasil, 2015 a 2022. Ministério da Saúde Secr Vigilância em Saúde e Ambient; 2022;54.</mixed-citation></ref>
+<ref id="pgph.0005425.ref006"><label>6</label><mixed-citation publication-type="book" xlink:type="simple"><collab>WHO</collab>. <source>Zika epidemiology update - May 2024</source>. <year>2024</year> [cited 7 Jan 2025]. <publisher-name>World Health Organization</publisher-name>; Available from: <ext-link ext-link-type="uri" xlink:href="https://www.who.int/publications/m/item/zika-epidemiology-update-may-2024" xlink:type="simple">https://www.who.int/publications/m/item/zika-epidemiology-update-may-2024</ext-link></mixed-citation></ref>
+<ref id="pgph.0005425.ref007"><label>7</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Faria</surname> <given-names>NR</given-names></name>, <name name-style="western"><surname>Do Socorro Da Silva Azevedo</surname> <given-names>R</given-names></name>, <name name-style="western"><surname>Kraemer</surname> <given-names>MUG</given-names></name>, <name name-style="western"><surname>Souza</surname> <given-names>R</given-names></name>, <name name-style="western"><surname>Cunha</surname> <given-names>MS</given-names></name>, <name name-style="western"><surname>Hill</surname> <given-names>SC</given-names></name>, <etal>et al</etal>. <article-title>Zika virus in the Americas: Early epidemiological and genetic findings</article-title>. <source>Science</source>. <year>2016</year>;<volume>352</volume>(<issue>6283</issue>):<fpage>345</fpage>–<lpage>9</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1126/science.aaf5036" xlink:type="simple">10.1126/science.aaf5036</ext-link></comment> <object-id pub-id-type="pmid">27013429</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref008"><label>8</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Grubaugh</surname> <given-names>ND</given-names></name>, <name name-style="western"><surname>Faria</surname> <given-names>NR</given-names></name>, <name name-style="western"><surname>Andersen</surname> <given-names>KG</given-names></name>, <name name-style="western"><surname>Pybus</surname> <given-names>OG</given-names></name>. <article-title>Genomic Insights into Zika Virus Emergence and Spread</article-title>. <source>Cell</source>. <year>2018</year>;<volume>172</volume>(<issue>6</issue>):<fpage>1160</fpage>–<lpage>2</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.cell.2018.02.027" xlink:type="simple">10.1016/j.cell.2018.02.027</ext-link></comment> <object-id pub-id-type="pmid">29522736</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref009"><label>9</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>de Araújo</surname> <given-names>TVB</given-names></name>, <name name-style="western"><surname>de Alencar Ximenes</surname> <given-names>RA</given-names></name>, <name name-style="western"><surname>de Barros Miranda-Filho</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>Souza</surname> <given-names>WV</given-names></name>, <name name-style="western"><surname>Montarroyos</surname> <given-names>UR</given-names></name>, <name name-style="western"><surname>de Melo</surname> <given-names>APL</given-names></name>, <etal>et al</etal>. <article-title>Association between microcephaly, Zika virus infection, and other risk factors in Brazil: final report of a case-control study</article-title>. <source>Lancet Infect Dis</source>. <year>2018</year>;<volume>18</volume>(<issue>3</issue>):<fpage>328</fpage>–<lpage>36</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/S1473-3099(17)30727-2" xlink:type="simple">10.1016/S1473-3099(17)30727-2</ext-link></comment> <object-id pub-id-type="pmid">29242091</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref010"><label>10</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>França</surname> <given-names>GVA</given-names></name>, <name name-style="western"><surname>Schuler-Faccini</surname> <given-names>L</given-names></name>, <name name-style="western"><surname>Oliveira</surname> <given-names>WK</given-names></name>, <name name-style="western"><surname>Henriques</surname> <given-names>CMP</given-names></name>, <name name-style="western"><surname>Carmo</surname> <given-names>EH</given-names></name>, <name name-style="western"><surname>Pedi</surname> <given-names>VD</given-names></name>, <etal>et al</etal>. <article-title>Congenital Zika virus syndrome in Brazil: a case series of the first 1501 livebirths with complete investigation</article-title>. <source>Lancet</source>. <year>2016</year>;<volume>388</volume>(<issue>10047</issue>):<fpage>891</fpage>–<lpage>7</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/S0140-6736(16)30902-3" xlink:type="simple">10.1016/S0140-6736(16)30902-3</ext-link></comment> <object-id pub-id-type="pmid">27372398</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref011"><label>11</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>das Graças Costa Alecrim</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>de Amorim</surname> <given-names>MMR</given-names></name>, <name name-style="western"><surname>de Araújo</surname> <given-names>TVB</given-names></name>, <name name-style="western"><surname>Brasil</surname> <given-names>P</given-names></name>, <name name-style="western"><surname>Brickley</surname> <given-names>EB</given-names></name>, <name name-style="western"><surname>da Costa Castilho</surname> <given-names>M</given-names></name>, <etal>et al</etal>. <article-title>Zika Brazilian Cohorts (ZBC) Consortium: Protocol for an Individual Participant Data Meta-Analysis of Congenital Zika Syndrome after Maternal Exposure during Pregnancy</article-title>. <source>Viruses</source>. <year>2021</year>;<volume>13</volume>(<issue>4</issue>):<fpage>687</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.3390/v13040687" xlink:type="simple">10.3390/v13040687</ext-link></comment> <object-id pub-id-type="pmid">33923434</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref012"><label>12</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Ximenes</surname> <given-names>RAA</given-names></name>, <name name-style="western"><surname>Miranda-Filho</surname> <given-names>DB</given-names></name>, <name name-style="western"><surname>Brickley</surname> <given-names>EB</given-names></name>, <etal>et al</etal>. <article-title>Zika virus infection in pregnancy: Establishing a case definition for clinical research on pregnant women with rash in an active transmission setting</article-title>. <source>PLoS Negl Trop Dis</source>. <year>2019</year>;<volume>13</volume>:<fpage>1</fpage>–<lpage>17</lpage>.</mixed-citation></ref>
+<ref id="pgph.0005425.ref013"><label>13</label><mixed-citation publication-type="book" xlink:type="simple"><collab>University of Oxford</collab>. <source>International Newborn Size Standards</source>. <year>2014</year>. <publisher-name>University of Oxford</publisher-name>; available from: <ext-link ext-link-type="uri" xlink:href="https://media.tghn.org/medialibrary/2017/04/08_NB_package_with_combined.pdf" xlink:type="simple">https://media.tghn.org/medialibrary/2017/04/08_NB_package_with_combined.pdf</ext-link></mixed-citation></ref>
+<ref id="pgph.0005425.ref014"><label>14</label><mixed-citation publication-type="book" xlink:type="simple"><collab>WHO</collab>. <source>Child growth standards. WHO Anthro Survey Analyser</source>. <year>2010</year>. <publisher-name>World Health Organization</publisher-name>; Available from: <ext-link ext-link-type="uri" xlink:href="https://www.who.int/tools/child-growth-standards/software" xlink:type="simple">https://www.who.int/tools/child-growth-standards/software</ext-link></mixed-citation></ref>
+<ref id="pgph.0005425.ref015"><label>15</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Dine</surname> <given-names>MS</given-names></name>, <name name-style="western"><surname>Gartside</surname> <given-names>PS</given-names></name>, <name name-style="western"><surname>Glueck</surname> <given-names>CJ</given-names></name>, <name name-style="western"><surname>Rheins</surname> <given-names>L</given-names></name>, <name name-style="western"><surname>Greene</surname> <given-names>G</given-names></name>, <name name-style="western"><surname>Khoury</surname> <given-names>P</given-names></name>. <article-title>Relationship of head circumference to length in the first 400 days of life: a mnemonic</article-title>. <source>Pediatrics</source>. <year>1981</year>;<volume>67</volume>(<issue>4</issue>):<fpage>506</fpage>–<lpage>7</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1542/peds.67.4.506" xlink:type="simple">10.1542/peds.67.4.506</ext-link></comment> <object-id pub-id-type="pmid">7254972</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref016"><label>16</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Funayama</surname> <given-names>CAR</given-names></name>. <article-title>Exame neurológico em crianças</article-title>. <source>Med (Ribeirao Preto)</source>. <year>1996</year>;<volume>29</volume>:<fpage>32</fpage>–<lpage>43</lpage>.</mixed-citation></ref>
+<ref id="pgph.0005425.ref017"><label>17</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Wheeler</surname> <given-names>AC</given-names></name>, <name name-style="western"><surname>Toth</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>Ridenour</surname> <given-names>T</given-names></name>, <name name-style="western"><surname>Lima Nóbrega</surname> <given-names>L</given-names></name>, <name name-style="western"><surname>Borba Firmino</surname> <given-names>R</given-names></name>, <name name-style="western"><surname>Marques da Silva</surname> <given-names>C</given-names></name>, <etal>et al</etal>. <article-title>Developmental Outcomes Among Young Children With Congenital Zika Syndrome in Brazil</article-title>. <source>JAMA Netw Open</source>. <year>2020</year>;<volume>3</volume>(<issue>5</issue>):e204096. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1001/jamanetworkopen.2020.4096" xlink:type="simple">10.1001/jamanetworkopen.2020.4096</ext-link></comment> <object-id pub-id-type="pmid">32369180</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref018"><label>18</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Cranston</surname> <given-names>JS</given-names></name>, <name name-style="western"><surname>Tiene</surname> <given-names>SF</given-names></name>, <name name-style="western"><surname>Nielsen-Saines</surname> <given-names>K</given-names></name>, <name name-style="western"><surname>Vasconcelos</surname> <given-names>Z</given-names></name>, <name name-style="western"><surname>Pone</surname> <given-names>MV</given-names></name>, <name name-style="western"><surname>Pone</surname> <given-names>S</given-names></name>, <etal>et al</etal>. <article-title>Association Between Antenatal Exposure to Zika Virus and Anatomical and Neurodevelopmental Abnormalities in Children</article-title>. <source>JAMA Netw Open</source>. <year>2020</year>;<volume>3</volume>(<issue>7</issue>):e209303. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1001/jamanetworkopen.2020.9303" xlink:type="simple">10.1001/jamanetworkopen.2020.9303</ext-link></comment> <object-id pub-id-type="pmid">32633763</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref019"><label>19</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Carvalho</surname> <given-names>MDCG</given-names></name>, <name name-style="western"><surname>Ximenes</surname> <given-names>RAA</given-names></name>, <name name-style="western"><surname>Montarroyos</surname> <given-names>UR</given-names></name>, <name name-style="western"><surname>da Silva</surname> <given-names>PFS</given-names></name>, <name name-style="western"><surname>Andrade-Valença</surname> <given-names>LPA</given-names></name>, <name name-style="western"><surname>Eickmann</surname> <given-names>SH</given-names></name>, <etal>et al</etal>. <article-title>Early epilepsy in children with Zika-related microcephaly in a cohort in Recife, Brazil: Characteristics, electroencephalographic findings, and treatment response</article-title>. <source>Epilepsia</source>. <year>2020</year>;<volume>61</volume>(<issue>3</issue>):<fpage>509</fpage>–<lpage>18</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1111/epi.16444" xlink:type="simple">10.1111/epi.16444</ext-link></comment> <object-id pub-id-type="pmid">32065676</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref020"><label>20</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Nyaga</surname> <given-names>VN</given-names></name>, <name name-style="western"><surname>Arbyn</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Aerts</surname> <given-names>M</given-names></name>. <article-title>Metaprop: a Stata command to perform meta-analysis of binomial data</article-title>. <source>Arch Public Health</source>. <year>2014</year>;<volume>72</volume>(<issue>1</issue>):<fpage>39</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1186/2049-3258-72-39" xlink:type="simple">10.1186/2049-3258-72-39</ext-link></comment> <object-id pub-id-type="pmid">25810908</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref021"><label>21</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>de Barros Miranda-Filho</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>Brickley</surname> <given-names>EB</given-names></name>, <name name-style="western"><surname>Ramond</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Martelli</surname> <given-names>CMT</given-names></name>, <name name-style="western"><surname>Sanchez Clemente</surname> <given-names>N</given-names></name>, <name name-style="western"><surname>Velho Barreto de Araújo</surname> <given-names>T</given-names></name>, <etal>et al</etal>. <article-title>The Microcephaly Epidemic Research Group Paediatric Cohort (MERG-PC): A Cohort Profile</article-title>. <source>Viruses</source>. <year>2021</year>;<volume>13</volume>(<issue>4</issue>):<fpage>602</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.3390/v13040602" xlink:type="simple">10.3390/v13040602</ext-link></comment> <object-id pub-id-type="pmid">33916084</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref022"><label>22</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Sanchez Clemente</surname> <given-names>N</given-names></name>, <name name-style="western"><surname>Rodrigues</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Pascalicchio</surname> <given-names>AP</given-names></name>, <name name-style="western"><surname>Gazeta</surname> <given-names>RE</given-names></name>, <name name-style="western"><surname>Vedovello</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>Brickley</surname> <given-names>EB</given-names></name>, <etal>et al</etal>. <article-title>Cohort profile: the Jundiaí Zika cohort (JZC), a pregnancy and birth cohort in São Paulo state, Brazil</article-title>. <source>BMJ Open</source>. <year>2019</year>;<volume>9</volume>(<issue>8</issue>):e027947. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1136/bmjopen-2018-027947" xlink:type="simple">10.1136/bmjopen-2018-027947</ext-link></comment> <object-id pub-id-type="pmid">31455701</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref023"><label>23</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Rice</surname> <given-names>ME</given-names></name>, <name name-style="western"><surname>Galang</surname> <given-names>RR</given-names></name>, <name name-style="western"><surname>Roth</surname> <given-names>NM</given-names></name>, <name name-style="western"><surname>Ellington</surname> <given-names>SR</given-names></name>, <name name-style="western"><surname>Moore</surname> <given-names>CA</given-names></name>, <name name-style="western"><surname>Valencia-Prado</surname> <given-names>M</given-names></name>, <etal>et al</etal>. <article-title>Vital Signs: Zika-Associated Birth Defects and Neurodevelopmental Abnormalities Possibly Associated with Congenital Zika Virus Infection - U.S. Territories and Freely Associated States, 2018</article-title>. <source>MMWR Morb Mortal Wkly Rep</source>. <year>2018</year>;<volume>67</volume>(<issue>31</issue>):<fpage>858</fpage>–<lpage>67</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.15585/mmwr.mm6731e1" xlink:type="simple">10.15585/mmwr.mm6731e1</ext-link></comment> <object-id pub-id-type="pmid">30091967</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref024"><label>24</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Hoen</surname> <given-names>B</given-names></name>, <name name-style="western"><surname>Schaub</surname> <given-names>B</given-names></name>, <name name-style="western"><surname>Funk</surname> <given-names>AL</given-names></name>, <name name-style="western"><surname>Ardillon</surname> <given-names>V</given-names></name>, <name name-style="western"><surname>Boullard</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Cabié</surname> <given-names>A</given-names></name>, <etal>et al</etal>. <article-title>Pregnancy Outcomes after ZIKV Infection in French Territories in the Americas</article-title>. <source>N Engl J Med</source>. <year>2018</year>;<volume>378</volume>(<issue>11</issue>):<fpage>985</fpage>–<lpage>94</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1056/NEJMoa1709481" xlink:type="simple">10.1056/NEJMoa1709481</ext-link></comment> <object-id pub-id-type="pmid">29539287</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref025"><label>25</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Adams Waldorf</surname> <given-names>KM</given-names></name>, <name name-style="western"><surname>McAdams</surname> <given-names>RM</given-names></name>. <article-title>Influence of infection during pregnancy on fetal development</article-title>. <source>Reproduction</source>. <year>2013</year>;<volume>146</volume>(<issue>5</issue>):R151-62. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1530/REP-13-0232" xlink:type="simple">10.1530/REP-13-0232</ext-link></comment> <object-id pub-id-type="pmid">23884862</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref026"><label>26</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Azevedo</surname> <given-names>RSS</given-names></name>, <name name-style="western"><surname>de Sousa</surname> <given-names>JR</given-names></name>, <name name-style="western"><surname>Araujo</surname> <given-names>MTF</given-names></name>, <name name-style="western"><surname>Martins Filho</surname> <given-names>AJ</given-names></name>, <name name-style="western"><surname>de Alcantara</surname> <given-names>BN</given-names></name>, <name name-style="western"><surname>Araujo</surname> <given-names>FMC</given-names></name>, <etal>et al</etal>. <article-title>In situ immune response and mechanisms of cell damage in central nervous system of fatal cases microcephaly by Zika virus</article-title>. <source>Sci Rep</source>. <year>2018</year>;<volume>8</volume>(<issue>1</issue>):<fpage>1</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1038/s41598-017-17765-5" xlink:type="simple">10.1038/s41598-017-17765-5</ext-link></comment> <object-id pub-id-type="pmid">29311619</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref027"><label>27</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Raper</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Kovacs-Balint</surname> <given-names>Z</given-names></name>, <name name-style="western"><surname>Mavigner</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Gumber</surname> <given-names>S</given-names></name>, <name name-style="western"><surname>Burke</surname> <given-names>MW</given-names></name>, <name name-style="western"><surname>Habib</surname> <given-names>J</given-names></name>, <etal>et al</etal>. <article-title>Long-term alterations in brain and behavior after postnatal Zika virus infection in infant macaques</article-title>. <source>Nat Commun</source>. <year>2020</year>;<volume>11</volume>(<issue>1</issue>):<fpage>2534</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1038/s41467-020-16320-7" xlink:type="simple">10.1038/s41467-020-16320-7</ext-link></comment> <object-id pub-id-type="pmid">32439858</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref028"><label>28</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>de Fatima Vasco Aragao</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>van der Linden</surname> <given-names>V</given-names></name>, <name name-style="western"><surname>Brainer-Lima</surname> <given-names>AM</given-names></name>, <name name-style="western"><surname>Coeli</surname> <given-names>RR</given-names></name>, <name name-style="western"><surname>Rocha</surname> <given-names>MA</given-names></name>, <name name-style="western"><surname>Sobral da Silva</surname> <given-names>P</given-names></name>, <etal>et al</etal>. <article-title>Clinical features and neuroimaging (CT and MRI) findings in presumed Zika virus related congenital infection and microcephaly: retrospective case series study</article-title>. <source>BMJ</source>. <year>2016</year>;<volume>353</volume>:i1901. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1136/bmj.i1901" xlink:type="simple">10.1136/bmj.i1901</ext-link></comment> <object-id pub-id-type="pmid">27075009</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref029"><label>29</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Yepez</surname> <given-names>JB</given-names></name>, <name name-style="western"><surname>Murati</surname> <given-names>FA</given-names></name>, <name name-style="western"><surname>Pettito</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Peñaranda</surname> <given-names>CF</given-names></name>, <name name-style="western"><surname>de Yepez</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>Maestre</surname> <given-names>G</given-names></name>, <etal>et al</etal>. <article-title>Ophthalmic Manifestations of Congenital Zika Syndrome in Colombia and Venezuela</article-title>. <source>JAMA Ophthalmol</source>. <year>2017</year>;<volume>135</volume>(<issue>5</issue>):<fpage>440</fpage>–<lpage>5</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1001/jamaophthalmol.2017.0561" xlink:type="simple">10.1001/jamaophthalmol.2017.0561</ext-link></comment> <object-id pub-id-type="pmid">28418539</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref030"><label>30</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>da Hora</surname> <given-names>LCD</given-names></name>, <name name-style="western"><surname>Muniz</surname> <given-names>LF</given-names></name>, <name name-style="western"><surname>Venâncio</surname> <given-names>LGA</given-names></name>, <name name-style="western"><surname>Advíncula</surname> <given-names>KP</given-names></name>, <name name-style="western"><surname>da Silva</surname> <given-names>JD</given-names></name>, <name name-style="western"><surname>de Albuquerque Britto</surname> <given-names>DBL</given-names></name>, <etal>et al</etal>. <article-title>Cortical Auditory Evoked Potentials in Children with Prenatal Exposure to Zika Virus</article-title>. <source>Viruses</source>. <year>2022</year>;<volume>14</volume>(<issue>9</issue>):<fpage>1923</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.3390/v14091923" xlink:type="simple">10.3390/v14091923</ext-link></comment> <object-id pub-id-type="pmid">36146729</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref031"><label>31</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>de Vasconcelos</surname> <given-names>RAL</given-names></name>, <name name-style="western"><surname>Ximenes</surname> <given-names>RAA</given-names></name>, <name name-style="western"><surname>Calado</surname> <given-names>AA</given-names></name>, <name name-style="western"><surname>Martelli</surname> <given-names>CMT</given-names></name>, <name name-style="western"><surname>Gonçalves</surname> <given-names>AV</given-names></name>, <name name-style="western"><surname>Brickley</surname> <given-names>EB</given-names></name>, <etal>et al</etal>. <article-title>Cryptorchidism in Children with Zika-Related Microcephaly</article-title>. <source>Am J Trop Med Hyg</source>. <year>2020</year>;<volume>102</volume>(<issue>5</issue>):<fpage>982</fpage>–<lpage>4</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.4269/ajtmh.19-0753" xlink:type="simple">10.4269/ajtmh.19-0753</ext-link></comment> <object-id pub-id-type="pmid">32157994</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref032"><label>32</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Veras Gonçalves</surname> <given-names>A</given-names></name>, <name name-style="western"><surname>Miranda-Filho D de</surname> <given-names>B</given-names></name>, <name name-style="western"><surname>Rocha Vilela</surname> <given-names>LC</given-names></name>, <name name-style="western"><surname>Ramos</surname> <given-names>RCF</given-names></name>, <name name-style="western"><surname>de Araújo</surname> <given-names>TVB</given-names></name>, <name name-style="western"><surname>de Vasconcelos</surname> <given-names>RAL</given-names></name>, <etal>et al</etal>. <article-title>Endocrine Dysfunction in Children with Zika-Related Microcephaly Who Were Born during the 2015 Epidemic in the State of Pernambuco, Brazil</article-title>. <source>Viruses</source>. <year>2020</year>;<volume>13</volume>(<issue>1</issue>):<fpage>1</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.3390/v13010001" xlink:type="simple">10.3390/v13010001</ext-link></comment> <object-id pub-id-type="pmid">33374895</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref033"><label>33</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Leal</surname> <given-names>MC</given-names></name>, <name name-style="western"><surname>Seabra Ramos</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>Pinto Bezerra</surname> <given-names>T</given-names></name>, <name name-style="western"><surname>Vilela</surname> <given-names>AESC</given-names></name>, <name name-style="western"><surname>de F Maciel</surname> <given-names>RJ</given-names></name>, <name name-style="western"><surname>Rodrigues</surname> <given-names>M</given-names></name>, <etal>et al</etal>. <article-title>The Prevalence of Adenoid Hypertrophy among Children with Zika Related Microcephaly</article-title>. <source>Viruses</source>. <year>2021</year>;<volume>13</volume>(<issue>1</issue>):<fpage>62</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.3390/v13010062" xlink:type="simple">10.3390/v13010062</ext-link></comment> <object-id pub-id-type="pmid">33466404</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref034"><label>34</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Santana</surname> <given-names>MB</given-names></name>, <name name-style="western"><surname>Lamas</surname> <given-names>CC</given-names></name>, <name name-style="western"><surname>Athayde</surname> <given-names>JG</given-names></name>, <name name-style="western"><surname>Calvet</surname> <given-names>G</given-names></name>, <name name-style="western"><surname>Moreira</surname> <given-names>J</given-names></name>, <name name-style="western"><surname>De Lorenzo</surname> <given-names>A</given-names></name>. <article-title>Congenital Zika syndrome: is the heart part of its spectrum?</article-title> <source>Clin Microbiol Infect</source>. <year>2019</year>;<volume>25</volume>(<issue>8</issue>):<fpage>1043</fpage>–<lpage>4</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1016/j.cmi.2019.03.020" xlink:type="simple">10.1016/j.cmi.2019.03.020</ext-link></comment> <object-id pub-id-type="pmid">30922930</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref035"><label>35</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>da Silva Oliveira</surname> <given-names>DM</given-names></name>, <name name-style="western"><surname>de Barros Miranda-Filho</surname> <given-names>D</given-names></name>, <name name-style="western"><surname>de Alencar Ximenes</surname> <given-names>RA</given-names></name>, <name name-style="western"><surname>Montarroyos</surname> <given-names>UR</given-names></name>, <name name-style="western"><surname>Martelli</surname> <given-names>CMT</given-names></name>, <name name-style="western"><surname>Brickley</surname> <given-names>EB</given-names></name>, <etal>et al</etal>. <article-title>Comparison of Oropharyngeal Dysphagia in Brazilian Children with Prenatal Exposure to Zika Virus, With and Without Microcephaly</article-title>. <source>Dysphagia</source>. <year>2021</year>;<volume>36</volume>(<issue>4</issue>):<fpage>583</fpage>–<lpage>94</lpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1007/s00455-020-10173-4" xlink:type="simple">10.1007/s00455-020-10173-4</ext-link></comment> <object-id pub-id-type="pmid">32886254</object-id></mixed-citation></ref>
+<ref id="pgph.0005425.ref036"><label>36</label><mixed-citation publication-type="journal" xlink:type="simple"><name name-style="western"><surname>Sobral da Silva</surname> <given-names>PF</given-names></name>, <name name-style="western"><surname>Eickmann</surname> <given-names>SH</given-names></name>, <name name-style="western"><surname>Arraes de Alencar Ximenes</surname> <given-names>R</given-names></name>, <name name-style="western"><surname>Ramos Montarroyos</surname> <given-names>U</given-names></name>, <name name-style="western"><surname>de Carvalho Lima</surname> <given-names>M</given-names></name>, <name name-style="western"><surname>Turchi Martelli</surname> <given-names>CM</given-names></name>, <etal>et al</etal>. <article-title>Pediatric neurodevelopment by prenatal Zika virus exposure: a cross-sectional study of the Microcephaly Epidemic Research Group Cohort</article-title>. <source>BMC Pediatr</source>. <year>2020</year>;<volume>20</volume>(<issue>1</issue>):<fpage>472</fpage>. <comment>doi: <ext-link ext-link-type="uri" xlink:href="https://doi.org/10.1186/s12887-020-02331-2" xlink:type="simple">10.1186/s12887-020-02331-2</ext-link></comment> <object-id pub-id-type="pmid">33038931</object-id></mixed-citation></ref>
+</ref-list>
+</back>
+</article>

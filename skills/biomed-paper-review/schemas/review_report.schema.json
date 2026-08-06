@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review_report.schema.json",
+  "title": "ReviewReport",
+  "description": "Skill 的顶层输出。Markdown 报告由本对象渲染而来（见 templates/review_report.md）。",
+  "type": "object",
+  "required": ["paper", "structured_result", "figure_records", "findings", "confidence_score", "manual_review_plan"],
+  "properties": {
+    "paper": {
+      "type": "object",
+      "properties": {
+        "title": {"type": "string"},
+        "doi": {"type": ["string", "null"]},
+        "input_format": {"enum": ["jats_xml", "pdf", "plain_text"]},
+        "reviewed_modules": {
+          "type": "array",
+          "items": {"enum": ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]},
+          "description": "实际执行的模块。因路由跳过的模块不列入，并在 skipped_modules 说明"
+        },
+        "skipped_modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "module": {"type": "string"},
+              "reason": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+
+    "structured_result": {"$ref": "structured_result.schema.json"},
+
+    "figure_records": {
+      "type": "array",
+      "items": {"$ref": "figure_record.schema.json"}
+    },
+
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "finding.schema.json"},
+      "description": "已按 SKILL.md §2 去重规则合并后的结果，severity 降序"
+    },
+
+    "confidence_score": {
+      "type": "object",
+      "required": ["score", "band", "breakdown"],
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "band": {
+          "enum": ["可进入常规同行评审", "需作者澄清后复审", "建议退回补充"],
+          "description": ">=80 / 60-79 / <60"
+        },
+        "breakdown": {
+          "type": "object",
+          "properties": {
+            "critical": {"type": "integer"},
+            "major": {"type": "integer"},
+            "minor": {"type": "integer"},
+            "info": {"type": "integer"},
+            "extraction_gap_penalty": {"type": "integer", "description": "必填字段缺失率 >30% 时为 -10"}
+          }
+        },
+        "priority_manual_review": {
+          "type": "boolean",
+          "description": "存在任一 critical 时恒为 true，无论分数高低"
+        },
+        "disclaimer": {
+          "type": "string",
+          "const": "置信度评分仅为排序信号，不构成录用或退稿决定。"
+        }
+      }
+    },
+
+    "manual_review_plan": {
+      "type": "array",
+      "description": "每条 severity>=major 的 finding 必须对应一条可执行复核动作",
+      "items": {
+        "type": "object",
+        "required": ["finding_ids", "action", "who"],
+        "properties": {
+          "finding_ids": {"type": "array", "items": {"type": "string"}},
+          "action": {"type": "string"},
+          "who": {"enum": ["统计审稿人", "领域审稿人", "伦理委员会", "编辑", "作者"]},
+          "priority": {"enum": ["P0", "P1", "P2"]}
+        }
+      }
+    }
+  }
+}

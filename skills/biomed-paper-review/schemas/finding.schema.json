@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "finding.schema.json",
+  "title": "Finding",
+  "description": "七个审核模块共用的发现契约。任何模块的输出都必须符合本模式，否则视为无效并丢弃。",
+  "type": "object",
+  "required": ["id", "module", "category", "severity", "title", "detail", "evidence", "confidence", "manual_review"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^M[1-7]-[0-9]{3}$",
+      "description": "模块前缀 + 三位序号，如 M4-003"
+    },
+    "module": {
+      "enum": ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]
+    },
+    "category": {
+      "type": "string",
+      "description": "各模块 reference 文件中已登记的 slug，不得自创"
+    },
+    "severity": {
+      "enum": ["critical", "major", "minor", "info"],
+      "description": "critical=结论不成立/伦理违规/疑似造假; major=需作者补充; minor=表述规范; info=提示"
+    },
+    "title": {"type": "string", "maxLength": 80},
+    "detail": {"type": "string"},
+    "evidence": {
+      "$ref": "#/$defs/evidence"
+    },
+    "rule_ref": {
+      "type": "string",
+      "description": "触发本发现的规则锚点，如 04-statistics#sample-size-floor"
+    },
+    "confidence": {
+      "enum": ["high", "medium", "low"],
+      "description": "high=论文明文写出; medium=由明文可靠推导; low=依赖估读或假设"
+    },
+    "manual_review": {
+      "type": "object",
+      "required": ["action"],
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "可执行的复核动作：看哪里、核什么、若属实该补什么"
+        },
+        "who": {
+          "enum": ["统计审稿人", "领域审稿人", "伦理委员会", "编辑", "作者"]
+        }
+      }
+    },
+    "related_findings": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "去重时被合并到本条之下的其他 finding id"
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["locator"],
+      "additionalProperties": false,
+      "properties": {
+        "locator": {
+          "type": "string",
+          "description": "定位符，管道符分隔，如 'fig:3B | p.7 | Methods §2.4'。PDF 输入时必须含 p.<页码>",
+          "pattern": "^(sec:|fig:|tab:|p\\.|ref:).+"
+        },
+        "quote": {
+          "type": "string",
+          "description": "论文原文片段，用于人工核对"
+        }
+      }
+    }
+  }
+}

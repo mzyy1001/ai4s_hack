@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "figure_record.schema.json",
+  "title": "FigureRecord",
+  "description": "阶段 ③ 图谱解析的产物，每张图一条。承载图表解释、抽取数值、原图定位与置信度。",
+  "type": "object",
+  "required": ["figure_id", "chart_type", "location", "interpretation", "extracted_data", "confidence"],
+  "properties": {
+    "figure_id": {"type": "string", "description": "如 fig:3 或 fig:3B"},
+    "caption": {"type": ["string", "null"]},
+
+    "chart_type": {
+      "enum": ["dose_response", "statistical_plot", "survival", "workflow",
+               "micrograph", "blot", "heatmap", "flow_cytometry", "schematic", "other"]
+    },
+    "chart_type_confidence": {"enum": ["high", "medium", "low"]},
+
+    "location": {
+      "type": "object",
+      "required": ["figure_label"],
+      "properties": {
+        "figure_label": {"type": "string", "description": "如 Figure 3"},
+        "panel": {"type": ["string", "null"]},
+        "page": {"type": ["integer", "null"], "description": "PDF 输入时必填；缺页码视为无效定位"},
+        "first_cited_at": {"type": ["string", "null"], "description": "正文首次引用位置，locator 格式"},
+        "image_file": {"type": ["string", "null"], "description": "抽出的图像文件相对路径"}
+      }
+    },
+
+    "experimental_conditions": {
+      "type": "object",
+      "description": "从图中读出的实验条件",
+      "properties": {
+        "groups": {"type": "array", "items": {"type": "string"}},
+        "dose_levels": {"type": "array", "items": {"type": "string"}},
+        "timepoints": {"type": "array", "items": {"type": "string"}},
+        "n_per_group": {"type": ["integer", "string", "null"]},
+        "replicate_type": {"enum": ["biological", "technical", "not_reported", null]}
+      }
+    },
+
+    "axes": {
+      "type": "object",
+      "description": "坐标轴信息；对数轴误判为线性会导致全部读数错误，必须显式记录",
+      "properties": {
+        "x": {"$ref": "#/$defs/axis"},
+        "y": {"$ref": "#/$defs/axis"}
+      }
+    },
+
+    "extracted_data": {
+      "type": "array",
+      "items": {"$ref": "structured_result.schema.json#/$defs/data_point"},
+      "description": "复用 key_data 结构，直接回填到 structured_result.key_data"
+    },
+
+    "curve_fit": {
+      "type": ["object", "null"],
+      "description": "仅 dose_response / survival 类型填写",
+      "properties": {
+        "model": {"type": ["string", "null"], "description": "如 four-parameter logistic"},
+        "ic50_ec50": {"type": ["number", "string", "null"]},
+        "unit": {"type": ["string", "null"]},
+        "ci": {"type": ["object", "null"]},
+        "hill_slope": {"type": ["number", "null"]},
+        "goodness_of_fit": {"type": ["string", "null"], "description": "R² 或其他拟合优度"}
+      }
+    },
+
+    "interpretation": {
+      "type": "string",
+      "description": "自然语言图表解读：这张图在回答什么问题，展示了什么，结论是什么"
+    },
+
+    "significance_markers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "marker": {"type": "string", "description": "如 ***"},
+          "comparison": {"type": ["string", "null"]},
+          "p_value": {"type": ["number", "string", "null"]},
+          "defined_in_caption": {"type": "boolean", "description": "星号阈值是否在图注中定义"}
+        }
+      }
+    },
+
+    "issues": {
+      "type": "array",
+      "items": {"$ref": "finding.schema.json"},
+      "description": "本图触发的 finding，module 恒为 M5"
+    },
+
+    "confidence": {
+      "enum": ["high", "medium", "low"],
+      "description": "本条记录整体置信度。任一 extracted_data 来源为 figure_pixel 时，上限为 low"
+    },
+
+    "manual_review_needed": {
+      "type": "boolean",
+      "description": "存在像素估读、拟合参数缺失或图像质量不足时为 true"
+    }
+  },
+
+  "$defs": {
+    "axis": {
+      "type": "object",
+      "properties": {
+        "label": {"type": ["string", "null"]},
+        "unit": {"type": ["string", "null"]},
+        "scale": {"enum": ["linear", "log10", "log2", "ln", "unknown"]},
+        "range": {"type": ["array", "null"], "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
+        "truncated": {"type": ["boolean", "null"], "description": "y 轴是否截断（不从 0 起），截断会夸大组间差异"}
+      }
+    }
+  }
+}

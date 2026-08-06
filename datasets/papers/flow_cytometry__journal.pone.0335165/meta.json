@@ -1,0 +1,67 @@
+{
+  "slot": "flow_cytometry",
+  "why_selected": "流式散点/门控图：典型非曲线统计图",
+  "doi": "10.1371/journal.pone.0335165",
+  "title": "Nano-curcumin enhances the sensitivity of tamoxifen-resistant breast cancer cells via the Cyclin D1-DILA1 axis and the PI3K/AKT/mTOR pathway downregulation",
+  "journal": "PLOS One",
+  "published": "2025-12-05",
+  "subjects": [
+    "/Biology and life sciences/Cell biology/Cell motility/Cell migration/Cancer cell migration",
+    "/Biology and life sciences/Cell biology/Cell processes/Cell cycle and cell division",
+    "/Biology and life sciences/Cell biology/Cell processes/Cell cycle and cell division/Cyclins",
+    "/Biology and life sciences/Cell biology/Cell processes/Cell death/Apoptosis",
+    "/Biology and life sciences/Developmental biology/Cell migration/Cancer cell migration",
+    "/Biology and life sciences/Genetics/Gene expression",
+    "/Medicine and health sciences/Oncology/Cancer treatment",
+    "/Medicine and health sciences/Oncology/Cancers and neoplasms/Breast tumors/Breast cancer"
+  ],
+  "license": "CC-BY 4.0 (PLOS)",
+  "url": "https://doi.org/10.1371/journal.pone.0335165",
+  "n_figures": 7,
+  "n_tables": 0,
+  "n_images_downloaded": 6,
+  "has_pdf": true,
+  "figures": [
+    {
+      "label": "Fig 1",
+      "caption": "Generation of MCF7-TR cells.(A) Cell viability by MTT assay. The MTT assay confirmed that DMSO had no cytotoxic effects. (B) The apoptosis analysis of the MCF7-S after 48h confirmed that DMSO at a final concentration of 0.016 µM had no cytotoxic effects on cells (C, D) Cell viability by MTT assay. An IC50 value for MCF7 cells after 24h and 48h. (E) The MCF7-S and MCF7-TR light microscope images. (F) qRT-PCR results of the PI3K, AKT, mTOR, c-Myc, Cyclin D1, DILA1, E-Cadherin, Twist, and P53 genes mean fold change in MCF7-S compared to MCF7-TR. (G, H) The analysis of the MCF7-TR cell cycle 48h after exposure to 6 µM of tamoxifen compared to MCF7-S, can be illustrated using both a histogram and bar plot. (I, J) The analysis of the MCF7-TR apoptosis rate 48h after exposure to 6 µM of tamoxifen compared to MCF7-S can be illustrated using both a histogram and bar plot. (k) Western blot analysis of AKT, p-AKT, and Cyclin D1 protein levels in MCF7-TR cells and MCF7-S. GAPDH was used as an endogenous control. The protein levels of AKT, p-AKT, and Cyclin D1 were increased in MCF7-TR cells compared to untreated cells. Columns and points, mean of three different experiments. Statistical analysis was conducted using a student t-test or one-way ANOVA, and means ± SEM were displayed. ns = not significant, *p &lt; 0.05, **p &lt; 0.01, ***p &lt; 0.001, ****p &lt; 0.0001.",
+      "graphic": "https://eurofinsgenomics.eu"
+    },
+    {
+      "label": "Fig 2",
+      "caption": "Selecting the effective dosage of nano-curcumin.(A, B) Cell viability by MTT assay. An IC50 value for MCF7-S cells after 24h and 48h. (C, D) An IC50 value for MCF7-TR cells after 24h and 48h. (E, F) Cell viability rate at 24h and 48h after nano-curcumin treatment on MCF10A cells. Points, mean of three different experiments. Statistical analysis was conducted using a student t-test or one-way ANOVA, and means ± SEM were displayed. ns = not significant, *p &lt; 0.05, **p &lt; 0.01, ***p &lt; 0.001, ****p &lt; 0.0001.",
+      "graphic": "info:doi/10.1371/journal.pone.0335165.g002",
+      "image_file": "figures/g002.png"
+    },
+    {
+      "label": "Fig 3",
+      "caption": "The expression levels of DILA1 and Cyclin D1 genes.(A) The DILA1 gene expression was significantly increased in MCF7-S and MCF7-TR cells compared to the MCF10 cell line. (B) The expression level of the Cyclin D1 gene was significantly up-regulated in MCF7-S and MCF7-TR cell lines compared to MCF10A cells. Columns represent the mean of three independent experiments. Statistical analysis was performed using a one-way ANOVA or student t-test, with means ± SEM presented. ns = not significant, *p &lt; 0.05, **p &lt; 0.01, ***p &lt; 0.001, ****p &lt; 0.0001.",
+      "graphic": "info:doi/10.1371/journal.pone.0335165.g003",
+      "image_file": "figures/g003.png"
+    },
+    {
+      "label": "Fig 4",
+      "caption": "The impact of nano-curcumin on cell viability and proliferation in breast cancer cells.(A, B) The MCF7-S and MCF7-TR light and fluorescent microscope images before and after nano-curcumin treatment. (C, D) MTT assays were conducted on MCF7-S and MCF7-TR cells following nano-curcumin treatment. Cell viability significantly decreased at all tested time points. (E, F) mRNA Expression levels PI3K, AKT1, mTOR, NF-KB, Cyclin D1, DILA1 and PTEN in breast cancer cells. Nano-curcumin treatment led to a reduction in PI3K, AKT1, mTOR, NF-KB, Cyclin D1, and DILA1 mRNA levels. (G) mRNA Expression levels PI3K, AKT1, mTOR, NF-KB, and Cyclin D1 in MCF10. No significant alterations were observed in the expression of PI3K, AKT1, mTOR, NF-KB, and Cyclin D1genes before and after nano-curcumin treatment. (H, I) qRT-PCR analysis revealed up‑regulation of the PTEN mRNA level in MCF7-S and MCF7-TR cells after nano-curcumin treatment. (J) Western blot analysis of mTOR, p-mTOR, and PI3K protein levels in MCF7-TR cells treated with nano-curcumin. GAPDH was used as an endogenous control. The protein levels of p-mTOR, Cyclin D1, and PI3K were reduced in MCF7-TR cells following nano-curcumin treatment compared to untreated cells. Columns and points represent the mean of three independent experiments. Statistical analysis was performed using a one-way ANOVA or student t-test, with means ± SEM presented. ns = not significant, *p &lt; 0.05, **p &lt; 0.01, ***p &lt; 0.001, ****p &lt; 0.0001.",
+      "graphic": "info:doi/10.1371/journal.pone.0335165.g004",
+      "image_file": "figures/g004.png"
+    },
+    {
+      "label": "Fig 5",
+      "caption": "Effects of nano-curcumin on cell cycle and apoptosis in breast cancer cells.(A) Flow cytometry analysis with PI staining shows the effect of nano-curcumin on MCF7-S cells after 48h of treatment. (B) Displays the percentage of the cells in different phases of the cell cycle, following treatment with nano-curcumin. Sub-G1 cell population has increased due to nano-curcumin treatment after 48h. (C) PI staining flow cytometry analysis of MCF7-TR cells treated with nano-curcumin in 48h. (D) The sub-G1 phase has risen in MCF7-TR-NC compared to MCF-TR cells. (E, F) Bar graphs show the relative expression levels of CCNA2, CCND1, and CDKN1A in breast cancer cell lines. The expression levels of CCNA2 and CCND1 were significantly decreased in both MCF7-S and MCF7-TR cells following nano-curcumin treatment. (G, I) Cell apoptosis assays reveal the apoptosis rate in MCF7-S and MCF7-TR cells after nano-curcumin treatment. (H, J) Apoptotic cell percentage was increased at 48h in the MCF7-S and MCF7-TR cell lines after being treated with nano-curcumin. (K, L) Cell apoptosis analysis revealed that the cytotoxic effect in MCF10A cells following 48 hours of treatment with nano-curcumin remained negligible compared to MCF10A- untreated. (M, N) The mRNA Expression levels of BAX, BCL2 and P53 in MCF7-S and MCF7-TR cells after treated with nano-curcumin. BAX and P53 expression level significantly increase, whereas BCL2 expression markedly decreases in cells treated with nano curcumin compared to untreated cells. (O) Western blot analysis confirms the upregulation of BAX and downregulation of BCL2 after nano-curcumin treatment. Data represent the mean of three independent experiments and are presented as means ± SEM. Statistical analysis was performed using student t-test or one-way ANOVA. ns = not significant, *p &lt; 0.05, **p &lt; 0.01, ***p &lt; 0.001, ****p &lt; 0.0001.",
+      "graphic": "info:doi/10.1371/journal.pone.0335165.g005",
+      "image_file": "figures/g005.png"
+    },
+    {
+      "label": "Fig 6",
+      "caption": "Effects of nano-curcumin on cell migration.(A, B) Wound healing analysis of MCF7-S and MCF7-S treated by nano-curcumin at 0h, 24h, and 48h post-scratching. Nano-curcumin in MCF7-S-NC cells significantly decreased cell migration in all time points tested. (C, D) Wound healing assay of MCF7-TR cells following treatment by nano-curcumin at 0h, 24h, and 48h. The nano-curcumin could decline the cell migration rate in MCF7-TR-NC cells. (E, F) VEGFα, MMP2, TIMP3, and RECK mRNA levels in MCF7-S and MCF7-TR breast cancer cells. The qRT-PCR results suggest that nano-curcumin significantly decreases the migration potential of MCF7-S-NC and MCF7-TR-NC. Columns and points, mean of three different experiments. Statistical analysis was conducted using a student t-test or one-way ANOVA and means ± SEM were displayed. ns = not significant, *p &lt; 0.05, **p &lt; 0.01, ***p &lt; 0.001, ****p &lt; 0.0001.",
+      "graphic": "info:doi/10.1371/journal.pone.0335165.g006",
+      "image_file": "figures/g006.png"
+    },
+    {
+      "label": "Fig 7",
+      "caption": "Schematic representation of different pathways regulation by nano-curcumin.The nano-curcumin, reduces the expression of Cyclin D1and DILA1 genes and PI3K/AKT/mTOR pathway activity which affects the biological process of cells, including cell proliferation and viability. Moreover, nano-curcumin regulates cell migration in this model by targeting αVEGF, RECK, TIMP3, and MMP2. nano-curcumin can reduce cell migration in MCF7-TR cells. As shown in this Figure, nano-curcumin can promote apoptosis by targeting BCL2L11, BAX, and also arrest the cell cycle by reduction of CCNA2 expression and up-regulation of CDKN1A (Parts of the figure are drawn by the BioRender site).",
+      "graphic": "info:doi/10.1371/journal.pone.0335165.g007",
+      "image_file": "figures/g007.png"
+    }
+  ]
+}

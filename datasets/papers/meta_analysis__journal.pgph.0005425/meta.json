@@ -1,0 +1,49 @@
+{
+  "slot": "meta_analysis",
+  "why_selected": "PRISMA 流程图 + 森林图：方法学规范极强",
+  "doi": "10.1371/journal.pgph.0005425",
+  "title": "Characterization of 843 children with Zika-related microcephaly in the first three years of life: An individual participant data meta-analysis of 12 cohorts in the Zika Brazilian Cohorts consortium",
+  "journal": "PLOS Global Public Health",
+  "published": "2025-12-29",
+  "subjects": [
+    "/Biology and life sciences/Developmental biology/Morphogenesis/Birth defects/Microcephaly",
+    "/Biology and life sciences/Microbiology/Medical microbiology/Microbial pathogens/Viral pathogens/Flaviviruses/Zika virus",
+    "/Biology and life sciences/Neuroscience/Neuroimaging",
+    "/Biology and life sciences/Neuroscience/Reflexes",
+    "/Biology and life sciences/Organisms/Viruses/RNA viruses/Flaviviruses/Zika virus",
+    "/Biology and life sciences/Organisms/Viruses/Viral pathogens/Flaviviruses/Zika virus",
+    "/Biology and life sciences/Physiology/Physiological parameters/Body weight/Birth weight",
+    "/Medicine and health sciences/Medical conditions/Congenital disorders/Birth defects/Microcephaly"
+  ],
+  "license": "CC-BY 4.0 (PLOS)",
+  "url": "https://doi.org/10.1371/journal.pgph.0005425",
+  "n_figures": 4,
+  "n_tables": 2,
+  "n_images_downloaded": 3,
+  "has_pdf": true,
+  "figures": [
+    {
+      "label": "Fig 1",
+      "caption": "Participating cohorts of the ZBC-Consortium and severity of microcephaly per site.A. Distribution of the cohorts participating in the ZBC-Consortium by Brazilian Regions. Note: Link to the base layer of the map: https://pixabay.com/pt/vectors/brasil-geografia-mapa-estados-153881/; Link of the terms of use/license information for the base layer of the map: https://pixabay.com/pt/service/license-summary/. B. Frequency of severe microcephaly in the ZBC-Consortium per site, city, and Brazilian Region.",
+      "graphic": "https://pixabay.com/pt/vectors/brasil-geografia-mapa-estados-153881/"
+    },
+    {
+      "label": "Fig 2",
+      "caption": "Frequency of low birth weight and neurological abnormalities of children with Zika-related microcephaly of the ZBC-Consortium.Frequency of low birth weight (A), epilepsy (B), deficit of social attention (C) and persistence of primitive reflexes (D) in children with Zika-related microcephaly of the ZBC-Consortium.",
+      "graphic": "info:doi/10.1371/journal.pgph.0005425.g002",
+      "image_file": "figures/g002.png"
+    },
+    {
+      "label": "Fig 3",
+      "caption": "Frequency of ocular abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium.Frequency of optical nerve (A) and retinal (B) abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium.",
+      "graphic": "info:doi/10.1371/journal.pgph.0005425.g003",
+      "image_file": "figures/g003.png"
+    },
+    {
+      "label": "Fig 4",
+      "caption": "Frequency of imaging and audiologic abnormalities in children with Zika-related microcephaly participating in the ZBC-Consortium.Frequency of abnormal cerebral ultrasonography, or tomography, or magnetic resonance imaging (A), calcification (B), ventriculomegaly (C) and abnormal ABR test (D) in children with Zika-related microcephaly participating in the ZBC-Consortium.",
+      "graphic": "info:doi/10.1371/journal.pgph.0005425.g004",
+      "image_file": "figures/g004.png"
+    }
+  ]
+}
