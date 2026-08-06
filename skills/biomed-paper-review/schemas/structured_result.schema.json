@@ -2,12 +2,22 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "structured_result.schema.json",
   "title": "StructuredResult",
-  "description": "M1 结构化抽取的产物，是 M2–M7 全部模块的输入。null = 未抽取到（我们的缺口）；\"not_reported\" = 论文确实没写（论文的问题）。二者不得混用。",
+  "description": "M1 结构化抽取的产物。v1 由 Stage 2 产出（仅文本来源，可含 unresolved）；v2 由 Stage 3b 产出（已合并图表来源并消解冲突，不得残留 unresolved）。M2–M7 一律消费 v2。references/01-structured-extraction.md。",
+
   "type": "object",
-  "required": ["meta", "objective", "methods", "key_data", "conclusion", "evaluation_matrix", "gaps"],
+  "required": ["version", "stage_3b_executed", "meta", "article_design", "objective",
+               "population", "design", "measurement", "conclusion", "declarations",
+               "key_data", "evaluation_matrix", "coverage_inputs"],
+  "additionalProperties": false,
+
   "properties": {
+
+    "version": {"enum": ["v1", "v2"]},
+    "stage_3b_executed": {"type": "boolean"},
+
     "meta": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "title": {"type": "string"},
         "journal": {"type": ["string", "null"]},
@@ -19,166 +29,449 @@
       }
     },
 
+    "article_design": {
+      "type": "object",
+      "description": "01-structured-extraction.md §4.2。区分『论文真的含多种设计』(design_components) 与『抽取器不确定』(primary_design.alternatives)。二者不得混用。",
+      "required": ["primary_design", "design_components"],
+      "additionalProperties": false,
+      "properties": {
+        "primary_design": {
+          "type": "object",
+          "required": ["family", "type", "status", "evidence_refs", "extraction_confidence"],
+          "additionalProperties": false,
+          "properties": {
+            "family": {"$ref": "#/$defs/design_family"},
+            "type": {"$ref": "#/$defs/design_type"},
+            "status": {"$ref": "common.schema.json#/$defs/field_status"},
+            "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+            "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"},
+            "other_description": {
+              "type": ["string", "null"],
+              "description": "family = other 时必填"
+            },
+            "alternatives": {
+              "type": "array",
+              "description": "抽取器在几种解读间不确定时使用；非空时必须同时产出 ambiguous_study_design signal",
+              "items": {
+                "type": "object",
+                "required": ["family", "type", "evidence_refs"],
+                "additionalProperties": false,
+                "properties": {
+                  "family": {"$ref": "#/$defs/design_family"},
+                  "type": {"$ref": "#/$defs/design_type"},
+                  "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
+                }
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {"properties": {"family": {"const": "other"}}, "required": ["family"]},
+              "then": {"required": ["other_description"],
+                       "properties": {"other_description": {"type": "string", "minLength": 1}}}
+            }
+          ]
+        },
+        "design_components": {
+          "type": "array",
+          "description": "论文事实层面含多种设计时，每个 experiment_id 一条，各自路由规则",
+          "items": {
+            "type": "object",
+            "required": ["experiment_id", "family", "type", "evidence_refs",
+                         "extraction_confidence"],
+            "additionalProperties": false,
+            "properties": {
+              "experiment_id": {"type": "string", "pattern": "^EXP-[0-9]{2,}$"},
+              "family": {"$ref": "#/$defs/design_family"},
+              "type": {"$ref": "#/$defs/design_type"},
+              "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+              "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"}
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "description": "01-structured-extraction.md §4.4：mixed 要求 >=2 个组件",
+          "if": {
+            "properties": {"primary_design": {"properties": {"family": {"const": "mixed"}},
+                                              "required": ["family"]}},
+            "required": ["primary_design"]
+          },
+          "then": {"properties": {"design_components": {"minItems": 2}}}
+        }
+      ]
+    },
+
     "objective": {
       "type": "object",
-      "required": ["research_question", "study_type", "primary_endpoint"],
+      "required": ["research_question", "hypothesis", "primary_endpoint", "secondary_endpoints"],
+      "additionalProperties": false,
       "properties": {
-        "research_question": {"type": ["string", "null"]},
-        "hypothesis": {"type": ["string", "null"]},
-        "study_type": {
-          "enum": ["in_vitro", "in_vivo_animal", "clinical_trial", "observational",
-                   "meta_analysis", "computational", "mixed", null],
-          "description": "路由字段：M3 用它决定是否查动物必要性，M4 用它选统计规范表，M6 用它决定是否要伦理批件"
-        },
-        "primary_endpoint": {"type": ["string", "null"]},
-        "secondary_endpoints": {"type": "array", "items": {"type": "string"}},
-        "evidence": {"$ref": "finding.schema.json#/$defs/evidence"}
+        "research_question": {"$ref": "#/$defs/extracted_field"},
+        "hypothesis": {"$ref": "#/$defs/extracted_field"},
+        "primary_endpoint": {"$ref": "#/$defs/extracted_field"},
+        "secondary_endpoints": {"$ref": "#/$defs/extracted_field"}
       }
     },
 
-    "methods": {
+    "population": {
       "type": "object",
-      "required": ["subjects", "groups", "control_type", "randomization", "blinding",
-                   "assays", "stats_methods", "sample_size_justification"],
+      "required": ["subjects", "inclusion_criteria", "exclusion_criteria"],
+      "additionalProperties": false,
       "properties": {
-        "subjects": {"type": ["string", "null"]},
-        "groups": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {"type": "string"},
-              "n": {"type": ["integer", "null"]},
-              "intervention": {"type": ["string", "null"]},
-              "dose": {"type": ["string", "null"]},
-              "route": {"type": ["string", "null"]},
-              "duration": {"type": ["string", "null"]}
-            }
-          }
-        },
-        "control_type": {"enum": ["vehicle", "sham", "placebo", "untreated", "historical", "none", "not_reported", null]},
-        "randomization": {"type": ["string", "null"]},
-        "blinding": {"enum": ["none", "single", "double", "not_reported", null]},
-        "assays": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {"type": "string"},
-              "purpose": {"type": ["string", "null"]},
-              "reference_citation": {"type": ["string", "null"]}
-            }
-          }
-        },
-        "stats_methods": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "test": {"type": "string"},
-              "applied_to": {"type": ["string", "null"]},
-              "software": {"type": ["string", "null"]},
-              "correction": {"type": ["string", "null"]}
-            }
-          }
-        },
-        "sample_size_justification": {"type": ["string", "null"]}
+        "subjects": {"$ref": "#/$defs/extracted_field"},
+        "inclusion_criteria": {"$ref": "#/$defs/extracted_field"},
+        "exclusion_criteria": {"$ref": "#/$defs/extracted_field"},
+        "participant_spectrum": {"$ref": "#/$defs/extracted_field"}
       }
     },
 
-    "key_data": {
-      "type": "array",
-      "items": {"$ref": "#/$defs/data_point"}
+    "design": {
+      "type": "object",
+      "description": "旧 allocation 字段已废除，拆为 randomization + allocation_concealment（CONSORT 中相互独立的两项）",
+      "required": ["arms", "interventions", "controls", "randomization",
+                   "allocation_concealment", "blinding"],
+      "additionalProperties": false,
+      "properties": {
+        "arms": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/arm"}
+        },
+        "interventions": {"$ref": "#/$defs/extracted_field"},
+        "controls": {"$ref": "#/$defs/extracted_field"},
+        "exposure": {"$ref": "#/$defs/extracted_field"},
+        "confounders": {"$ref": "#/$defs/extracted_field"},
+        "follow_up": {"$ref": "#/$defs/extracted_field"},
+        "randomization": {"$ref": "#/$defs/extracted_field"},
+        "allocation_concealment": {"$ref": "#/$defs/extracted_field"},
+        "blinding": {"$ref": "#/$defs/extracted_field"},
+        "registration": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "measurement": {
+      "type": "object",
+      "required": ["assays", "statistical_methods", "sample_size_justification"],
+      "additionalProperties": false,
+      "properties": {
+        "assays": {"$ref": "#/$defs/extracted_field"},
+        "index_test": {"$ref": "#/$defs/extracted_field"},
+        "reference_standard": {"$ref": "#/$defs/extracted_field"},
+        "target_condition": {
+          "$ref": "#/$defs/extracted_field",
+          "description": "诊断准确性研究的目标疾病。与 primary_endpoint（准确性指标）语义不同，不得互相顶替。"
+        },
+        "statistical_methods": {"$ref": "#/$defs/extracted_field"},
+        "sample_size_justification": {"$ref": "#/$defs/extracted_field"},
+        "missing_data_handling": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "design_specific": {
+      "type": "object",
+      "description": "01-structured-extraction.md §5.2。只对特定设计族适用的字段。",
+      "additionalProperties": false,
+      "properties": {
+        "databases_searched": {"$ref": "#/$defs/extracted_field"},
+        "search_date": {"$ref": "#/$defs/extracted_field"},
+        "search_strategy": {"$ref": "#/$defs/extracted_field"},
+        "risk_of_bias_method": {"$ref": "#/$defs/extracted_field"},
+        "synthesis_method": {"$ref": "#/$defs/extracted_field"},
+        "protocol_registration": {"$ref": "#/$defs/extracted_field"},
+        "dataset": {"$ref": "#/$defs/extracted_field"},
+        "split_strategy": {"$ref": "#/$defs/extracted_field"},
+        "baselines": {"$ref": "#/$defs/extracted_field"},
+        "metrics": {"$ref": "#/$defs/extracted_field"},
+        "validation_protocol": {"$ref": "#/$defs/extracted_field"}
+      }
     },
 
     "conclusion": {
       "type": "object",
+      "required": ["claims", "limitations", "generalization_scope"],
+      "additionalProperties": false,
       "properties": {
         "claims": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["statement", "supported_by"],
+            "required": ["claim_id", "statement", "supported_by", "evidence_refs"],
+            "additionalProperties": false,
             "properties": {
+              "claim_id": {"type": "string", "pattern": "^CLM-[0-9]{2,}$"},
               "statement": {"type": "string"},
               "scope": {"type": ["string", "null"]},
               "supported_by": {
                 "type": "array",
                 "items": {"type": "string"},
-                "description": "key_data.id 或 locator。为空数组即触发 M7 unsupported_claim"
-              }
+                "description": "key_data.id 或 evidence_ref。解析不到任何一项时产出 claim_without_resolved_evidence_link signal（交 M7 判定），M1 与 Stage 3b 都不下结论。"
+              },
+              "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
             }
           }
         },
-        "limitations_stated": {"type": "array", "items": {"type": "string"}},
-        "generalization_scope": {"type": ["string", "null"]}
+        "limitations": {"$ref": "#/$defs/extracted_field"},
+        "generalization_scope": {"$ref": "#/$defs/extracted_field"}
       }
+    },
+
+    "declarations": {
+      "type": "object",
+      "required": ["ethics_statement", "informed_consent", "funding",
+                   "conflict_of_interest", "data_availability"],
+      "additionalProperties": false,
+      "properties": {
+        "ethics_statement": {"$ref": "#/$defs/extracted_field"},
+        "informed_consent": {"$ref": "#/$defs/extracted_field"},
+        "funding": {"$ref": "#/$defs/extracted_field"},
+        "conflict_of_interest": {"$ref": "#/$defs/extracted_field"},
+        "data_availability": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "key_data": {
+      "type": "array",
+      "items": {"$ref": "key_data.schema.json"}
     },
 
     "evaluation_matrix": {
       "type": "object",
-      "description": "供 M2–M7 快速查表，避免每个模块重读全文",
+      "description": "路由与索引工具。不得仅凭它直接立 finding —— M2–M7 必须回查 evidence_refs 并在自己的 finding 中独立给出证据。",
+      "additionalProperties": {
+        "oneOf": [
+          {"$ref": "#/$defs/matrix_entry"},
+          {"type": "array", "items": {"$ref": "#/$defs/matrix_entry"}},
+          {"type": "integer"},
+          {"type": "array", "items": {"$ref": "#/$defs/group_size"}}
+        ]
+      }
+    },
+
+    "coverage_inputs": {
+      "type": "object",
+      "description": "01-structured-extraction.md §12.2。计算 extraction_coverage 的原始计数，由 Stage 5 装配为 coverage_breakdown。",
+      "required": ["fields_in_scope", "resolved", "unresolved", "required_applicable_total"],
+      "additionalProperties": false,
       "properties": {
-        "has_animal_experiment": {"type": ["boolean", "null"]},
-        "has_human_subjects": {"type": ["boolean", "null"]},
-        "has_ethics_statement": {"type": ["boolean", "null"]},
-        "has_ml_model": {"type": ["boolean", "null"]},
-        "has_randomization": {"type": ["boolean", "null"]},
-        "has_blinding": {"type": ["boolean", "null"]},
-        "has_power_analysis": {"type": ["boolean", "null"]},
-        "has_multiple_comparison_correction": {"type": ["boolean", "null"]},
-        "min_group_n": {"type": ["integer", "null"]},
-        "has_data_availability": {"type": ["boolean", "null"]},
-        "has_conflict_of_interest": {"type": ["boolean", "null"]},
-        "figure_count": {"type": "integer"},
-        "table_count": {"type": "integer"},
-        "all_figures_cited_in_text": {"type": ["boolean", "null"]}
+        "fields_in_scope": {"type": "array", "items": {"type": "string"}},
+        "resolved": {"type": "array", "items": {"type": "string"}},
+        "unresolved": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field_path", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "field_path": {"type": "string"},
+              "status": {"enum": ["ambiguous", "conflicting", "parse_failed", "unresolved"]},
+              "reason_ref": {"type": ["string", "null"], "pattern": "^(SYS|SIG)-[0-9]{3,}$"}
+            }
+          }
+        },
+        "required_applicable_total": {"type": "integer", "minimum": 0},
+        "recommended_applicable_total": {"type": "integer", "minimum": 0}
       }
     },
 
     "gaps": {
       "type": "array",
+      "description": "运维日志，非记录、非 finding，不进任何评分",
       "items": {
         "type": "object",
-        "required": ["field", "reason"],
+        "required": ["field_path", "status_assigned", "resolution"],
+        "additionalProperties": false,
         "properties": {
-          "field": {"type": "string", "description": "点号路径，如 methods.sample_size_justification"},
-          "reason": {"enum": ["not_found_in_text", "ambiguous", "conflicting_values", "parse_failed"]},
-          "searched": {"type": "array", "items": {"type": "string"}},
-          "impact": {"type": "string", "description": "哪个下游模块因此受阻"}
+          "field_path": {"type": "string"},
+          "status_assigned": {"$ref": "common.schema.json#/$defs/field_status"},
+          "attempts": {"type": "array", "items": {"type": "string"}},
+          "search_terms": {"type": "array", "items": {"type": "string"}},
+          "resolution": {
+            "enum": ["confirmed_absent", "unresolved", "resolved_in_stage3b",
+                     "blocked_by_system_limitation"]
+          },
+          "note": {"type": "string"}
         }
       }
     }
   },
 
+  "allOf": [
+    {
+      "description": "00-contracts.md §4 规则 5 + §11 lint：v2 中不得残留 unresolved",
+      "if": {"properties": {"version": {"const": "v2"}}, "required": ["version"]},
+      "then": {
+        "properties": {
+          "key_data": {
+            "items": {"properties": {"status": {"not": {"const": "pending_visual_resolution"}}}}
+          },
+          "stage_3b_executed": {"const": true}
+        }
+      }
+    }
+  ],
+
   "$defs": {
-    "data_point": {
+
+    "design_family": {
+      "enum": ["experimental", "human_interventional", "human_observational",
+               "evidence_synthesis", "computational", "mixed", "other"]
+    },
+
+    "design_type": {
+      "enum": ["in_vitro", "ex_vivo", "organoid", "in_vivo_animal", "preclinical_mixed",
+               "randomized_controlled_trial", "nonrandomized_trial", "single_arm_trial",
+               "cohort", "case_control", "cross_sectional", "diagnostic_accuracy",
+               "case_series", "case_report",
+               "systematic_review", "meta_analysis", "scoping_review",
+               "bioinformatics", "prediction_model", "simulation", "method_development",
+               "benchmark_study",
+               "mixed_multi_family", "other_unclassified"]
+    },
+
+    "extracted_field": {
       "type": "object",
-      "required": ["id", "metric", "value", "source", "evidence", "confidence"],
+      "description": "00-contracts.md §3.3。applicability / requiredness / status 三个正交维度必须分别显式给出，禁止用裸 null 编码多种缺失状态。",
+      "required": ["applicability", "requiredness", "status", "value", "evidence_refs",
+                   "extraction_confidence"],
+      "additionalProperties": false,
       "properties": {
-        "id": {"type": "string", "pattern": "^KD-[0-9]{3}$"},
-        "metric": {"type": "string"},
-        "value": {"type": ["number", "string", "null"], "description": "figure_pixel 来源时必须为区间字符串，如 \"12–15\""},
+        "field_path": {"type": "string"},
+        "applicability": {"$ref": "common.schema.json#/$defs/applicability"},
+        "requiredness": {"$ref": "common.schema.json#/$defs/requiredness"},
+        "status": {"$ref": "common.schema.json#/$defs/field_status"},
+        "value": {
+          "description": "数值型必须用 common.schema.json#/$defs/numeric_value；结构化或文本值按字段语义",
+          "anyOf": [
+            {"$ref": "common.schema.json#/$defs/numeric_value"},
+            {"type": ["string", "array", "object", "null"]}
+          ]
+        },
         "unit": {"type": ["string", "null"]},
-        "ci": {
+        "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+        "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"},
+        "na_reason": {"type": ["string", "null"]},
+        "system_limitation_ref": {"type": ["string", "null"], "pattern": "^SYS-[0-9]{3,}$"},
+        "resolution_state": {
           "type": ["object", "null"],
+          "required": ["state", "pending_stage", "expected_sources"],
+          "additionalProperties": false,
           "properties": {
-            "type": {"enum": ["95CI", "SD", "SEM", "IQR", "range"]},
-            "low": {"type": ["number", "null"]},
-            "high": {"type": ["number", "null"]}
+            "state": {"const": "pending_visual_resolution"},
+            "pending_stage": {"const": "stage_3"},
+            "expected_sources": {"type": "array", "minItems": 1, "items": {"type": "string"}}
           }
         },
-        "n": {"type": ["integer", "null"]},
-        "replicate_type": {"enum": ["biological", "technical", "not_reported", null]},
-        "group": {"type": ["string", "null"]},
-        "p_value": {"type": ["number", "string", "null"]},
-        "test": {"type": ["string", "null"]},
-        "source": {
-          "enum": ["text", "table", "figure_caption", "figure_axis", "figure_pixel"],
-          "description": "figure_pixel 强制 confidence=low 且 value 为区间"
+        "candidate_refs": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"}
         },
-        "evidence": {"$ref": "finding.schema.json#/$defs/evidence"},
-        "confidence": {"enum": ["high", "medium", "low"]}
+        "alternatives": {
+          "type": "array",
+          "description": "抽取器对同一事实的不同解读（我们不确定）",
+          "items": {
+            "type": "object",
+            "required": ["value", "evidence_refs"],
+            "additionalProperties": false,
+            "properties": {
+              "value": {},
+              "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
+            }
+          }
+        }
+      },
+
+      "allOf": [
+        {
+          "description": "非 reported 状态时 value 必须为 null",
+          "if": {
+            "properties": {
+              "status": {"enum": ["not_reported", "not_applicable", "ambiguous",
+                                  "conflicting", "parse_failed", "unresolved"]}
+            },
+            "required": ["status"]
+          },
+          "then": {"properties": {"value": {"type": "null"}}}
+        },
+        {
+          "description": "not_applicable 必须写明依据",
+          "if": {"properties": {"status": {"const": "not_applicable"}}, "required": ["status"]},
+          "then": {"required": ["na_reason"],
+                   "properties": {"na_reason": {"type": "string", "minLength": 1}}}
+        },
+        {
+          "description": "not_reported 必须有 absence 证据支撑（refs 非空）",
+          "if": {"properties": {"status": {"const": "not_reported"}}, "required": ["status"]},
+          "then": {"properties": {"evidence_refs": {"minItems": 1}}}
+        },
+        {
+          "description": "parse_failed 必须关联 system_limitation",
+          "if": {"properties": {"status": {"const": "parse_failed"}}, "required": ["status"]},
+          "then": {"required": ["system_limitation_ref"],
+                   "properties": {"system_limitation_ref": {"type": "string"}}}
+        },
+        {
+          "description": "unresolved 必须带 resolution_state，且不得填 system_limitation_ref（它不是系统限制）",
+          "if": {"properties": {"status": {"const": "unresolved"}}, "required": ["status"]},
+          "then": {
+            "required": ["resolution_state"],
+            "properties": {
+              "resolution_state": {"type": "object"},
+              "system_limitation_ref": {"type": "null"}
+            }
+          }
+        },
+        {
+          "description": "reported 必须有证据",
+          "if": {"properties": {"status": {"const": "reported"}}, "required": ["status"]},
+          "then": {"properties": {"evidence_refs": {"minItems": 1}}}
+        }
+      ]
+    },
+
+    "arm": {
+      "type": "object",
+      "required": ["experiment_id", "arm_name", "n", "replicate_type"],
+      "additionalProperties": false,
+      "properties": {
+        "experiment_id": {"type": "string", "pattern": "^EXP-[0-9]{2,}$"},
+        "arm_name": {"type": "string"},
+        "n": {"$ref": "#/$defs/extracted_field"},
+        "replicate_type": {"$ref": "common.schema.json#/$defs/replicate_type"},
+        "intervention": {"$ref": "#/$defs/extracted_field"},
+        "dose": {"$ref": "#/$defs/extracted_field"},
+        "route": {"$ref": "#/$defs/extracted_field"},
+        "duration": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "matrix_entry": {
+      "type": "object",
+      "description": "状态感知对象，不是裸布尔。不同实验状态不同时拆成多个条目，不取『或』。",
+      "required": ["applicability", "requiredness", "status", "applies_to",
+                   "evidence_refs", "extraction_confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "applicability": {"$ref": "common.schema.json#/$defs/applicability"},
+        "requiredness": {"$ref": "common.schema.json#/$defs/requiredness"},
+        "status": {"$ref": "common.schema.json#/$defs/field_status"},
+        "applies_to": {"type": "array", "items": {"type": "string"}},
+        "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+        "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"}
+      }
+    },
+
+    "group_size": {
+      "type": "object",
+      "description": "取代已废除的 min_group_n 单一整数。M4 自行按实验分组计算最小值与分布。",
+      "required": ["experiment_id", "group", "n", "replicate_type", "evidence_refs"],
+      "additionalProperties": false,
+      "properties": {
+        "experiment_id": {"type": "string"},
+        "group": {"type": "string"},
+        "n": {"type": "integer", "minimum": 0},
+        "replicate_type": {"$ref": "common.schema.json#/$defs/replicate_type"},
+        "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
       }
     }
   }

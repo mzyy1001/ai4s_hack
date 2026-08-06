@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.schema.json",
+  "title": "CommonDefs",
+  "description": "全 schema 共用的原子定义。对应 references/00-contracts.md §1.5 / §2 / §3。本文件不定义顶层对象，只提供 $defs。",
+
+  "$defs": {
+
+    "confidence_level": {
+      "enum": ["high", "medium", "low"],
+      "description": "extraction_confidence 与 finding.review_confidence 共用"
+    },
+
+    "applicability": {
+      "enum": ["applicable", "not_applicable", "applicability_uncertain"],
+      "description": "00-contracts.md §3.1：这个概念对本研究说得通吗"
+    },
+
+    "requiredness": {
+      "enum": ["required", "recommended", "optional"],
+      "description": "00-contracts.md §3.1：这个设计多大程度上应该报告它"
+    },
+
+    "field_status": {
+      "enum": ["reported", "not_reported", "not_applicable", "ambiguous",
+               "conflicting", "parse_failed", "unresolved"],
+      "description": "00-contracts.md §3.1。unresolved 仅允许出现在 structured_result_v1"
+    },
+
+    "locator_scope": {
+      "enum": ["document", "section", "paragraph", "figure", "panel", "table", "supplement"]
+    },
+
+    "section_name": {
+      "enum": ["title", "abstract", "introduction", "methods", "results", "discussion",
+               "conclusion", "declarations", "ethics", "funding", "conflict_of_interest",
+               "data_availability", "references", "supplement"]
+    },
+
+    "locator": {
+      "type": "object",
+      "description": "00-contracts.md §1.5。结构化对象，禁止用自由文本作为唯一存储形式。",
+      "required": ["scope"],
+      "additionalProperties": false,
+      "properties": {
+        "section": {"oneOf": [{"$ref": "#/$defs/section_name"}, {"type": "null"}]},
+        "subsection": {"type": ["string", "null"]},
+        "paragraph_id": {"type": ["string", "null"]},
+        "pdf_file_page": {"type": ["integer", "null"], "minimum": 1,
+                          "description": "PDF 物理页码，PDF 输入必填"},
+        "printed_page": {"type": ["integer", "null"]},
+        "supplement_page": {"type": ["integer", "null"]},
+        "figure": {"type": ["string", "null"]},
+        "panel": {"type": ["string", "null"]},
+        "table": {"type": ["string", "null"]},
+        "supplement_id": {"type": ["string", "null"]},
+        "xml_id": {"type": ["string", "null"], "description": "JATS/XML 输入必填"},
+        "scope": {"$ref": "#/$defs/locator_scope"}
+      }
+    },
+
+    "numeric_value": {
+      "description": "00-contracts.md §2.1。禁止裸数字与字符串区间。",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type", "number"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "point"},
+            "number": {"type": "number"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "low", "high"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "interval"},
+            "low": {"type": "number"},
+            "high": {"type": "number"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "low"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "lower_bound"},
+            "low": {"type": "number"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "high"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "upper_bound"},
+            "high": {"type": "number"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "label"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "categorical"},
+            "label": {"type": "string"}
+          }
+        }
+      ]
+    },
+
+    "uncertainty": {
+      "type": "object",
+      "description": "00-contracts.md §2.2。SD/SEM 用 value；区间型用 low/high。",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {"enum": ["SD", "SEM", "95CI", "IQR", "range", "none"]},
+        "value": {"type": ["number", "null"]},
+        "low": {"type": ["number", "null"]},
+        "high": {"type": ["number", "null"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"type": {"enum": ["95CI", "IQR", "range"]}}, "required": ["type"]},
+          "then": {"required": ["low", "high"]}
+        },
+        {
+          "if": {"properties": {"type": {"enum": ["SD", "SEM"]}}, "required": ["type"]},
+          "then": {"required": ["value"]}
+        }
+      ]
+    },
+
+    "source_type": {
+      "enum": ["explicit_main_text", "explicit_table", "explicit_figure_caption",
+               "axis_readable", "pixel_estimated"],
+      "description": "00-contracts.md §2.3。explicit_reported = 前三者；visually_derived = 后两者。旧值 text/table/figure/figure_caption/figure_axis/figure_pixel 已废弃。"
+    },
+
+    "extraction_method": {
+      "enum": ["text_parse", "table_parse", "caption_parse", "axis_read",
+               "visual_estimation", "ocr_text"]
+    },
+
+    "derivation": {
+      "type": "object",
+      "description": "00-contracts.md §2.3。必填 —— 否则 §8.3 的 pixel/OCR 依赖率无法计算。",
+      "required": ["extraction_method", "ocr_used"],
+      "additionalProperties": false,
+      "properties": {
+        "extraction_method": {"$ref": "#/$defs/extraction_method"},
+        "ocr_used": {"type": "boolean"}
+      }
+    },
+
+    "provenance": {
+      "type": "object",
+      "description": "00-contracts.md §2.3。locator 不内联，改由 evidence_ref 解析。",
+      "required": ["source_type", "source_id", "evidence_ref", "derivation"],
+      "additionalProperties": false,
+      "properties": {
+        "source_type": {"$ref": "#/$defs/source_type"},
+        "source_id": {"type": "string", "description": "如 fig:2C / results-p8 / table:3"},
+        "evidence_ref": {"type": "string", "pattern": "^EV-[0-9]{3,}$"},
+        "derivation": {"$ref": "#/$defs/derivation"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"source_type": {"const": "pixel_estimated"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"const": "visual_estimation"}}}}}
+        },
+        {
+          "if": {"properties": {"source_type": {"const": "axis_readable"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"const": "axis_read"}}}}}
+        },
+        {
+          "if": {"properties": {"source_type": {"const": "explicit_main_text"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"enum": ["text_parse", "ocr_text"]}}}}}
+        },
+        {
+          "if": {"properties": {"source_type": {"const": "explicit_table"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"enum": ["table_parse", "ocr_text"]}}}}}
+        },
+        {
+          "if": {"properties": {"source_type": {"const": "explicit_figure_caption"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"enum": ["caption_parse", "ocr_text"]}}}}}
+        }
+      ]
+    },
+
+    "reporting_completeness": {
+      "enum": ["complete", "incomplete", "not_assessed"],
+      "description": "00-contracts.md §3.5。与 extraction_confidence 正交，不得互相传染。"
+    },
+
+    "metric_family": {
+      "enum": ["continuous_summary", "effect_estimate", "count", "proportion", "p_value",
+               "correlation", "time_to_event", "dose_response", "classification_metric",
+               "diagnostic_accuracy"],
+      "description": "01-structured-extraction.md §6.3"
+    },
+
+    "replicate_type": {
+      "enum": ["biological", "technical", "unspecified"],
+      "description": "稿件未写明用 unspecified 并出 partial_extraction signal，不得默认填 biological"
+    },
+
+    "module_id_review": {
+      "enum": ["M2", "M3", "M4", "M5", "M6", "M7"],
+      "description": "审核模块。M1 是前置抽取层，不得产出 finding。"
+    },
+
+    "stage_id": {
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b", "stage_4", "stage_5"]
+    }
+  }
+}

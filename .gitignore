@@ -9,3 +9,11 @@ venv/
 # 测试用 PDF：仅本地保留，用于验证页码级原图定位
 # 提交包不含（单文件超 10MB 且非必需）；python3 tools/fetch_papers.py 可重建
 datasets/papers/*/paper.pdf
+
+# 密钥与本地环境：绝不入库
+.env
+.env.local
+*.key
+secrets/
+loop/state/
+loop/logs/

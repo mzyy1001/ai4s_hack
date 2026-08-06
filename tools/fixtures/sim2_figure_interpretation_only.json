@@ -1,0 +1,149 @@
+{
+  "_simulation": "② 单图解读请求（interpretation_only）：只跑 Stage 1 + scoped Stage 3。验证不跑 Stage 2/3b、不产 M5 finding、不产风险分、用 output_confidence、分母只含被请求的那一张图。",
+
+  "paper": {
+    "title": "Early-pregnancy HDL-related inflammatory indices and risk of preeclampsia",
+    "doi": "10.1371/journal.pone.0339322",
+    "journal": "PLOS One",
+    "input_format": "pdf"
+  },
+
+  "execution_scope": {
+    "mode": "figure_analysis",
+    "submode": "interpretation_only",
+    "executed_stages": ["stage_1", "stage_3"],
+    "executed_modules": [],
+    "skipped_modules": ["M2", "M3", "M4", "M5", "M6", "M7"],
+    "fields": [],
+    "assets": ["fig:3"],
+    "supplements": [],
+    "scope_rationale": "用户只要求解读 Figure 3 的剂量响应曲线，未要求审稿",
+    "stage_3b_executed": false
+  },
+
+  "coverage_breakdown": {
+    "resolved_fields": [],
+    "unresolved_required_fields": [],
+    "unreadable_assets": [],
+    "inaccessible_supplements": [],
+    "scope_denominators": {
+      "required_fields_total": 0,
+      "assets_total": 1,
+      "supplements_total": 0
+    }
+  },
+
+  "evidence_registry": {
+    "EV-001": {
+      "id": "EV-001", "type": "present",
+      "locator": {"figure": "3", "panel": "B", "pdf_file_page": 8, "scope": "panel"},
+      "quote": "Figure 3B. Restricted cubic spline of MHR and preeclampsia risk.",
+      "created_by": "stage_3"
+    },
+    "EV-002": {
+      "id": "EV-002", "type": "present",
+      "locator": {"figure": "3", "panel": "B", "pdf_file_page": 8, "scope": "panel"},
+      "created_by": "stage_3"
+    }
+  },
+
+  "figure_records": [
+    {
+      "figure_id": "fig:3B",
+      "caption": "Restricted cubic spline analysis of the monocyte-to-HDL ratio (MHR) and the adjusted odds of preeclampsia. Solid line: adjusted OR; shaded band: 95% CI.",
+      "chart_type": "statistical_plot",
+      "chart_type_confidence": "high",
+      "location": {
+        "figure_label": "Figure 3",
+        "panel": "B",
+        "evidence_ref": "EV-001",
+        "first_cited_at": null,
+        "image_file": "datasets/papers/dose_response__journal.pone.0339322/figures/g003.jpg",
+        "placement": "main_text"
+      },
+      "research_scene": "暴露-结局剂量响应关系",
+      "scientific_question": "早孕期单核细胞/HDL 比值（MHR）与子痫前期风险之间是否存在非线性剂量响应关系，拐点在哪里",
+      "experimental_conditions": {
+        "groups": ["全队列"],
+        "dose_levels": [],
+        "timepoints": ["早孕期"],
+        "n_per_group": null,
+        "replicate_type": null
+      },
+      "axes": {
+        "x": {"label": "MHR", "unit": null, "scale": "linear", "range": [0.1, 1.2], "truncated": null},
+        "y": {"label": "Adjusted OR", "unit": null, "scale": "log10", "range": [0.5, 4.0], "truncated": null}
+      },
+      "observations": [
+        {
+          "observation_id": "OBS-001",
+          "value": {"type": "interval", "low": 0.38, "high": 0.46},
+          "unit": null, "unit_normalized": null,
+          "uncertainty": {"type": "none"},
+          "n": null, "replicate_type": null,
+          "provenance": {
+            "source_type": "pixel_estimated",
+            "source_id": "fig:3B",
+            "evidence_ref": "EV-002",
+            "derivation": {"extraction_method": "visual_estimation", "ocr_used": false}
+          },
+          "extraction_confidence": "low",
+          "manual_review_needed": true,
+          "target_grouping_key": {
+            "experiment_id": null, "group": "全队列", "comparison": null,
+            "timepoint": "早孕期", "endpoint": "preeclampsia_OR_inflection"
+          },
+          "metric_name": "MHR inflection point",
+          "metric_family": "effect_estimate"
+        },
+        {
+          "observation_id": "OBS-002",
+          "value": {"type": "point", "number": 1.0},
+          "unit": null, "unit_normalized": null,
+          "uncertainty": {"type": "none"},
+          "n": null, "replicate_type": null,
+          "provenance": {
+            "source_type": "axis_readable",
+            "source_id": "fig:3B",
+            "evidence_ref": "EV-002",
+            "derivation": {"extraction_method": "axis_read", "ocr_used": false}
+          },
+          "extraction_confidence": "medium",
+          "manual_review_needed": false,
+          "target_grouping_key": {
+            "experiment_id": null, "group": "全队列", "comparison": null,
+            "timepoint": "早孕期", "endpoint": "preeclampsia_OR_reference"
+          },
+          "metric_name": "OR reference line",
+          "metric_family": "effect_estimate"
+        }
+      ],
+      "curve_fit": null,
+      "interpretation": "该图用限制性立方样条展示早孕期 MHR 与子痫前期校正 OR 的关系。曲线在 MHR 约 0.38–0.46 区间与 OR=1 参考线相交后持续上升，提示两者呈正向非线性关联，且低值区风险平坦、超过拐点后风险加速上升。纵轴为对数刻度，读图时不可按线性距离估计效应大小。拐点位置为像素估读所得区间，非稿件明文报告值。",
+      "significance_markers": [],
+      "parse_limitations": [],
+      "extraction_confidence": "low",
+      "manual_review_needed": true
+    }
+  ],
+
+  "table_records": [],
+
+  "all_extraction_signals": [],
+  "all_system_limitations": [],
+
+  "extraction_coverage": {
+    "value": 1.0,
+    "field_resolution": {"resolved": 0, "total": 0, "rate": 1.0},
+    "asset_readability": {"resolved": 1, "total": 1, "rate": 1.0},
+    "supplement_accessibility": {"resolved": 0, "total": 0, "rate": 1.0}
+  },
+
+  "output_confidence": {
+    "value": 0.85,
+    "pixel_share": 0.5,
+    "ocr_share": 0.0
+  },
+
+  "disclaimer": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号（screening / triage signal），不构成录用、退稿或发表决定。"
+}

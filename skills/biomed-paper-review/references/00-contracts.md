@@ -1,68 +1,106 @@
 # 00 · 共享契约（全模块通用）
 
-**本文件定义七个模块共用的数据契约，是 M1–M7 能合成一个 Skill 的关键。
-任何模块输出不符合此处定义的内容，一律视为无效。**
+**本文件定义 Stage 1–5 与 M1–M7 共用的数据契约。任何模块输出不符合此处定义的内容，一律视为无效。**
 
-由 `SKILL.md` §3 引用。修改此文件等于修改全部模块的接口，需全组同步。
+由 `SKILL.md §3` 引用。修改此文件等于修改全部模块的接口，需全组同步。
+本文件所有示例**必须**能通过 §11 的契约 lint 检查表。
+
+**术语约定**：本文件中「记录（record）」特指 §6 的三类顶层记录（`finding` / `extraction_signal` /
+`system_limitation`）。§7 的对象（`execution_scope` / `coverage_breakdown`）**不是记录**，
+不得称为 finding，不得带 `severity`。
 
 ---
 
-## 1. 证据与字段契约
+## 1. 证据登记表（evidence_registry）
 
-### 1.1 evidence 对象
+### 1.1 为什么需要登记表
 
-`evidence` 是**数组**（一条 finding 可由多处证据支撑）。每个元素为下列两型之一。
+同一处证据常被多个字段、多条 finding、多个 signal 引用。若各处内联复制，
+同一段落会出现七份不同措辞的 locator，去重与聚簇无从对齐。
 
-**存在型证据**（针对稿件中已有内容）：
-
-```json
-{
-  "type": "present",
-  "locator": {
-    "section": "methods", "subsection": "2.4", "paragraph_id": "methods-p17",
-    "pdf_file_page": 7, "printed_page": 1043,
-    "figure": null, "panel": null, "table": null,
-    "supplement_id": null, "xml_id": "para-0042", "scope": "paragraph"
-  },
-  "quote": "Data are presented as mean ± SEM (n = 3)."
-}
-```
-
-**缺失型证据**（针对稿件中不存在的内容）：
+**规则：证据的规范存储是登记表；其他一切位置只存 `evidence_ref` 字符串。**
 
 ```json
 {
-  "type": "absence",
-  "scope": "document",
-  "searched_locations": [
-    {"section": "methods", "scope": "section"},
-    {"section": "declarations", "scope": "section"},
-    {"supplement_id": "S1", "scope": "supplement"}
-  ],
-  "search_terms": ["randomization", "random allocation", "randomly assigned", "随机分组"],
-  "search_result": "no_match"
+  "evidence_registry": {
+    "EV-018": {
+      "id": "EV-018",
+      "type": "present",
+      "locator": {
+        "section": "methods",
+        "subsection": "2.4",
+        "paragraph_id": "methods-p17",
+        "pdf_file_page": 7,
+        "printed_page": 1043,
+        "xml_id": "para-0042",
+        "scope": "paragraph"
+      },
+      "quote": "Data are presented as mean ± SEM (n = 3).",
+      "created_by": "stage_2"
+    },
+    "EV-019": {
+      "id": "EV-019",
+      "type": "absence",
+      "scope": "document",
+      "searched_locations": [
+        {"section": "methods", "scope": "section"},
+        {"section": "declarations", "scope": "section"},
+        {"supplement_id": "S1", "scope": "supplement"}
+      ],
+      "search_terms": ["randomization", "random allocation", "randomly assigned", "随机分组", "随机化"],
+      "search_result": "no_match",
+      "created_by": "stage_2"
+    }
+  }
 }
 ```
 
-**规则**
+### 1.2 两种证据型
 
-- `type: "absence"` 的证据**不得**含 `quote` 字段。绝不为不存在的内容编造引文。
-- `searched_locations[]` 与 `search_terms[]` 在 `absence` 型中**必填**，且必须反映实际检索范围。
-  检索范围之外的部分不得声称"缺失"，应改用 `system_limitation`。
-- `search_result` 取值：`no_match` / `partial_match_ambiguous`。
-  后者不足以支撑缺失结论，应改产出 `ambiguous` 状态。
+| type | 用于 | 必填 | 禁止 |
+| --- | --- | --- | --- |
+| `present` | 稿件中已有的内容 | `locator` 对象 | —— |
+| `absence` | 稿件中不存在的内容 | `scope` + `searched_locations[]` + `search_terms[]` + `search_result` | **`quote`**、**`locator`** |
 
-### 1.2 locator 规范
+**`search_result` 枚举**：`no_match` / `partial_match_ambiguous`。
+后者**不足以**支撑缺失结论，引用它的字段必须判 `ambiguous` 而非 `not_reported`。
 
-**存储形式为结构化对象**（见 §1.1），字段：
+### 1.3 登记表硬性规则
+
+1. 每个 `evidence_ref` **必须**能在 `evidence_registry` 中解析到**恰好一个**条目。
+   解析不到即为契约违规，该条 finding / signal 一律丢弃。
+2. 证据 id 在**一次审核运行内**稳定，格式 `EV-<三位以上数字>`，全局递增，不复用。
+3. `type: "absence"` 的条目**禁止**含 `quote`。**绝不为不存在的内容编造引文。**
+4. `absence` 的 `searched_locations[]` 必须反映**实际执行过**的检索。
+   检索范围之外的部分不得声称"缺失"，应改产出 `system_limitation`。
+5. `created_by` 取 `stage_1` / `stage_2` / `stage_3` / `stage_3b` / `M2`…`M7`，用于排障。
+6. 同一 locator + 同一 quote 的证据**复用既有条目**，不新建。
+
+### 1.4 引用规则：evidence_refs[] 是唯一规范形式
+
+| 位置 | 存储形式 |
+| --- | --- |
+| `finding` | `evidence_refs[]`（**必填，非空**） |
+| `extraction_signal` | `evidence_refs[]` + 可选 `observation_refs[]` |
+| `system_limitation` | `evidence_refs[]`（可为空数组：输入截断等情形无处可指） |
+| `extracted_field` | `evidence_refs[]` |
+| `provenance` | `evidence_ref`（**单个**字符串） |
+| `evaluation_matrix` 条目 | `evidence_refs[]` |
+
+**渲染层**（`templates/review_report.md`）负责把 ref 展开成引文与页码；
+**机器可读 JSON 保留 ref**，同时在顶层附完整 `evidence_registry`，使 JSON 自洽可校验。
+
+**禁止**在上述任何位置内联 `evidence[]` 对象数组。旧契约的内联形式见 §10 迁移表。
+
+### 1.5 locator 字段表
 
 | 字段 | 说明 |
 | --- | --- |
-| `section` | 归一化章节名，取 Stage 1 的枚举 |
+| `section` | 归一化章节名，取 Stage 1 枚举 |
 | `subsection` | 小节编号，如 `"2.4"` |
 | `paragraph_id` | Stage 1 分配的段落 id |
-| `pdf_file_page` | **PDF 文件页码**（从 1 起数的物理页），PDF 输入必填 |
-| `printed_page` | **印刷页码**（论文上印的页码），能识别则填，否则 `null` |
+| `pdf_file_page` | **PDF 物理页码**（从 1 起数），PDF 输入必填 |
+| `printed_page` | **印刷页码**，能识别则填，否则 `null` |
 | `supplement_page` | 补充材料内页码 |
 | `figure` / `panel` | 图号与面板号 |
 | `table` | 表号 |
@@ -70,88 +108,405 @@
 | `xml_id` | JATS/XML 元素 id，XML 输入必填 |
 | `scope` | `document` / `section` / `paragraph` / `figure` / `panel` / `table` / `supplement` |
 
-**渲染形式**（仅供报告展示，不作为唯一存储）：由渲染器按
-`fig:3B | p.7 | sec:methods§2.4` 拼装。缺失型证据渲染为 `absence:doc:whole`。
+**渲染形式**（仅供展示，不作存储）：`fig:3B | p.7 | sec:methods§2.4`；
+缺失型渲染为 `absence:document`。**禁止**把自由文本作为 locator 的唯一存储形式。
 
-**禁止**把自由文本（如 `"Methods §2.4"`）作为 locator 的唯一存储形式。
+---
 
-### 1.3 extracted_field 结构
+## 2. 数值契约
 
-**所有重要字段**（清单见 `references/01-structured-extraction.md` §3）统一使用：
+### 2.1 numeric value 变体（全局唯一形式）
+
+**任何数值一律使用带 `type` 标签的对象，禁止裸数字、禁止字符串区间。**
+
+```
+point | interval | lower_bound | upper_bound | categorical
+```
+
+| type | 形状 | 用于 |
+| --- | --- | --- |
+| `point` | `{"type": "point", "number": 12.4}` | 明确报告的点值 |
+| `interval` | `{"type": "interval", "low": 40, "high": 50}` | 像素估读、原文给出的范围 |
+| `lower_bound` | `{"type": "lower_bound", "low": 100}` | `> 100`、`≥ LLOQ` |
+| `upper_bound` | `{"type": "upper_bound", "high": 0.001}` | `p < 0.001`、`< LOD` |
+| `categorical` | `{"type": "categorical", "label": "not_detected"}` | `ND` / `n.s.` / 分级标签 |
+
+**明令禁止**：`"value": "40–50"`、`"value": 12.4`、`"value": "<0.001"`。
+旧字符串区间的迁移见 §10。
+
+### 2.2 unit 与 uncertainty
 
 ```json
 {
-  "value": null,
-  "status": "not_reported",
-  "evidence": [],
-  "extraction_confidence": "high",
-  "alternatives": [],
-  "candidates": []
+  "unit": "μM",
+  "unit_normalized": "umol/L",
+  "uncertainty": {"type": "95CI", "low": 9.8, "high": 15.7}
 }
 ```
 
-**`status` 枚举（不得自创）**
+- `unit` 保留稿件原写法；`unit_normalized` 为归一化形式，**兼容性比较一律用归一化值**。
+  无量纲指标 `unit: null`，`unit_normalized: null`。
+- `uncertainty.type` 枚举：`SD` / `SEM` / `95CI` / `IQR` / `range` / `none`。
+  `SD` / `SEM` 用 `{"type": "SD", "value": 1.2}`；区间型用 `low` / `high`。
 
-| status | 含义 | `value` | `evidence` |
-| --- | --- | --- | --- |
-| `reported` | 稿件明确报告了该值 | 非 null | 至少一条 `present` |
-| `not_reported` | **已检索**相关位置，稿件确实未报告 | `null` | 至少一条 `absence` |
-| `not_applicable` | 该字段对本研究设计不适用 | `null` | 可为空，需填 `na_reason` |
-| `ambiguous` | 存在相关文本但无法唯一解读 | `null` | 至少一条 `present`（指向歧义文本） |
-| `conflicting` | 多个来源报告了不兼容的值 | `null` | 每个 `candidates[]` 元素各带证据 |
-| `parse_failed` | 内容可能存在，但系统无法可靠抽取 | `null` | 可为空，需关联 `system_limitation.id` |
+### 2.3 provenance（含 derivation，必填）
 
-**关键区分**（下游模块行为完全不同）：
-
-- `not_reported` → 稿件的报告完整性问题，**可以**成为 M2/M4/M6 的 finding 依据。
-- `parse_failed` → **系统的**能力问题，**不得**成为稿件 finding，只降低 coverage 与 confidence。
-- `ambiguous` / `conflicting` → 产出 signal，由下游模块判定，M1 不下结论。
-
-### 1.4 provenance 对象
-
-所有数值型抽取结果（`key_data[]` 及图表读数）必须带：
+**所有数值型结果必须带 `provenance`，且 `provenance.derivation` 必填** ——
+否则 §8.3 的 pixel / OCR 依赖率无法计算。
 
 ```json
 {
-  "source_type": "figure_caption",
+  "source_type": "explicit_figure_caption",
   "source_id": "fig:2C",
-  "locator": { "figure": "2", "panel": "C", "pdf_file_page": 5, "scope": "panel" }
+  "evidence_ref": "EV-014",
+  "derivation": {
+    "extraction_method": "caption_parse",
+    "ocr_used": false
+  }
 }
 ```
 
-**`source_type` 枚举（全局唯一，所有文件与示例必须一致）**：
+**`source_type` 枚举（全局唯一，五值，所有文件与示例必须一致）**：
 
 ```
 explicit_main_text | explicit_table | explicit_figure_caption | axis_readable | pixel_estimated
 ```
 
-> 旧值 `"figure"` / `"text"` / `"figure_axis"` / `"figure_pixel"` 已废弃，见 §D 迁移说明。
+**`derivation.extraction_method` 枚举**：
 
-**`pixel_estimated` 的强制约束**：`extraction_confidence` 必须为 `low`；
-`value` 必须为区间（如 `"40–50"`）而非点值；必须置 `manual_review_needed = true`。
+```
+text_parse | table_parse | caption_parse | axis_read | visual_estimation | ocr_text
+```
 
-### 1.5 抽取置信度 vs 报告完整性
+**`derivation.ocr_used`**：布尔，`true` 表示该数值经过 OCR 文本层。
 
-**两个正交概念，不得合并。**
+**`source_type` × `extraction_method` 合法组合**（其余组合为契约违规）：
 
-| 概念 | 字段 | 回答的问题 |
-| --- | --- | --- |
-| 抽取置信度 | `extraction_confidence`: `high` / `medium` / `low` | 我们对"读出来的这个值就是稿件写的值"有多确定？ |
-| 报告完整性 | `reporting_completeness`: `complete` / `incomplete` / `not_applicable` | 稿件对这个数值的报告是否符合该指标族的要求？ |
+| source_type | 允许的 extraction_method |
+| --- | --- |
+| `explicit_main_text` | `text_parse`, `ocr_text` |
+| `explicit_table` | `table_parse`, `ocr_text` |
+| `explicit_figure_caption` | `caption_parse`, `ocr_text` |
+| `axis_readable` | `axis_read` |
+| `pixel_estimated` | `visual_estimation` |
 
-例：图注写明 `IC50 = 12.4 μM`，但未给拟合方法与置信区间 →
-`extraction_confidence: "high"`（我们确信读对了）+ `reporting_completeness: "incomplete"`
-（稿件报告不全，是 M4 的 finding 线索）。
+**两级来源分类**（§5.4 兼容性判定与 canonical 选择的基础）：
+
+```
+explicit_reported  = {explicit_main_text, explicit_table, explicit_figure_caption}
+visually_derived   = {axis_readable, pixel_estimated}
+```
+
+### 2.4 pixel_estimated 的强制约束
+
+`source_type: "pixel_estimated"` 时**同时**满足，缺一即为契约违规：
+
+1. `value.type` 必须为 `interval`（或 `lower_bound` / `upper_bound`），**不得为 `point`**；
+2. `extraction_confidence` 必须为 `low`；
+3. `manual_review_needed` 必须为 `true`；
+4. **不得**作为 M4 任何统计复算或一致性检验的输入；
+5. 引用它的 finding，其 `review_confidence` 上限为 `medium`。
+
+`axis_readable` 允许 `point`，但 `extraction_confidence` 上限为 `medium`。
 
 ---
 
-## 2. 三类输出契约
+## 3. 字段契约（extracted_field）
 
-系统产出三种彼此不可混用的记录。**判断归属的唯一标准：这是稿件的问题，还是我们的观察，还是我们的能力限制？**
+### 3.1 三个正交维度
 
-### 2.1 finding · 稿件级审核判断
+旧契约把「适用性」与「必填性」混在 `not_applicable` 一个值里，导致
+「不进覆盖率分母」被错写成「本研究不适用」。**三者独立存储**：
 
-由 M2–M7 产出（M1 只在 §4.5 的受限情形下产出）。
+| 维度 | 字段 | 回答的问题 |
+| --- | --- | --- |
+| 适用性 applicability | `applicability` | 这个概念对本研究/本实验**说得通吗**？ |
+| 必填性 requiredness | `requiredness` | 这个设计**多大程度上应该**报告它？ |
+| 抽取状态 status | `status` | 我们**实际抽到了什么**？ |
+
+```
+applicability : applicable | not_applicable | applicability_uncertain
+requiredness  : required | recommended | optional
+status        : reported | not_reported | not_applicable | ambiguous
+                | conflicting | parse_failed | unresolved
+```
+
+**判定顺序固定**：先定 `applicability`（依 §9.1 的路由优先级），
+再定 `requiredness`，最后由检索结果定 `status`。
+
+### 3.2 组合语义（唯一合法映射）
+
+| applicability | 检索结果 | status | 附加必填 |
+| --- | --- | --- | --- |
+| `applicable` | 找到明确报告 | `reported` | ≥1 条 `present` 证据 |
+| `applicable` | 完整检索后确认未报告 | `not_reported` | ≥1 条 `absence` 证据 |
+| `applicable` | 有相关文本但读不出唯一解 | `ambiguous` | ≥1 条 `present`（指向歧义文本） |
+| `applicable` | 多来源不兼容 | `conflicting` | 见 §5（key_data）或 `candidate_refs[]` |
+| `applicable` | 等待 Stage 3 视觉解析 | `unresolved` | `resolution_state` 块，见 §4 |
+| `applicable` | 技术原因抽不出 | `parse_failed` | `system_limitation_ref` |
+| `not_applicable` | ——（不检索） | `not_applicable` | `na_reason` |
+| `applicability_uncertain` | —— | `ambiguous` | 关联 `ambiguous_study_design` signal |
+
+**`requiredness` 不改变 `status`**，只改变覆盖率分母（§8.2）与下游 severity 基线。
+
+### 3.3 结构
+
+```json
+{
+  "field_path": "measurement.sample_size_justification",
+  "applicability": "applicable",
+  "requiredness": "required",
+  "status": "not_reported",
+  "value": null,
+  "unit": null,
+  "evidence_refs": ["EV-019"],
+  "extraction_confidence": "high",
+  "na_reason": null,
+  "resolution_state": null,
+  "system_limitation_ref": null,
+  "candidate_refs": [],
+  "alternatives": []
+}
+```
+
+- `value` 为 §2.1 的 numeric 对象、字符串、结构化对象或 `null`。
+  `status ∈ {not_reported, not_applicable, ambiguous, conflicting, parse_failed, unresolved}`
+  时 `value` **必须**为 `null`。
+- `alternatives[]`：**抽取器对同一事实的不同解读**（我们不确定），每项 `{value, evidence_refs}`。
+- `candidate_refs[]`：`status: conflicting` 时指向 §5 的 `observation_id`。
+- **禁止**用裸 `null` 编码多种缺失状态。
+
+### 3.4 三条不可混淆的边界
+
+1. **`not_reported` ≠ `parse_failed`** —— 前者是**稿件**没写（已检索确认），
+   **可以**成为 M2/M4/M6 的 finding 依据；后者是**我们**没读出来，
+   **绝不可**成为稿件 finding，只降 `extraction_coverage` 与 confidence。
+   无法确定属于哪一种时，一律用 `parse_failed` —— 宁可承认看不清，不可冤枉稿件。
+
+2. **`not_reported` ≠ `not_applicable`** —— 前者「该写没写」，后者「本来就不需要写」。
+   **不得**因为某字段不在覆盖率分母内就判 `not_applicable`（§3.1）。
+
+3. **`ambiguous` ≠ `conflicting`** —— 前者是**一处**文本读不出唯一解；
+   后者是**多处**来源互相打架，且已通过 §5.4 判定为不兼容。
+   来源之间**无法建立可比性**时用 `ambiguous`，**不得**自动判 `conflicting`。
+
+### 3.5 抽取置信度 vs 报告完整性（正交）
+
+| 概念 | 字段 | 回答 |
+| --- | --- | --- |
+| 抽取置信度 | `extraction_confidence`: `high`/`medium`/`low` | 我们读出的值就是稿件写的值吗？ |
+| 报告完整性 | `reporting_completeness`: `complete`/`incomplete`/`not_assessed` | 稿件对这个数值报全了吗？ |
+
+例：图注写明 `IC50 = 12.4 μM` 但无 CI 与拟合方法 →
+`extraction_confidence: "high"` + `reporting_completeness: "incomplete"`。
+**两者不得互相传染。**
+
+---
+
+## 4. pending 生命周期（unresolved）
+
+M1 在 Stage 2 遇到「文本没有、但图里可能有」的字段时，**不得**判 `parse_failed`
+—— Stage 3 尚未尝试，谈不上失败。使用 `unresolved` 生命周期状态：
+
+```json
+{
+  "field_path": "key_results.ic50_compound_a",
+  "applicability": "applicable",
+  "requiredness": "required",
+  "status": "unresolved",
+  "value": null,
+  "resolution_state": {
+    "state": "pending_visual_resolution",
+    "pending_stage": "stage_3",
+    "expected_sources": ["fig:2C"]
+  },
+  "evidence_refs": ["EV-022"],
+  "extraction_confidence": "high",
+  "system_limitation_ref": null
+}
+```
+
+**规则**
+
+1. `status: "unresolved"` **只允许出现在 `structured_result_v1`**。
+2. 它**不是** `system_limitation`，**不得**填 `system_limitation_ref`，**不降低**覆盖率
+   —— 覆盖率在 Stage 3b 之后才结算。
+3. `resolution_state.state` 一期只有一个值：`pending_visual_resolution`。
+   `pending_stage` 恒为 `stage_3`。`expected_sources[]` 至少一项，形如 `fig:2C` / `table:3`。
+4. **Stage 3b 必须把每个 `unresolved` 解析为**下列之一：
+   `reported` / `not_reported` / `ambiguous` / `conflicting` / `parse_failed`。
+5. **`structured_result_v2` 中不得出现 `status: "unresolved"`**，
+   也不得出现非空 `resolution_state`。这是 §11 lint 的强制检查项。
+6. 只有 Stage 3 **真正尝试并失败**（图像不可读、面板缺失）才可转为 `parse_failed`，
+   并**必须**关联一条 `system_limitation`。
+
+**Stage 3b 未执行时**（如 `structured_extraction` 无视觉需求模式）：
+输出停在 v1，`unresolved` 合法保留，但该字段计入
+`coverage_breakdown.unresolved_required_fields[]`，且输出必须标注 `stage_3b_executed: false`。
+
+---
+
+## 5. key_data 观测组契约
+
+### 5.1 为什么是「组」而不是「点」
+
+同一个 IC50 可能同时出现在图注、正文、表格。旧契约的扁平 `key_data` 只能存一个值，
+合并时必然静默覆盖。**`key_data[]` 的每个元素是一个观测组（observation group）**，
+组内保留全部来源，组本身承载合并结论。
+
+### 5.2 结构
+
+```json
+{
+  "id": "KD-007",
+  "metric_name": "IC50",
+  "metric_family": "dose_response",
+  "grouping_key": {
+    "experiment_id": "EXP-02",
+    "group": "Compound A",
+    "comparison": "Compound A vs vehicle",
+    "timepoint": "72h",
+    "endpoint": "cell_viability"
+  },
+  "status": "conflicting",
+  "canonical_observation": null,
+  "canonical_rationale": null,
+  "observations": [
+    {
+      "observation_id": "OBS-014",
+      "value": {"type": "point", "number": 12.4},
+      "unit": "μM",
+      "unit_normalized": "umol/L",
+      "uncertainty": {"type": "95CI", "low": 9.8, "high": 15.7},
+      "n": 3,
+      "replicate_type": "biological",
+      "provenance": {
+        "source_type": "explicit_figure_caption",
+        "source_id": "fig:2C",
+        "evidence_ref": "EV-014",
+        "derivation": {"extraction_method": "caption_parse", "ocr_used": false}
+      },
+      "extraction_confidence": "high",
+      "manual_review_needed": false
+    },
+    {
+      "observation_id": "OBS-015",
+      "value": {"type": "point", "number": 15.1},
+      "unit": "μM",
+      "unit_normalized": "umol/L",
+      "uncertainty": {"type": "none"},
+      "n": 3,
+      "replicate_type": "biological",
+      "provenance": {
+        "source_type": "explicit_main_text",
+        "source_id": "results-p8",
+        "evidence_ref": "EV-015",
+        "derivation": {"extraction_method": "text_parse", "ocr_used": false}
+      },
+      "extraction_confidence": "high",
+      "manual_review_needed": false
+    }
+  ],
+  "compatible_observations": [],
+  "conflicting_observations": ["OBS-014", "OBS-015"],
+  "reporting_completeness": "not_assessed",
+  "missing_elements": [],
+  "signal_refs": ["SIG-002"]
+}
+```
+
+### 5.3 组 status 枚举
+
+```
+reported | compatible_multiple_sources | conflicting | ambiguous
+| pending_visual_resolution | parse_failed
+```
+
+| status | 含义 | `canonical_observation` |
+| --- | --- | --- |
+| `reported` | 单一来源，正常报告 | 该唯一 `observation_id` |
+| `compatible_multiple_sources` | 多来源且已判定兼容 | 按 §5.5 选出的 id |
+| `conflicting` | 多来源且已判定不兼容 | **`null`** |
+| `ambiguous` | 无法建立可比性（单位不可归一 / 分组键不匹配） | **`null`** |
+| `pending_visual_resolution` | 仅 v1 合法，等待 Stage 3 | **`null`** |
+| `parse_failed` | Stage 3 尝试后仍无法读出 | **`null`** |
+
+**`pending_visual_resolution` 不得出现在 v2**（与 §4 规则 5 同）。
+
+### 5.4 分组与兼容性判定（Stage 3b 执行）
+
+**第一步 · 分组。** 两个 observation 属于同一组，当且仅当 `grouping_key` 的
+**五个键全部相等**：`experiment_id` / `group` / `comparison` / `timepoint` / `endpoint`
+（`null` 与 `null` 视为相等；一方为 `null` 另一方有值视为**不相等**）。
+分组键不匹配 → 是两个不同的 `key_data`，**不是冲突**。
+
+**第二步 · 可比性。** 同组内两两判定，顺序固定：
+
+1. **单位归一化**。`unit_normalized` 无法归一到同一量纲 → `ambiguous`，判定终止。
+2. **变体兼容**。`categorical` 与数值型不可比 → `ambiguous`。
+3. **区间重叠**。双方都有 `uncertainty` 区间（`95CI` / `IQR` / `range`）或
+   `value.type = interval`：区间**有重叠**即 `compatible`，无重叠即 `conflicting`。
+4. **四舍五入容差**。双方均为 `point` 且至少一方无区间：
+   取**精度较低**一方的最后一位有效数字单位 `u`，容差 `tol = 0.5 × u`。
+   `|a − b| ≤ tol` → `compatible`（属四舍五入差异，**不得**判冲突）；否则 `conflicting`。
+   例：`12.4` vs `12.43` → `u = 0.1`，`tol = 0.05`，差 `0.03` → **兼容**。
+   例：`12.4` vs `15.1` → `tol = 0.05`，差 `2.7` → **冲突**。
+5. **单边界**。`lower_bound` / `upper_bound` 与点值：点值落在界内 → `compatible`，否则 `conflicting`。
+
+**第三步 · 归档。** 判定为兼容的 id 进 `compatible_observations[]`，
+不兼容的**双方 id 都**进 `conflicting_observations[]`。
+**全部 observation 一律保留在 `observations[]`，禁止删除或静默覆盖。**
+
+**第四步 · 出信号。** 存在 `conflicting_observations[]` → 产出一条
+`source_value_conflict` signal（§6.2），`signal_refs[]` 回填。
+
+### 5.5 canonical_observation 的选择
+
+**不使用「正文 > 表 > 图注 > 轴 > 像素」的绝对顺序**。该顺序在
+「正文是四舍五入的叙述性摘要、表格才是完整结果」这一常见情形下是错的。
+
+**唯一保留的绝对规则**：`explicit_reported` 一律优先于 `visually_derived`。
+若组内同时存在两类且已判定兼容，canonical 必须取自 `explicit_reported`。
+
+`explicit_reported` 内部按下列**有序**判据选择，命中即停：
+
+| # | 判据 | 说明 |
+| --- | --- | --- |
+| 1 | 稿件明示为主要数值结果 | 如「primary outcome」「主要终点」所在的表或段 |
+| 2 | 携带不确定度信息 | 有 CI/SD/SEM 者优于裸点值 |
+| 3 | 有效数字精度更高 | `12.43` 优于 `12.4` |
+| 4 | 非叙述性四舍五入摘要 | 表格/图注的完整结果优于正文的「约 12 μM」 |
+| 5 | 该指标族要素更齐全 | 依 `01-structured-extraction.md §6.3` |
+| 6 | 以上全部持平 | 取 `observation_id` 字典序最小者，保证可复现 |
+
+选中后**必须**在 `canonical_rationale` 写明命中的判据编号与理由，
+如 `"criterion_2: fig:2C 带 95% CI，results-p8 为裸点值"`。
+
+**无法给出可辩护选择时，`canonical_observation` 置 `null`**，
+组 status 判 `ambiguous`，不得随便挑一个。
+
+### 5.6 reporting_completeness 与指标族
+
+指标族要素表见 `01-structured-extraction.md §6.3`。
+`reporting_completeness` 在**组层级**判定，取 `canonical_observation` 的要素齐备情况；
+`canonical_observation` 为 `null` 时一律 `not_assessed`，`missing_elements` 为空数组。
+
+---
+
+## 6. 三类顶层记录（不可混用）
+
+**判断归属的唯一标准：这是稿件的问题，还是我们的观察，还是我们的能力限制？**
+
+| 契约 | 产出者 | 有 severity | 影响 |
+| --- | --- | --- | --- |
+| `finding` | **仅 M2–M7** | ✅ `critical`/`major`/`minor`/`info` | 稿件风险分 |
+| `extraction_signal` | Stage 2 (M1)、Stage 3b | ❌ 无 | 路由给下游判定，本身不是结论 |
+| `system_limitation` | Stage 1 / 2 / 3 / 3b | ❌ 无 | 只降覆盖率与置信度 |
+
+**M1 不产出任何 `finding`。** 旧契约的 `extraction_quality_findings[]` 已废除，
+迁移映射见 §10。
+
+### 6.1 finding · 稿件级审核判断
 
 ```json
 {
@@ -161,133 +516,445 @@ explicit_main_text | explicit_table | explicit_figure_caption | axis_readable | 
   "severity": "major",
   "title": "组间比较未报告样本量依据与效应量",
   "detail": "Fig 3B 三组比较使用 one-way ANOVA，各组 n=3 且未说明为生物学或技术重复；正文与方法节均未见效能分析或效应量报告。",
-  "evidence": [
-    {"type": "present",
-     "locator": {"figure": "3", "panel": "B", "pdf_file_page": 7, "scope": "panel"},
-     "quote": "Data are presented as mean ± SEM (n = 3)."},
-    {"type": "absence", "scope": "document",
-     "searched_locations": [{"section": "methods", "scope": "section"},
-                            {"section": "results", "scope": "section"}],
-     "search_terms": ["power analysis", "sample size", "effect size", "样本量"],
-     "search_result": "no_match"}
-  ],
+  "evidence_refs": ["EV-018", "EV-019"],
   "rule_ref": "04-statistics#sample-size-reporting",
   "review_confidence": "high",
+  "derived_from_signals": ["SIG-004"],
   "related_findings": [],
   "manual_review": {
     "action": "核对 n=3 指生物学重复还是技术重复；要求作者补充效能分析或效应量",
-    "who": "statistical_reviewer"
+    "who": "statistical_reviewer",
+    "priority": "P1"
   }
 }
 ```
 
 **枚举（不得自创）**
 
-- `severity`: `critical`（结论不成立 / 伦理违规 / 疑似不端）> `major`（需作者补充材料或重做分析）
+- `module`: `M2` / `M3` / `M4` / `M5` / `M6` / `M7`。**`M1` 非法。**
+- `severity`: `critical`（结论不成立 / 伦理违规 / 疑似不端）> `major`（需作者补材料或重做分析）
   > `minor`（表述与规范问题）> `info`（提示）
 - `review_confidence`: `high` / `medium` / `low` —— 指**本条判断本身**的可靠程度。
-  依赖 `pixel_estimated` 证据或 `ambiguous` 字段的 finding，上限为 `medium`。
-- `category`: 必须是该模块 reference 文件中已登记的 slug。
+- `category`: 必须是该模块 reference 文件已登记的 slug。
 - `manual_review.who`: `statistical_reviewer` / `domain_reviewer` / `ethics_committee` /
-  `editor` / `author`。
+  `editor` / `author`
+- `manual_review.priority`: `P0` / `P1` / `P2`
 
 **硬性规则**
 
-- `severity >= major` 的 finding **必须**有非空 `manual_review.action`。
-- **解析失败不得赋予稿件 severity。** 任何源于 `parse_failed` 的情形一律走 §4.3。
+1. `evidence_refs[]` **必须非空**，且每项在登记表中可解析。
+2. `severity >= major` 的 finding **必须**有非空 `manual_review.action`。
+3. 证据中含 `pixel_estimated` 或指向 `ambiguous` 字段的 finding，
+   `review_confidence` 上限为 `medium`。
+4. **`system_limitation` 不得转成 finding**。若确要就同一位置立 finding，
+   必须**另行**给出稿件证据（`present` 或合规的 `absence`）。
+5. `derived_from_signals[]` 只作溯源，**不得**替代 `evidence_refs[]`
+   —— 仅凭 signal id 立 finding 为契约违规。
 
-### 2.2 extraction_signal · 机器级观察
-
-由 M1（Stage 2）与 Stage 3b 产出。**signal 不是结论，是待下游解读的观察。**
+### 6.2 extraction_signal · 机器级观察
 
 ```json
 {
   "id": "SIG-002",
   "type": "source_value_conflict",
   "target": "key_data.KD-007",
-  "detail": "IC50 在图注为 12.4 μM，在 Results 正文为 15.1 μM，两者置信区间不重叠。",
-  "candidates": [
-    {"value": 12.4, "unit": "μM",
-     "provenance": {"source_type": "explicit_figure_caption", "source_id": "fig:2C",
-                    "locator": {"figure": "2", "panel": "C", "pdf_file_page": 5, "scope": "panel"}}},
-    {"value": 15.1, "unit": "μM",
-     "provenance": {"source_type": "explicit_main_text", "source_id": "results-p8",
-                    "locator": {"section": "results", "paragraph_id": "results-p8",
-                                "pdf_file_page": 6, "scope": "paragraph"}}}
-  ],
-  "routed_to": ["M2"]
+  "detail": "IC50 图注 12.4 μM (95% CI 9.8–15.7)，正文 15.1 μM 无区间；四舍五入容差 0.05，差值 2.7，判定不兼容。",
+  "observation_refs": ["OBS-014", "OBS-015"],
+  "evidence_refs": ["EV-014", "EV-015"],
+  "routed_to": ["M2", "M4"],
+  "produced_by": "stage_3b"
 }
 ```
 
-**`type` 枚举**
+**`type` 枚举（六值）**
 
 | type | 触发条件 | 路由到 | 下游判定什么 |
 | --- | --- | --- | --- |
-| `source_value_conflict` | 同一字段多来源数值不兼容 | M2（主）、M4 | 是否构成稿件内部矛盾 |
-| `claim_without_resolved_evidence_link` | claim 的 `supported_by` 无法解析到任何证据 | M7 | 是否构成无支撑主张 / 过度外推 |
-| `ambiguous_study_design` | 研究设计线索冲突或不足以唯一归类 | M2、M3、M4、M6 | 是否构成设计描述不清 |
-| `unresolved_cross_reference` | 正文引用的图/表/补充材料无法解析到实体 | M2、M5 | 是否构成引用错误 |
-| `partial_extraction` | 字段部分抽出（如有 n 无分组归属） | M4、M5 | 是否构成报告不完整 |
-| `parse_failure` | 抽取因技术原因失败 | **不路由到审核模块** | 仅关联 `system_limitation` |
+| `source_value_conflict` | 同一观测组多来源不兼容（§5.4） | M2（主）、M4 | 是否构成稿件内部矛盾 |
+| `claim_without_resolved_evidence_link` | claim 的 `supported_by` 解析不到任何 `key_data.id` 或证据 | M7 | 是否构成无支撑主张 |
+| `ambiguous_study_design` | 设计线索冲突或不足以唯一归类 | M2、M3、M4、M6 | 是否构成设计描述不清 |
+| `unresolved_cross_reference` | 正文引用的图/表/补充材料解析不到实体 | M2、M5 | 是否构成引用错误 |
+| `partial_extraction` | 字段部分抽出（有 n 无分组归属、有剂量无单位） | M4、M5 | 是否构成报告不完整 |
+| `ambiguous_extraction` | 字段 `status: ambiguous`，存在文本但读不出唯一解 | M2、M4 | 是否构成表述不清 |
 
-**规则**：signal **不得**带 `severity`。下游模块若据此立 finding，必须在该 finding 的
-`evidence[]` 中**独立**给出稿件证据，不得仅引用 signal id。
+**规则**
 
-### 2.3 system_limitation · 系统能力限制
+1. signal **没有 `severity`**，**不直接**影响 `manuscript_risk_score`。
+2. `produced_by` 取 `stage_2` / `stage_3b`。
+3. `claim_without_resolved_evidence_link` 的 `target` 必须携带目标元数据：
+   `{"claim_id": "CLM-03", "unresolved_refs": ["Fig 5D"]}`，
+   **不另设** `unresolved_evidence_links[]` 数组（§10）。
+4. 旧 `parse_failure` type **已废除** —— 解析失败是 `system_limitation`，不是 signal（§10）。
+
+### 6.3 system_limitation · 系统能力限制
 
 ```json
 {
   "id": "SYS-004",
   "category": "figure_unreadable",
-  "impact": "M4 与 M5 对 Figure 4 的审核不完整",
+  "impact": "Figure 4 的面板 B 无法解析，M4 与 M5 对该图的审核不完整",
   "affected_modules": ["M4", "M5"],
-  "affected_targets": ["fig:4"],
-  "evidence": [
-    {"type": "present",
-     "locator": {"figure": "4", "pdf_file_page": 9, "scope": "figure"}}
-  ],
-  "recommended_action": "调取原始高分辨率图件或矢量 PDF 后重新解析"
+  "affected_targets": ["fig:4B"],
+  "affected_fields": ["key_results.tumor_volume_day28"],
+  "evidence_refs": ["EV-041"],
+  "recommended_action": "调取原始高分辨率图件或矢量 PDF 后重新解析",
+  "produced_by": "stage_3"
 }
 ```
 
-**`category` 枚举**：`parse_failed` / `figure_unreadable` / `table_unparseable` /
-`supplement_inaccessible` / `section_missing_from_input` / `ocr_low_quality` /
-`encoding_error` / `input_truncated`。
+**`category` 枚举（八值）**
+
+```
+parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
+| section_missing_from_input | ocr_low_quality | encoding_error | input_truncated
+```
 
 **硬性规则**
 
-- `system_limitation` **没有 `severity` 字段**。它不是稿件问题。
-- 它**降低** `extraction_coverage` 与 `review_confidence`，
-  **不降低** `manuscript_risk_score`（见 §6）。
-- 报告中必须单列一节，让人看到"哪些地方我们没看清"。
+1. **没有 `severity` 字段。** 它不是稿件问题。
+2. **降低** `extraction_coverage` 与 confidence，**不降低** `manuscript_risk_score`（§8.1）。
+3. **不得**在无独立稿件证据的情况下转成稿件缺陷（§6.1 规则 4）。
+4. 报告中必须单列一节 —— 让人看到「哪些地方我们没看清」。
+5. `produced_by` 取 `stage_1` / `stage_2` / `stage_3` / `stage_3b`。
 
-### 2.4 去重与聚簇
+### 6.4 边界矩阵（争议情形的唯一判法）
 
-Stage 5 执行，顺序固定：
-
-1. **同模块内合并**：同一模块内 `category` 相同且 `evidence` 主锚点
-   （第一条 `present` 证据的 `locator`，比较 `figure`+`panel` 或 `paragraph_id`）相同的
-   findings，合并为一条，保留 `severity` 最高者，其余进 `related_findings[]`。
-2. **跨模块聚簇**：不同模块命中同一主锚点且语义重合时，构成一个 `issue_cluster`。
-   保留 `severity` 最高的一条为簇代表，其余挂 `related_findings[]`。
-   **不要把同一个问题报告六遍。**
-3. **簇内证据合并**：簇代表的 `evidence[]` 并入各成员的证据，去重后保留。
-
-聚簇结果 `issue_clusters[]` 是 §6.1 评分的输入单位。
-
-### 2.5 M1 可以产出的 finding（严格受限）
-
-M1 **仅**可产出**抽取质量类** finding，且这类 finding **只影响系统覆盖率与复核置信度，
-不直接降低稿件风险分**：
-
-| category | 触发 | 影响 |
+| 情形 | 正确契约 | 错误做法 |
 | --- | --- | --- |
-| `ambiguous_extraction` | 字段 `status: ambiguous` | 降 coverage / confidence |
-| `required_field_unresolved` | 条件必填字段最终为 `ambiguous`/`conflicting`/`parse_failed` | 降 coverage / confidence |
-
-`parse_failed` 与 `unreadable_figure` **不走 finding**，走 §4.3 `system_limitation`。
-
-M1 **不得**产出 `unsupported_claim`、`internal_inconsistency`、`missing_ethics_statement`
-等稿件级判断 —— 这些分别属于 M7、M2、M6。
+| 补充材料引用了但下载不到 | `system_limitation: supplement_inaccessible`；依赖字段 `parse_failed` | 判 `not_reported` 并立缺失 finding |
+| 图片糊到读不出坐标 | `system_limitation: figure_unreadable` | 立「图表质量差」finding |
+| 稿件确实没写伦理声明（已全文检索） | 字段 `not_reported` + `absence` 证据 → M6 立 finding | 判 `parse_failed` |
+| 正文与图注数值打架 | `source_value_conflict` signal → M2 判定 | M1 直接立 `internal_inconsistency` finding |
+| 字段等 Stage 3 解析 | `status: unresolved` | `parse_failed` + `pending_visual_resolution: true` |
+| 单位不可归一无法比较 | 组 status `ambiguous` | 组 status `conflicting` |
 
 ---
+
+## 7. 非记录对象
+
+以下两者**不是记录**，不得称为 finding，不得带 `severity`。
+
+### 7.1 execution_scope · 执行范围
+
+**一切覆盖率与置信度的分母都取自本对象。** 全模式必填。
+
+```json
+{
+  "execution_scope": {
+    "mode": "targeted_check",
+    "submode": null,
+    "executed_stages": ["stage_1", "stage_2", "stage_3b"],
+    "executed_modules": ["M6"],
+    "skipped_modules": ["M2", "M3", "M4", "M5", "M7"],
+    "fields": ["declarations.ethics_statement", "declarations.informed_consent",
+               "population.subjects"],
+    "assets": [],
+    "supplements": ["S1"],
+    "scope_rationale": "用户仅询问伦理声明是否齐全"
+  }
+}
+```
+
+| 字段 | 说明 |
+| --- | --- |
+| `mode` | `full_review` / `structured_extraction` / `figure_analysis` / `targeted_check` |
+| `submode` | 仅 `figure_analysis` 使用：`interpretation_only` / `figure_review`；其余为 `null` |
+| `executed_stages[]` | `stage_1` / `stage_2` / `stage_3` / `stage_3b` / `stage_4` / `stage_5` |
+| `executed_modules[]` | 实际运行的审核模块；非审核模式为空数组 |
+| `skipped_modules[]` | `full_review` 下为空数组 |
+| `fields[]` | 进入覆盖率分母的字段路径全集 |
+| `assets[]` | 进入 `asset_readability_rate` 分母的图表 id |
+| `supplements[]` | 进入 `supplement_accessibility` 分母的补充材料 id |
+
+**硬性规则**：任何阶段**不得**消费未在 `executed_stages[]` 中声明的上游产物。
+这是 §11 lint 的强制检查项。
+
+### 7.2 coverage_breakdown · 覆盖率明细
+
+```json
+{
+  "coverage_breakdown": {
+    "resolved_fields": ["population.subjects", "declarations.informed_consent"],
+    "unresolved_required_fields": [
+      {"field_path": "declarations.ethics_statement", "status": "parse_failed",
+       "reason_ref": "SYS-007"}
+    ],
+    "unreadable_assets": [],
+    "inaccessible_supplements": ["S1"],
+    "scope_denominators": {
+      "required_fields_total": 3,
+      "assets_total": 0,
+      "supplements_total": 1
+    }
+  }
+}
+```
+
+**规则**
+
+1. 本块的条目**不是 finding**，不进 `issue_clusters[]`，不影响 `manuscript_risk_score`。
+2. `resolved_fields[]` 与 `unresolved_required_fields[]` 之和
+   **必须**等于 `scope_denominators.required_fields_total`。
+3. `unresolved_required_fields[]` 的 `reason_ref` 指向 `system_limitation.id`
+   或 `extraction_signal.id`；`status: not_reported` 的字段**属于已解析**，进 `resolved_fields[]`。
+
+---
+
+## 8. 评分契约
+
+三项指标**互不替代，分别输出**，报告中不得合并为单一数字。
+**禁止**把稿件风险分称作「置信度」。
+
+### 8.1 manuscript_risk_score · 稿件风险分（0–100）
+
+以 §9.2 的 `issue_clusters[]` 为计分单位（防止一个问题拆成多条放大分数）：
+
+```
+每簇权重 w：critical 25 / major 10 / minor 3 / info 0
+  （簇内取最高 severity，只计一次）
+每个 category 的累计上限：30
+manuscript_risk_score = min(100, Σ_category min(30, Σ_cluster w))
+```
+
+**不因** PDF 不可读或解析失败而升高 —— 那属于 coverage 与 confidence。
+
+**partial 语义**
+
+```json
+{
+  "manuscript_risk_score": {
+    "value": 22,
+    "partial": true,
+    "executed_modules": ["M6"],
+    "skipped_modules": ["M2", "M3", "M4", "M5", "M7"],
+    "comparable_to_full_review": false
+  }
+}
+```
+
+- `executed_modules` 未覆盖全部六个审核模块时，`partial` **必须**为 `true`。
+- `partial: true` 的分数**禁止**与 `full_review` 的分数并列比较或排序；
+  报告与 JSON 均须带 `comparable_to_full_review: false`。
+- `executed_modules` 为空数组时**不得输出本项**（见 SKILL.md §1 模式约束）。
+
+**分段仅为筛查信号**（阈值未经实证验证，报告中必须注明）：
+
+| 分数 | 标签 |
+| --- | --- |
+| 0–19 | `routine_review` |
+| 20–49 | `clarification_needed` |
+| 50+ | `major_revision_suggested` |
+
+出现任一 `critical` 簇时，无论分数如何，`priority_manual_review = true`。
+
+### 8.2 extraction_coverage · 抽取覆盖率（0.0–1.0）
+
+**全部分母取自 `execution_scope`（§7.1）**，禁止用全文分母评估单图任务。
+
+```
+field_resolution_rate
+  分子 = |execution_scope.fields 中 applicability=applicable ∧ requiredness=required
+          ∧ status ∈ {reported, not_reported} 的字段|
+  分母 = |execution_scope.fields 中 applicability=applicable ∧ requiredness=required 的字段|
+  （status ∈ {ambiguous, conflicting, parse_failed, unresolved} 计为未解析）
+  （applicability = not_applicable 或 applicability_uncertain 的字段不入分子分母）
+  分母为 0 → 1.0（与下面两个子率同规则；如仅解读一张图时 scope 内无条件必填字段）
+
+asset_readability_rate
+  分子 = |execution_scope.assets 中 readable 的图表|
+  分母 = |execution_scope.assets|
+  分母为 0 → 1.0
+
+supplement_accessibility
+  分子 = |execution_scope.supplements 中可得的|
+  分母 = |execution_scope.supplements|
+  分母为 0 → 1.0
+
+extraction_coverage = 0.60 × field_resolution_rate
+                    + 0.25 × asset_readability_rate
+                    + 0.15 × supplement_accessibility
+```
+
+**报告必须给出显式分子分母**，不只给加权结果：
+
+```json
+{
+  "extraction_coverage": 0.78,
+  "field_resolution": {"resolved": 12, "total": 15, "rate": 0.80},
+  "asset_readability": {"resolved": 6, "total": 8, "rate": 0.75},
+  "supplement_accessibility": {"resolved": 0, "total": 1, "rate": 0.0},
+  "recommended_field_coverage": {"resolved": 4, "total": 7, "rate": 0.571}
+}
+```
+
+`recommended_field_coverage` 为**可选**的旁路指标，统计
+`requiredness = recommended` 的字段，**不进** `extraction_coverage` 加权。
+
+### 8.3 confidence · 两个互斥指标
+
+**跑过至少一个审核模块** → 输出 `review_confidence`；
+**一个都没跑**（`structured_extraction`、`figure_analysis / interpretation_only`）
+→ 输出 `output_confidence`。**二者不得同时输出。**
+
+**`output_confidence`**（无审核结论可言，只反映抽取本身的稳固程度）：
+
+```
+pixel_share = |scope 内 provenance.source_type = pixel_estimated 的 observation|
+              / max(1, |scope 内 observation 总数|)
+ocr_share   = |scope 内 provenance.derivation.ocr_used = true 的 observation|
+              / max(1, |scope 内 observation 总数|)
+
+Q_out = max(0, 1 − 0.30 × pixel_share − 0.20 × ocr_share)
+output_confidence = extraction_coverage × Q_out
+```
+
+**`review_confidence`**（系统对自身审核结论的支撑强度）：
+
+```
+pixel_dependency_rate = |evidence_refs 关联到 pixel_estimated observation 的 finding|
+                        / max(1, |finding 总数|)
+ocr_dependency_rate   = |evidence_refs 关联到 ocr_used=true observation 的 finding|
+                        / max(1, |finding 总数|)
+low_conf_finding_rate = |review_confidence = low 的 finding| / max(1, |finding 总数|)
+
+Q = max(0, 1 − 0.30 × pixel_dependency_rate
+              − 0.20 × ocr_dependency_rate
+              − 0.10 × low_conf_finding_rate)
+C = max(0, 1 − 0.10 × min(|status=conflicting 且未消解的 key_data 组|, 5))
+
+review_confidence = extraction_coverage × Q × C
+```
+
+**可计算性保证**：上述每个变量都能从已声明字段直接算出 ——
+`provenance.source_type`（§2.3）、`provenance.derivation.ocr_used`（§2.3）、
+`finding.review_confidence`（§6.1）、`key_data.status`（§5.3）。
+**不得**定义无法从 schema 推出的评分变量。
+
+`review_confidence < 0.5` 时，报告首屏必须提示
+「本次审核证据基础较弱，结论仅供参考」。
+
+---
+
+## 9. 路由优先级、聚合与聚簇
+
+### 9.1 适用性路由优先级（自高向低，命中即停）
+
+```
+1. 实验级类型规则   design_components[].type 对该 experiment_id 的专门规则
+2. 文章级专门规则   article_design.primary_design.type 的专门规则（如 case_report）
+3. 族级规则         article_design.primary_design.family 的规则
+4. 默认规则         通用字段清单
+```
+
+字段清单与各级规则见 `01-structured-extraction.md §5`。
+**专门规则覆盖族级规则**：`case_report` 的 `not_applicable(randomization)`
+覆盖 `human_observational` 族的通用要求。
+
+### 9.2 阶段本地产物与最终聚合
+
+**每个数组有且只有一个产出者。** 跨阶段同名数组一律拆为阶段本地数组，
+再由单一聚合器合并 —— 这是旧契约「一个产物一个产出者」被违反的根因。
+
+| 阶段本地数组 | 产出者 |
+| --- | --- |
+| `stage1_system_limitations[]` | Stage 1 |
+| `stage2_system_limitations[]` | Stage 2 (M1) |
+| `stage3_system_limitations[]` | Stage 3 (Figure Parser) |
+| `stage3b_system_limitations[]` | Stage 3b |
+| `m1_extraction_signals[]` | Stage 2 (M1) |
+| `merge_extraction_signals[]` | Stage 3b |
+| `m2_findings[]` … `m7_findings[]` | 对应审核模块 |
+
+| 聚合产物 | **唯一聚合器** | 组成 |
+| --- | --- | --- |
+| `all_system_limitations[]` | **Stage 5**（非 `full_review` 模式为输出装配步骤） | 四个 stage-local 数组按 id 升序拼接 |
+| `all_extraction_signals[]` | 同上 | `m1_` + `merge_` 两个数组拼接 |
+| `all_findings[]` | **Stage 5** | `m2_`…`m7_` 六个数组拼接 |
+| `issue_clusters[]` | **Stage 5** | 对 `all_findings[]` 执行 §9.3 |
+
+**已废除的冗余数组**：`source_conflict_signals[]`、`unresolved_evidence_links[]`、
+`extraction_quality_findings[]`。迁移见 §10。
+
+### 9.3 去重与聚簇（Stage 5，顺序固定）
+
+1. **同模块内合并** —— 同一模块内 `category` 相同、且**主锚点**相同的 findings 合并为一条。
+   **主锚点定义**：`evidence_refs[0]` 解析出的证据，比较其 locator 的
+   `figure`+`panel`（有图时）或 `paragraph_id`（无图时）或 `table`。
+   保留 `severity` 最高者为代表，其余进 `related_findings[]`。
+2. **跨模块聚簇** —— 不同模块命中同一主锚点且语义重合时构成一个 `issue_cluster`。
+   保留 `severity` 最高的一条为簇代表。**不要把同一个问题报告六遍。**
+3. **簇内证据合并** —— 簇代表的 `evidence_refs[]` 并入各成员的 refs，按 id 去重后保留。
+
+```json
+{
+  "cluster_id": "CL-002",
+  "representative_finding": "M4-003",
+  "member_findings": ["M4-003", "M2-011"],
+  "categories": ["sample_size_reporting", "internal_inconsistency"],
+  "max_severity": "major",
+  "anchor": {"figure": "3", "panel": "B"},
+  "evidence_refs": ["EV-018", "EV-019", "EV-020"]
+}
+```
+
+`issue_clusters[]` 是 §8.1 计分的唯一单位。
+
+---
+
+## 10. 迁移表（旧契约 → 新契约）
+
+**不保留任何向后兼容的别名。** 旧字段一律按下表改写，改完即删。
+
+| 旧形式 | 新形式 | 说明 |
+| --- | --- | --- |
+| `extraction_quality_findings[]` 之 `ambiguous_extraction` | `extraction_signal` type `ambiguous_extraction` | §6.2 |
+| `extraction_quality_findings[]` 之 `required_field_unresolved` | `coverage_breakdown.unresolved_required_fields[]` | §7.2，非记录 |
+| `source_conflict_signals[]` | `merge_extraction_signals[]` 中 type `source_value_conflict` | §9.2 |
+| `unresolved_evidence_links[]` | signal `claim_without_resolved_evidence_link` 的 `target` 元数据 | §6.2 规则 3 |
+| signal type `parse_failure` | `system_limitation`（category `parse_failed`） | §6.3；signal 枚举已删该值 |
+| 内联 `evidence[]` 对象数组 | `evidence_refs[]` + 顶层 `evidence_registry` | §1.4 |
+| `provenance.locator` 内联 | `provenance.evidence_ref` | §2.3 |
+| `source_type: "text"` | `explicit_main_text` | §2.3 |
+| `source_type: "table"` | `explicit_table` | §2.3 |
+| `source_type: "figure"` / `"figure_caption"` | `explicit_figure_caption` | §2.3 |
+| `source_type: "figure_axis"` | `axis_readable` | §2.3 |
+| `source_type: "figure_pixel"` | `pixel_estimated` | §2.3 |
+| `"value": "40–50"` | `{"type": "interval", "low": 40, "high": 50}` | §2.1 |
+| `"value": 12.4` | `{"type": "point", "number": 12.4}` | §2.1 |
+| `status: parse_failed` + `pending_visual_resolution: true` | `status: unresolved` + `resolution_state` 块 | §4 |
+| 扁平 `key_data` 单值对象 | 观测组（`observations[]`） | §5.2 |
+| `evaluation_matrix.min_group_n` 整数 | `group_sizes[]` 数组 | `01-…md §8.4` |
+| `reporting_completeness: "not_applicable"` | `not_assessed` | §3.5 |
+| 绝对来源顺序「正文>表>图注>轴>像素」 | 两级分类 + §5.5 有序判据 | §5.5 |
+
+---
+
+## 11. 契约 lint 检查表
+
+**输出任何结构化内容前逐条自检；任一项不通过即为无效输出。**
+
+```
+[ ] 全部 enum 取值合法（source_type 五值 / extraction_method 六值 / status 七值 /
+    applicability 三值 / requiredness 三值 / severity 四值 / signal type 六值 /
+    system_limitation category 八值 / key_data status 六值 / numeric type 五值）
+[ ] 全部 §x.y 内部引用可解析到本仓库真实存在的小节
+[ ] 全部 evidence_ref / evidence_refs[] 在 evidence_registry 中解析到恰好一个条目
+[ ] 全部 observation_refs[] 在对应 key_data.observations[] 中可解析
+[ ] 每个数组产物都在 §9.2 声明了唯一产出者或唯一聚合器
+[ ] 没有任何阶段消费 execution_scope.executed_stages[] 之外的产物
+[ ] structured_result_v2 中不存在 status = "unresolved" 或非空 resolution_state
+[ ] structured_result_v2 中不存在 key_data.status = "pending_visual_resolution"
+[ ] 没有 system_limitation 携带 severity
+[ ] 没有 finding 的 module 为 M1
+[ ] 每条 finding 的 evidence_refs[] 非空
+[ ] severity >= major 的 finding 均有非空 manual_review.action
+[ ] type = "absence" 的证据均无 quote 字段
+[ ] 全部数值为 §2.1 的 numeric 对象，无裸数字、无字符串区间
+[ ] 全部 pixel_estimated 数值满足 §2.4 四项强制约束
+[ ] 全部 provenance 带 derivation，且 source_type × extraction_method 组合合法
+[ ] 覆盖率与置信度的分母全部取自 execution_scope
+[ ] 未跑审核模块的模式不输出 review_confidence 与 manuscript_risk_score
+[ ] executed_modules 未覆盖六个审核模块时 manuscript_risk_score.partial = true
+[ ] coverage_breakdown 的条目未被称为 finding
+[ ] resolved_fields + unresolved_required_fields = scope_denominators.required_fields_total
+```

@@ -1,0 +1,474 @@
+{
+  "_simulation": "① RCT 完整审核：PDF 完整、图像可读、六模块全跑。验证 full_review 依赖图、非 partial 风险分、review_confidence。",
+
+  "paper": {
+    "title": "Ultrasound-guided stellate ganglion block attenuates early postoperative visceral pain after laparoscopic hysterectomy: a prospective randomized controlled trial",
+    "doi": "10.1371/journal.pone.0339677",
+    "journal": "PLOS One",
+    "input_format": "pdf"
+  },
+
+  "execution_scope": {
+    "mode": "full_review",
+    "submode": null,
+    "executed_stages": ["stage_1", "stage_2", "stage_3", "stage_3b", "stage_4", "stage_5"],
+    "executed_modules": ["M2", "M3", "M4", "M5", "M6", "M7"],
+    "skipped_modules": [],
+    "fields": ["objective.primary_endpoint", "design.randomization",
+               "measurement.missing_data_handling"],
+    "assets": ["fig:1", "fig:2"],
+    "supplements": [],
+    "scope_rationale": "用户提交整篇论文未指明范围，默认完整审核",
+    "stage_3b_executed": true
+  },
+
+  "coverage_breakdown": {
+    "resolved_fields": ["objective.primary_endpoint", "design.randomization"],
+    "unresolved_required_fields": [
+      {"field_path": "measurement.missing_data_handling", "status": "ambiguous",
+       "reason_ref": "SIG-003"}
+    ],
+    "unreadable_assets": [],
+    "inaccessible_supplements": [],
+    "scope_denominators": {
+      "required_fields_total": 3,
+      "assets_total": 2,
+      "supplements_total": 0
+    }
+  },
+
+  "evidence_registry": {
+    "EV-001": {
+      "id": "EV-001", "type": "present",
+      "locator": {"section": "methods", "subsection": "2.2", "paragraph_id": "methods-p04",
+                  "pdf_file_page": 3, "scope": "paragraph"},
+      "quote": "Participants were randomly assigned in a 1:1 ratio using a computer-generated random number sequence.",
+      "created_by": "stage_2"
+    },
+    "EV-002": {
+      "id": "EV-002", "type": "present",
+      "locator": {"section": "methods", "subsection": "2.1", "paragraph_id": "methods-p02",
+                  "pdf_file_page": 3, "scope": "paragraph"},
+      "quote": "The primary outcome was the VAS score for visceral pain at 6 h postoperatively.",
+      "created_by": "stage_2"
+    },
+    "EV-003": {
+      "id": "EV-003", "type": "present",
+      "locator": {"section": "statistics", "paragraph_id": "methods-p11",
+                  "pdf_file_page": 4, "scope": "paragraph"},
+      "quote": "Missing values were handled appropriately.",
+      "created_by": "stage_2"
+    },
+    "EV-004": {
+      "id": "EV-004", "type": "present",
+      "locator": {"figure": "2", "panel": "A", "pdf_file_page": 7, "scope": "panel"},
+      "quote": "Figure 2A. VAS scores at 6 h (mean ± SD, n = 42 per group).",
+      "created_by": "stage_3"
+    },
+    "EV-005": {
+      "id": "EV-005", "type": "absence", "scope": "document",
+      "searched_locations": [
+        {"section": "methods", "scope": "section"},
+        {"section": "statistics", "scope": "section"},
+        {"section": "results", "scope": "section"}
+      ],
+      "search_terms": ["multiplicity", "Bonferroni", "Holm", "false discovery rate",
+                       "多重比较", "校正"],
+      "search_result": "no_match",
+      "created_by": "M4"
+    },
+    "EV-006": {
+      "id": "EV-006", "type": "present",
+      "locator": {"section": "results", "paragraph_id": "results-p07",
+                  "pdf_file_page": 6, "scope": "paragraph"},
+      "quote": "Secondary outcomes were compared across four timepoints using repeated independent t-tests.",
+      "created_by": "M4"
+    },
+    "EV-007": {
+      "id": "EV-007", "type": "present",
+      "locator": {"section": "declarations", "paragraph_id": "decl-p01",
+                  "pdf_file_page": 10, "scope": "paragraph"},
+      "quote": "This study was approved by the Ethics Committee (approval no. 2024-KY-081) and registered at ChiCTR (ChiCTR2400081234).",
+      "created_by": "stage_2"
+    }
+  },
+
+  "structured_result": {
+    "version": "v2",
+    "stage_3b_executed": true,
+    "meta": {
+      "title": "Ultrasound-guided stellate ganglion block attenuates early postoperative visceral pain",
+      "journal": "PLOS One", "year": 2025, "doi": "10.1371/journal.pone.0339677",
+      "article_type": "research-article", "input_format": "pdf", "page_count": 12
+    },
+    "article_design": {
+      "primary_design": {
+        "family": "human_interventional", "type": "randomized_controlled_trial",
+        "status": "reported", "evidence_refs": ["EV-001"],
+        "extraction_confidence": "high", "alternatives": []
+      },
+      "design_components": []
+    },
+    "objective": {
+      "research_question": {
+        "field_path": "objective.research_question", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "星状神经节阻滞能否减轻腹腔镜子宫切除术后早期内脏痛",
+        "evidence_refs": ["EV-002"], "extraction_confidence": "high"
+      },
+      "hypothesis": {
+        "field_path": "objective.hypothesis", "applicability": "applicable",
+        "requiredness": "optional", "status": "not_reported", "value": null,
+        "evidence_refs": ["EV-005"], "extraction_confidence": "medium"
+      },
+      "primary_endpoint": {
+        "field_path": "objective.primary_endpoint", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "术后 6 h 内脏痛 VAS 评分",
+        "evidence_refs": ["EV-002"], "extraction_confidence": "high"
+      },
+      "secondary_endpoints": {
+        "field_path": "objective.secondary_endpoints", "applicability": "applicable",
+        "requiredness": "optional", "status": "reported",
+        "value": ["术后 12/24/48 h VAS", "阿片类累计用量", "恶心呕吐发生率"],
+        "evidence_refs": ["EV-006"], "extraction_confidence": "high"
+      }
+    },
+    "population": {
+      "subjects": {
+        "field_path": "population.subjects", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "择期腹腔镜子宫切除术患者 84 例，ASA I–II 级",
+        "evidence_refs": ["EV-002"], "extraction_confidence": "high"
+      },
+      "inclusion_criteria": {
+        "field_path": "population.inclusion_criteria", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "18–65 岁，ASA I–II，拟行择期腹腔镜子宫切除",
+        "evidence_refs": ["EV-002"], "extraction_confidence": "high"
+      },
+      "exclusion_criteria": {
+        "field_path": "population.exclusion_criteria", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "慢性疼痛史、局麻药过敏、凝血功能障碍",
+        "evidence_refs": ["EV-002"], "extraction_confidence": "high"
+      }
+    },
+    "design": {
+      "arms": [
+        {
+          "experiment_id": "EXP-01", "arm_name": "SGB group",
+          "n": {"field_path": "design.arms[0].n", "applicability": "applicable",
+                "requiredness": "required", "status": "reported",
+                "value": {"type": "point", "number": 42},
+                "evidence_refs": ["EV-004"], "extraction_confidence": "high"},
+          "replicate_type": "biological"
+        },
+        {
+          "experiment_id": "EXP-01", "arm_name": "control",
+          "n": {"field_path": "design.arms[1].n", "applicability": "applicable",
+                "requiredness": "required", "status": "reported",
+                "value": {"type": "point", "number": 42},
+                "evidence_refs": ["EV-004"], "extraction_confidence": "high"},
+          "replicate_type": "biological"
+        }
+      ],
+      "interventions": {
+        "field_path": "design.interventions", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "超声引导下星状神经节阻滞，0.2% 罗哌卡因 5 mL",
+        "evidence_refs": ["EV-001"], "extraction_confidence": "high"
+      },
+      "controls": {
+        "field_path": "design.controls", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "等容量生理盐水假阻滞",
+        "evidence_refs": ["EV-001"], "extraction_confidence": "high"
+      },
+      "randomization": {
+        "field_path": "design.randomization", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "计算机生成随机数序列，1:1 分配",
+        "evidence_refs": ["EV-001"], "extraction_confidence": "high"
+      },
+      "allocation_concealment": {
+        "field_path": "design.allocation_concealment", "applicability": "applicable",
+        "requiredness": "required", "status": "not_reported", "value": null,
+        "evidence_refs": ["EV-005"], "extraction_confidence": "high"
+      },
+      "blinding": {
+        "field_path": "design.blinding", "applicability": "applicable",
+        "requiredness": "required", "status": "reported", "value": "double",
+        "evidence_refs": ["EV-001"], "extraction_confidence": "high"
+      },
+      "registration": {
+        "field_path": "design.registration", "applicability": "applicable",
+        "requiredness": "required", "status": "reported", "value": "ChiCTR2400081234",
+        "evidence_refs": ["EV-007"], "extraction_confidence": "high"
+      }
+    },
+    "measurement": {
+      "assays": {
+        "field_path": "measurement.assays", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": [{"name": "VAS", "purpose": "疼痛强度评估", "reference_citation": null}],
+        "evidence_refs": ["EV-002"], "extraction_confidence": "high"
+      },
+      "statistical_methods": {
+        "field_path": "measurement.statistical_methods", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": [{"test": "independent t-test", "applied_to": "VAS 各时点组间比较",
+                   "software": "SPSS 26.0", "correction": null}],
+        "evidence_refs": ["EV-006"], "extraction_confidence": "high"
+      },
+      "sample_size_justification": {
+        "field_path": "measurement.sample_size_justification", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "以预试验 VAS 差值 1.2±1.8 计算，α=0.05，power=0.8，每组需 36 例，按 15% 脱落补足至 42 例",
+        "evidence_refs": ["EV-002"], "extraction_confidence": "high"
+      },
+      "missing_data_handling": {
+        "field_path": "measurement.missing_data_handling", "applicability": "applicable",
+        "requiredness": "required", "status": "ambiguous", "value": null,
+        "evidence_refs": ["EV-003"], "extraction_confidence": "low"
+      }
+    },
+    "conclusion": {
+      "claims": [
+        {
+          "claim_id": "CLM-01",
+          "statement": "星状神经节阻滞可显著减轻腹腔镜子宫切除术后 6 h 内脏痛",
+          "scope": "择期腹腔镜子宫切除术患者",
+          "supported_by": ["KD-001"],
+          "evidence_refs": ["EV-004"]
+        }
+      ],
+      "limitations": {
+        "field_path": "conclusion.limitations", "applicability": "applicable",
+        "requiredness": "recommended", "status": "reported",
+        "value": "单中心、随访仅 48 h",
+        "evidence_refs": ["EV-006"], "extraction_confidence": "high"
+      },
+      "generalization_scope": {
+        "field_path": "conclusion.generalization_scope", "applicability": "applicable",
+        "requiredness": "optional", "status": "reported",
+        "value": "限于同类腹腔镜妇科手术",
+        "evidence_refs": ["EV-006"], "extraction_confidence": "medium"
+      }
+    },
+    "declarations": {
+      "ethics_statement": {
+        "field_path": "declarations.ethics_statement", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "伦理批件号 2024-KY-081", "evidence_refs": ["EV-007"],
+        "extraction_confidence": "high"
+      },
+      "informed_consent": {
+        "field_path": "declarations.informed_consent", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "全部受试者签署书面知情同意", "evidence_refs": ["EV-007"],
+        "extraction_confidence": "high"
+      },
+      "funding": {
+        "field_path": "declarations.funding", "applicability": "applicable",
+        "requiredness": "recommended", "status": "reported",
+        "value": "省级自然科学基金 No. 2023JJ40123", "evidence_refs": ["EV-007"],
+        "extraction_confidence": "high"
+      },
+      "conflict_of_interest": {
+        "field_path": "declarations.conflict_of_interest", "applicability": "applicable",
+        "requiredness": "recommended", "status": "reported",
+        "value": "作者声明无利益冲突", "evidence_refs": ["EV-007"],
+        "extraction_confidence": "high"
+      },
+      "data_availability": {
+        "field_path": "declarations.data_availability", "applicability": "applicable",
+        "requiredness": "recommended", "status": "reported",
+        "value": "数据可向通讯作者索取", "evidence_refs": ["EV-007"],
+        "extraction_confidence": "high"
+      }
+    },
+    "key_data": [
+      {
+        "id": "KD-001",
+        "metric_name": "VAS score at 6h",
+        "metric_family": "continuous_summary",
+        "grouping_key": {"experiment_id": "EXP-01", "group": "SGB group",
+                         "comparison": "SGB vs control", "timepoint": "6h",
+                         "endpoint": "visceral_pain_VAS"},
+        "status": "reported",
+        "canonical_observation": "OBS-001",
+        "canonical_rationale": "criterion_1: fig:2A 为稿件指定的主要终点结果，且带 SD 与 n",
+        "observations": [
+          {
+            "observation_id": "OBS-001",
+            "value": {"type": "point", "number": 2.4},
+            "unit": "VAS", "unit_normalized": null,
+            "uncertainty": {"type": "SD", "value": 1.1},
+            "n": 42, "replicate_type": "biological",
+            "provenance": {
+              "source_type": "explicit_figure_caption", "source_id": "fig:2A",
+              "evidence_ref": "EV-004",
+              "derivation": {"extraction_method": "caption_parse", "ocr_used": false}
+            },
+            "extraction_confidence": "high", "manual_review_needed": false
+          }
+        ],
+        "compatible_observations": [],
+        "conflicting_observations": [],
+        "reporting_completeness": "complete",
+        "missing_elements": []
+      }
+    ],
+    "evaluation_matrix": {
+      "randomization": {
+        "applicability": "applicable", "requiredness": "required", "status": "reported",
+        "applies_to": ["EXP-01"], "evidence_refs": ["EV-001"], "extraction_confidence": "high"
+      },
+      "allocation_concealment": {
+        "applicability": "applicable", "requiredness": "required", "status": "not_reported",
+        "applies_to": ["EXP-01"], "evidence_refs": ["EV-005"], "extraction_confidence": "high"
+      },
+      "multiple_comparison_correction": {
+        "applicability": "applicable", "requiredness": "required", "status": "not_reported",
+        "applies_to": ["EXP-01"], "evidence_refs": ["EV-005"], "extraction_confidence": "high"
+      },
+      "figure_count": 2,
+      "table_count": 3,
+      "group_sizes": [
+        {"experiment_id": "EXP-01", "group": "SGB group", "n": 42,
+         "replicate_type": "biological", "evidence_refs": ["EV-004"]},
+        {"experiment_id": "EXP-01", "group": "control", "n": 42,
+         "replicate_type": "biological", "evidence_refs": ["EV-004"]}
+      ]
+    },
+    "coverage_inputs": {
+      "fields_in_scope": ["objective.primary_endpoint", "design.randomization",
+                          "measurement.missing_data_handling"],
+      "resolved": ["objective.primary_endpoint", "design.randomization"],
+      "unresolved": [
+        {"field_path": "measurement.missing_data_handling", "status": "ambiguous",
+         "reason_ref": "SIG-003"}
+      ],
+      "required_applicable_total": 3,
+      "recommended_applicable_total": 3
+    }
+  },
+
+  "figure_records": [],
+  "table_records": [],
+
+  "all_findings": [
+    {
+      "id": "M4-001",
+      "module": "M4",
+      "category": "multiple_comparison_correction",
+      "severity": "major",
+      "title": "四个时点重复组间比较未做多重比较校正",
+      "detail": "次要终点在 6/12/24/48 h 四个时点各做一次独立样本 t 检验，方法节与统计节均未见任何多重比较校正说明。族系错误率未受控。",
+      "evidence_refs": ["EV-006", "EV-005"],
+      "rule_ref": "04-statistics#multiple-comparison-correction",
+      "review_confidence": "high",
+      "derived_from_signals": [],
+      "related_findings": [],
+      "manual_review": {
+        "action": "核对次要终点检验次数；要求作者补充 Bonferroni 或 Holm 校正后的结果，或明确声明次要终点仅作探索性分析",
+        "who": "statistical_reviewer",
+        "priority": "P1"
+      }
+    },
+    {
+      "id": "M2-001",
+      "module": "M2",
+      "category": "incomplete_method_reporting",
+      "severity": "minor",
+      "title": "缺失数据处理表述笼统，无法判定具体方法",
+      "detail": "统计节仅写 'Missing values were handled appropriately'，未说明是完整病例分析、末次观测结转还是多重填补。",
+      "evidence_refs": ["EV-003"],
+      "rule_ref": "02-macro-logic#vague-method-statement",
+      "review_confidence": "high",
+      "derived_from_signals": ["SIG-003"],
+      "related_findings": [],
+      "manual_review": {
+        "action": "要求作者写明缺失数据处理的具体方法与缺失比例",
+        "who": "author",
+        "priority": "P2"
+      }
+    }
+  ],
+
+  "all_extraction_signals": [
+    {
+      "id": "SIG-003",
+      "type": "ambiguous_extraction",
+      "target": "measurement.missing_data_handling",
+      "detail": "统计节存在相关表述但为笼统措辞，无法解析出具体处理方法。",
+      "observation_refs": [],
+      "evidence_refs": ["EV-003"],
+      "routed_to": ["M2", "M4"],
+      "produced_by": "stage_2"
+    }
+  ],
+
+  "all_system_limitations": [],
+
+  "issue_clusters": [
+    {
+      "cluster_id": "CL-001",
+      "representative_finding": "M4-001",
+      "member_findings": ["M4-001"],
+      "categories": ["multiple_comparison_correction"],
+      "max_severity": "major",
+      "anchor": {"paragraph_id": "results-p07"},
+      "evidence_refs": ["EV-006", "EV-005"]
+    },
+    {
+      "cluster_id": "CL-002",
+      "representative_finding": "M2-001",
+      "member_findings": ["M2-001"],
+      "categories": ["incomplete_method_reporting"],
+      "max_severity": "minor",
+      "anchor": {"paragraph_id": "methods-p11"},
+      "evidence_refs": ["EV-003"]
+    }
+  ],
+
+  "manuscript_risk_score": {
+    "value": 13,
+    "partial": false,
+    "executed_modules": ["M2", "M3", "M4", "M5", "M6", "M7"],
+    "skipped_modules": [],
+    "comparable_to_full_review": true,
+    "band": "routine_review",
+    "priority_manual_review": false,
+    "threshold_caveat": "分段阈值未经实证验证，是初始经验值，不得表述为自动化的录用/退稿决定。"
+  },
+
+  "extraction_coverage": {
+    "value": 0.8,
+    "field_resolution": {"resolved": 2, "total": 3, "rate": 0.667},
+    "asset_readability": {"resolved": 2, "total": 2, "rate": 1.0},
+    "supplement_accessibility": {"resolved": 0, "total": 0, "rate": 1.0},
+    "recommended_field_coverage": {"resolved": 3, "total": 3, "rate": 1.0}
+  },
+
+  "review_confidence": {
+    "value": 0.8,
+    "pixel_dependency_rate": 0.0,
+    "ocr_dependency_rate": 0.0,
+    "low_conf_finding_rate": 0.0,
+    "unresolved_conflict_count": 0,
+    "weak_evidence_warning": null
+  },
+
+  "manual_review_plan": [
+    {
+      "finding_ids": ["M4-001"],
+      "action": "核对次要终点检验次数；要求作者补充多重比较校正后的结果，或明确声明次要终点仅作探索性分析",
+      "who": "statistical_reviewer",
+      "priority": "P1"
+    }
+  ],
+
+  "disclaimer": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号（screening / triage signal），不构成录用、退稿或发表决定。"
+}

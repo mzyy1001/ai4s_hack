@@ -1,71 +1,161 @@
 ---
 name: biomed-paper-review
-description: 生物医药论文结构化抽取与审稿辅助。输入一篇论文（PDF / JATS XML / 纯文本），输出结构化证据表、图表解读与原图定位、多维审核发现、抽取覆盖率与复核置信度，以及分优先级的人工复核建议。支持四种执行模式（完整审核 / 仅结构化抽取 / 仅图表解析 / 定向核查）。当用户需要预审、复核生物医药论文或稿件，或需要抽取论文中的实验条件、剂量响应曲线、统计图、实验流程图、显微图的关键数值时使用。
+description: 生物医药论文结构化抽取与审稿辅助。输入一篇论文（PDF / JATS XML / 纯文本），输出结构化证据表、图表解读与原图定位、多维审核发现、抽取覆盖率与复核置信度，以及分优先级的人工复核建议。支持四种执行模式（完整审核 / 仅结构化抽取 / 图表解析 / 定向核查）。当用户需要预审、复核生物医药论文或稿件，或需要抽取论文中的实验条件、剂量响应曲线、统计图、实验流程图、显微图的关键数值时使用。
 ---
 
 # 生物医药论文审稿辅助 Skill
 
 ## 0. 定位与边界
 
-**做什么**：自动化并辅助审稿的**基础性工作** —— 结构化证据抽取、图表解读、报告规范核查、
-以及为专家复核排定优先级。
+**做什么**：自动化并辅助审稿的**基础性工作** —— 结构化证据抽取、图表解读、
+报告规范核查，以及为专家复核排定优先级。
 
 **明确声明（必须原样写入每份输出报告）**：
 
 > 本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查
 > 与人工复核优先级排序。**它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。**
-> 本 Skill 的任何评分均为筛查信号（screening recommendation / triage signal），
+> 本 Skill 的任何评分均为筛查信号（screening / triage signal），
 > 不构成录用、退稿或发表决定。
 
 ### 0.1 核心原则：证据可审计
 
-**每一条稿件级 finding 都必须有可审计的证据支撑。**
-
-- **针对已存在内容的 finding**：必须给出稿件内 `locator`（见 §3.1），可附原文引用。
-- **针对缺失内容的 finding**：必须给出**显式的检索范围与缺失证据记录**（`type: "absence"`，
-  见 §3.1），**不得**为不存在的内容伪造引文。
-
-无法给出上述任一种证据的判断，一律丢弃，不得输出。这是本 Skill 与"大模型泛泛点评"的根本区别。
+**每一条稿件级 finding 都必须有可审计的证据支撑。** 针对**已存在内容**给出 `present`
+证据（含结构化 locator）；针对**缺失内容**给出 `absence` 证据（显式检索范围 + 检索词 +
+检索结果），**绝不为不存在的内容伪造引文**。证据的规范存储是**证据登记表**
+`evidence_registry`，一切引用位置只存 `evidence_refs[]`（`references/00-contracts.md §1`）。
+给不出上述任一种证据的判断一律丢弃 —— 这是本 Skill 与「大模型泛泛点评」的根本区别。
 
 ### 0.2 一期能力边界
 
-一期仅基于**论文自身内容 + 通用规范库**完成校验，**不调用外部数据库**。
-下列四项能力**不是做不到，是一期先不做**；每项已指派归属模块，规则写在该模块 reference 的
-「二期扩展」一节。
+一期仅基于**论文自身内容 + 通用规范库**校验，**不调用外部数据库**。
+下列四项**不是做不到，是一期先不做**，规则写在对应模块 reference 的「二期扩展」一节。
 
 | 能力 | 一期做法 | 二期归属 | 二期前置条件 |
 | --- | --- | --- | --- |
-| 判断论文结论在科学上是否**为真** | 只做 claim↔evidence 对齐，不查外部证据 | M7 | 文献库 MCP（PubMed / Europe PMC） |
-| 判断领域**创新性 / 重要性** | 不判断 | M7 | 文献库 + 引用网络；需先定义可量化的新颖度判据 |
-| 判断违背基础常识的结论 | 标记「结论超出证据支持范围」交人工 | M7 | 领域常识规则库；先积累一期人工复核的误判样本 |
-| 复现统计计算 / 重跑分析 | 只校验方法选择与报告完整性 | M4 | 需原始数据；可先做「不依赖原始数据的一致性检验」子集 |
+| 判断结论在科学上是否**为真** | 只做 claim↔evidence 对齐 | M7 | 文献库 MCP（PubMed / Europe PMC） |
+| 判断领域**创新性 / 重要性** | 不判断 | M7 | 文献库 + 引用网络；需先定义可量化新颖度判据 |
+| 判断违背基础常识的结论 | 标记「结论超出证据支持范围」交人工 | M7 | 领域常识规则库；先积累一期误判样本 |
+| 复现统计计算 | 只校验方法选择与报告完整性 | M4 | 需原始数据；可先做不依赖原始数据的一致性检验 |
 
-**二期与一期的关系**：二期应尽可能**保留核心流水线**，通过**扩展** provenance、外部证据、
-来源版本与冲突消解契约来实现，而不是重构主框架。外部证据将需要额外元数据：
-`database` / `query` / `retrieval_date` / `record_id` / `version` /
-`retraction_or_correction_status` / `relation_to_claim`。
+二期应**扩展**而非重构主框架：新增 `database` / `query` / `retrieval_date` / `record_id` /
+`version` / `retraction_or_correction_status` / `relation_to_claim` 等 provenance 元数据；
+外部数据源接入清单见 `docs/phase2-external-sources.md`。
 
 ---
 
-## 1. 执行模式
+## 1. 执行模式与依赖图
 
-**首先判定执行模式，再进入流水线。**默认 `full_review`；用户只要一张图或一个数值时，
+**先判定执行模式，再进入流水线。** 默认 `full_review`；用户只要一张图或一个数值时，
 **不得**自动跑完整审核。
 
-| 模式 | 触发条件 | 执行阶段 | 输出 |
-| --- | --- | --- | --- |
-| `full_review` | 用户要求审稿、预审、全面复核，或未指明范围地提交整篇论文 | Stage 1 → 5 | 完整 `review_report` |
-| `structured_extraction` | 用户只要"抽取关键信息 / 结构化结果表" | Stage 1、2，以及仅针对被引用图表的 3 与 3b | `structured_result_v2` + `extraction_signals[]` + `system_limitations[]` |
-| `figure_analysis` | 用户指定某几张图，或要求"解析全部图表" | Stage 1、3（限定范围）、3b | `figure_records[]` / `table_records[]` + 相关 `findings[]`（仅 M5） |
-| `targeted_check` | 用户提出具体问题（如"样本量够不够""伦理声明齐全吗"） | Stage 1、2、3b，加上问题相关模块 | 相关模块 `findings[]` + `manual_review_plan[]` |
+**总原则：任何阶段不得消费尚未产出的产物。** 每个模式必须在输出中声明
+`execution_scope`（`references/00-contracts.md` §7.1），
+其中 `executed_stages[]` 是消费权限的白名单。
 
-**模式约束**
+### 1.1 `full_review`
 
-- `structured_extraction` 与 `figure_analysis` **不产出** `manuscript_risk_score`
-  —— 未跑审核模块就没有稿件风险结论。二者仍产出 `extraction_coverage`。
-- `targeted_check` 必须在输出中列明**实际执行了哪些模块**、**跳过了哪些**，
-  且 `manuscript_risk_score` 标记为 `partial: true`，不得与 `full_review` 的分数并列比较。
-- 任何模式下，`review_confidence` 与 `system_limitations[]` 都必须输出。
+```
+Stage 1 → Stage 2 → Stage 3 → Stage 3b → Stage 4 (M2–M7) → Stage 5
+```
+
+输出：`review_report`、`structured_result_v2`、`figure_records[]`、`table_records[]`、
+`issue_clusters[]`、`all_extraction_signals[]`、`all_system_limitations[]`、
+`manuscript_risk_score`（`partial: false`）、`extraction_coverage`、`review_confidence`。
+这是唯一产出**非 partial** 风险分的模式。
+
+### 1.2 `structured_extraction`
+
+触发：用户只要「抽取关键信息 / 结构化结果表」。
+
+```
+Stage 1
+→ Stage 2
+→ [条件] scoped Stage 3    仅当被请求字段依赖视觉证据
+→ [条件] scoped Stage 3b   仅当上一步执行了
+→ 输出装配
+```
+
+**规则**
+
+- 无视觉需求 → 输出 **`structured_result_v1`** + `stage_3b_executed: false`；
+  执行了 scoped Stage 3 + 3b → 输出 **`structured_result_v2`** + `stage_3b_executed: true`。
+  **不得**把 v1 冒充 v2。v1 中允许保留 `status: "unresolved"`，
+  但必须计入 `coverage_breakdown.unresolved_required_fields[]`。
+- **不跑 M2–M7**，**不输出** `manuscript_risk_score`。
+- 置信度用 **`output_confidence`**，不用 `review_confidence` —— 没做审核就没有审核置信度。
+
+### 1.3 `figure_analysis`（两个 submode，必须显式声明）
+
+#### 1.3.1 `interpretation_only` —— 只解读，不评判
+
+触发：用户指定某几张图要「看懂它在说什么 / 读出数值」。
+
+```
+Stage 1 → scoped Stage 3 → 输出装配
+```
+
+**规则**
+
+- **不跑 Stage 2**，**不跑 Stage 3b**（除非用户明确要求把读数合并回结构化字段；
+  合并即需先跑最小 Stage 2 以提供 `structured_result_v1`）。
+- 产出 `figure_records[]` / `table_records[]`。
+- **不产出任何 M5 稿件级 finding**，**不产出** `manuscript_risk_score`。
+- 置信度用 **`output_confidence`**。
+
+#### 1.3.2 `figure_review` —— 解读 + 图表使用规范审核
+
+触发：用户要求「审一下图表是否规范 / 图用得对不对」。
+
+```
+Stage 1
+→ Stage 2 (minimal context)   仅抽取 study_design、endpoint、arms、statistical_methods
+→ scoped Stage 3
+→ scoped Stage 3b
+→ Stage 4: 仅 M5
+→ Stage 5 (partial aggregation)
+```
+
+**规则**
+
+- 最小 Stage 2 是 Stage 3b 的前置 —— 没有 `structured_result_v1` 就无从合并。
+- 产出 M5 finding 与 partial `issue_clusters[]`。
+- `manuscript_risk_score.partial = true`，`comparable_to_full_review = false`。
+- 置信度用 **`review_confidence`**（跑了审核模块）。
+
+### 1.4 `targeted_check`
+
+触发：用户提出具体问题（「样本量够不够」「伦理声明齐全吗」）。
+
+```
+Stage 1
+→ Stage 2
+→ [条件] scoped Stage 3    仅当问题依赖图或表
+→ scoped Stage 3b
+→ Stage 4: 仅选定模块
+→ Stage 5 (partial aggregation)
+```
+
+**规则**
+
+- scoped Stage 3b 始终执行（哪怕 Stage 3 未跑）—— 它同时负责把 v1 的
+  `status: "unresolved"` 收敛掉；无视觉输入时一律收敛为 `not_reported` 或 `parse_failed`。
+- 输出**必须**列明 `executed_stages[]` / `executed_modules[]` / `skipped_modules[]` /
+  `execution_scope`。
+- `manuscript_risk_score.partial = true`，禁止与 `full_review` 分数并列比较。
+- 置信度用 **`review_confidence`**。
+
+### 1.5 模式约束速查
+
+| 模式 / submode | 跑审核模块 | risk_score | 置信度字段 | 主结构化产物 |
+| --- | --- | --- | --- | --- |
+| `full_review` | M2–M7 | 完整 | `review_confidence` | `structured_result_v2` |
+| `structured_extraction` | 无 | **不输出** | `output_confidence` | v1 或 v2（见 §1.2） |
+| `figure_analysis / interpretation_only` | 无 | **不输出** | `output_confidence` | 无（仅 records） |
+| `figure_analysis / figure_review` | 仅 M5 | partial | `review_confidence` | `structured_result_v2` |
+| `targeted_check` | 选定模块 | partial | `review_confidence` | `structured_result_v2` |
+
+`review_confidence` 与 `output_confidence` **互斥，不得同时输出**。任何模式都必须输出
+`execution_scope`、`coverage_breakdown`、`extraction_coverage`、`all_system_limitations[]`。
 
 ---
 
@@ -73,372 +163,337 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 
 ### 2.1 模块关系（不要说错）
 
-本 Skill 含**七个分析模块**：**M1 是前置抽取层，M2–M7 是并行审核模块**。
+本 Skill 含**七个分析模块**：**M1 是前置抽取层，M2–M7 是并行审核模块。**
 
-M2–M7 全部消费 M1 的产物，因此 **M1 与 M2–M7 不是并行关系**。
+M2–M7 全部消费 M1（经 Stage 3b 合并后）的产物，因此 **M1 与 M2–M7 不是并行关系**。
 只有在 Stage 2 与 Stage 3b 完成之后，M2–M7 才可并行执行。
-可以说"一个抽取模块 + 六个审核模块"，**不要**说"七个模块相互独立"。
+可以说「一个抽取层 + 六个审核模块」，**不要**说「七个模块相互独立」。
 
-### 2.2 阶段与产物
+### 2.2 Figure Parser 与 M5 Reviewer 是两个执行角色
+
+两者共用 `references/05-figures-and-charts.md`，但**执行位置与产物完全不同**：
+
+| 角色 | 阶段 | 产物 | 产出 finding |
+| --- | --- | --- | --- |
+| **Figure Parser** | Stage 3 | `figure_records[]`、`table_records[]`、`stage3_system_limitations[]` | **否** |
+| **M5 Figure-Use Reviewer** | Stage 4 | `m5_findings[]`（图型选择、标注、一致性、位置、报告规范） | 是 |
+
+**不得**说「Stage 3 产出 M5 findings」—— Stage 3 只解读，不评判。
+
+### 2.3 阶段与阶段本地产物
 
 ```
-Stage 1  文档归一化与切分
-         └─> normalized_document, asset_inventory, system_limitations[]
-
-Stage 2  M1 结构化抽取（文本来源）
-         └─> structured_result_v1, extraction_signals[], extraction_quality_findings[]
-
-Stage 3  图表解析（M5 执行解析部分）
-         └─> figure_records[], table_records[]
-
-Stage 3b 证据合并与冲突消解
-         └─> structured_result_v2, source_conflict_signals[], unresolved_evidence_links[]
-
-Stage 4  M2–M7 并行审核
-         └─> findings[]
-
-Stage 5  去重、评分、人工复核动作、报告渲染
-         └─> review_report
+Stage 1  文档归一化与切分   └─> normalized_document, asset_inventory,
+                                stage1_system_limitations[], evidence_registry（开始登记）
+Stage 2  M1 结构化抽取      └─> structured_result_v1, m1_extraction_signals[],
+                                stage2_system_limitations[]
+Stage 3  图表解析(Parser)   └─> figure_records[], table_records[], stage3_system_limitations[]
+Stage 3b 合并与冲突消解     └─> structured_result_v2, merge_extraction_signals[],
+                                stage3b_system_limitations[]
+Stage 4  M2–M7 并行审核     └─> m2_findings[] … m7_findings[]
+Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_limitations[],
+                                all_findings[], issue_clusters[], 三项评分, review_report
 ```
 
-### 2.3 产出者 / 消费者对照（每个产物有且只有一个产出者）
+### 2.4 产出者与聚合器（每个数组恰好一个）
 
-| 产物 | 唯一产出者 | 消费者 |
+**跨阶段同名数组一律拆为阶段本地数组，由 Stage 5 单一聚合。**
+非 `full_review` 模式下，聚合职责由「输出装配」步骤承担，规则相同。
+
+| 产物 | 唯一产出者 / 聚合器 | 主要消费者 |
 | --- | --- | --- |
-| `normalized_document` | Stage 1 | M1, M5, M2 |
-| `asset_inventory`（图/表/补充材料清单 + 可读性） | Stage 1 | Stage 3, Stage 5（覆盖率） |
-| `structured_result_v1` | Stage 2 (M1) | Stage 3（提供上下文）, Stage 3b |
-| `extraction_signals[]` | Stage 2 (M1) + Stage 3b | M2, M4, M7（按 signal 类型路由） |
-| `extraction_quality_findings[]` | Stage 2 (M1) | Stage 5（仅影响 coverage/confidence） |
-| `figure_records[]` / `table_records[]` | Stage 3 (M5 解析部分) | Stage 3b, M4, M5 审核部分, M7 |
+| `normalized_document` | Stage 1 | Stage 2, Stage 3, M2 |
+| `asset_inventory` | Stage 1 | Stage 3, Stage 5（覆盖率） |
+| `evidence_registry` | Stage 1 建立，各阶段**追加**（id 全局递增，不改已有条目） | 全部 |
+| `structured_result_v1` | Stage 2 (M1) | Stage 3（上下文）, Stage 3b |
+| `m1_extraction_signals[]` | Stage 2 (M1) | Stage 5 聚合 |
+| `figure_records[]` / `table_records[]` | Stage 3 (Figure Parser) | Stage 3b, M4, M5, M7 |
 | `structured_result_v2` | Stage 3b | **M2–M7 全部** |
-| `source_conflict_signals[]` | Stage 3b | M2（判定是否为稿件矛盾）, M4 |
-| `unresolved_evidence_links[]` | Stage 3b | M7（判定 claim 是否失据）, Stage 5 |
-| `findings[]` | Stage 4（各模块） | Stage 5 |
-| `system_limitations[]` | Stage 1 / 2 / 3（任一阶段可追加） | Stage 5 |
-| `review_report` | Stage 5 | 用户 |
+| `merge_extraction_signals[]` | Stage 3b | Stage 5 聚合 |
+| `stage{1,2,3,3b}_system_limitations[]` | 对应阶段 | Stage 5 聚合 |
+| `m2_findings[]` … `m7_findings[]` | 对应审核模块 | Stage 5 |
+| `all_extraction_signals[]` | **Stage 5** 聚合 `m1_` + `merge_` | 报告 |
+| `all_system_limitations[]` | **Stage 5** 聚合四个 stage-local | 报告 |
+| `all_findings[]` / `issue_clusters[]` / `execution_scope` / `coverage_breakdown` / `review_report` | **Stage 5** | 评分、报告、用户 |
 
-### 2.4 Stage 1 · 文档归一化与切分
+### 2.5 Stage 1 · 文档归一化与切分
 
-1. 判定输入类型：JATS/PMC XML（最优，章节与图注已结构化）> PDF > 纯文本。
+1. 判定输入类型：JATS/PMC XML（最优）> PDF > 纯文本。
 2. 切分标准章节：`title / abstract / introduction / methods / results / discussion /
    conclusion / declarations / ethics / funding / conflict_of_interest /
-   data_availability / references / supplement`。
-   - 章节缺失**不在本阶段判定为问题**，只写入 `asset_inventory.missing_sections[]`，
-     由 M2 结合刊型决定是否构成 finding。
-3. 为每个段落分配 `paragraph_id`，为每张图表分配稳定 id，构造 §3.1 的 locator 对象。
-   PDF 输入必须记录 `pdf_file_page`；若能识别印刷页码则同时记录 `printed_page`。
+   data_availability / references / supplement`。章节缺失**不在本阶段判定为问题**，
+   只写入 `asset_inventory.missing_sections[]`，由 M2 结合刊型决定。
+3. 为每段分配 `paragraph_id`、每张图表分配稳定 id；PDF 输入必须记录 `pdf_file_page`，
+   能识别印刷页码则同时记录 `printed_page`。初始化 `evidence_registry`。
 4. 建立 `asset_inventory`：图、表、补充材料清单，逐项标注
    `readable` / `low_resolution` / `inaccessible`。
-5. 解析失败（页面无法提取、图像损坏、补充材料不可得）产出 **`system_limitation`**，
-   **不是** finding（见 §3.3）。
+5. 解析失败产出 **`stage1_system_limitations[]`**，**不是** finding。
 
-### 2.5 Stage 2 · M1 结构化抽取
+### 2.6 Stage 2 · M1 结构化抽取
 
-产出 `structured_result_v1`（**仅文本来源**：正文、表格、图注文字）、
-`extraction_signals[]`、`extraction_quality_findings[]`。
-详细规则见 `references/01-structured-extraction.md`。
+产出 `structured_result_v1`（**仅文本来源**：正文、表格、图注文字）。
+详细规则见 `references/01-structured-extraction.md`。四条硬性规则：
 
-**本阶段的三条硬性规则**
+- 只抽取论文**明确写出**的内容，**严禁推断填充** —— 推断值会污染下游六个模块。
+- 每个重要字段使用 `extracted_field` 结构，`applicability` / `requiredness` / `status`
+  三者**分别显式给出**，不得用裸 `null` 编码多种缺失状态。
+- **M1 不产出任何 `finding`。** M1 只产出 `extraction_signal`（机器级观察），
+  由 M2 / M4 / M7 决定其是否构成稿件问题。
+- 文本没有、但图里可能有的字段判 `status: "unresolved"` +
+  `resolution_state.state = "pending_visual_resolution"`，**不判 `parse_failed`**
+  —— Stage 3 尚未尝试，谈不上失败。
 
-- 只抽取论文**明确写出**的内容，**严禁推断填充**。推断出的数值会污染下游全部六个审核模块。
-- 每个重要字段使用 §3.2 的 `extracted_field` 结构，`status` 必须显式给出，
-  **不得用裸 `null` 编码多种缺失状态**。
-- M1 **不做稿件级判断**。M1 只产出 `extraction_signal`（机器级观察），
-  由 M2 / M4 / M7 决定其是否构成稿件问题（见 §3.3）。
+### 2.7 Stage 3 · 图表解析（Figure Parser）
 
-### 2.6 Stage 3 · 图表解析
+对每张图产出 `figure_record`，每张表产出 `table_record`。
+规则见 `references/05-figures-and-charts.md`。关键约束：
 
-对每张图产出 `figure_record`，每张表产出 `table_record`。执行者是 M5 的解析部分，
-规则见 `references/05-figures-and-charts.md`。
+- 先确定该图试图回答的**科学问题**，再判断图表类型是否匹配（判断结果交 Stage 4 的 M5）。
+- 从图中读出的数值必须带 `provenance`（含 `derivation`）。
+- **像素估读一律 `source_type: "pixel_estimated"` + `value.type: "interval"` +
+  `extraction_confidence: "low"` + `manual_review_needed: true`** ——
+  编造精确读数是本 Skill 最严重的失败模式。
+- 图像不可读产出 `stage3_system_limitations[]`（`figure_unreadable`），不是 finding。
 
-关键约束（完整规则在 M5 文件）：
+### 2.8 Stage 3b · 证据合并与冲突消解
 
-- 先确定该图试图回答的**科学问题**，再判断图表类型是否匹配。
-- 从图中读出的数值必须带 §3.2 的 `provenance` 对象。
-- **像素估读的数值一律 `extraction_confidence: low`，必须写成区间而非点值**，
-  并置 `manual_review_needed = true`。编造精确读数是本 Skill 最严重的失败模式。
-- 图像不可读产出 `system_limitation`（`category: figure_unreadable`），不是 finding。
+**数据流的关键一环：图表解析结果必须回流，`structured_result_v1` 不得直接交给 M2–M7。**
 
-### 2.7 Stage 3b · 证据合并与冲突消解
+1. **收敛 pending** —— 每个 `status: "unresolved"` 必须解析为 `reported` /
+   `not_reported` / `ambiguous` / `conflicting` / `parse_failed`。
+   **v2 中不得残留 `unresolved`。**
+2. **观测分组** —— 按 `grouping_key` 五键（`experiment_id` / `group` / `comparison` /
+   `timepoint` / `endpoint`）归组。键不匹配是两个组，**不是冲突**。
+3. **兼容性判定** —— 单位归一化 → 变体兼容 → 区间重叠 → 四舍五入容差 → 单边界。
+   **四舍五入差异不得判为冲突**；无法建立可比性判 `ambiguous`，不判 `conflicting`。
+4. **canonical 选择** —— `explicit_reported` 优先于 `visually_derived`；其内部按
+   「主要结果 → 带不确定度 → 精度 → 非叙述性摘要 → 要素齐全 → 字典序」有序判据。
+   **给不出可辩护选择时 `canonical_observation = null`，组判 `ambiguous`。**
+5. **保全** —— 全部 observation 保留，**禁止静默覆盖**。不兼容时产出
+   `source_value_conflict` signal，交 M2 判定。
+6. **claim 链接** —— `claims[].supported_by` 解析不到任何 `key_data.id` 或证据的，
+   产出 `claim_without_resolved_evidence_link` signal（`target` 携带 `claim_id`
+   与 `unresolved_refs[]`），交 M7 判定。**M1 与 Stage 3b 都不下这个结论。**
 
-把 Stage 3 的图表来源数值合并回结构化结果，产出 `structured_result_v2`。
-**这是数据流的关键一环：图表解析结果必须回流，`structured_result_v1` 不得直接交给 M2–M7。**
+完整判定规则见 `references/00-contracts.md` §5.4 与 §5.5。
 
-**来源可靠性排序**（高 → 低）：
-
-```
-1. explicit_main_text     正文明文数值
-2. explicit_table         表格明文数值
-3. explicit_figure_caption 图注明文数值
-4. axis_readable          可读坐标轴刻度
-5. pixel_estimated        像素估读
-```
-
-**合并规则**
-
-1. 同一字段有多个来源且**数值兼容**（在各自不确定度内一致）：
-   取最高可靠性来源为 `value`，其余全部保留在 `alternatives[]`，`status: "reported"`。
-2. 同一字段有多个来源且**数值不兼容**：
-   - **不得静默覆盖**。
-   - `status` 置为 `"conflicting"`，`value` 置为 `null`。
-   - 全部来源值保留在 `candidates[]`，各带自己的 `provenance`。
-   - 产出 `source_value_conflict` signal，交 **M2** 判定是否构成稿件内部矛盾。
-3. 字段仅有 `pixel_estimated` 来源：`value` 写区间，`extraction_confidence: low`，
-   `reporting_completeness` 独立判定（见 §3.2）。
-4. `claims[].supported_by` 中无法解析到任何 `key_data.id` 或 locator 的条目：
-   写入 `unresolved_evidence_links[]`，产出 `claim_without_resolved_evidence_link` signal，
-   交 **M7** 判定是否构成无支撑主张。**M1 与 Stage 3b 都不下这个结论。**
-
-### 2.8 Stage 4 · M2–M7 并行审核
+### 2.9 Stage 4 · M2–M7 并行审核
 
 **前置条件：Stage 2 与 Stage 3b 均已完成。** 六个审核模块此时可并行执行，
 各自读取自己的 reference 文件，消费 `structured_result_v2`、`figure_records[]`、
-`extraction_signals[]`，输出统一格式的 `finding[]`。
+`all` 之前的 stage-local signals，输出统一格式的 `finding`。
 
 | # | 模块 | 负责人 | 规则文件 | 核心问题 |
 | --- | --- | --- | --- | --- |
-| M1 | 结构化抽取（**前置层，非审核模块**） | MZYY（陈泓睿） | `references/01-structured-extraction.md` | 关键信息是否完整、可溯源地抽出？ |
+| M1 | 结构化抽取（**前置层，非审核模块，不产 finding**） | MZYY（陈泓睿） | `references/01-structured-extraction.md` | 关键信息是否完整、可溯源地抽出？ |
 | M2 | 宏观逻辑与格式 | ZY（卓妍） | `references/02-macro-logic.md` | 逻辑链是否闭环？章节是否完整？有无数据泄露、前后矛盾？ |
-| M3 | 实验方法合规性 | Peter | `references/03-experimental-methods.md` | 方法有无 reference 依据？实验动物是否必要？有无非通用流程？ |
-| M4 | 统计学方法 | JY（蒋运） | `references/04-statistics.md` | 统计方法是否匹配数据类型？样本量报告是否充分？多重比较是否校正？ |
-| M5 | 图表解析与使用规范 | MY（敏怡） | `references/05-figures-and-charts.md` | 图表类型是否匹配研究目的？呈现是否规范？正文/supplement 位置是否合理？ |
-| M6 | 伦理合规 | Peter | `references/06-ethics-compliance.md` | 动物/人体试验流程是否合规？有无伦理批件号与知情同意？ |
+| M3 | 实验方法合规性 | Peter | `references/03-experimental-methods.md` | 方法有无 reference 依据？动物实验是否必要？ |
+| M4 | 统计学方法 | JY（蒋运） | `references/04-statistics.md` | 统计方法是否匹配数据类型？样本量与多重比较是否充分？ |
+| M5 | 图表使用规范（Reviewer 角色） | MY（敏怡） | `references/05-figures-and-charts.md` | 图表类型是否匹配研究目的？呈现与位置是否规范？ |
+| M6 | 伦理合规 | Peter | `references/06-ethics-compliance.md` | 动物/人体试验是否合规？有无批件号与知情同意？ |
 | M7 | 结论与讨论 | MY（敏怡） | `references/07-conclusions-discussion.md` | 结论是否被本文数据支持？有无过度外推、避谈局限？ |
 
-> 与会议纪要"分层审核"的映射：第一层内部逻辑 = M2；第二层实验方法 = M3；第三层统计学 = M4；
-> 第四层呈现规范 = M5；第五层特殊场景合规 = M6。M1 是全部层的输入，M7 是全部层的收口。
+> 与会议纪要「五层审核」的映射见 `docs/architecture.md`。
 
-**模块路由**：各模块依据 `structured_result_v2.study_design` 与 `evaluation_matrix`
+**模块路由**：各模块依据 `structured_result_v2.article_design` 与 `evaluation_matrix`
 决定跑哪些规则集。路由字段仅用于**选择规则**与**定位证据**，
 **不得**仅凭 `evaluation_matrix` 的摘要值直接产出 finding（见 §4.2）。
 
-### 2.9 Stage 5 · 汇总与输出
+### 2.10 Stage 5 · 聚合与输出
 
-1. **去重与聚簇**：按 `references/00-contracts.md` §2.4 把 findings 归并为 issue cluster。
-2. **评分**：计算 §5 的三项指标。
-3. **人工复核动作**：每一条 `severity >= major` 的 finding 必须对应一条可执行动作，
-   写明"看哪里、核什么、若属实该补什么"。
-4. **渲染**：按 `templates/review_report.md` 输出 Markdown；需要机器消费时同时输出
-   符合 `schemas/review_report.schema.json` 的 JSON。
+1. **聚合**：按 §2.4 合并 stage-local 数组为 `all_*`。
+2. **去重与聚簇**：按 `references/00-contracts.md` §9.3 归并为 `issue_clusters[]`。
+3. **评分**：计算 §5 的三项指标，分母全部取自 `execution_scope`。
+4. **人工复核动作**：每一条 `severity >= major` 的 finding 必须对应一条可执行动作，
+   写明「看哪里、核什么、若属实该补什么」。
+5. **渲染**：按 `templates/review_report.md` 输出 Markdown；需要机器消费时同时输出
+   符合 `schemas/review_report.schema.json` 的 JSON（含完整 `evidence_registry`）。
 
 ---
 
 ## 3. 契约总览（详见 `references/00-contracts.md`）
 
-全部模块共用三套契约。**完整定义、字段表与示例见 `references/00-contracts.md`，
-需要输出任何结构化内容前必须先读该文件。** 此处仅给出必须随时记住的要点。
+**需要输出任何结构化内容前必须先读该文件。** 此处只列必须随时记住的要点。
 
-### 3.1 证据（evidence）
+### 3.1 证据（§1）
 
-`evidence` 是**数组**，每个元素为两型之一：
+证据存于 `evidence_registry`，各处只写 `evidence_refs[]`，每个 ref 必须解析到
+**恰好一个**登记条目，否则该 finding 无效。`present` 型必填 `locator` 对象；
+`absence` 型必填 `searched_locations[]` + `search_terms[]` + `search_result`，
+且**禁止**含 `quote` 或 `locator`。
 
-| type | 用于 | 必填 | 禁止 |
-| --- | --- | --- | --- |
-| `present` | 稿件中已有的内容 | `locator` 对象 | —— |
-| `absence` | 稿件中不存在的内容 | `searched_locations[]` + `search_terms[]` + `search_result` | **`quote`** |
-
-`locator` 以**结构化对象**存储（`section` / `subsection` / `paragraph_id` /
-`pdf_file_page` / `printed_page` / `figure` / `panel` / `table` / `supplement_id` /
-`xml_id` / `scope`），`fig:3B | p.7` 只是渲染形式。**绝不为不存在的内容编造引文。**
-
-### 3.2 字段状态（extracted_field）
-
-所有重要字段用 `{value, status, evidence[], extraction_confidence, ...}`，
-`status` 取六值之一，**不得用裸 `null` 编码多种缺失状态**：
+### 3.2 字段的三个正交维度（§3）
 
 ```
-reported | not_reported | not_applicable | ambiguous | conflicting | parse_failed
+applicability : applicable | not_applicable | applicability_uncertain
+requiredness  : required | recommended | optional
+status        : reported | not_reported | not_applicable | ambiguous
+                | conflicting | parse_failed | unresolved
 ```
 
-最关键的两条区分：`not_reported`（**稿件**没写，已检索确认）**可以**成为 finding 依据；
+**适用性 ≠ 必填性** —— 不得因为某字段不进覆盖率分母就判 `not_applicable`。
+`not_reported`（**稿件**没写，已检索确认）**可以**成为 finding 依据；
 `parse_failed`（**我们**没读出来）**绝不可以**，只降覆盖率。
-无法确定属于哪种时一律用 `parse_failed` —— 宁可承认看不清，不可冤枉稿件。
+`unresolved` 只允许存在于 v1。`extraction_confidence`（我们读对了吗）与
+`reporting_completeness`（稿件报全了吗）**正交**，不得互相传染。
 
-数值来源统一用 `provenance.source_type`：
+### 3.3 数值（§2）
+
+一律用带 `type` 的对象：`point` / `interval` / `lower_bound` / `upper_bound` / `categorical`。
+**禁止**裸数字与字符串区间（`"40–50"` 非法）。
+`provenance.source_type` 五值，**且必须带 `derivation`**（否则 pixel/OCR 依赖率算不出来）：
 
 ```
-explicit_main_text | explicit_table | explicit_figure_caption | axis_readable | pixel_estimated
+explicit_reported  = explicit_main_text | explicit_table | explicit_figure_caption
+visually_derived   = axis_readable | pixel_estimated
 ```
 
-`pixel_estimated` 强制 `extraction_confidence: low` + 区间值 + `manual_review_needed`。
+`pixel_estimated` 强制 `interval` + `extraction_confidence: low` +
+`manual_review_needed: true`，且**不得**用于任何统计复算。
 
-`extraction_confidence`（我们读对了吗）与 `reporting_completeness`（稿件报全了吗）
-是**正交**的两个字段，不得互相传染。
-
-### 3.3 三类输出（不可混用）
-
-判断归属的唯一标准：**这是稿件的问题，还是我们的观察，还是我们的能力限制？**
+### 3.4 三类记录（§6，不可混用）
 
 | 契约 | 产出者 | 含 severity | 影响 |
 | --- | --- | --- | --- |
-| `finding` | M2–M7（M1 仅限抽取质量类） | ✅ `critical/major/minor/info` | 稿件风险分 |
-| `extraction_signal` | M1、Stage 3b | ❌ **无** | 路由给下游判定，本身不是结论 |
-| `system_limitation` | Stage 1/2/3 | ❌ **无** | 只降覆盖率与置信度 |
+| `finding` | **仅 M2–M7** | ✅ `critical`/`major`/`minor`/`info` | 稿件风险分 |
+| `extraction_signal` | Stage 2、Stage 3b | ❌ | 路由给下游判定，本身不是结论 |
+| `system_limitation` | Stage 1/2/3/3b | ❌ | 只降覆盖率与置信度 |
 
-**解析失败不得赋予稿件 severity。** `severity >= major` 的 finding 必须有可执行的
-`manual_review.action`。`extraction_signal` 的六种 type 与路由去向见
-`references/00-contracts.md` §2.2；下游据 signal 立 finding 时，
-必须在 `evidence[]` 中独立给出稿件证据，不得仅引用 signal id。
+**M1 不产出 finding。** `coverage_breakdown` 与 `execution_scope` **不是记录**，
+其条目不得称为 finding。**解析失败不得赋予稿件 severity。**
+下游据 signal 立 finding 时，必须在 `evidence_refs[]` 中独立给出稿件证据，
+不得仅引用 signal id。
 
-Stage 5 的去重与聚簇规则（同模块合并 → 跨模块聚簇 → 证据合并）见
-`references/00-contracts.md` §2.4，其产物 `issue_clusters[]` 是 §5.1 计分的单位。
-
+---
 
 ## 4. 结构化结果与路由
 
-### 4.1 structured_result 的两个版本
+### 4.1 v1 与 v2
 
 | 版本 | 产出者 | 内容 | 谁能用 |
 | --- | --- | --- | --- |
-| `structured_result_v1` | Stage 2 (M1) | **仅文本来源**的抽取结果 | 仅 Stage 3（作上下文）与 Stage 3b |
-| `structured_result_v2` | Stage 3b | 合并图表来源、完成冲突消解后的结果 | **M2–M7 全部** |
+| `structured_result_v1` | Stage 2 (M1) | **仅文本来源**，可含 `unresolved` | Stage 3（上下文）、Stage 3b；`structured_extraction` 无视觉需求时可直接输出 |
+| `structured_result_v2` | Stage 3b | 合并图表来源、消解冲突、**无 `unresolved` 残留** | **M2–M7 全部** |
 
-**M2–M7 一律消费 `v2`。** 直接读 `v1` 会漏掉全部图表来源数值。
+**M2–M7 一律消费 v2。** 直接读 v1 会漏掉全部图表来源数值。
 
 ### 4.2 evaluation_matrix 的正确用法
 
-`evaluation_matrix` 是**路由与索引**工具，每个条目是**状态感知对象**而非裸布尔：
-
-```json
-"randomization": {
-  "status": "not_reported",
-  "applies_to": ["EXP-01", "EXP-02"],
-  "evidence_refs": ["EV-018"],
-  "extraction_confidence": "high"
-}
-```
-
-**三条用法规则**
+`evaluation_matrix` 是**路由与索引**工具，每个条目是状态感知对象而非裸布尔
+（`{status, applicability, requiredness, applies_to[], evidence_refs[],
+extraction_confidence}`，见 `01-structured-extraction.md §8`）：
 
 1. **可以**用它决定跑哪些规则集、定位相关证据。
-2. **不得**仅凭它直接立 finding。M2–M7 必须回查 `evidence_refs` 指向的证据记录，
-   在自己的 finding 中独立给出 `evidence[]`。
-3. 实验级字段（如组样本量）**不得**压缩为单一数字。使用 `group_sizes[]` 保留实验级上下文：
+2. **不得**仅凭它直接立 finding —— M2–M7 必须回查 `evidence_refs`，
+   在自己的 finding 中独立给出 `evidence_refs[]`。
+3. 实验级字段**不得**压缩为单一数字，用 `group_sizes[]` 保留实验级上下文。
 
-```json
-"group_sizes": [
-  {"experiment_id": "EXP-01", "group": "vehicle", "n": 6, "replicate_type": "biological",
-   "evidence_refs": ["EV-021"]}
-]
+### 4.3 研究设计路由
+
+设计存为 `article_design`，区分「文章主设计」`primary_design` 与
+「实验级设计」`design_components[]`（每项带 `experiment_id` + `family` + `type`）。
+
+**适用性路由优先级（命中即停）**：
+
 ```
+实验级类型规则 > 文章级专门规则 > 族级规则 > 默认规则
+```
+
+一篇论文**真的**含多种设计时用 `design_components[]`；
+`alternatives[]` **只**用于「抽取器在几种解读之间不确定」。二者不得混用。
+完整枚举、字段清单与各设计的适用性规则见 `references/01-structured-extraction.md` §4–§5。
 
 ---
 
 ## 5. 三项评分（互不替代）
 
-**禁止**把稿件风险分称作"置信度"。三项分别输出，报告中不得合并为单一数字。
+**禁止**把稿件风险分称作「置信度」。三项分别输出，不得合并为单一数字。
+完整公式与可计算性证明见 `references/00-contracts.md` §8。
 
-```json
-{
-  "manuscript_risk_score": 34,
-  "extraction_coverage": 0.82,
-  "review_confidence": 0.71
-}
-```
+### 5.1 manuscript_risk_score（0–100，越高风险越大）
 
-### 5.1 manuscript_risk_score · 稿件风险分（0–100，越高风险越大）
-
-反映**已验证的稿件 finding** 的严重度与范围。
-**不因 PDF 不可读或解析失败而升高**（那属于 coverage 与 confidence）。
-
-以 `references/00-contracts.md` §2.4 产出的 `issue_clusters[]` 为单位计分，防止把一个问题拆成多条来放大分数：
+以 `issue_clusters[]` 为单位计分（防止一个问题拆成多条放大分数），
+**不因**解析失败而升高：
 
 ```
-每簇权重 w：critical 25 / major 10 / minor 3 / info 0
-  （簇内取最高 severity，只计一次）
-
-每个 category 的累计上限：30
-  （同一类问题反复出现不应无限累加）
-
-manuscript_risk_score = min(100, Σ_category min(30, Σ_cluster w))
+每簇权重 w：critical 25 / major 10 / minor 3 / info 0（簇内取最高 severity，只计一次）
+manuscript_risk_score = min(100, Σ_category min(30, Σ_cluster w))    每 category 上限 30
 ```
 
-**分段仅为筛查信号，不是录用决定**：
+未跑满六个审核模块时**必须**标 `partial: true` + `comparable_to_full_review: false`，
+并列出 `executed_modules[]` / `skipped_modules[]`；partial 分数**禁止**与完整分数比较。
+`executed_modules` 为空时**不输出本项**。分段（`routine_review` 0–19 /
+`clarification_needed` 20–49 / `major_revision_suggested` 50+）**仅为筛查信号，
+阈值未经实证验证**，报告中必须注明，不得表述为录用/退稿决定。
+出现任一 `critical` 簇时 `priority_manual_review = true`。
 
-| 分数 | 标签（screening recommendation） |
-| --- | --- |
-| 0–19 | `routine_review` 可进入常规同行评审 |
-| 20–49 | `clarification_needed` 建议作者澄清后复审 |
-| 50+ | `major_revision_suggested` 建议退回补充 |
+### 5.2 extraction_coverage（0.0–1.0）
 
-出现任一 `critical` 簇时，无论分数如何，`priority_manual_review = true`。
-
-> 阈值**未经实证验证**，是初始经验值。报告中必须注明这一点，
-> 且不得表述为自动化的录用/退稿决定。
-
-### 5.2 extraction_coverage · 抽取覆盖率（0.0–1.0）
-
-反映我们**成功抽出了多少应抽的内容**。三个子率加权：
+**全部分母取自 `execution_scope`** —— 单图任务不得用全文分母。
 
 ```
-field_resolution_rate = |status ∈ {reported, not_reported, not_applicable} 的条件必填字段|
-                        / |该 study_design 下的条件必填字段总数|
-   （status ∈ {ambiguous, conflicting, parse_failed} 计为未解析）
+field_resolution_rate    = |scope 内 applicable ∧ required ∧ status ∈ {reported, not_reported}|
+                         / |scope 内 applicable ∧ required|
+asset_readability_rate   = |scope 内 readable 图表| / |scope 内图表|          （分母 0 → 1.0）
+supplement_accessibility = |scope 内可得补充材料| / |scope 内被引用补充材料|  （分母 0 → 1.0）
 
-asset_readability_rate = |asset_inventory 中 readable 的图表数| / |图表总数|
-
-supplement_accessibility = 1.0 若无补充材料或全部可得；
-                           否则 |可得补充材料| / |被引用的补充材料总数|
-
-extraction_coverage = 0.60 × field_resolution_rate
-                    + 0.25 × asset_readability_rate
+extraction_coverage = 0.60 × field_resolution_rate + 0.25 × asset_readability_rate
                     + 0.15 × supplement_accessibility
 ```
 
-三个子率必须在报告中**分别列出**，不只给加权结果 —— 覆盖率 0.6 因字段缺失
-与因图像不可读，含义完全不同。
+三个子率必须**分别列出显式分子分母** —— 覆盖率 0.6 因字段缺失与因图像不可读，
+含义完全不同。`requiredness = recommended` 的字段可另报
+`recommended_field_coverage`，**不进**加权。
 
-### 5.3 review_confidence · 复核置信度（0.0–1.0）
+### 5.3 review_confidence 与 output_confidence（互斥）
 
-反映**系统对自身审核结论的支撑强度**。
+**跑过至少一个审核模块**用 `review_confidence`；一个都没跑用 `output_confidence`。
 
 ```
-pixel_dependency_rate = |证据中含 pixel_estimated 的 finding 数| / max(1, |finding 总数|)
-ocr_dependency_rate   = |依赖 OCR 文本的 finding 数| / max(1, |finding 总数|)
-
-Q（证据质量因子）= max(0, 1 - 0.30 × pixel_dependency_rate - 0.20 × ocr_dependency_rate)
-C（冲突因子）    = max(0, 1 - 0.10 × min(未消解的 source_value_conflict 数, 5))
+output_confidence = extraction_coverage × max(0, 1 − 0.30 × pixel_share − 0.20 × ocr_share)
 
 review_confidence = extraction_coverage × Q × C
+  Q = max(0, 1 − 0.30 × pixel_dependency_rate − 0.20 × ocr_dependency_rate
+                − 0.10 × low_conf_finding_rate)
+  C = max(0, 1 − 0.10 × min(未消解 conflicting 组数, 5))
 ```
 
-`review_confidence < 0.5` 时，报告首屏必须提示"本次审核证据基础较弱，结论仅供参考"。
+全部变量均可从 `provenance.source_type`、`provenance.derivation.ocr_used`、
+`finding.review_confidence`、`key_data.status` 直接算出（`00-contracts.md §8.3`）。
+`review_confidence < 0.5` 时，报告首屏必须提示「本次审核证据基础较弱，结论仅供参考」。
 
 ---
 
 ## 6. 输出规范
 
-主输出为 `templates/review_report.md` 渲染的 Markdown，固定七节：
+主输出为 `templates/review_report.md` 渲染的 Markdown，固定八节：
+①**执行摘要**（`execution_scope` + 三项评分含 partial 标记 + §0 声明原文）
+②**结构化结果表**（须标明 v1 还是 v2，每字段带三维度与证据引用）
+③**图表解读与原图定位**（`figure_records[]` / `table_records[]`）
+④**审核发现**（`issue_clusters[]`，severity 降序，每条附证据）
+⑤**抽取信号**（`all_extraction_signals[]` 及路由去向）
+⑥**系统限制**（`all_system_limitations[]`，即「哪些地方我们没看清」）
+⑦**覆盖率明细**（`coverage_breakdown`，显式分子分母）
+⑧**人工复核建议**（按 P0/P1/P2 排序的可执行动作）
 
-1. **执行摘要** —— 执行模式、三项评分、§0 的声明原文
-2. **结构化结果表** —— `structured_result_v2`，每字段带 status 与证据引用
-3. **图表解读与原图定位** —— `figure_records[]` / `table_records[]`
-4. **审核发现** —— `issue_clusters[]`，按 severity 降序，每条附证据
-5. **抽取信号** —— `extraction_signals[]` 及其路由去向
-6. **系统限制** —— `system_limitations[]`，即"哪些地方我们没看清"
-7. **人工复核建议** —— 按 P0/P1/P2 排序的可执行动作
-
-机器消费时同时输出符合 `schemas/review_report.schema.json` 的 JSON。
-
-非 `full_review` 模式下，未执行阶段对应的节写明"本模式未执行"，**不得**省略节标题
-（避免读者误以为该维度无问题）。
+机器消费时同时输出符合 `schemas/review_report.schema.json` 的 JSON，
+**必须**内含完整 `evidence_registry` 以保证 ref 自洽可校验。
+非 `full_review` 模式下，未执行阶段对应的节写明「本模式未执行」，
+**不得**省略节标题（避免读者误以为该维度无问题）。
 
 ---
 
-## 7. 参考文件索引
+## 7. 参考文件索引（按需读取，不要一次性全部载入）
 
 | 文件 | 内容 | 何时读取 |
 | --- | --- | --- |
-| `references/00-contracts.md` | **共享契约**：evidence/locator/extracted_field/三类输出/去重聚簇 | **产出任何结构化内容前** |
-| `references/01-structured-extraction.md` | 字段状态模型、研究设计路由、指标族规则、v1/v2、抽取信号 | Stage 2、3b |
+| `references/00-contracts.md` | **共享契约**：证据登记表、数值变体、字段三维度、观测组、三类记录、执行范围、评分、聚合聚簇、迁移表、lint 清单 | **产出任何结构化内容前** |
+| `references/01-structured-extraction.md` | 字段清单与适用性规则、设计路由、指标族、v1/v2、抽取信号、evaluation_matrix | Stage 2、3b |
 | `references/02-macro-logic.md` | 逻辑链校验、章节完整性、数据泄露场景库 | Stage 4 M2 |
 | `references/03-experimental-methods.md` | 实验设计惯例库、动物实验必要性判据 | Stage 4 M3 |
 | `references/04-statistics.md` | 统计方法选择表、样本量报告、多重比较 | Stage 4 M4 |
-| `references/05-figures-and-charts.md` | 图表类型知识库、解析流程、设计规范、正文/supplement 位置适配 | Stage 3、Stage 4 M5 |
+| `references/05-figures-and-charts.md` | 图表类型知识库、Stage 3 解析流程、M5 审核规范 | Stage 3、Stage 4 M5 |
 | `references/06-ethics-compliance.md` | 伦理批件、知情同意、3R 原则核查 | Stage 4 M6 |
 | `references/07-conclusions-discussion.md` | 结论-证据对齐、过度外推识别 | Stage 4 M7 |
 | `schemas/*.json` | 全部输出的机器可校验模式 | 输出前自检 |
 | `templates/review_report.md` | 报告渲染模板 | Stage 5 |
-
-按需读取，不要一次性全部载入。

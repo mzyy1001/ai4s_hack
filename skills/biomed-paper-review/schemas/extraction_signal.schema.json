@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "extraction_signal.schema.json",
+  "title": "ExtractionSignal",
+  "description": "机器级观察。references/00-contracts.md §6.2。signal 不是结论，没有 severity，不直接影响 manuscript_risk_score。由 Stage 2 (M1) 与 Stage 3b 产出，路由给下游审核模块判定。",
+
+  "type": "object",
+  "required": ["id", "type", "target", "detail", "evidence_refs", "routed_to", "produced_by"],
+  "additionalProperties": false,
+
+  "properties": {
+    "id": {"type": "string", "pattern": "^SIG-[0-9]{3,}$"},
+
+    "type": {
+      "enum": ["source_value_conflict",
+               "claim_without_resolved_evidence_link",
+               "ambiguous_study_design",
+               "unresolved_cross_reference",
+               "partial_extraction",
+               "ambiguous_extraction"],
+      "description": "六值。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
+    },
+
+    "target": {
+      "description": "signal 指向的对象。字符串形式为字段路径或实体 id；对象形式用于携带类型专属元数据。",
+      "oneOf": [
+        {"type": "string", "description": "如 key_data.KD-007 / article_design.primary_design"},
+        {"$ref": "#/$defs/claim_target"}
+      ]
+    },
+
+    "detail": {"type": "string", "minLength": 1},
+
+    "observation_refs": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"},
+      "description": "指向 key_data.observations[].observation_id"
+    },
+
+    "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+
+    "routed_to": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
+      "description": "下游判定模块。signal 本身不下结论。"
+    },
+
+    "produced_by": {
+      "enum": ["stage_2", "stage_3b"]
+    }
+  },
+
+  "not": {
+    "required": ["severity"],
+    "description": "signal 不得携带 severity"
+  },
+
+  "allOf": [
+    {
+      "description": "source_value_conflict 只能由 Stage 3b 产出 —— 兼容性判定是 Stage 3b 的职责，M1 不做",
+      "if": {"properties": {"type": {"const": "source_value_conflict"}}, "required": ["type"]},
+      "then": {
+        "properties": {"produced_by": {"const": "stage_3b"},
+                       "observation_refs": {"minItems": 2}},
+        "required": ["observation_refs"]
+      }
+    },
+    {
+      "description": "claim 链接类 signal 必须携带 claim 元数据",
+      "if": {"properties": {"type": {"const": "claim_without_resolved_evidence_link"}}, "required": ["type"]},
+      "then": {"properties": {"target": {"$ref": "#/$defs/claim_target"}}}
+    }
+  ],
+
+  "$defs": {
+    "claim_target": {
+      "type": "object",
+      "description": "替代已废除的 unresolved_evidence_links[] 数组（00-contracts.md §10）",
+      "required": ["claim_id", "unresolved_refs"],
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {"type": "string", "pattern": "^CLM-[0-9]{2,}$"},
+        "unresolved_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"},
+          "description": "claims[].supported_by 中解析不到实体的条目原文，如 [\"Fig 5D\"]"
+        }
+      }
+    }
+  }
+}

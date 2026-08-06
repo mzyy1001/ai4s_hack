@@ -2,128 +2,201 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "figure_record.schema.json",
   "title": "FigureRecord",
-  "description": "阶段 ③ 图谱解析的产物，每张图一条。承载图表解释、抽取数值、原图定位与置信度。",
+  "description": "Stage 3 图表解析的产物，每张图一条。产出者是 Figure Parser（解析角色），不是 M5 Reviewer（Stage 4 审核角色）—— Figure Parser 只解读，不评判，不产出 finding。references/05-figures-and-charts.md。",
+
   "type": "object",
-  "required": ["figure_id", "chart_type", "location", "interpretation", "extracted_data", "confidence"],
+  "required": ["figure_id", "chart_type", "chart_type_confidence", "location",
+               "scientific_question", "interpretation", "observations",
+               "extraction_confidence", "manual_review_needed"],
+  "additionalProperties": false,
+
   "properties": {
     "figure_id": {"type": "string", "description": "如 fig:3 或 fig:3B"},
     "caption": {"type": ["string", "null"]},
 
     "chart_type": {
       "enum": ["dose_response", "statistical_plot", "survival", "workflow",
-               "micrograph", "blot", "heatmap", "flow_cytometry", "schematic", "other"]
+               "micrograph", "blot", "heatmap", "flow_cytometry", "forest_plot",
+               "roc_curve", "schematic", "other"]
     },
-    "chart_type_confidence": {"enum": ["high", "medium", "low"]},
+    "chart_type_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"},
 
     "location": {
       "type": "object",
-      "required": ["figure_label"],
+      "required": ["figure_label", "placement"],
+      "additionalProperties": false,
       "properties": {
-        "figure_label": {"type": "string", "description": "如 Figure 3。保留原始标签，含 Extended Data Fig. 1c 这类形式"},
-        "panel": {"type": ["string", "null"], "description": "无 panel 时填 NA"},
-        "page": {"type": ["integer", "null"], "description": "PDF 输入时必填；缺页码视为无效定位"},
-        "first_cited_at": {"type": ["string", "null"], "description": "正文首次引用位置，locator 格式"},
-        "image_file": {"type": ["string", "null"], "description": "抽出的图像文件相对路径"},
+        "figure_label": {
+          "type": "string",
+          "description": "保留原始标签，含 Extended Data Fig. 1c 这类形式"
+        },
+        "panel": {"type": ["string", "null"]},
+        "evidence_ref": {
+          "type": ["string", "null"],
+          "pattern": "^EV-[0-9]{3,}$",
+          "description": "指向该图的 present 证据（含 pdf_file_page）。PDF 输入时必填。"
+        },
+        "first_cited_at": {
+          "type": ["string", "null"],
+          "pattern": "^EV-[0-9]{3,}$",
+          "description": "正文首次引用位置的 evidence_ref；解析不到时产出 unresolved_cross_reference signal"
+        },
+        "image_file": {"type": ["string", "null"]},
         "placement": {
           "enum": ["main_text", "supplementary", "unknown"],
-          "description": "图所在位置。M5 §B.2 据此判断证据权重与位置是否匹配"
+          "description": "M5 Reviewer 据此判断证据权重与位置是否匹配"
         }
       }
     },
 
     "research_scene": {
       "type": ["string", "null"],
-      "description": "该图试图回答的研究场景，取自 M5 §A.2 知识库，如 药效评估 / 组间比较 / 实验流程 / 空间定位 / 临床生存分析"
+      "description": "该图对应的研究场景，取自 05-figures-and-charts.md 知识库"
     },
     "scientific_question": {
-      "type": ["string", "null"],
-      "description": "该 figure/panel 试图回答的科学问题。解析第一步就要确定，后续所有判断都依赖它"
+      "type": "string",
+      "description": "该 figure/panel 试图回答的科学问题。解析第一步就要确定，后续所有判断都依赖它。"
     },
 
     "experimental_conditions": {
       "type": "object",
-      "description": "从图中读出的实验条件",
+      "additionalProperties": false,
       "properties": {
         "groups": {"type": "array", "items": {"type": "string"}},
         "dose_levels": {"type": "array", "items": {"type": "string"}},
         "timepoints": {"type": "array", "items": {"type": "string"}},
-        "n_per_group": {"type": ["integer", "string", "null"]},
-        "replicate_type": {"enum": ["biological", "technical", "not_reported", null]}
+        "n_per_group": {"type": ["integer", "null"]},
+        "replicate_type": {
+          "oneOf": [{"$ref": "common.schema.json#/$defs/replicate_type"}, {"type": "null"}]
+        }
       }
     },
 
     "axes": {
       "type": "object",
-      "description": "坐标轴信息；对数轴误判为线性会导致全部读数错误，必须显式记录",
+      "description": "对数轴误判为线性会导致全部读数错误，必须显式记录",
+      "additionalProperties": false,
       "properties": {
         "x": {"$ref": "#/$defs/axis"},
         "y": {"$ref": "#/$defs/axis"}
       }
     },
 
-    "extracted_data": {
+    "observations": {
       "type": "array",
-      "items": {"$ref": "structured_result.schema.json#/$defs/data_point"},
-      "description": "复用 key_data 结构，直接回填到 structured_result.key_data"
+      "description": "从图中读出的观测。回流至 Stage 3b，由后者按 grouping_key 并入 key_data 组并判定兼容性。Figure Parser 不做合并判定。",
+      "items": {
+        "allOf": [
+          {"$ref": "key_data.schema.json#/$defs/observation"},
+          {
+            "type": "object",
+            "properties": {
+              "target_grouping_key": {
+                "type": "object",
+                "description": "该观测预期归入的 key_data 组的分组键；Stage 3b 据此归组",
+                "required": ["experiment_id", "group", "comparison", "timepoint", "endpoint"],
+                "properties": {
+                  "experiment_id": {"type": ["string", "null"]},
+                  "group": {"type": ["string", "null"]},
+                  "comparison": {"type": ["string", "null"]},
+                  "timepoint": {"type": ["string", "null"]},
+                  "endpoint": {"type": ["string", "null"]}
+                }
+              },
+              "metric_name": {"type": "string"},
+              "metric_family": {"$ref": "common.schema.json#/$defs/metric_family"}
+            },
+            "required": ["target_grouping_key", "metric_name", "metric_family"]
+          }
+        ]
+      }
     },
 
     "curve_fit": {
       "type": ["object", "null"],
-      "description": "仅 dose_response / survival 类型填写",
+      "description": "仅 dose_response / survival / roc_curve 类型填写",
+      "additionalProperties": false,
       "properties": {
-        "model": {"type": ["string", "null"], "description": "如 four-parameter logistic"},
-        "ic50_ec50": {"type": ["number", "string", "null"]},
+        "model": {"type": ["string", "null"]},
+        "parameter_name": {"type": ["string", "null"], "description": "如 IC50 / EC50 / AUC"},
+        "value": {
+          "oneOf": [{"$ref": "common.schema.json#/$defs/numeric_value"}, {"type": "null"}]
+        },
         "unit": {"type": ["string", "null"]},
-        "ci": {"type": ["object", "null"]},
+        "uncertainty": {
+          "oneOf": [{"$ref": "common.schema.json#/$defs/uncertainty"}, {"type": "null"}]
+        },
         "hill_slope": {"type": ["number", "null"]},
-        "goodness_of_fit": {"type": ["string", "null"], "description": "R² 或其他拟合优度"}
+        "goodness_of_fit": {"type": ["string", "null"]},
+        "reported_in_manuscript": {
+          "type": "boolean",
+          "description": "false 表示是我们拟合出来的，不是稿件报告的 —— 不得当作稿件数值"
+        }
       }
     },
 
     "interpretation": {
       "type": "string",
-      "description": "自然语言图表解读：这张图在回答什么问题，展示了什么，结论是什么"
+      "minLength": 1,
+      "description": "自然语言图表解读：这张图在回答什么问题、展示了什么、结论是什么。纯解读，不含评判。"
     },
 
     "significance_markers": {
       "type": "array",
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
-          "marker": {"type": "string", "description": "如 ***"},
+          "marker": {"type": "string"},
           "comparison": {"type": ["string", "null"]},
-          "p_value": {"type": ["number", "string", "null"]},
-          "defined_in_caption": {"type": "boolean", "description": "星号阈值是否在图注中定义"}
+          "p_value": {
+            "oneOf": [{"$ref": "common.schema.json#/$defs/numeric_value"}, {"type": "null"}]
+          },
+          "defined_in_caption": {"type": "boolean"}
         }
       }
     },
 
-    "issues": {
+    "parse_limitations": {
       "type": "array",
-      "items": {"$ref": "finding.schema.json"},
-      "description": "本图触发的 finding，module 恒为 M5"
+      "items": {"type": "string", "pattern": "^SYS-[0-9]{3,}$"},
+      "description": "本图触发的 system_limitation id（如 figure_unreadable）。不是 finding。"
     },
 
-    "confidence": {
-      "enum": ["high", "medium", "low"],
-      "description": "本条记录整体置信度。任一 extracted_data 来源为 figure_pixel 时，上限为 low"
+    "extraction_confidence": {
+      "$ref": "common.schema.json#/$defs/confidence_level",
+      "description": "本条记录整体抽取置信度。任一 observation 来源为 pixel_estimated 时上限为 low。"
     },
 
-    "manual_review_needed": {
-      "type": "boolean",
-      "description": "存在像素估读、拟合参数缺失或图像质量不足时为 true"
-    }
+    "manual_review_needed": {"type": "boolean"}
+  },
+
+  "not": {
+    "anyOf": [
+      {"required": ["issues"]},
+      {"required": ["findings"]}
+    ],
+    "description": "Stage 3 不产出 finding。图表使用规范的 finding 由 Stage 4 的 M5 Reviewer 产出，存于 m5_findings[]。"
   },
 
   "$defs": {
     "axis": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "label": {"type": ["string", "null"]},
         "unit": {"type": ["string", "null"]},
         "scale": {"enum": ["linear", "log10", "log2", "ln", "unknown"]},
-        "range": {"type": ["array", "null"], "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
-        "truncated": {"type": ["boolean", "null"], "description": "y 轴是否截断（不从 0 起），截断会夸大组间差异"}
+        "range": {
+          "type": ["array", "null"],
+          "items": {"type": "number"},
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "truncated": {
+          "type": ["boolean", "null"],
+          "description": "y 轴是否截断（不从 0 起）；截断会夸大组间差异，是 M5 的 finding 线索"
+        }
       }
     }
   }

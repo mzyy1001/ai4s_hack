@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "key_data.schema.json",
+  "title": "KeyDataGroup",
+  "description": "key_data 观测组。references/00-contracts.md §5。每个元素是一个观测组，组内保留全部来源观测，组本身承载合并结论。禁止静默覆盖。",
+
+  "type": "object",
+  "required": ["id", "metric_name", "metric_family", "grouping_key", "status",
+               "canonical_observation", "observations", "compatible_observations",
+               "conflicting_observations", "reporting_completeness", "missing_elements"],
+  "additionalProperties": false,
+
+  "properties": {
+    "id": {"type": "string", "pattern": "^KD-[0-9]{3,}$"},
+    "metric_name": {"type": "string", "description": "如 IC50 / tumor volume / sensitivity"},
+    "metric_family": {"$ref": "common.schema.json#/$defs/metric_family"},
+
+    "grouping_key": {
+      "type": "object",
+      "description": "五键全部相等才是同一组。null 与 null 相等；一方 null 一方有值视为不等。键不匹配是两个组，不是冲突。",
+      "required": ["experiment_id", "group", "comparison", "timepoint", "endpoint"],
+      "additionalProperties": false,
+      "properties": {
+        "experiment_id": {"type": ["string", "null"]},
+        "group": {"type": ["string", "null"]},
+        "comparison": {"type": ["string", "null"]},
+        "timepoint": {"type": ["string", "null"]},
+        "endpoint": {"type": ["string", "null"]}
+      }
+    },
+
+    "status": {
+      "enum": ["reported", "compatible_multiple_sources", "conflicting", "ambiguous",
+               "pending_visual_resolution", "parse_failed"],
+      "description": "pending_visual_resolution 仅允许出现在 structured_result_v1"
+    },
+
+    "canonical_observation": {
+      "type": ["string", "null"],
+      "description": "observation_id，或 null。status 为 conflicting/ambiguous/pending_visual_resolution/parse_failed 时必须为 null。"
+    },
+
+    "canonical_rationale": {
+      "type": ["string", "null"],
+      "description": "命中的判据编号与理由，如 'criterion_2: fig:2C 带 95% CI'。选出 canonical 时必填。"
+    },
+
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/observation"},
+      "description": "全部来源观测一律保留，禁止删除或覆盖"
+    },
+
+    "compatible_observations": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "已判定兼容的 observation_id"
+    },
+
+    "conflicting_observations": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "已判定不兼容的 observation_id（冲突双方都列入）"
+    },
+
+    "reporting_completeness": {"$ref": "common.schema.json#/$defs/reporting_completeness"},
+
+    "missing_elements": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "该 metric_family 要求但稿件未报告的要素，如 [\"dispersion\", \"n\"]"
+    },
+
+    "signal_refs": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^SIG-[0-9]{3,}$"}
+    },
+
+    "resolution_state": {
+      "type": ["object", "null"],
+      "description": "仅 status = pending_visual_resolution 时非 null",
+      "required": ["state", "pending_stage", "expected_sources"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"const": "pending_visual_resolution"},
+        "pending_stage": {"const": "stage_3"},
+        "expected_sources": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    }
+  },
+
+  "allOf": [
+    {
+      "description": "无可辩护 canonical 时必须为 null",
+      "if": {
+        "properties": {
+          "status": {"enum": ["conflicting", "ambiguous", "pending_visual_resolution", "parse_failed"]}
+        },
+        "required": ["status"]
+      },
+      "then": {"properties": {"canonical_observation": {"type": "null"}}}
+    },
+    {
+      "description": "选出 canonical 时必须写明理由",
+      "if": {
+        "properties": {"canonical_observation": {"type": "string"}},
+        "required": ["canonical_observation"]
+      },
+      "then": {"required": ["canonical_rationale"],
+               "properties": {"canonical_rationale": {"type": "string", "minLength": 1}}}
+    },
+    {
+      "description": "canonical 为 null 时完整性一律 not_assessed",
+      "if": {
+        "properties": {"canonical_observation": {"type": "null"}},
+        "required": ["canonical_observation"]
+      },
+      "then": {"properties": {
+        "reporting_completeness": {"const": "not_assessed"},
+        "missing_elements": {"maxItems": 0}
+      }}
+    },
+    {
+      "description": "conflicting 必须已登记冲突观测",
+      "if": {"properties": {"status": {"const": "conflicting"}}, "required": ["status"]},
+      "then": {"properties": {"conflicting_observations": {"minItems": 2}}}
+    },
+    {
+      "description": "pending 状态必须带 resolution_state",
+      "if": {"properties": {"status": {"const": "pending_visual_resolution"}}, "required": ["status"]},
+      "then": {"required": ["resolution_state"],
+               "properties": {"resolution_state": {"type": "object"}}}
+    }
+  ],
+
+  "$defs": {
+
+    "observation": {
+      "type": "object",
+      "description": "单个来源的一次观测。00-contracts.md §5.2。",
+      "required": ["observation_id", "value", "provenance", "extraction_confidence",
+                   "manual_review_needed"],
+      "additionalProperties": false,
+      "properties": {
+        "observation_id": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"},
+        "value": {"$ref": "common.schema.json#/$defs/numeric_value"},
+        "unit": {"type": ["string", "null"], "description": "稿件原写法"},
+        "unit_normalized": {"type": ["string", "null"], "description": "归一化形式；兼容性比较一律用它"},
+        "uncertainty": {"$ref": "common.schema.json#/$defs/uncertainty"},
+        "n": {"type": ["integer", "null"]},
+        "replicate_type": {"oneOf": [{"$ref": "common.schema.json#/$defs/replicate_type"}, {"type": "null"}]},
+        "provenance": {"$ref": "common.schema.json#/$defs/provenance"},
+        "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"},
+        "manual_review_needed": {"type": "boolean"},
+        "quote": {"type": ["string", "null"]}
+      },
+
+      "allOf": [
+        {
+          "description": "00-contracts.md §2.4：pixel_estimated 的四项强制约束",
+          "if": {
+            "properties": {"provenance": {"properties": {"source_type": {"const": "pixel_estimated"}},
+                                          "required": ["source_type"]}},
+            "required": ["provenance"]
+          },
+          "then": {
+            "properties": {
+              "value": {"properties": {"type": {"enum": ["interval", "lower_bound", "upper_bound"]}}},
+              "extraction_confidence": {"const": "low"},
+              "manual_review_needed": {"const": true}
+            }
+          }
+        },
+        {
+          "description": "axis_readable 允许 point，但置信度上限 medium",
+          "if": {
+            "properties": {"provenance": {"properties": {"source_type": {"const": "axis_readable"}},
+                                          "required": ["source_type"]}},
+            "required": ["provenance"]
+          },
+          "then": {"properties": {"extraction_confidence": {"enum": ["medium", "low"]}}}
+        }
+      ]
+    }
+  }
+}

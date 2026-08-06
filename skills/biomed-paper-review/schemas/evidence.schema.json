@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence.schema.json",
+  "title": "EvidenceRegistry",
+  "description": "证据登记表。references/00-contracts.md §1。证据的规范存储在此，其他一切位置只写 evidence_refs[] 字符串。每个 evidence_ref 必须解析到恰好一个条目。",
+
+  "type": "object",
+  "required": ["evidence_registry"],
+  "additionalProperties": false,
+  "properties": {
+    "evidence_registry": {
+      "type": "object",
+      "description": "键为 EV-id，值为该条目；键必须与条目的 id 字段相等",
+      "propertyNames": {"pattern": "^EV-[0-9]{3,}$"},
+      "additionalProperties": {"$ref": "#/$defs/evidence_entry"}
+    }
+  },
+
+  "$defs": {
+
+    "evidence_entry": {
+      "description": "两型之一：present（稿件中已有）或 absence（稿件中不存在）",
+      "oneOf": [
+        {"$ref": "#/$defs/present_evidence"},
+        {"$ref": "#/$defs/absence_evidence"}
+      ]
+    },
+
+    "present_evidence": {
+      "type": "object",
+      "required": ["id", "type", "locator", "created_by"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^EV-[0-9]{3,}$"},
+        "type": {"const": "present"},
+        "locator": {"$ref": "common.schema.json#/$defs/locator"},
+        "quote": {"type": "string", "description": "论文原文片段，用于人工核对"},
+        "created_by": {"$ref": "#/$defs/created_by"}
+      }
+    },
+
+    "absence_evidence": {
+      "type": "object",
+      "description": "缺失型证据。禁止含 quote 与 locator —— 绝不为不存在的内容编造引文。",
+      "required": ["id", "type", "scope", "searched_locations", "search_terms",
+                   "search_result", "created_by"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^EV-[0-9]{3,}$"},
+        "type": {"const": "absence"},
+        "scope": {"$ref": "common.schema.json#/$defs/locator_scope"},
+        "searched_locations": {
+          "type": "array",
+          "minItems": 1,
+          "description": "必须反映实际执行过的检索。范围之外不得声称缺失。",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "section": {"$ref": "common.schema.json#/$defs/section_name"},
+              "supplement_id": {"type": "string"},
+              "figure": {"type": "string"},
+              "table": {"type": "string"},
+              "scope": {"$ref": "common.schema.json#/$defs/locator_scope"}
+            },
+            "required": ["scope"]
+          }
+        },
+        "search_terms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"},
+          "description": "中英双语检索词"
+        },
+        "search_result": {
+          "enum": ["no_match", "partial_match_ambiguous"],
+          "description": "partial_match_ambiguous 不足以支撑缺失结论，引用它的字段必须判 ambiguous"
+        },
+        "created_by": {"$ref": "#/$defs/created_by"}
+      }
+    },
+
+    "created_by": {
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b",
+               "M2", "M3", "M4", "M5", "M6", "M7"],
+      "description": "用于排障；不影响语义"
+    },
+
+    "evidence_ref": {
+      "type": "string",
+      "pattern": "^EV-[0-9]{3,}$",
+      "description": "指向 evidence_registry 的键。必须解析到恰好一个条目。"
+    },
+
+    "evidence_refs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence_ref"},
+      "description": "证据引用数组。canonical 存储形式；渲染层负责展开为引文与页码。"
+    }
+  }
+}

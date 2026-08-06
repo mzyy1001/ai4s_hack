@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "system_limitation.schema.json",
+  "title": "SystemLimitation",
+  "description": "系统能力或输入可及性问题。references/00-contracts.md §6.3。没有 severity —— 它不是稿件问题。降低 extraction_coverage 与 confidence，不降低 manuscript_risk_score。不得在无独立稿件证据的情况下转成稿件缺陷。",
+
+  "type": "object",
+  "required": ["id", "category", "impact", "affected_modules", "evidence_refs",
+               "recommended_action", "produced_by"],
+  "additionalProperties": false,
+
+  "properties": {
+    "id": {"type": "string", "pattern": "^SYS-[0-9]{3,}$"},
+
+    "category": {
+      "enum": ["parse_failed", "figure_unreadable", "table_unparseable",
+               "supplement_inaccessible", "section_missing_from_input",
+               "ocr_low_quality", "encoding_error", "input_truncated"]
+    },
+
+    "impact": {
+      "type": "string",
+      "minLength": 1,
+      "description": "说明哪些审核因此不完整，即『哪些地方我们没看清』"
+    },
+
+    "affected_modules": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
+      "description": "可为空数组：影响面尚不确定时"
+    },
+
+    "affected_targets": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "受影响的实体，如 fig:4B / table:2 / S1"
+    },
+
+    "affected_fields": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "因此判 parse_failed 的字段路径"
+    },
+
+    "evidence_refs": {
+      "$ref": "evidence.schema.json#/$defs/evidence_refs",
+      "description": "可为空数组 —— input_truncated 等情形无处可指"
+    },
+
+    "recommended_action": {
+      "type": "string",
+      "minLength": 1,
+      "description": "如何才能看清，如『调取原始高分辨率图件或矢量 PDF 后重新解析』"
+    },
+
+    "produced_by": {
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b"]
+    }
+  },
+
+  "not": {
+    "anyOf": [
+      {"required": ["severity"]},
+      {"required": ["manual_review"]}
+    ],
+    "description": "system_limitation 不得携带 severity，也不产生人工复核动作（那是 finding 的职责）"
+  }
+}

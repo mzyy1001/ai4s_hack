@@ -2,43 +2,71 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "finding.schema.json",
   "title": "Finding",
-  "description": "七个审核模块共用的发现契约。任何模块的输出都必须符合本模式，否则视为无效并丢弃。",
+  "description": "稿件级审核判断。references/00-contracts.md §6.1。仅 M2–M7 可产出 —— M1 是前置抽取层，不得产出 finding。任何不符合本模式的输出视为无效并丢弃。",
+
   "type": "object",
-  "required": ["id", "module", "category", "severity", "title", "detail", "evidence", "confidence", "manual_review"],
+  "required": ["id", "module", "category", "severity", "title", "detail",
+               "evidence_refs", "review_confidence", "manual_review"],
   "additionalProperties": false,
+
   "properties": {
     "id": {
       "type": "string",
-      "pattern": "^M[1-7]-[0-9]{3}$",
-      "description": "模块前缀 + 三位序号，如 M4-003"
+      "pattern": "^M[2-7]-[0-9]{3}$",
+      "description": "模块前缀 + 三位序号，如 M4-003。M1- 前缀非法。"
     },
+
     "module": {
-      "enum": ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]
+      "$ref": "common.schema.json#/$defs/module_id_review",
+      "description": "M1 非法 —— 抽取层的观察走 extraction_signal 或 coverage_breakdown"
     },
+
     "category": {
       "type": "string",
-      "description": "各模块 reference 文件中已登记的 slug，不得自创"
+      "description": "该模块 reference 文件中已登记的 slug，不得自创"
     },
+
     "severity": {
       "enum": ["critical", "major", "minor", "info"],
-      "description": "critical=结论不成立/伦理违规/疑似造假; major=需作者补充; minor=表述规范; info=提示"
+      "description": "critical=结论不成立/伦理违规/疑似不端; major=需作者补材料或重做分析; minor=表述与规范问题; info=提示"
     },
+
     "title": {"type": "string", "maxLength": 80},
-    "detail": {"type": "string"},
-    "evidence": {
-      "$ref": "#/$defs/evidence"
+    "detail": {"type": "string", "minLength": 1},
+
+    "evidence_refs": {
+      "allOf": [
+        {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+        {"minItems": 1}
+      ],
+      "description": "必须非空，且每项在 evidence_registry 中解析到恰好一个条目。canonical 存储形式，禁止内联 evidence[] 对象数组。"
     },
+
     "rule_ref": {
       "type": "string",
-      "description": "触发本发现的规则锚点，如 04-statistics#sample-size-floor"
+      "description": "触发本发现的规则锚点，如 04-statistics#sample-size-reporting"
     },
-    "confidence": {
-      "enum": ["high", "medium", "low"],
-      "description": "high=论文明文写出; medium=由明文可靠推导; low=依赖估读或假设"
+
+    "review_confidence": {
+      "$ref": "common.schema.json#/$defs/confidence_level",
+      "description": "本条判断本身的可靠程度。证据含 pixel_estimated 或指向 ambiguous 字段时上限为 medium。"
     },
+
+    "derived_from_signals": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^SIG-[0-9]{3,}$"},
+      "description": "溯源用。不得替代 evidence_refs —— 仅凭 signal id 立 finding 为契约违规。"
+    },
+
+    "related_findings": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "去重聚簇时被合并到本条之下的其他 finding id"
+    },
+
     "manual_review": {
       "type": "object",
-      "required": ["action"],
+      "required": ["action", "who"],
       "additionalProperties": false,
       "properties": {
         "action": {
@@ -46,48 +74,27 @@
           "description": "可执行的复核动作：看哪里、核什么、若属实该补什么"
         },
         "who": {
-          "enum": ["统计审稿人", "领域审稿人", "伦理委员会", "编辑", "作者"]
-        }
+          "enum": ["statistical_reviewer", "domain_reviewer", "ethics_committee",
+                   "editor", "author"],
+          "description": "英文枚举；渲染层负责本地化显示"
+        },
+        "priority": {"enum": ["P0", "P1", "P2"]}
       }
-    },
-    "related_findings": {
-      "type": "array",
-      "items": {"type": "string"},
-      "description": "去重时被合并到本条之下的其他 finding id"
     }
   },
-  "$defs": {
-    "evidence": {
-      "type": "object",
-      "required": ["locator"],
-      "additionalProperties": false,
-      "properties": {
-        "locator": {
-          "type": "string",
-          "description": "定位符，管道符分隔，如 'fig:3B | p.7 | Methods §2.4'。PDF 输入时必须含 p.<页码>",
-          "pattern": "^(sec:|fig:|tab:|p\\.|ref:).+"
-        },
-        "quote": {
-          "type": "string",
-          "description": "论文原文片段，用于人工核对"
-        },
-        "external_source": {
-          "type": "object",
-          "description": "二期预留：外部证据来源。一期不填。引入外部证据后，locator 仍必填 —— 论文内定位不可省略。",
-          "required": ["type", "id", "relation"],
-          "properties": {
-            "type": {
-              "enum": ["pubmed", "crossref", "clinicaltrials", "chictr", "cellosaurus",
-                       "rrid", "retraction_watch", "image_fingerprint", "other"]
-            },
-            "id": {"type": "string", "description": "如 PMID:12345678 / NCT01234567"},
-            "relation": {
-              "enum": ["contradicts", "supports", "not_found", "mismatch", "retracted", "duplicate"]
-            },
-            "note": {"type": "string"}
+
+  "allOf": [
+    {
+      "description": "00-contracts.md §6.1 规则 2：severity >= major 必须有非空可执行动作",
+      "if": {"properties": {"severity": {"enum": ["critical", "major"]}}, "required": ["severity"]},
+      "then": {
+        "properties": {
+          "manual_review": {
+            "properties": {"action": {"type": "string", "minLength": 1}},
+            "required": ["action", "priority"]
           }
         }
       }
     }
-  }
+  ]
 }

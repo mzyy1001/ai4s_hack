@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "execution_scope.schema.json",
+  "title": "ExecutionScope",
+  "description": "执行范围与覆盖率明细。references/00-contracts.md §7。不是记录，条目不得称为 finding，不得带 severity。一切覆盖率与置信度的分母都取自本对象。全模式必填。",
+
+  "type": "object",
+  "required": ["execution_scope", "coverage_breakdown"],
+  "additionalProperties": false,
+
+  "properties": {
+
+    "execution_scope": {
+      "type": "object",
+      "required": ["mode", "submode", "executed_stages", "executed_modules",
+                   "skipped_modules", "fields", "assets", "supplements"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": ["full_review", "structured_extraction", "figure_analysis", "targeted_check"]
+        },
+        "submode": {
+          "oneOf": [
+            {"enum": ["interpretation_only", "figure_review"]},
+            {"type": "null"}
+          ],
+          "description": "仅 figure_analysis 使用；其余模式必须为 null"
+        },
+        "executed_stages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "common.schema.json#/$defs/stage_id"},
+          "description": "消费权限白名单：任何阶段不得消费未在此声明的上游产物"
+        },
+        "executed_modules": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
+          "description": "实际运行的审核模块；非审核模式为空数组"
+        },
+        "skipped_modules": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
+          "description": "full_review 下为空数组"
+        },
+        "fields": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "进入覆盖率分母的字段路径全集"
+        },
+        "assets": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "进入 asset_readability_rate 分母的图表 id"
+        },
+        "supplements": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "进入 supplement_accessibility 分母的补充材料 id"
+        },
+        "scope_rationale": {"type": "string"},
+        "stage_3b_executed": {"type": "boolean"}
+      },
+
+      "allOf": [
+        {
+          "description": "submode 只在 figure_analysis 下取非 null",
+          "if": {"properties": {"mode": {"const": "figure_analysis"}}, "required": ["mode"]},
+          "then": {"properties": {"submode": {"enum": ["interpretation_only", "figure_review"]}}},
+          "else": {"properties": {"submode": {"type": "null"}}}
+        },
+        {
+          "description": "full_review 必须跑满六个审核模块且无跳过",
+          "if": {"properties": {"mode": {"const": "full_review"}}, "required": ["mode"]},
+          "then": {
+            "properties": {
+              "executed_modules": {"minItems": 6},
+              "skipped_modules": {"maxItems": 0}
+            }
+          }
+        },
+        {
+          "description": "interpretation_only 与 structured_extraction 不跑任何审核模块",
+          "if": {
+            "anyOf": [
+              {"properties": {"mode": {"const": "structured_extraction"}}, "required": ["mode"]},
+              {"properties": {"submode": {"const": "interpretation_only"}}, "required": ["submode"]}
+            ]
+          },
+          "then": {"properties": {"executed_modules": {"maxItems": 0}}}
+        },
+        {
+          "description": "figure_review 只跑 M5",
+          "if": {"properties": {"submode": {"const": "figure_review"}}, "required": ["submode"]},
+          "then": {"properties": {"executed_modules": {"const": ["M5"]}}}
+        },
+        {
+          "description": "Stage 3b 依赖 Stage 2 的 structured_result_v1",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_3b"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_2"}}}}
+        },
+        {
+          "description": "Stage 4 依赖 Stage 3b 的 structured_result_v2",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_4"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_3b"}}}}
+        }
+      ]
+    },
+
+    "coverage_breakdown": {
+      "type": "object",
+      "description": "覆盖率明细。条目不是 finding，不进 issue_clusters[]，不影响 manuscript_risk_score。",
+      "required": ["resolved_fields", "unresolved_required_fields", "unreadable_assets",
+                   "inaccessible_supplements", "scope_denominators"],
+      "additionalProperties": false,
+      "properties": {
+        "resolved_fields": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "status ∈ {reported, not_reported} 的条件必填字段。not_reported 属于已解析。"
+        },
+        "unresolved_required_fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field_path", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "field_path": {"type": "string"},
+              "status": {"enum": ["ambiguous", "conflicting", "parse_failed", "unresolved"]},
+              "reason_ref": {
+                "type": ["string", "null"],
+                "pattern": "^(SYS|SIG)-[0-9]{3,}$",
+                "description": "指向 system_limitation.id 或 extraction_signal.id"
+              }
+            }
+          }
+        },
+        "unreadable_assets": {"type": "array", "items": {"type": "string"}},
+        "inaccessible_supplements": {"type": "array", "items": {"type": "string"}},
+        "scope_denominators": {
+          "type": "object",
+          "required": ["required_fields_total", "assets_total", "supplements_total"],
+          "additionalProperties": false,
+          "properties": {
+            "required_fields_total": {
+              "type": "integer", "minimum": 0,
+              "description": "必须等于 resolved_fields 与 unresolved_required_fields 的长度之和"
+            },
+            "assets_total": {"type": "integer", "minimum": 0},
+            "supplements_total": {"type": "integer", "minimum": 0},
+            "recommended_fields_total": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    }
+  }
+}
