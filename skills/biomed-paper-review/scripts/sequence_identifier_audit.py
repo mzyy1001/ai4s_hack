@@ -21,7 +21,8 @@
   标 `hgvs_syntax_unresolved + candidate: true`，不得把“解析器不支持”写成稿件语法错误。
 - **惯例类**（4/6）只产出**候选**：基因符号大小写惯例有例外，引物参数因体系而异，
   一律标 `candidate: true`，由下游模块交人工，**不得**自动判定稿件有错。
-- 输入不足时不猜：缺序列就不做位置检查，缺物种就不做符号惯例检查。
+- 输入不足时不猜：缺序列就不做位置检查；给了序列但缺完整性、accession 或版本时，
+  只产 `partial_extraction`，不得把片段当完整参考序列判位点越界。
 
 **本模块只产出 `extraction_signal`，不产出 finding。**
 路由到 M2（表述一致性）与 M3（方法与试剂）。
@@ -146,7 +147,8 @@ def _norm_aa(tok):
 def check_hgvs(item, sid="SIG-001"):
     """HGVS 语法 + 位置范围 + 参考残基三合一检查。
 
-    item: {hgvs, sequence(可选), sequence_type(protein/dna), target(可选)}
+    item: {hgvs, sequence(可选), sequence_type(protein/dna), reference_id,
+           reference_version, sequence_complete, target(可选)}
     """
     h = (item.get("hgvs") or "").strip()
     target = item.get("target", "variant")
@@ -163,6 +165,10 @@ def check_hgvs(item, sid="SIG-001"):
         ref = _norm_aa(m.group("ref"))
         pos = int(m.group("pos"))
         alt_raw = m.group("alt")
+        if pos < 1:
+            return _sig(sid, "sequence_identifier_inconsistent", target,
+                        f"HGVS {h!r} 的蛋白残基位置必须从 1 开始。",
+                        {"check": "hgvs_syntax_invalid", "candidate": False, "hgvs": h})
         if ref is None:
             return _sig(sid, "sequence_identifier_inconsistent", target,
                         f"HGVS {h!r} 的参考残基 {m.group('ref')!r} 不是合法氨基酸。",
@@ -175,6 +181,20 @@ def check_hgvs(item, sid="SIG-001"):
 
         seq = (item.get("sequence") or "").strip().upper()
         if seq and item.get("sequence_type", "protein") == "protein":
+            missing_context = [name for name in
+                               ("reference_id", "reference_version", "sequence_complete")
+                               if item.get(name) in (None, "")]
+            if item.get("sequence_complete") is not True and "sequence_complete" not in missing_context:
+                missing_context.append("sequence_complete=true")
+            if missing_context:
+                return _sig(
+                    sid, "partial_extraction", target,
+                    f"已提供序列，但缺少可确定坐标所需的参考上下文："
+                    f"{', '.join(missing_context)}。不得把片段或未版本化序列当完整参考序列，"
+                    f"因此未运行位点越界与参考残基检查。",
+                    {"check": "reference_context_incomplete", "candidate": True,
+                     "hgvs": h, "missing_context": missing_context,
+                     "routed_to": ["M3"]})
             if pos > len(seq):
                 return _sig(sid, "sequence_identifier_inconsistent", target,
                             f"变异位点 {h} 的位置 {pos} 超出所给蛋白序列长度 {len(seq)}。"
@@ -206,6 +226,12 @@ def check_hgvs(item, sid="SIG-001"):
                         f"不能据此判定语法错误，需用完整 HGVS 解析器或人工复核。",
                         {"check": "hgvs_syntax_unresolved", "candidate": True, "hgvs": h})
         return None
+
+    if re.match(r"^(n|m|r|o)\.", h):
+        return _sig(sid, "sequence_identifier_inconsistent", target,
+                    f"HGVS 表达式 {h!r} 使用本地解析器尚未覆盖的前缀；"
+                    f"不能据此判定语法错误，需用完整 HGVS 解析器或人工复核。",
+                    {"check": "hgvs_syntax_unresolved", "candidate": True, "hgvs": h})
 
     return _sig(sid, "sequence_identifier_inconsistent", target,
                 f"变异命名 {h!r} 缺少 HGVS 前缀（应为 c. / g. / p. / n. / m. 之一）。",
@@ -385,6 +411,9 @@ def _selftest():
     s = check_hgvs({"hgvs": "p.Xyz273His"})
     expect("非法残基 -> 报警", s["sequence_audit"]["check"] if s else None,
            "hgvs_syntax_invalid")
+    s = check_hgvs({"hgvs": "p.Arg0His"})
+    expect("蛋白位置 0 -> 语法违规",
+           s["sequence_audit"]["check"] if s else None, "hgvs_syntax_invalid")
     s = check_hgvs({"hgvs": "R273H"})
     expect("缺 HGVS 前缀 -> 报警", s["sequence_audit"]["check"] if s else None,
            "hgvs_syntax_invalid")
@@ -393,21 +422,37 @@ def _selftest():
            s["sequence_audit"]["check"] if s else None, "hgvs_syntax_unresolved")
     expect("超出子集不得判确定性错误",
            s["sequence_audit"]["candidate"] if s else None, True)
+    s = check_hgvs({"hgvs": "n.76A>T"})
+    expect("合法前缀但超出子集不得误报缺前缀",
+           s["sequence_audit"]["check"] if s else None, "hgvs_syntax_unresolved")
 
     # --- 位置越界（确定性）---
-    s = check_hgvs({"hgvs": "p.Arg273His", "sequence": P53, "sequence_type": "protein"})
+    s = check_hgvs({"hgvs": "p.Arg273His", "sequence": P53, "sequence_type": "protein",
+                    "reference_id": "TEST-P53", "reference_version": "1",
+                    "sequence_complete": True})
     expect("位置 273 超出 60aa -> 报警", s["sequence_audit"]["check"] if s else None,
            "variant_position_out_of_range")
     expect("越界属确定性非候选", s["sequence_audit"]["candidate"] if s else None, False)
 
     # --- 参考残基不符（确定性）---
     # P53[1] = 'E'（第 2 位）。声称 p.Ala2Val 应报错。
-    s = check_hgvs({"hgvs": "p.Ala2Val", "sequence": P53, "sequence_type": "protein"})
+    s = check_hgvs({"hgvs": "p.Ala2Val", "sequence": P53, "sequence_type": "protein",
+                    "reference_id": "TEST-P53", "reference_version": "1",
+                    "sequence_complete": True})
     expect("参考残基不符 -> 报警", s["sequence_audit"]["check"] if s else None,
            "variant_reference_mismatch")
     # 正确的：第 2 位确实是 E (Glu)
-    s = check_hgvs({"hgvs": "p.Glu2Val", "sequence": P53, "sequence_type": "protein"})
+    s = check_hgvs({"hgvs": "p.Glu2Val", "sequence": P53, "sequence_type": "protein",
+                    "reference_id": "TEST-P53", "reference_version": "1",
+                    "sequence_complete": True})
     expect("参考残基相符 -> 无信号", s, None)
+    s = check_hgvs({"hgvs": "p.Arg273His", "sequence": P53,
+                    "sequence_type": "protein"})
+    expect("未版本化片段不得判确定性越界", s["type"] if s else None,
+           "partial_extraction")
+    expect("缺参考上下文有明确判据",
+           s["sequence_audit"]["check"] if s else None,
+           "reference_context_incomplete")
 
     # --- 基因符号物种惯例（候选）---
     s = check_gene_symbol({"symbol": "TP53", "species": "mouse"})

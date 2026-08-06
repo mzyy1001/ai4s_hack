@@ -36,12 +36,13 @@ skills/biomed-paper-review/     ← 交付物本体
 │   ├── 05-figures-and-charts.md       M5 图谱解析与图表规范  MY（敏怡）
 │   ├── 06-ethics-compliance.md        M6 伦理合规            ✅ 已填充（待 Peter 复核）
 │   └── 07-conclusions-discussion.md   M7 结论与讨论          ✅ 已填充
-├── scripts/                    运行时确定性能力（纯标准库）
+├── scripts/                    运行时确定性能力（标准库 + 预装科学栈）
 │   ├── normalize_biomed_units.py      单位归一化，fail-closed
 │   ├── statistical_forensics.py       p 反算 / CI 自洽 / 计数 / GRIM
 │   ├── ethics_compliance_check.py     伦理规范库筛查
-│   └── sequence_identifier_audit.py   序列 / HGVS / 登录号 / 引物候选审计
-├── resources/ethics_rules.json 伦理规范库：三法域 25 部规范 / 22 条要求
+│   ├── sequence_identifier_audit.py   序列 / HGVS / 登录号 / 引物候选审计
+│   └── figure_integrity_audit.py      图像重复 / 拼接 / 均匀区块候选审计
+├── resources/ethics_rules.json 伦理规范库：三法域 28 部规范 / 22 条要求
 ├── schemas/                    10 份 JSON Schema（模块间集成契约）
 │   ├── finding.schema.json            ★ 六个审核模块共用
 │   ├── evidence.schema.json           证据登记表
@@ -57,7 +58,7 @@ datasets/                       测试语料：10 篇 PLOS 开放获取论文（
     └── figures/                逐图图像（max 1400px JPEG）
 
 tools/fetch_papers.py           语料抓取脚本（可重跑）
-tools/validate_schemas.py       契约校验器：schema + 四个模拟实例，140 项检查
+tools/validate_schemas.py       契约校验器：schema + 工具产物 + 四个模拟实例
 tools/fixtures/*.json           四个端到端模拟实例
 docs/architecture.md            架构说明：七个模块如何合成一个 Skill
 docs/schema-migration.md        schema 逐字段迁移方案
@@ -93,7 +94,7 @@ python3 tools/fetch_papers.py
 ## 使用
 
 采用 `SKILL.md` frontmatter + 渐进披露资源目录的通用 Agent Skill 格式。**skill 目录自包含**：
-references、schemas、resources、templates 与四个运行时脚本都在
+references、schemas、resources、templates 与五个运行时脚本都在
 `skills/biomed-paper-review/` 之内，拷贝该目录即可获得全部能力，无外部依赖。
 （`tools/validate_schemas.py` 是开发期契约校验器，不参与运行时，故留在仓库根。）
 
@@ -103,7 +104,7 @@ references、schemas、resources、templates 与四个运行时脚本都在
 | --- | --- |
 | `skills/` 下有且仅有一个 skill 目录 | ✅ `biomed-paper-review` |
 | `SKILL.md` frontmatter 含合法 `name` / `description` | ✅ name 19 字符（≤64，小写连字符）；description 199 字符（≤1024，第三人称） |
-| SKILL.md 正文建议 <500 行 | ✅ 正文 491 行（文件含 frontmatter 共 496 行）；契约细节已拆入 `references/00-contracts.md` |
+| SKILL.md 正文建议 <500 行 | ✅ 正文少于 500 行；契约细节已拆入 `references/00-contracts.md` |
 | 文件引用只一层深（渐进披露） | ✅ SKILL.md 直接索引全部运行时 reference，不存在只能经另一 reference 才能发现的文件 |
 | 单文件 ≤10MB | ✅ skill 本体内满足；⚠️ 若误打包 `datasets/`，其中一份 PDF 为 18,677,256 bytes，会超限 |
 | 提交包体积 | ✅ `skills/biomed-paper-review/` 小于 0.5 MiB；完整工作区约 200 MiB，不得整仓提交 |
@@ -120,18 +121,19 @@ references、schemas、resources、templates 与四个运行时脚本都在
 
 当前外部证据契约与连接器尚未落地，不能声称已经完成数据库核验。原先统一推到“二期”的注册核验、
 标识符核验与数据登录号核验应按 `docs/proposals/round-4-external-data-components.md` 重新排期；
-M4 的 p 值反算、CI 自洽、计数/百分比与 GRIM 已实现为一期离线能力，图像取证仍未实现。
+M4 的 p 值反算、CI 自洽、计数/百分比与 GRIM 已实现为一期离线能力；图像取证已实现
+网格对齐重复、列向背景不连续与异常均匀区块的候选筛查，旋转/镜像/缩放验证尚未实现。
 
 ## 当前状态
 
 - ✅ 主框架：执行模式依赖图、五阶段流水线、三类记录契约、证据登记表、三项评分
-- ✅ 10 份 JSON Schema + 报告模板；`tools/validate_schemas.py` 140 项检查全通过
+- ✅ 10 份 JSON Schema + 报告模板；`tools/validate_schemas.py` 覆盖 schema、工具产物与四个模拟实例
 - ✅ 四个端到端模拟实例（RCT 完整审核 / 单图解读 / 定向伦理核查 / IC50 冲突）
 - ✅ M1 结构化抽取规则（字段清单、七张设计路由表、pending 生命周期）
 - ✅ M4 统计学（三步判定法 + 九张检验选择对照表）
 - ✅ M6 伦理合规（三法域规范库 + 离线筛查器，待 Peter 复核）
 - ✅ M7 结论与讨论（证据层级 × 主张层级对照表）
-- ✅ 四个运行时确定性工具，均纯标准库、均带自检
+- ✅ 五个运行时确定性工具，均使用标准库或评测环境预装科学栈，均带自检
 - 🚧 现有四个 fixtures 是契约模拟实例；尚无可复跑的论文输入→最终报告统一执行器与 uplift 结果 artifact
 - 🚧 M2（卓妍）、M3（Peter）一期规则库仍为骨架；M5 已填充 v1，但 Parser / Reviewer 职责冲突待负责人收敛
 - 🚧 外部验证层 X1：网络已确认可用（白名单），连接器与 `external` 证据型待实现

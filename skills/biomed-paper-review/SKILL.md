@@ -28,7 +28,7 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 ### 0.2 当前实现边界与联网增强原则
 
 执行环境允许访问白名单内的公开科学数据源，网络与 12 小时超时**不再构成分期依据**。
-当前提交包已定义论文内部证据与通用规范库的离线流程，并交付四项可独立运行的确定性脚本；
+当前提交包已定义论文内部证据与通用规范库的离线流程，并交付五项可独立运行的确定性脚本；
 外部 evidence 契约与解析层尚未落地，因此本版本**不得声称已完成外部数据库核验**。
 后续一期可加入可选联网增强；外部源不可达、
 限流或无权访问时必须产 `system_limitation`，不得据此判稿件有问题，离线流程仍须完整结束。
@@ -494,7 +494,7 @@ critical 及直接阻断核心解释的 major）；P1=给出修改要求前核�
 | `scripts/normalize_biomed_units.py` | 单位归一化（fail-closed，只做同量纲确定性换算） | Stage 3b 兼容性判定 |
 | `scripts/statistical_forensics.py` | 统计取证：p 反算 / CI 自洽 / 计数-百分比 / GRIM | Stage 2，产 signal 交 M4 |
 | `scripts/ethics_compliance_check.py` | 伦理规范库筛查 | Stage 2，产 signal 交 M6 |
-| `scripts/sequence_identifier_audit.py` | 序列与标识符确定性审计：HGVS 语法、变异位点越界、参考残基不符、登录号格式、基因符号物种惯例、引物 QC | Stage 2，产 signal 交 M2 / M3 |
+| `scripts/sequence_identifier_audit.py` | 序列与标识符审计：HGVS 支持子集、版本化完整参考序列上的位点/残基核对、登录号格式、基因符号物种惯例、引物 QC；参考上下文不全时只产 `partial_extraction` | Stage 2，产 signal 交 M2 / M3 |
 | `scripts/figure_integrity_audit.py` | 论文内图像完整性：候选重复区域、拼接不连续、异常均匀区块。**只出候选，禁止自动定性** | Stage 3，产 signal 交 M5 |
 | `resources/ethics_rules.json` | 三法域伦理规范库（28 部规范 / 22 条要求） | M6 |
 | `schemas/*.json` | 全部输出的机器可校验模式 | 输出前自检 |

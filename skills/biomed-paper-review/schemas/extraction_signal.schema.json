@@ -83,6 +83,7 @@
       "properties": {
         "check": {
           "enum": ["hgvs_syntax_invalid", "hgvs_syntax_unresolved",
+                   "reference_context_incomplete",
                    "variant_position_out_of_range",
                    "variant_reference_mismatch", "gene_symbol_species_mismatch",
                    "accession_format_invalid", "primer_qc_out_of_range",

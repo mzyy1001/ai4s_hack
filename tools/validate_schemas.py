@@ -931,6 +931,11 @@ def check_tool_signals(rep, schemas):
                for x in sigs if not required.issubset(set(x))]
     rep.check(not bad_req, "工具产出的 signal 必填字段齐全", "; ".join(bad_req[:4]))
 
+    bad_ids = [str(x.get("id")) for x in sigs
+               if not re.match(r"^SIG-[0-9]{3,}$", str(x.get("id", "")))]
+    rep.check(not bad_ids, "工具产出的 signal id 符合契约 pattern",
+              "; ".join(bad_ids[:4]))
+
     bad_prod = sorted({x.get("produced_by") for x in sigs} - produced_enum)
     rep.check(not bad_prod, "工具产出的 produced_by 合法", f"越界: {bad_prod}")
 

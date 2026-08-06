@@ -20,7 +20,7 @@
 ----------
 - **方差门控**：空白/背景区块（局部方差过低）一律跳过 ——
   否则每张图的白底都会互相匹配，产出海量垃圾。
-- **两阶段判定**：先用 dHash 粗筛，再用实际像素的 Pearson 相关精确验证，
+- **两阶段判定**：先用完全相同的 dHash 分桶，再用实际像素的 Pearson 相关精确验证，
   只有 r ≥ 0.98 才算候选。
 - **同图近邻排除**：同一张图内距离过近的区块不算重复（那是纹理连续性）。
 - **依赖缺失不崩**：numpy/PIL 不可用时产出 `system_limitation`，不是报错。
@@ -60,15 +60,14 @@ MIN_STD = 12.0      # 区块灰度标准差下限：低于此视为空白/背景
 MIN_ENTROPY = 4.0   # 区块灰度熵下限（bit）。线条图/坐标轴/网格熵极低（~1-2），
                     # 显微图/印迹/散点等真实影像熵高（~6-7）。
                     # 没有这道门控时，图表的重复线条元素会产生大量 r=1.0 的假重复。
-HAMMING_MAX = 4     # dHash 粗筛阈值（64 位）
 CORR_MIN = 0.98     # 精确验证的 Pearson 相关下限
 MIN_SELF_DIST = 96  # 同图内两区块中心的最小距离，低于此不算重复
 MAX_SIDE = 1200     # 超大图先缩放，控制计算量
 
 
-def _system_limitation(detail):
+def _system_limitation(detail, sid="SYS-001"):
     return {
-        "id": "SYS-IMG",
+        "id": sid,
         "category": "figure_unreadable",
         "impact": detail,
         "affected_modules": ["M5"],
@@ -210,7 +209,7 @@ def find_duplicate_regions(images, max_signals=20):
         ]
         best = max(m[2] for m in matches)
         sigs.append(_sig(
-            f"SIG-IMG{n:02d}",
+            f"SIG-{n:03d}",
             f"figure_integrity.{key[0]}",
             f"检出 {len(matches)} 处候选重复区块（{BLOCK}×{BLOCK}），"
             f"{'同图内远距离重复' if same else f'跨图重复：{key[0]} ↔ {key[1]}'}，"
@@ -244,7 +243,7 @@ def find_splice_discontinuity(name, arr, z_threshold=6.0):
     if not peaks:
         return []
     return [_sig(
-        "SIG-IMGSPL",
+        "SIG-001",
         f"figure_integrity.{name}",
         f"检出 {len(peaks)} 处列向背景突变（x≈{peaks[:5]}），"
         f"稳健 z 分数超过 {z_threshold}。印迹类图像的背景在拼接处常出现此类不连续。"
@@ -267,7 +266,7 @@ def find_uniform_patches(name, arr, min_run=3):
     if len(flat) < min_run:
         return []
     return [_sig(
-        "SIG-IMGUNI",
+        "SIG-001",
         f"figure_integrity.{name}",
         f"检出 {len(flat)} 个近似完全均匀的非极值区块（灰度标准差 <0.5 且非纯黑纯白）。"
         f"**这只是候选**：纯色填充的示意图元素、图例底色都会命中，必须人工核对。",
@@ -287,7 +286,9 @@ def audit_figures(paths):
         try:
             images[os.path.basename(p)] = load_gray(p)
         except Exception as exc:
-            limits.append(_system_limitation(f"无法读取图像 {os.path.basename(p)}：{exc}"))
+            limits.append(_system_limitation(
+                f"无法读取图像 {os.path.basename(p)}：{exc}",
+                sid=f"SYS-{len(limits) + 1:03d}"))
 
     if not images:
         return [], limits
@@ -296,6 +297,10 @@ def audit_figures(paths):
     for name, arr in images.items():
         sigs.extend(find_splice_discontinuity(name, arr))
         sigs.extend(find_uniform_patches(name, arr))
+    # 各检测器可独立调用，因而各自从 SIG-001 起编号；汇总入口必须重排为
+    # 报告内唯一、符合 schema 的数字 id。
+    for i, sig in enumerate(sigs, 1):
+        sig["id"] = f"SIG-{i:03d}"
     return sigs, limits
 
 
@@ -360,6 +365,11 @@ def _selftest():
     expect("全部信号 type 一致",
            {x["type"] for x in allsig}, {"figure_integrity_candidate"})
     expect("无信号携带 severity", all("severity" not in x for x in allsig), True)
+    expect("图像信号 id 符合 schema",
+           all(__import__("re").match(r"^SIG-[0-9]{3,}$", x["id"]) for x in allsig), True)
+    lim = _system_limitation("测试")
+    expect("图像 system_limitation id 符合 schema",
+           bool(__import__("re").match(r"^SYS-[0-9]{3,}$", lim["id"])), True)
 
     print("\n全部通过" if ok else "\n存在失败项")
     return 0 if ok else 1
@@ -370,7 +380,7 @@ def _scan(root):
     paths = []
     for dirpath, _, files in os.walk(root):
         for f in sorted(files):
-            if f.lower().endswith((".jpg", ".jpeg", ".png")):
+            if f.lower().endswith((".jpg", ".jpeg", ".png", ".tif", ".tiff")):
                 paths.append(os.path.join(dirpath, f))
     print(f"扫描 {len(paths)} 张图像 …")
     sigs, lims = audit_figures(paths)
