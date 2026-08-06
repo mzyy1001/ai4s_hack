@@ -1,12 +1,12 @@
 # M6 · 伦理合规
 
-**原负责人：Peter** · 状态：**一期规则库已填充（框架层代填，待 Peter 复核）**
+**原负责人：Peter** · 状态：**一期规则库已完成法源与防误报复核（2026-08-07）**
 
 核心问题：这项研究**该不该做**、**做之前有没有获得授权**、**稿件有没有把授权说清楚**。
 
 **本模块与其他审核模块的关键差异**：伦理要求是**成文的规范**，不是领域惯例。
 因此本模块的判定不靠经验，而靠一份可引用的规范库
-——`resources/ethics_rules.json`（25 部规范、22 条结构化要求，三法域）。
+——`resources/ethics_rules.json`（28 部规范、22 条结构化要求，三法域）。
 **每一条 finding 都必须引用到具体规范的具体条款。**
 
 **本文件依赖 `00-contracts.md`。** finding 结构、`evidence_refs[]`、severity 枚举
@@ -46,9 +46,9 @@ M6（本模块）                          判定是否构成 finding、定 seve
 
 | 法域 | 主要规范 |
 | --- | --- |
-| 国际 | 赫尔辛基宣言、CIOMS 2016、ICH-GCP E6、ARRIVE 2.0、ISSCR 2021、名古屋议定书、ICMJE |
+| 国际 | 赫尔辛基宣言、CIOMS 2016、ICH-GCP E6、ARRIVE 2.0、ISSCR 2021（2025 SCBEM 定向更新）、名古屋议定书、ICMJE |
 | 美国 | Common Rule (45 CFR 46)、FDA (21 CFR 50/56)、HIPAA、PHS-OLAW、动物福利法 (9 CFR)、NRC Guide、AVMA 安乐死指南、贝尔蒙报告 |
-| 中国 | 涉及人的生命科学和医学研究伦理审查办法 (2023)、人类遗传资源管理条例、GCP (2020)、实验动物管理条例、GB/T 35892-2018、生物安全法、个人信息保护法、人胚胎干细胞研究伦理指导原则 |
+| 中国 | 涉及人的生命科学和医学研究伦理审查办法 (2023)、科技伦理审查办法（试行）、人类遗传资源管理条例（2024 修订）及实施细则、GCP (2020)、实验动物管理条例与实验动物许可证管理办法、GB/T 35892-2018、生物安全法、病原微生物实验室生物安全管理条例（2024 修订）、个人信息保护法、人胚胎干细胞研究伦理指导原则 |
 
 领域：`human_clinical` / `animal` / `human_derived_cells_tissue` / `cell_line_general` /
 `stem_cell_embryo` / `genetic_resources` / `biosafety` / `data_privacy` /
@@ -59,8 +59,9 @@ M6（本模块）                          判定是否构成 finding、定 seve
 1. **引用要精确到条款。** finding 的 `rule_ref` 写 `ethics_rules#<rule_id>`，
    `detail` 中列出该规则的 `citations`（规范名 + 条款）。
 2. **注意 `citation_confidence`。** 规范库对每条引用标了置信度；
-   `medium` 及以下的条款号在写入正式审稿意见前应人工核对原文
-   （赫尔辛基宣言 2024 年修订重排过段落号）。
+   `medium` 及以下的定位在写入正式审稿意见前必须人工打开原文核对。
+   当前仅 GB/T 35892-2018 的细目、2003 年中国人胚胎干细胞原则的部分定位和
+   `ETH-BIO-002` 的中国法依据未提升为 `high`；不得把它们渲染成已确定法律结论。
 3. **规范库不是法律意见。** 输出是筛查信号，不构成合规裁定。
 
 ---
@@ -82,7 +83,7 @@ M6（本模块）                          判定是否构成 finding、定 seve
 | `type = randomized_controlled_trial` 等干预性 | 追加 `clinical_trial_registration` |
 | `design_components[] 含 in_vivo_animal` | `animal`（**按实验级判定**，不是全文级） |
 | `population.subjects` 含原代人源材料 | `human_derived_cells_tissue` |
-| `population.subjects` 只含已建立商业细胞系 | **反向豁免**，见 §3.3 |
+| `population.subjects` 只含来源与允许用途明确的已建立细胞系 | **反向豁免候选**，见 §3.3 |
 | 含 hESC / 人胚胎 | `stem_cell_embryo` |
 | 中国人群样本 + 境外合作/样本出境 | `genetic_resources` |
 | 活体病原微生物 | `biosafety` |
@@ -110,10 +111,15 @@ M6（本模块）                          判定是否构成 finding、定 seve
 
 | 情形 | 被压制的规则 | 理由 |
 | --- | --- | --- |
-| 只用已建立的商业化细胞系（HeLa/HEK293/HepG2/Huh7 等，规范库列了 30 个） | `ETH-CELL-001`、`ETH-HUM-001`、`ETH-HUM-002` | 不可识别的既有细胞系不构成 human subjects research（45 CFR 46.102(e)） |
+| 只用来源/允许用途明确的既有不可识别细胞系（HeLa/HEK293/HepG2/Huh7 等，规范库列 29 个名称） | `ETH-CELL-001`、`ETH-HUM-001`、`ETH-HUM-002` | 既有不可识别标本通常不构成 Common Rule 下的 human subject；中国研究还须满足 2023 办法第32条的来源、授权范围与排除条件 |
 | 纯计算 / 二次文献研究 | 全部 `human_clinical` 与 `animal` 规则 | 无受试者 |
 | 病例报告 | 注册、样本量类要求 | 见 `01-…md §5.3.5` |
 | 公开去标识数据集二次分析 | `ETH-HUM-002`（知情同意） | 应改查是否说明数据来源与使用许可 |
+
+细胞系名称只用于离线召回，不是合规白名单。命中任一名称时仍须扫描同一研究是否还含
+原代组织、HUVEC、患者来源类器官、血液或新增供者样本；出现任一项即禁止整篇豁免。
+`CHO` 等短名称按独立实体匹配，不得命中 `chondrocyte` 等普通词。未知细胞系不自动加入名单，
+也不因“常见”二字推定来源合法；先核对 catalog/RRID/CVCL 与材料转移限制。
 
 ---
 
@@ -126,7 +132,7 @@ M6（本模块）                          判定是否构成 finding、定 seve
 | `ETH-HUM-001` | 伦理委员会批准 + 批件号 | 未报告为 major；明确未获批准且规则适用时 critical |
 | `ETH-HUM-002` | 知情同意 | 未报告为 major；明确未获同意/豁免且规则适用时 critical |
 | `ETH-HUM-003` | 豁免知情同意须说明依据 | major |
-| `ETH-HUM-004` | 赫尔辛基宣言遵循声明 | minor |
+| `ETH-HUM-004` | 赫尔辛基宣言遵循声明 | info；只缺宣言名称不立 finding |
 | `ETH-HUM-005` | 干预性试验前瞻性注册 | major |
 | `ETH-HUM-006` | 弱势群体额外保护 | major |
 | `ETH-HUM-007` | 未成年人：监护人许可 + 本人赞同 | major |
@@ -137,7 +143,7 @@ M6（本模块）                          判定是否构成 finding、定 seve
 | rule_id | 要求 | severity |
 | --- | --- | --- |
 | `ETH-ANI-001` | IACUC / 动物伦理委员会批准 + 方案号 | 未报告为 major；明确未获批准时 critical |
-| `ETH-ANI-002` | 3R 原则（替代/减少/优化） | major |
+| `ETH-ANI-002` | 3R 原则（替代/减少/优化） | 仅报告缺口为 minor；不得由缺少“3R”字样推定未实施 |
 | `ETH-ANI-003` | 物种、品系、性别、年龄或体重、来源 | major |
 | `ETH-ANI-004` | 麻醉、镇痛与人道终点 | major |
 | `ETH-ANI-005` | 安乐死方法 | major |
@@ -149,7 +155,7 @@ M6（本模块）                          判定是否构成 finding、定 seve
 | --- | --- | --- |
 | `ETH-CELL-001` | 人源原代细胞/组织的供者同意 + 伦理批准 | 未报告为 major；明确未获授权时 critical |
 | `ETH-CELL-002` | **反向规则**：商业化细胞系豁免 | info |
-| `ETH-CELL-003` | hESC 研究的专门监督委员会 | critical |
+| `ETH-CELL-003` | hESC 研究类别、来源与监督路径——**一律交人工** | 默认 major；明确应审未审且影响合法性时才可 critical |
 | `ETH-CELL-004` | 人胚胎体外培养期限（14 天规则）——**一律交人工** | critical |
 
 ### 4.4 遗传资源与生物安全
@@ -161,9 +167,12 @@ M6（本模块）                          判定是否构成 finding、定 seve
 | `ETH-BIO-001` | 病原微生物实验的生物安全等级 | major |
 | `ETH-BIO-002` | 两用性研究关切（DURC）——**一律交人工** | critical |
 
-> **三条 `manual_only` 规则**（`ETH-CELL-004`、`ETH-HGR-002`、`ETH-BIO-002`）
-> 的共同点：适用性判断高度依赖领域与法域，自动判定误报风险过高。
-> 它们只产出人工复核项，**不自动定 severity**。
+> **四条 `manual_only` 规则**（`ETH-CELL-003`、`ETH-CELL-004`、
+> `ETH-HGR-002`、`ETH-BIO-002`）的共同点不是“问题严重”，而是自动化缺少决定适用性
+> 所需的法域或实验类别事实。它们只产 `partial_extraction` 人工复核项，
+> **不得产 `ethics_requirement_unmet`，不自动定 severity**。
+> `ETH-CELL-003` 新纳入人工路径：既有 hESC 的常规体外培养可属 ISSCR Category 1A，
+> 不能仅凭出现 `hESC` 就要求专门持续审查或判 critical。
 
 ---
 
@@ -205,7 +214,8 @@ methods 三节均未见 IACUC、伦理委员会、批件号 → **major 报告�
 
 **不该报警**：方法节写「HepG2 与 Huh7 细胞购自 ATCC」
 → 命中商业化细胞系反向豁免 → **不报**。
-这是本模块最常见的误报来源，规范库专门列了 30 个细胞系来压制它。
+这是本模块最常见的误报来源，规范库列出 29 个常见名称作离线召回；HUVEC 因通常为
+原代人脐静脉内皮细胞已从豁免列表移除。
 
 ### 6.3 `ETH-HUM-002` 知情同意
 
@@ -230,9 +240,9 @@ methods 三节均未见 IACUC、伦理委员会、批件号 → **major 报告�
 - [x] 实现离线筛查器与三条防误报机制
 - [x] 填充适用性路由表与状态门控规则
 - [x] 每条规则配正例/反例
-- [ ] **请 Peter 复核**：规范库的条款引用、severity 分级、以及中国法规部分的完备性
+- [x] 复核规范库条款、severity 与中国法规：纠正 2023 办法第32条误引、动物许可证法源、ARRIVE item；更新 2024/2025 版本元数据
 - [ ] 补充「伦理声明与研究设计矛盾」的检测规则（如声明无人体研究但有患者数据）
-- [ ] 扩充 `exempt_cell_lines` 列表（当前 30 个，建议对照 ATCC/ECACC 目录扩到 100+）
+- [x] 停止把名称列表盲目扩到 100+；移除 HUVEC，并把扩展方向改为 accession + 来源/允许用途核验（见 Round 10 提案）
 - [ ] 与 M3 划清边界：动物**必要性**（该不该做动物实验）归 M3，
       动物**授权**（有没有批件）归 M6
 - [ ] 在 `datasets/` 的 `animal_invivo` 与 `rct_clinical` 两篇语料上实测误报率

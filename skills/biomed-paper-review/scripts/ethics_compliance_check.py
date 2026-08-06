@@ -73,6 +73,16 @@ def _field_text(field_obj):
     return json.dumps(v, ensure_ascii=False)
 
 
+def _named_entity_hits(text, names):
+    """按独立名称命中细胞系，避免 `CHO` 误命中 `chondrocyte`。"""
+    hits = []
+    for name in names:
+        pattern = rf"(?<![A-Za-z0-9]){re.escape(name)}(?![A-Za-z0-9])"
+        if re.search(pattern, text, re.I):
+            hits.append(name)
+    return hits
+
+
 def derive_facts(structured_result, rb):
     """从 structured_result 推出 applies_when 需要的布尔事实。
 
@@ -91,13 +101,26 @@ def derive_facts(structured_result, rb):
     subj_lower = subjects_txt.lower()
 
     exempt = rb.get("exempt_cell_lines", {}).get("lines", [])
-    exempt_hit = [c for c in exempt if c.lower() in subj_lower]
+    exempt_hit = _named_entity_hits(subjects_txt, exempt)
 
     # 是否只用了已建立的商业化细胞系
-    human_primary_markers = ["primary", "原代", "patient", "患者", "donor", "供者",
+    human_primary_markers = ["human primary", "primary human", "human tissue",
+                             "human organoid", "patient-derived", "patient derived",
+                             "patient", "患者", "donor", "供者", "人源", "人体",
                              "biopsy", "活检", "surgical specimen", "手术标本",
-                             "peripheral blood", "外周血", "pbmc"]
+                             "peripheral blood", "外周血", "pbmc", "huvec",
+                             "human umbilical vein endothelial"]
     has_primary_human = any(m in subj_lower for m in human_primary_markers)
+
+    # `virus`/`viral` 本身可指灭活样本、载体或假病毒。只有文本明确指向具感染性
+    # 菌（毒）种/活体病原体时才置 True；仅有泛称时保留 None，禁止自动立缺失信号。
+    pathogen_confirmed = bool(re.search(
+        r"\blive\s+(?:virus|bacteri(?:um|a))\b|\binfectious\s+(?:virus|agent|pathogen)\b|"
+        r"\breplication[- ]competent\b|活病毒|活菌|病原(?:菌|毒株)|具感染性(?:样本|病毒)",
+        subjects_txt, re.I))
+    pathogen_mentioned = bool(re.search(
+        r"virus|viral|bacteri|pathogen|infect|病毒|细菌|病原|感染",
+        subjects_txt, re.I))
 
     facts = {
         "has_human_subjects": (
@@ -115,8 +138,7 @@ def derive_facts(structured_result, rb):
             re.search(r"\bhESC\b|human embryonic stem|人胚胎干细胞", subjects_txt, re.I)),
         "cultures_human_embryos": bool(
             re.search(r"human embryo|人胚胎", subjects_txt, re.I)),
-        "uses_pathogens": bool(
-            re.search(r"virus|bacteri|pathogen|infect|病毒|细菌|病原", subjects_txt, re.I)),
+        "uses_pathogens": True if pathogen_confirmed else (None if pathogen_mentioned else False),
         "_exempt_cell_lines_hit": exempt_hit,
     }
 
@@ -209,10 +231,10 @@ def screen(structured_result, rulebase=None, signal_start=600):
             if applicable is None:
                 continue
             signals.append(_sig(
-                sid, "ethics_requirement_unmet", rule,
+                sid, "partial_extraction", rule,
                 f"[{rule['rule_id']}] {rule['title_zh']}：本条按规范库设定"
-                f"**一律交人工判定**（{rule.get('false_positive_guard','')}）。",
-                {"rulebase_version": version}))
+                f"**一律交人工判定**；自动化未判定要求未满足"
+                f"（{rule.get('false_positive_guard','')}）。"))
             continue
 
         if applicable is None:
@@ -323,6 +345,47 @@ def _selftest():
     expect("商业细胞系不报 ETH-CELL-001", "ETH-CELL-001" in ids2, False)
     expect("商业细胞系不报 ETH-HUM-002", "ETH-HUM-002" in ids2, False)
 
+    # --- 案例 2b：HUVEC 是原代人源材料，不得按既有细胞系豁免 ---
+    sr2b = {
+        "article_design": {"primary_design": {"family": "experimental",
+                                                "type": "in_vitro"},
+                           "design_components": []},
+        "population": {"subjects": _mk_field(
+            "reported", "Primary HUVEC isolated from human umbilical cords")},
+        "declarations": {"ethics_statement": _mk_field("not_reported"),
+                         "informed_consent": _mk_field("not_reported")},
+    }
+    sigs2b = screen(sr2b, rb)
+    ids2b = {s.get("ethics", {}).get("rule_id") for s in sigs2b}
+    expect("HUVEC 不走商业细胞系豁免", "ETH-CELL-001" in ids2b, True)
+
+    # --- 案例 2c：短名称按实体边界匹配，CHO 不得命中 chondrocytes ---
+    sr2c = {
+        "article_design": {"primary_design": {"family": "experimental",
+                                                "type": "in_vitro"},
+                           "design_components": []},
+        "population": {"subjects": _mk_field(
+            "reported", "Primary murine chondrocytes from C57BL/6 mice")},
+        "declarations": {"ethics_statement": _mk_field("not_applicable"),
+                         "informed_consent": _mk_field("not_applicable")},
+    }
+    facts2c = derive_facts(sr2c, rb)
+    expect("CHO 不误命中 chondrocytes", facts2c["_exempt_cell_lines_hit"], [])
+
+    # --- 案例 2d：既有细胞系 + 患者材料不能整篇豁免 ---
+    sr2d = {
+        "article_design": {"primary_design": {"family": "experimental",
+                                                "type": "organoid"},
+                           "design_components": []},
+        "population": {"subjects": _mk_field(
+            "reported", "HepG2 cells and patient-derived liver organoids")},
+        "declarations": {"ethics_statement": _mk_field("not_reported"),
+                         "informed_consent": _mk_field("not_reported")},
+    }
+    facts2d = derive_facts(sr2d, rb)
+    expect("混合患者材料禁止整篇豁免",
+           facts2d["uses_established_cell_line_only"], False)
+
     # --- 案例 3：补充材料不可得 → partial_extraction 而非缺失 ---
     sr3 = {
         "article_design": {"primary_design": {"family": "experimental",
@@ -351,6 +414,33 @@ def _selftest():
     ids4 = {s.get("ethics", {}).get("rule_id") for s in sigs4}
     expect("RCT 缺注册 → ETH-HUM-005", "ETH-HUM-005" in ids4, True)
     expect("RCT 有批件不报 ETH-HUM-001", "ETH-HUM-001" in ids4, False)
+
+    # --- 案例 5：假病毒只形成适用性不确定，不得报 BSL 缺失 ---
+    sr5 = {
+        "article_design": {"primary_design": {"family": "experimental",
+                                                "type": "in_vitro"},
+                           "design_components": []},
+        "population": {"subjects": _mk_field(
+            "reported", "non-replicating lentiviral pseudovirus particles")},
+        "measurement": {"assays": _mk_field("not_reported")},
+    }
+    sigs5 = screen(sr5, rb)
+    bio5 = [s for s in sigs5 if s["target"] == "ethics.ETH-BIO-001"]
+    expect("假病毒不报 BSL 缺失",
+           all(s["type"] != "ethics_requirement_unmet" for s in bio5), True)
+
+    # --- 案例 6：manual_only 只是人工候选，不得谎称 requirement_unmet ---
+    sr6 = {
+        "article_design": {"primary_design": {"family": "experimental",
+                                                "type": "in_vitro"},
+                           "design_components": []},
+        "population": {"subjects": _mk_field("reported", "H9 hESC cell culture")},
+        "declarations": {"ethics_statement": _mk_field("reported", "institutional review")},
+    }
+    sigs6 = screen(sr6, rb)
+    cell6 = [s for s in sigs6 if s["target"] == "ethics.ETH-CELL-003"]
+    expect("manual_only 不冒充要求未满足",
+           cell6[0]["type"] if cell6 else None, "partial_extraction")
 
     # --- 契约：信号无 severity，路由到 M6 ---
     expect("信号 id 符合 schema",
