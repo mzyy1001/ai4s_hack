@@ -27,14 +27,24 @@
 **本模块只产出 `extraction_signal`，不产出 finding。**
 路由到 M2（表述一致性）与 M3（方法与试剂）。
 
-命令行自检：
-    python3 sequence_identifier_audit.py --selftest
+命令行：
+    python3 <Skill 目录>/scripts/sequence_identifier_audit.py --input sequence_items.json
+    python3 <Skill 目录>/scripts/sequence_identifier_audit.py --selftest
 """
 
+import argparse
+import json
 import re
 import sys
 
 RULE_VERSION = "2026-08-07"
+
+
+class _JsonArgumentParser(argparse.ArgumentParser):
+    def error(self, message):
+        print(json.dumps({"error": {"code": "invalid_input", "detail": message}},
+                         ensure_ascii=False), file=sys.stderr)
+        raise SystemExit(2)
 
 # ---------------------------------------------------------------- 氨基酸表
 AA3_TO_1 = {
@@ -102,6 +112,7 @@ def detect_species(text):
 
 
 def _sig(sid, stype, target, detail, extra):
+    extra = dict(extra)
     return {
         "id": sid,
         "type": stype,
@@ -144,13 +155,22 @@ def _norm_aa(tok):
     return None
 
 
+def _text(value):
+    """把可选标量安全转成去空白文本；容忍 JSON 数值，拒绝容器。"""
+    if value is None:
+        return ""
+    if isinstance(value, (dict, list)):
+        raise ValueError("序列/标识符字段必须是标量，不能是对象或数组")
+    return str(value).strip()
+
+
 def check_hgvs(item, sid="SIG-001"):
     """HGVS 语法 + 位置范围 + 参考残基三合一检查。
 
     item: {hgvs, sequence(可选), sequence_type(protein/dna), reference_id,
            reference_version, sequence_complete, target(可选)}
     """
-    h = (item.get("hgvs") or "").strip()
+    h = _text(item.get("hgvs"))
     target = item.get("target", "variant")
     if not h:
         return None
@@ -179,7 +199,7 @@ def check_hgvs(item, sid="SIG-001"):
                             f"HGVS {h!r} 的替换残基 {alt_raw!r} 不是合法氨基酸。",
                             {"check": "hgvs_syntax_invalid", "candidate": False, "hgvs": h})
 
-        seq = (item.get("sequence") or "").strip().upper()
+        seq = _text(item.get("sequence")).upper()
         if seq and item.get("sequence_type", "protein") == "protein":
             missing_context = [name for name in
                                ("reference_id", "reference_version", "sequence_complete")
@@ -241,7 +261,7 @@ def check_hgvs(item, sid="SIG-001"):
 # ================================================================ 4 基因符号
 def check_gene_symbol(item, sid="SIG-002"):
     """基因符号书写惯例与所述物种是否相符。**只报候选。**"""
-    sym = (item.get("symbol") or "").strip()
+    sym = _text(item.get("symbol"))
     species = item.get("species") or detect_species(item.get("context"))
     target = item.get("target", "gene_symbol")
     if not sym or not species or species not in SPECIES_CONVENTION:
@@ -275,7 +295,7 @@ def check_gene_symbol(item, sid="SIG-002"):
 # ================================================================ 5 登录号
 def check_accession(item, sid="SIG-003"):
     """登录号格式是否符合所声明数据库的规范。**确定性。**"""
-    acc = (item.get("accession") or "").strip()
+    acc = _text(item.get("accession"))
     db = item.get("database")
     target = item.get("target", "accession")
     if not acc or not db:
@@ -314,7 +334,7 @@ def _tm_gc_formula(seq):
 
 def check_primer(item, sid="SIG-004"):
     """引物基本 QC。**只报候选** —— 参数区间因体系与应用而异。"""
-    seq = (item.get("sequence") or "").strip().upper()
+    seq = _text(item.get("sequence")).upper()
     target = item.get("target", "primer")
     if not seq:
         return None
@@ -355,7 +375,7 @@ def check_primer(item, sid="SIG-004"):
 
 # ================================================================ 7 序列字母表
 def check_sequence_alphabet(item, sid="SIG-005"):
-    seq = (item.get("sequence") or "").strip().upper()
+    seq = _text(item.get("sequence")).upper()
     kind = item.get("sequence_type", "dna")
     target = item.get("target", "sequence")
     if not seq:
@@ -381,12 +401,19 @@ CHECKS = {
 
 def audit(items):
     """items: [{check: <名>, ...}] -> extraction_signal 列表。合规项不产出信号。"""
+    if not isinstance(items, list):
+        raise ValueError("序列审计输入必须是 JSON 数组")
     out = []
     for i, item in enumerate(items, 1):
+        if not isinstance(item, dict):
+            raise ValueError(f"序列审计第 {i} 项必须是 JSON 对象")
         fn = CHECKS.get(item.get("check"))
         if fn is None:
-            continue
-        sig = fn(item, sid=f"SIG-{i:03d}")
+            raise ValueError(f"序列审计第 {i} 项的 check 不受支持：{item.get('check')!r}")
+        try:
+            sig = fn(item, sid=f"SIG-{i:03d}")
+        except (TypeError, ValueError, OverflowError, ZeroDivisionError) as exc:
+            raise ValueError(f"序列审计第 {i} 项参数非法：{exc}") from exc
         if sig is not None:
             out.append(sig)
     return out
@@ -505,11 +532,43 @@ def _selftest():
     expect("signal id 符合 schema",
            all(re.match(r"^SIG-[0-9]{3,}$", x["id"]) for x in sigs), True)
 
+    try:
+        audit([None])
+        invalid_rejected = False
+    except ValueError:
+        invalid_rejected = True
+    expect("非对象输入给出受控错误", invalid_rejected, True)
+
     print("\n全部通过" if ok else "\n存在失败项")
     return 0 if ok else 1
 
 
+def _read_json(path):
+    if path == "-":
+        return json.load(sys.stdin)
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def _main(argv=None):
+    parser = _JsonArgumentParser(description="序列与标识符确定性审计")
+    parser.add_argument("--input", metavar="JSON", help="检查数组 JSON 文件；- 表示 stdin")
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args(argv)
+    if args.selftest:
+        return _selftest()
+    if not args.input:
+        parser.error("必须提供 --input JSON（或 --selftest）")
+    try:
+        items = _read_json(args.input)
+        signals = audit(items)
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+        print(json.dumps({"error": {"code": "invalid_input", "detail": str(exc)}},
+                         ensure_ascii=False), file=sys.stderr)
+        return 2
+    print(json.dumps({"signals": signals}, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
 if __name__ == "__main__":
-    if "--selftest" in sys.argv:
-        sys.exit(_selftest())
-    print(__doc__)
+    sys.exit(_main())

@@ -35,14 +35,23 @@
   不构成「图像无问题」的结论。报告中必须这样表述。
 
 命令行：
-    python3 figure_integrity_audit.py --selftest
-    python3 figure_integrity_audit.py <图像目录>       # 对真实语料跑一遍
+    python3 <Skill 目录>/scripts/figure_integrity_audit.py --selftest
+    python3 <Skill 目录>/scripts/figure_integrity_audit.py --input <图像目录>
 """
 
+import argparse
+import json
 import os
 import sys
 
 RULE_VERSION = "2026-08-07"
+
+
+class _JsonArgumentParser(argparse.ArgumentParser):
+    def error(self, message):
+        print(json.dumps({"error": {"code": "invalid_input", "detail": message}},
+                         ensure_ascii=False), file=sys.stderr)
+        raise SystemExit(2)
 
 try:
     import numpy as np
@@ -65,16 +74,17 @@ MIN_SELF_DIST = 96  # 同图内两区块中心的最小距离，低于此不算�
 MAX_SIDE = 1200     # 超大图先缩放，控制计算量
 
 
-def _system_limitation(detail, sid="SYS-001"):
+def _system_limitation(detail, sid="SYS-001", category="figure_unreadable",
+                       recommended_action="在具备 numpy 与 Pillow 的环境重跑图像完整性审计"):
     return {
         "id": sid,
-        "category": "figure_unreadable",
+        "category": category,
         "impact": detail,
         "affected_modules": ["M5"],
         "affected_targets": [],
         "affected_fields": [],
         "evidence_refs": [],
-        "recommended_action": "在具备 numpy 与 Pillow 的环境重跑图像完整性审计",
+        "recommended_action": recommended_action,
         "produced_by": "stage_3",
     }
 
@@ -281,10 +291,22 @@ def audit_figures(paths):
         return [], [_system_limitation(
             f"图像完整性审计需要 numpy 与 Pillow，当前环境不可用：{DEPS_ERR}")]
 
+    if not isinstance(paths, (list, tuple)):
+        raise ValueError("paths 必须是图像路径数组")
+
     images, limits = {}, []
     for p in paths:
+        if not isinstance(p, (str, os.PathLike)):
+            raise ValueError("每个图像路径必须是字符串或 PathLike")
         try:
-            images[os.path.basename(p)] = load_gray(p)
+            name = os.path.basename(os.fspath(p))
+            if name in images:
+                limits.append(_system_limitation(
+                    f"多个输入图像同名为 {name!r}，无法建立唯一资产映射；重复 basename 已跳过。",
+                    sid=f"SYS-{len(limits) + 1:03d}", category="parse_failed",
+                    recommended_action="为图像分配唯一文件名或资产 id 后重新运行"))
+                continue
+            images[name] = load_gray(p)
         except Exception as exc:
             limits.append(_system_limitation(
                 f"无法读取图像 {os.path.basename(p)}：{exc}",
@@ -375,27 +397,47 @@ def _selftest():
     return 0 if ok else 1
 
 
-def _scan(root):
-    """对真实语料跑一遍，用于经验校准误报率。"""
+def scan_directory(root):
+    """扫描目录并返回 JSON 可序列化结果；不存在或非目录时给出受控错误。"""
+    if not isinstance(root, (str, os.PathLike)) or not os.path.isdir(root):
+        raise ValueError(f"图像输入目录不存在或不是目录：{root!r}")
     paths = []
     for dirpath, _, files in os.walk(root):
         for f in sorted(files):
             if f.lower().endswith((".jpg", ".jpeg", ".png", ".tif", ".tiff")):
                 paths.append(os.path.join(dirpath, f))
-    print(f"扫描 {len(paths)} 张图像 …")
     sigs, lims = audit_figures(paths)
     from collections import Counter
     c = Counter(s["image_audit"]["check"] for s in sigs)
-    print(f"信号 {len(sigs)} 条：{dict(c)}；system_limitation {len(lims)} 条")
-    for s in sigs[:8]:
-        print("  -", s["detail"][:150].replace("\n", " "))
+    return {
+        "images_scanned": len(paths),
+        "signals": sigs,
+        "system_limitations": lims,
+        "summary": {"signal_count": len(sigs), "by_check": dict(c),
+                    "system_limitation_count": len(lims)},
+    }
+
+
+def _main(argv=None):
+    parser = _JsonArgumentParser(description="论文内图像完整性候选审计")
+    parser.add_argument("legacy_input", nargs="?", help=argparse.SUPPRESS)
+    parser.add_argument("--input", metavar="DIR", help="递归扫描的图像目录")
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args(argv)
+    if args.selftest:
+        return _selftest()
+    root = args.input or args.legacy_input
+    if not root:
+        parser.error("必须提供 --input DIR（或 --selftest）")
+    try:
+        result = scan_directory(root)
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"error": {"code": "invalid_input", "detail": str(exc)}},
+                         ensure_ascii=False), file=sys.stderr)
+        return 2
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
     return 0
 
 
 if __name__ == "__main__":
-    args = [a for a in sys.argv[1:]]
-    if "--selftest" in args:
-        sys.exit(_selftest())
-    if args and os.path.isdir(args[0]):
-        sys.exit(_scan(args[0]))
-    print(__doc__)
+    sys.exit(_main())

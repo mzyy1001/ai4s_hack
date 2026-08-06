@@ -3,7 +3,7 @@
   "rulebase_version": "2026-08-07",
   "description": "生物医药论文伦理合规规范库。国际 / 美国 / 中国三法域，覆盖人体临床、动物实验、细胞与干细胞、人类遗传资源、生物安全、数据隐私六个领域。一期离线使用：本文件不含任何受版权保护的规范全文，只含结构化要求条目与可核验的出处引用。",
 
-  "usage_note": "本规范库由 skills/biomed-paper-review/scripts/ethics_compliance_check.py 消费，产出 extraction_signal（type=ethics_requirement_unmet），交 M6 判定是否构成 finding。工具层不下稿件结论。",
+  "usage_note": "本规范库由 Skill 根目录相对路径 scripts/ethics_compliance_check.py 消费，产出 extraction_signal（type=ethics_requirement_unmet），交 M6 判定是否构成 finding。工具层不下稿件结论。",
 
   "copyright_note": "本文件是对公开规范文件要求的**结构化索引与摘述**，非全文转载。美国联邦法规（CFR）、Belmont Report、PHS/NIH 政策属美国政府作品，无版权；中国法律法规与国务院部门规章依《著作权法》第五条不受著作权保护；ARRIVE 2.0 为 CC-BY。WMA 赫尔辛基宣言、CIOMS 指南、ICH-GCP、NRC《实验动物饲养管理和使用指南》、GB/T 标准等受版权保护，本库**仅引用条款编号与要求要点，不转载原文**。",
 

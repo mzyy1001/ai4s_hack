@@ -536,40 +536,47 @@ critical 及直接阻断核心解释的 major）；P1=给出修改要求前核�
 `scripts/` 下的五个脚本是**可执行工具**，不是参考资料。
 实测发现模型倾向于把它们当源码阅读而从不执行 —— 那样它们贡献为零。
 
-**先把工作目录切换到本 `SKILL.md` 所在目录，再调用脚本。** 不得假定仓库根目录或把
-Skill 路径写死。每个脚本都可 `import` 后调用，也都带 `--selftest`：
+先由运行时解析本 `SKILL.md` 的父目录并保存为 `BIOMED_REVIEW_SKILL_DIR`；**不得**假定仓库根目录、
+不得写死安装路径，也不得靠切换工作目录改变输入文件的相对路径语义。五个脚本均支持稳定 CLI；
+业务模式的 stdout 只写 JSON（`--selftest` / `--help` 除外），输入错误在 stderr 写
+`error.code=invalid_input` 并以退出码 2 结束，不输出 traceback。
+以下命令可从任意工作目录执行：
 
 ```bash
-# 单位归一化：判断两个数值能否比较（Stage 3b 兼容性判定）
-python3 -c "import sys; sys.path.insert(0,'scripts'); \
-from normalize_biomed_units import compare_units; print(compare_units('mg/mL','g/L'))"
+# 执行器须把已加载 SKILL.md 的父目录赋给该变量
+test -f "${BIOMED_REVIEW_SKILL_DIR}/SKILL.md"
 
-# 统计取证：p 值反算 / CI 自洽 / 计数-百分比 / GRIM / 互斥穷尽分类合计
-python3 -c "import sys; sys.path.insert(0,'scripts'); \
-from statistical_forensics import check_all; \
-print(check_all([{'check':'count_percentage','count':30,'n':28, \
-'reported_percent':107.1,'reported_percent_text':'107.1'}]))"
+# 单位归一化：verdict=comparable，factor_a_to_b=1.0
+python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/normalize_biomed_units.py" \
+  --compare 'mg/mL' 'g/L'
 
-# 伦理规范库筛查（传入 structured_result）
-python3 -c "import sys; sys.path.insert(0,'scripts'); \
-from ethics_compliance_check import screen; \
-print(len(screen({'article_design':{'primary_design':{'family':'human_interventional',\
-'type':'randomized_controlled_trial'},'design_components':[]}})))"
+# 统计取证：30 超过 n=28，stdout 的 signals[] 产生 count_percentage_mismatch
+printf '%s' '[{"check":"count_percentage","count":30,"n":28,"reported_percent":107.1,"reported_percent_text":"107.1"}]' |
+  python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/statistical_forensics.py" --input -
 
-# 序列与标识符：HGVS / 位点越界 / 登录号 / 基因符号 / 引物
-python3 -c "import sys; sys.path.insert(0,'scripts'); \
-from sequence_identifier_audit import audit; \
-print(audit([{'check':'accession','accession':'NCT123','database':'clinicaltrials'}]))"
+# 伦理筛查：structured_result_v2.json 为 Stage 3b 产物；规则库按脚本位置自动定位
+python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/ethics_compliance_check.py" \
+  --input structured_result_v2.json > ethics_signals.json
 
-# 论文内图像完整性（需要图像文件）
-python3 scripts/figure_integrity_audit.py <图像目录>
+# 序列审计：非法 NCT 格式产生 sequence_identifier_inconsistent
+printf '%s' '[{"check":"accession","accession":"NCT123","database":"clinicaltrials"}]' |
+  python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/sequence_identifier_audit.py" --input -
+
+# 图像完整性：递归扫描目录，完整 signal/limitation 均写入 JSON
+python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/figure_integrity_audit.py" \
+  --input figures > figure_integrity.json
 ```
+
+CLI 产物仍是工具原始结果：调用阶段必须为每条 signal 补齐稿件 `evidence_refs[]` 后再汇总；
+脚本不产 finding。任何命令退出码非 0 都视为工具未完成，登记对应 `system_limitation`，
+禁止把空 stdout 解释为“未发现问题”。
 
 **什么时候必须运行**：
 - 论文报告了「计数 + 百分比」或「均值 + 整数量表 + n」→ 跑统计取证
 - 表格给出互斥穷尽分类及声明总数 → 跑统计取证的 `table_total` 检查
 - 论文报告了检验统计量与自由度 → 跑 p 值反算
 - 出现两个不同单位的同一指标 → 跑单位归一化
+- 涉及人体、动物、人源材料、胚胎/干细胞、病原体或临床注册 → 跑伦理规范库筛查
 - 出现变异命名、登录号、引物序列、基因符号 → 跑序列审计
 - 有图像文件可读 → 跑图像完整性
 

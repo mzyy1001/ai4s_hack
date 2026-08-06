@@ -29,15 +29,27 @@
     from statistical_forensics import check_all
     signals = check_all(claims)
 
-命令行自检：
-    python3 skills/biomed-paper-review/scripts/statistical_forensics.py --selftest
+命令行：
+    python3 <Skill 目录>/scripts/statistical_forensics.py --input checks.json
+    printf '%s' '[{"check":"count_percentage","count":3,"n":10,"reported_percent":30,"reported_percent_text":"30"}]' |
+      python3 <Skill 目录>/scripts/statistical_forensics.py --input -
+    python3 <Skill 目录>/scripts/statistical_forensics.py --selftest
 """
 
+import argparse
+import json
 import math
 import re
 import sys
 
 RULE_VERSION = "2026-08-07"
+
+
+class _JsonArgumentParser(argparse.ArgumentParser):
+    def error(self, message):
+        print(json.dumps({"error": {"code": "invalid_input", "detail": message}},
+                         ensure_ascii=False), file=sys.stderr)
+        raise SystemExit(2)
 
 
 # ================================================================ 分布函数
@@ -471,12 +483,22 @@ def check_all(items, signal_start=100):
 
     一致的项**不产出信号**（沉默即通过）；只有不一致或前提不全才产出。
     """
+    if not isinstance(items, list):
+        raise ValueError("统计取证输入必须是 JSON 数组")
+    if not isinstance(signal_start, int) or isinstance(signal_start, bool) or signal_start < 0:
+        raise ValueError("signal_start 必须是非负整数")
+
     out = []
     for i, item in enumerate(items, 1):
+        if not isinstance(item, dict):
+            raise ValueError(f"统计取证第 {i} 项必须是 JSON 对象")
         fn = CHECKS.get(item.get("check"))
         if fn is None:
-            continue
-        sig = fn(item, signal_id=f"SIG-{signal_start + i:03d}")
+            raise ValueError(f"统计取证第 {i} 项的 check 不受支持：{item.get('check')!r}")
+        try:
+            sig = fn(item, signal_id=f"SIG-{signal_start + i:03d}")
+        except (TypeError, ValueError, OverflowError, ZeroDivisionError) as exc:
+            raise ValueError(f"统计取证第 {i} 项参数非法：{exc}") from exc
         if sig is not None:
             out.append(sig)
     return out
@@ -566,11 +588,44 @@ def _selftest():
     expect("信号无 severity", all("severity" not in x for x in sigs), True)
     expect("信号路由到 M4", sigs[0]["routed_to"], ["M4"])
 
+    try:
+        check_all([None])
+        invalid_rejected = False
+    except ValueError:
+        invalid_rejected = True
+    expect("非对象输入给出受控错误", invalid_rejected, True)
+
     print("\n全部通过" if ok else "\n存在失败项")
     return 0 if ok else 1
 
 
+def _read_json(path):
+    if path == "-":
+        return json.load(sys.stdin)
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def _main(argv=None):
+    parser = _JsonArgumentParser(description="无需原始数据的统计一致性取证")
+    parser.add_argument("--input", metavar="JSON", help="检查数组 JSON 文件；- 表示 stdin")
+    parser.add_argument("--signal-start", type=int, default=100)
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args(argv)
+    if args.selftest:
+        return _selftest()
+    if not args.input:
+        parser.error("必须提供 --input JSON（或 --selftest）")
+    try:
+        items = _read_json(args.input)
+        signals = check_all(items, signal_start=args.signal_start)
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+        print(json.dumps({"error": {"code": "invalid_input", "detail": str(exc)}},
+                         ensure_ascii=False), file=sys.stderr)
+        return 2
+    print(json.dumps({"signals": signals}, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
 if __name__ == "__main__":
-    if "--selftest" in sys.argv:
-        sys.exit(_selftest())
-    print(__doc__)
+    sys.exit(_main())

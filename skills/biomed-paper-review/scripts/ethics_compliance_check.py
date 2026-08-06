@@ -30,10 +30,12 @@
     from ethics_compliance_check import screen
     signals = screen(structured_result, evaluation_matrix_facts)
 
-命令行自检：
-    python3 skills/biomed-paper-review/scripts/ethics_compliance_check.py --selftest
+命令行：
+    python3 <Skill 目录>/scripts/ethics_compliance_check.py --input structured_result_v2.json
+    python3 <Skill 目录>/scripts/ethics_compliance_check.py --selftest
 """
 
+import argparse
 import json
 import os
 import re
@@ -43,6 +45,13 @@ import sys
 # 用 __file__ 相对定位，不写死任何绝对路径（L1 明确扣硬编码路径的分）。
 SKILL_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RULEBASE = os.path.join(SKILL_ROOT, "resources", "ethics_rules.json")
+
+
+class _JsonArgumentParser(argparse.ArgumentParser):
+    def error(self, message):
+        print(json.dumps({"error": {"code": "invalid_input", "detail": message}},
+                         ensure_ascii=False), file=sys.stderr)
+        raise SystemExit(2)
 
 
 def load_rulebase(path=RULEBASE):
@@ -89,9 +98,19 @@ def derive_facts(structured_result, rb):
     只用**已抽取到的**内容推断，抽取不确定时事实置 None（= 不确定），
     applies_when 命中 None 时规则不评估，改出 partial_extraction。
     """
+    if not isinstance(structured_result, dict):
+        raise ValueError("structured_result 必须是 JSON 对象")
+    if not isinstance(rb, dict):
+        raise ValueError("伦理规范库必须是 JSON 对象")
     ad = structured_result.get("article_design", {})
+    if not isinstance(ad, dict):
+        raise ValueError("article_design 必须是 JSON 对象")
     primary = ad.get("primary_design", {}) or {}
     comps = ad.get("design_components", []) or []
+    if not isinstance(primary, dict):
+        raise ValueError("article_design.primary_design 必须是 JSON 对象")
+    if not isinstance(comps, list) or any(not isinstance(c, dict) for c in comps):
+        raise ValueError("article_design.design_components 必须是对象数组")
     types = {primary.get("type")} | {c.get("type") for c in comps}
     families = {primary.get("family")} | {c.get("family") for c in comps}
     types.discard(None)
@@ -203,7 +222,15 @@ def screen(structured_result, rulebase=None, signal_start=600):
 
     合规（要求已满足）的规则**不产出信号** —— 沉默即通过。
     """
-    rb = rulebase or load_rulebase()
+    if not isinstance(structured_result, dict):
+        raise ValueError("structured_result 必须是 JSON 对象")
+    if not isinstance(signal_start, int) or isinstance(signal_start, bool) or signal_start < 0:
+        raise ValueError("signal_start 必须是非负整数")
+    rb = load_rulebase() if rulebase is None else rulebase
+    if not isinstance(rb, dict) or not isinstance(rb.get("rules"), list):
+        raise ValueError("伦理规范库缺少 rules 数组")
+    if any(not isinstance(rule, dict) for rule in rb["rules"]):
+        raise ValueError("伦理规范库 rules 的每一项必须是 JSON 对象")
     facts = derive_facts(structured_result, rb)
     version = rb.get("rulebase_version")
     signals = []
@@ -459,11 +486,48 @@ def _selftest():
     bad2 = [r["rule_id"] for r in rb["rules"] if not r.get("false_positive_guard")]
     expect("每条规则都有防误报说明", bad2, [])
 
+    try:
+        screen([])
+        invalid_rejected = False
+    except ValueError:
+        invalid_rejected = True
+    expect("非对象 structured_result 给出受控错误", invalid_rejected, True)
+
     print("\n全部通过" if ok else "\n存在失败项")
     return 0 if ok else 1
 
 
+def _read_json(path):
+    if path == "-":
+        return json.load(sys.stdin)
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def _main(argv=None):
+    parser = _JsonArgumentParser(description="伦理规范库筛查（只产 signal）")
+    parser.add_argument("--input", metavar="JSON",
+                        help="structured_result JSON 文件；- 表示 stdin")
+    parser.add_argument("--rulebase", metavar="JSON", default=RULEBASE,
+                        help="规范库路径；默认按脚本位置解析 Skill 内 resources")
+    parser.add_argument("--signal-start", type=int, default=600)
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args(argv)
+    if args.selftest:
+        return _selftest()
+    if not args.input:
+        parser.error("必须提供 --input JSON（或 --selftest）")
+    try:
+        structured_result = _read_json(args.input)
+        rulebase = _read_json(args.rulebase)
+        signals = screen(structured_result, rulebase, signal_start=args.signal_start)
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+        print(json.dumps({"error": {"code": "invalid_input", "detail": str(exc)}},
+                         ensure_ascii=False), file=sys.stderr)
+        return 2
+    print(json.dumps({"signals": signals}, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
 if __name__ == "__main__":
-    if "--selftest" in sys.argv:
-        sys.exit(_selftest())
-    print(__doc__)
+    sys.exit(_main())

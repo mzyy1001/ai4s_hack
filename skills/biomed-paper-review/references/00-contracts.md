@@ -203,7 +203,7 @@ point | interval | lower_bound | upper_bound | categorical
 
 - `unit` 保留稿件原写法；`unit_normalized` 为归一化形式，**兼容性比较一律用归一化值**。
   无量纲指标 `unit: null`，`unit_normalized: null`。
-- **归一化由 `skills/biomed-paper-review/scripts/normalize_biomed_units.py` 执行**
+- **归一化由 Skill 根目录相对路径 `scripts/normalize_biomed_units.py` 执行**
   （一期能力，只用标准库）。
   它是 fail-closed 的：只做**同量纲**确定性换算；未登记别名返回 `unknown_unit`，
   调用方据此判 `ambiguous`，**不得猜**。三条永不合并的量纲边界：
@@ -714,7 +714,7 @@ finding id 升序排列。
 
 > 五种统计取证 signal（`test_statistic_p_mismatch`、`ci_estimate_mismatch`、
 > `count_percentage_mismatch`、`grim_incompatible_mean`、`table_total_mismatch`）由
-> `skills/biomed-paper-review/scripts/statistical_forensics.py` 在 Stage 2 产出，
+> `scripts/statistical_forensics.py` 在 Stage 2 产出（路径相对 Skill 根目录），
 > **不需要原始数据**，
 > 是一期就能做的确定性一致性检验（`produced_by: "stage_2"`，`routed_to: ["M4"]`）。
 > 它们**仍然只是 signal** —— 工具层不下稿件结论，是否构成稿件问题由 M4 判定。

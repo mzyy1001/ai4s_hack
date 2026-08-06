@@ -55,7 +55,7 @@ SIGNAL_TYPE = {"source_value_conflict", "claim_without_resolved_evidence_link",
                "test_statistic_p_mismatch", "ci_estimate_mismatch",
                "count_percentage_mismatch", "grim_incompatible_mean",
                "table_total_mismatch",
-               # 一期伦理规范库筛查（tools/ethics_compliance_check.py）
+               # 一期伦理规范库筛查（Skill 内 scripts/ethics_compliance_check.py）
                "ethics_requirement_unmet",
                # 一期序列与标识符确定性审计
                "sequence_identifier_inconsistent",
@@ -80,6 +80,9 @@ STAGE_DEPS = {"stage_2": "stage_1", "stage_3": "stage_1", "stage_3b": "stage_2",
 SEVERITY_WEIGHT = {"critical": 25, "major": 10, "minor": 3, "info": 0}
 SEVERITY_RANK = {"critical": 3, "major": 2, "minor": 1, "info": 0}
 PRIORITY_RANK = {"P0": 0, "P1": 1, "P2": 2}
+STAT_FORENSICS_CHECKS = {"test_statistic_p_mismatch", "ci_estimate_mismatch",
+                         "count_percentage_mismatch", "grim_incompatible_mean",
+                         "table_total_mismatch"}
 
 
 class Report:
@@ -179,6 +182,11 @@ def check_schemas(rep):
     sig_enum = set(sig.get("properties", {}).get("type", {}).get("enum", []))
     rep.check(sig_enum == SIGNAL_TYPE, "signal type 十五值且无 parse_failure",
               f"schema={sorted(sig_enum)}")
+    forensics_enum = set(sig.get("properties", {}).get("forensics", {})
+                         .get("properties", {}).get("check", {}).get("enum", []))
+    rep.check(forensics_enum == STAT_FORENSICS_CHECKS,
+              "forensics.check 覆盖五种已实现统计取证",
+              f"schema={sorted(forensics_enum)}")
 
     ev = schemas.get("evidence.schema.json", {})
     ev_defs = ev.get("$defs", {})
@@ -1056,6 +1064,12 @@ def check_tool_signals(rep, schemas):
         if need and need not in x:
             bad_block.append(f"{x.get('id')}({x.get('type')}) 缺 {need}")
     rep.check(not bad_block, "各类 signal 携带其判据块", "; ".join(bad_block[:4]))
+
+    bad_forensics = [f"{x.get('id')}:{x.get('forensics', {}).get('check')}"
+                      for x in sigs if "forensics" in x and
+                      x.get("forensics", {}).get("check") not in STAT_FORENSICS_CHECKS]
+    rep.check(not bad_forensics, "统计工具产出的 forensics.check 在 schema 枚举内",
+              "; ".join(bad_forensics[:4]))
 
     # 图像审计的定性禁令：schema 层已强制，这里再验实际产出
     img = [x for x in sigs if x.get("type") == "figure_integrity_candidate"]

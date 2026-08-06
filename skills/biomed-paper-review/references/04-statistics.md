@@ -38,14 +38,14 @@
 | `source_value_conflict` | Stage 3b | 数值矛盾是否影响统计结论 |
 | `partial_extraction` | Stage 2 | 报告是否不完整（如有 n 无重复类型） |
 | `ambiguous_extraction` | Stage 2 | 统计方法表述是否含糊到无法判定 |
-| **`test_statistic_p_mismatch`** | `skills/biomed-paper-review/scripts/statistical_forensics.py` | 是否构成 p 值报告错误 |
+| **`test_statistic_p_mismatch`** | `scripts/statistical_forensics.py`（相对 Skill 根目录） | 是否构成 p 值报告错误 |
 | **`ci_estimate_mismatch`** | 同上 | 是否构成区间报告错误 |
 | **`count_percentage_mismatch`** | 同上 | 是否构成数据报告错误 |
 | **`grim_incompatible_mean`** | 同上 | 是否构成汇总统计不可能 |
 | **`table_total_mismatch`** | 同上 | 互斥穷尽分类的合计是否与声明分母矛盾 |
 
 > **加粗的五种是一期已实现的确定性取证**
->（`skills/biomed-paper-review/scripts/statistical_forensics.py`），
+>（`scripts/statistical_forensics.py`，相对 Skill 根目录），
 > 不需要原始数据，只用论文自己印出来的数字。它们**已从二期提前到一期**
 > —— 本文件旧版把它们列在「§5 二期扩展」，现已更正。
 > 工具层只产 signal，**M4 决定是否构成 finding 以及 severity**。

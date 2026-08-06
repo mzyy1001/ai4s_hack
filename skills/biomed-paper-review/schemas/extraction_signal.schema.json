@@ -155,13 +155,14 @@
 
     "forensics": {
       "type": "object",
-      "description": "仅统计取证类 signal 使用。记录复算输入与结果，使 M4 能独立复现该判定。由 skills/biomed-paper-review/scripts/statistical_forensics.py 产出。",
+      "description": "仅统计取证类 signal 使用。记录复算输入与结果，使 M4 能独立复现该判定。由 Skill 根目录相对路径 scripts/statistical_forensics.py 产出。",
       "required": ["check", "ran", "rule_version"],
       "additionalProperties": true,
       "properties": {
         "check": {
           "enum": ["test_statistic_p_mismatch", "ci_estimate_mismatch",
-                   "count_percentage_mismatch", "grim_incompatible_mean"]
+                   "count_percentage_mismatch", "grim_incompatible_mean",
+                   "table_total_mismatch"]
         },
         "ran": {
           "type": "boolean",

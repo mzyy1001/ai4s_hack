@@ -29,15 +29,27 @@
     compare_units("mg/mL", "g/L")   # -> ('comparable', 1.0)
     compare_units("mg/kg", "mg/kg/day")  # -> ('incomparable_dimension', None)
 
-命令行自检：
-    python3 skills/biomed-paper-review/scripts/normalize_biomed_units.py --selftest
+命令行：
+    python3 <Skill 目录>/scripts/normalize_biomed_units.py --normalize 'µM'
+    python3 <Skill 目录>/scripts/normalize_biomed_units.py --compare 'mg/mL' 'g/L'
+    python3 <Skill 目录>/scripts/normalize_biomed_units.py --selftest
 """
 
+import argparse
+import json
+import math
 import re
 import sys
 import unicodedata
 
 RULE_VERSION = "2026-08-07"
+
+
+class _JsonArgumentParser(argparse.ArgumentParser):
+    def error(self, message):
+        print(json.dumps({"error": {"code": "invalid_input", "detail": message}},
+                         ensure_ascii=False), file=sys.stderr)
+        raise SystemExit(2)
 
 # ---------------------------------------------------------------- 量纲定义
 # 每个量纲一个基准单位；同量纲之间才允许换算。
@@ -289,14 +301,19 @@ def compare_units(unit_a, unit_b, molecular_weight=None, analyte=None):
         return "comparable", ra["factor_to_base"] / rb["factor_to_base"]
 
     if frozenset({da, db}) in CONVERTIBLE_WITH_MW:
-        if molecular_weight is None or analyte is None:
+        try:
+            mw = float(molecular_weight)
+        except (TypeError, ValueError, OverflowError):
+            mw = None
+        if (mw is None or not math.isfinite(mw) or mw <= 0
+                or analyte is None or not str(analyte).strip()):
             return "conversion_requires_molecular_weight", None
         # g/L -> mol/L 需要除以 MW(g/mol)
         a_base = ra["factor_to_base"]
         b_base = rb["factor_to_base"]
         if da == "mass_concentration":
-            return "comparable", (a_base / molecular_weight) / b_base
-        return "comparable", (a_base * molecular_weight) / b_base
+            return "comparable", (a_base / mw) / b_base
+        return "comparable", (a_base * mw) / b_base
 
     return "incomparable_dimension", None
 
@@ -335,12 +352,44 @@ def _selftest():
     ok &= good
     print(f"  {'PASS' if good else 'FAIL'}  g/L vs mmol/L (glucose MW=180.16) -> {v} factor={f}")
 
+    for bad_mw in (0, -1, "unknown", float("inf")):
+        v, f = compare_units("g/L", "mmol/L", molecular_weight=bad_mw, analyte="glucose")
+        good = v == "conversion_requires_molecular_weight" and f is None
+        ok &= good
+        print(f"  {'PASS' if good else 'FAIL'}  非法分子量 {bad_mw!r} 安全拒绝 -> {v}")
+
     print("\n全部通过" if ok else "\n存在失败项")
     return 0 if ok else 1
 
 
+def _main(argv=None):
+    parser = _JsonArgumentParser(description="生物医学单位归一化与可比性判定")
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--normalize", metavar="UNIT", help="归一化一个单位")
+    mode.add_argument("--compare", nargs=2, metavar=("UNIT_A", "UNIT_B"),
+                      help="判断两个单位是否可比")
+    mode.add_argument("--selftest", action="store_true", help="运行内置自检")
+    parser.add_argument("--molecular-weight", type=float,
+                        help="跨质量/摩尔浓度换算所需的正分子量，单位 g/mol")
+    parser.add_argument("--analyte", help="跨质量/摩尔浓度换算所需的分析物名称")
+    args = parser.parse_args(argv)
+
+    if args.selftest:
+        return _selftest()
+    if args.normalize is not None:
+        result = normalize(args.normalize)
+    else:
+        verdict, factor = compare_units(
+            args.compare[0], args.compare[1],
+            molecular_weight=args.molecular_weight, analyte=args.analyte)
+        result = {
+            "unit_a": args.compare[0], "unit_b": args.compare[1],
+            "verdict": verdict, "factor_a_to_b": factor,
+            "rule_version": RULE_VERSION,
+        }
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
 if __name__ == "__main__":
-    if "--selftest" in sys.argv:
-        sys.exit(_selftest())
-    for arg in sys.argv[1:]:
-        print(arg, "->", normalize(arg))
+    sys.exit(_main())
