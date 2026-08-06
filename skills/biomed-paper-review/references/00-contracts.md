@@ -1,6 +1,6 @@
 # 00 · 共享契约（全模块通用）
 
-**本文件定义 Stage 1–5 与 M1–M7 共用的数据契约。任何模块输出不符合此处定义的内容，一律视为无效。**
+**本文件定义 Stage 1–5、可选外部验证层 X1 与 M1–M7 共用的数据契约。任何模块输出不符合此处定义的内容，一律视为无效。**
 
 由 `SKILL.md §3` 引用。修改此文件等于修改全部模块的接口，需全组同步。
 本文件所有示例**必须**能通过 §11 的契约 lint 检查表。
@@ -55,15 +55,22 @@
 }
 ```
 
-### 1.2 两种证据型
+### 1.2 三种证据型
 
 | type | 用于 | 必填 | 禁止 |
 | --- | --- | --- | --- |
 | `present` | 稿件中已有的内容 | `locator` 对象 | —— |
 | `absence` | 稿件中不存在的内容 | `scope` + `searched_locations[]` + `search_terms[]` + `search_result` | **`quote`**、**`locator`** |
+| `external` | X1 从公开科学数据源取得的事实 | `database` + `endpoint` + `query` + `retrieval_status` + 响应 hash/版本 + `assertions[]` | 稿件 `locator`/`quote`、API key、Cookie、Authorization header、整份响应 |
 
 **`search_result` 枚举**：`no_match` / `partial_match_ambiguous`。
 后者**不足以**支撑缺失结论，引用它的字段必须判 `ambiguous` 而非 `not_reported`。
+
+**`external.retrieval_status` 枚举**：`resolved` / `not_found` / `not_addressed`。
+`not_found` 仅用于**格式合法的精确标识符**获得权威 404 或成功响应中的明确零记录；
+名称、关键词或语义查询零命中只能记 `not_addressed`。DNS、超时、TLS、白名单拦截、
+401/403、429、5xx 或响应结构漂移**不得创建 external evidence**，按 §6.3 产
+`system_limitation`。数据库沉默不是反证。
 
 ### 1.3 登记表硬性规则
 
@@ -73,8 +80,12 @@
 3. `type: "absence"` 的条目**禁止**含 `quote`。**绝不为不存在的内容编造引文。**
 4. `absence` 的 `searched_locations[]` 必须反映**实际执行过**的检索。
    检索范围之外的部分不得声称"缺失"，应改产出 `system_limitation`。
-5. `created_by` 取 `stage_1` / `stage_2` / `stage_3` / `stage_3b` / `M2`…`M7`，用于排障。
+5. `created_by` 取 `stage_1` / `stage_2` / `stage_3` / `stage_3b` /
+   `stage_3c_external_validation` / `M2`…`M7`，用于排障；`external` 只能由
+   `stage_3c_external_validation` 创建。
 6. 同一 locator + 同一 quote 的证据**复用既有条目**，不新建。
+7. `external.assertions[]` 只保存外部响应中的原子事实与 `source_path`；稿件值与外部值的
+   比较写入 `extraction_signal.external_check`，不得把比较结论伪装成数据库原文。
 
 ### 1.4 引用规则：evidence_refs[] 是唯一规范形式
 
@@ -92,7 +103,53 @@
 
 **禁止**在上述任何位置内联 `evidence[]` 对象数组。旧契约的内联形式见 §10 迁移表。
 
-### 1.5 locator 字段表
+### 1.5 external evidence 示例
+
+```json
+{
+  "id": "EV-120",
+  "type": "external",
+  "database": "ClinicalTrials.gov",
+  "endpoint": "https://clinicaltrials.gov/api/v2/studies/NCT01234567",
+  "query": {"query_kind": "trial_registration", "normalized_input": "NCT01234567"},
+  "record_id": "NCT01234567",
+  "retrieved_at": "2026-08-07T03:20:00Z",
+  "database_version": "2026-08-07",
+  "http_status": 200,
+  "retrieval_status": "resolved",
+  "response_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "parser_version": "clinicaltrials_gov/1.0.0",
+  "assertions": [{
+    "predicate": "study_first_submit_date",
+    "subject": "NCT01234567",
+    "external_value": "2021-05-04",
+    "unit": null,
+    "source_path": "protocolSection.statusModule.studyFirstSubmitDate"
+  }],
+  "created_by": "stage_3c_external_validation"
+}
+```
+
+### 1.6 X1 获取、缓存与重试契约
+
+1. X1 只接受 Stage 3b 封闭后的 `lookup_request`：`request_id`、`connector`、
+   `query_kind`、`normalized_input`、稿件 `present` evidence refs 与请求断言。X1 只产
+   `external` evidence、`external_validation_candidate` signal 或 X1 本地
+   `system_limitation`，**禁止产 finding**。
+2. 缓存键为 `sha256(connector_version + HTTP method + endpoint template + 排序后的规范化参数
+   + Accept)`；响应体按原始字节计算 SHA-256。缓存保存状态码、响应头中的 ETag/Last-Modified、
+   获取时间、数据库版本与 parser 版本，不保存凭证；缓存目录由运行参数指定，不进入提交包。
+3. 同一次审核运行首次成功响应后冻结，不在运行中刷新。`resolved` 缓存默认 TTL 24 小时；
+   精确标识符的 `not_found` 与语义查询的 `not_addressed` 最多缓存 1 小时；过期条目优先用
+   `If-None-Match` / `If-Modified-Since` 复核。429、5xx、网络异常与解析失败不得负缓存为
+   `not_found`。
+4. 仅对连接超时、读超时、429、502、503、504 重试，最多 4 次；等待 1、2、4 秒，
+   有 `Retry-After` 时取其值但上限 120 秒。400/401/403/404 不重试；401/403/白名单拦截
+   记 `external_access_denied`，404 仅在精确标识符规则满足时记 `not_found`。
+5. 所有 connector 先执行本地格式校验再联网，并遵守数据源公布的速率限制；无凭证时不得
+   通过提高并发绕过限流。离线模式或 X1 未执行时，Stage 1–5 仍须完整结束。
+
+### 1.7 locator 字段表
 
 | 字段 | 说明 |
 | --- | --- |
@@ -549,8 +606,8 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 | 契约 | 产出者 | 有 severity | 影响 |
 | --- | --- | --- | --- |
 | `finding` | **仅 M2–M7** | ✅ `critical`/`major`/`minor`/`info` | 稿件风险分 |
-| `extraction_signal` | Stage 2 (M1)、Stage 3b | ❌ 无 | 路由给下游判定，本身不是结论 |
-| `system_limitation` | Stage 1 / 2 / 3 / 3b | ❌ 无 | 只降覆盖率与置信度 |
+| `extraction_signal` | Stage 2、Stage 3、Stage 3b、可选 X1 | ❌ 无 | 路由给下游判定，本身不是结论 |
+| `system_limitation` | Stage 1 / 2 / 3 / 3b、可选 X1 | ❌ 无 | 披露能力限制；不增加稿件风险 |
 
 **M1 不产出任何 `finding`。** 旧契约的 `extraction_quality_findings[]` 已废除，
 迁移映射见 §10。
@@ -613,6 +670,12 @@ finding id 升序排列。
 6. critical 的 `manual_review.priority` 必须为 P0；major 只能为 P0/P1；minor/info 若设置
    priority 只能为 P2。每条 critical/major 必须进入报告级 `manual_review_plan`；minor/info
    设置了 P2 且 action 非空时也必须进入。
+7. 凡引用 `external` evidence 的 finding，`evidence_refs[0]` 必须解析到稿件内
+   `present` evidence，且 refs 中至少各有一条 `present` 与 `external`。外部记录只能核验
+   稿件中**实际出现的主张、标识符或数值**；`absence + external` 不能替代稿件内锚点。
+8. `external.retrieval_status ∈ {not_found, not_addressed}`、X1 `system_limitation` 或
+   `external_check.comparison_result ∈ {not_comparable, needs_manual_review}` 均不得单独支撑
+   finding。数据库没查到、接口失败或语义不可比绝不等于稿件有问题。
 
 ### 6.2 extraction_signal · 机器级观察
 
@@ -629,7 +692,7 @@ finding id 升序排列。
 }
 ```
 
-**`type` 枚举（十三值）**
+**`type` 枚举（十四值）**
 
 | type | 触发条件 | 路由到 | 下游判定什么 |
 | --- | --- | --- | --- |
@@ -646,6 +709,7 @@ finding id 升序排列。
 | `ethics_requirement_unmet` | 规范库某条伦理要求适用，但稿件未见对应报告 | M6 | 是否构成伦理合规问题 |
 | `sequence_identifier_inconsistent` | 变异命名/序列/登录号/基因符号存在明确违规，或表达式超出本地解析子集、需人工复核 | M2、M3 | 是否构成表述或方法学错误 |
 | `figure_integrity_candidate` | 图像审计检出候选重复区域、背景拼接不连续或异常均匀区块 | M5 | 人工核对原图、图注与合法复用说明后，是否构成图像完整性问题 |
+| `external_validation_candidate` | X1 对稿件 `present` 事实与 `external` 原子事实完成可比性判定 | M2、M4、M6、M7 | 回查稿件与外部记录后，是否存在身份、注册、统计或主张不一致 |
 
 > 后四种由 `skills/biomed-paper-review/scripts/statistical_forensics.py` 在 Stage 2 产出，
 > **不需要原始数据**，
@@ -663,13 +727,21 @@ finding id 升序排列。
 **规则**
 
 1. signal **没有 `severity`**，**不直接**影响 `manuscript_risk_score`。
-2. `produced_by` 取 `stage_2` / `stage_3` / `stage_3b`。
+2. `produced_by` 取 `stage_2` / `stage_3` / `stage_3b` /
+   `stage_3c_external_validation`。
    `stage_3` **仅**用于图像完整性审计 —— 它是像素级机器观察，
-   自然产生于图像解析阶段；Figure Parser 仍**不产出 finding**。
+   自然产生于图像解析阶段；`stage_3c_external_validation` **仅**用于
+   `external_validation_candidate`；两者都**不产出 finding**。
 3. `claim_without_resolved_evidence_link` 的 `target` 必须携带目标元数据：
    `{"claim_id": "CLM-03", "unresolved_refs": ["Fig 5D"]}`，
    **不另设** `unresolved_evidence_links[]` 数组（§10）。
 4. 旧 `parse_failure` type **已废除** —— 解析失败是 `system_limitation`，不是 signal（§10）。
+5. `external_validation_candidate` 必填 `external_check`，并同时引用至少一条稿件内
+   `present` 与一条 `retrieval_status: resolved` 的 `external` evidence；顶层
+   `evidence_refs[]` 必须恰好覆盖 `external_check` 的两组 refs。`not_found` / `not_addressed`
+   没有可比较原子事实，不得创建 signal。`comparison_result` 只取 `match` / `mismatch` /
+   `not_comparable` / `needs_manual_review`；只有 `mismatch` 可进入下游 finding 候选，仍须
+   M2/M4/M6/M7 独立回查证据。X1 不路由 M1/M3/M5。
 
 > **图像完整性审计的定性禁令。** `figure_integrity_candidate` 的
 > `image_audit.severity_hint` **恒为 `null`**，`candidate` 恒为 `true`，
@@ -694,20 +766,25 @@ finding id 升序排列。
 }
 ```
 
-**`category` 枚举（八值）**
+**`category` 枚举（十二值）**
 
 ```
 parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
 | section_missing_from_input | ocr_low_quality | encoding_error | input_truncated
+| external_source_unavailable | external_access_denied | external_rate_limited
+| external_response_unparseable
 ```
 
 **硬性规则**
 
 1. **没有 `severity` 字段。** 它不是稿件问题。
-2. **降低** `extraction_coverage` 与 confidence，**不降低** `manuscript_risk_score`（§8.1）。
+2. Stage 1–3b 的限制按 §8 降低 `extraction_coverage` 与 confidence；X1 限制只降低后续
+   `external_validation_coverage`（未落地前只展示），**不得改变现有三项评分**，更不得提高
+   `manuscript_risk_score`。
 3. **不得**在无独立稿件证据的情况下转成稿件缺陷（§6.1 规则 4）。
 4. 报告中必须单列一节 —— 让人看到「哪些地方我们没看清」。
-5. `produced_by` 取 `stage_1` / `stage_2` / `stage_3` / `stage_3b`。
+5. `produced_by` 取 `stage_1` / `stage_2` / `stage_3` / `stage_3b` /
+   `stage_3c_external_validation`；四类 `external_*` category 只能由 X1 产出。
 
 ### 6.4 边界矩阵（争议情形的唯一判法）
 
@@ -719,6 +796,9 @@ parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
 | 正文与图注数值打架 | `source_value_conflict` signal → M2 判定 | M1 直接立 `internal_inconsistency` finding |
 | 字段等 Stage 3 解析 | `status: unresolved` | `parse_failed` + `pending_visual_resolution: true` |
 | 单位不可归一无法比较 | 组 status `ambiguous` | 组 status `conflicting` |
+| 外部主机未进白名单、429、5xx 或响应结构漂移 | X1 `system_limitation`；离线流程继续 | `not_found`、mismatch signal 或 finding |
+| 精确登录号权威 404 | `external: not_found`；最多进入人工核对，不自动 finding | 宣称编号虚假或数据不可用 |
+| 名称/语义查询零命中 | `external: not_addressed` | 当作外部反证 |
 
 ---
 
@@ -752,7 +832,7 @@ parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
 | --- | --- |
 | `mode` | `full_review` / `structured_extraction` / `figure_analysis` / `targeted_check` |
 | `submode` | 仅 `figure_analysis` 使用：`interpretation_only` / `figure_review`；其余为 `null` |
-| `executed_stages[]` | `stage_1` / `stage_2` / `stage_3` / `stage_3b` / `stage_4` / `stage_5` |
+| `executed_stages[]` | `stage_1` / `stage_2` / `stage_3` / `stage_3b` / `stage_3c_external_validation` / `stage_4` / `stage_5`；X1 未运行时不列该值 |
 | `executed_modules[]` | 实际运行的审核模块；非审核模式为空数组 |
 | `skipped_modules[]` | `full_review` 下为空数组 |
 | `fields[]` | 进入覆盖率分母的字段路径全集 |
@@ -978,15 +1058,17 @@ review_confidence = extraction_coverage × Q × C
 | `stage2_system_limitations[]` | Stage 2 (M1) |
 | `stage3_system_limitations[]` | Stage 3 (Figure Parser) |
 | `stage3b_system_limitations[]` | Stage 3b |
+| `external_system_limitations[]` | X1 (`stage_3c_external_validation`) |
 | `m1_extraction_signals[]` | Stage 2 (M1) |
 | `stage3_extraction_signals[]` | Stage 3（图像完整性审计） |
 | `merge_extraction_signals[]` | Stage 3b |
+| `external_validation_signals[]` | X1 (`stage_3c_external_validation`) |
 | `m2_findings[]` … `m7_findings[]` | 对应审核模块 |
 
 | 聚合产物 | **唯一聚合器** | 组成 |
 | --- | --- | --- |
-| `all_system_limitations[]` | **Stage 5**（非 `full_review` 模式为输出装配步骤） | 四个 stage-local 数组按 id 升序拼接 |
-| `all_extraction_signals[]` | 同上 | `m1_` + `stage3_` + `merge_` 三个数组拼接 |
+| `all_system_limitations[]` | **Stage 5**（非 `full_review` 模式为输出装配步骤） | Stage 1/2/3/3b 四个数组 + 可选 `external_`，按 id 升序拼接 |
+| `all_extraction_signals[]` | 同上 | `m1_` + `stage3_` + `merge_` + 可选 `external_validation_` 拼接 |
 | `all_findings[]` | **Stage 5** | `m2_`…`m7_` 六个数组拼接 |
 | `issue_clusters[]` | **Stage 5** | 对 `all_findings[]` 执行 §9.3 |
 
@@ -1056,8 +1138,8 @@ review_confidence = extraction_coverage × Q × C
 
 ```
 [ ] 全部 enum 取值合法（source_type 五值 / extraction_method 六值 / status 七值 /
-    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十三值 /
-    system_limitation category 八值 / key_data status 六值 / numeric type 五值）
+    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十四值 /
+    system_limitation category 十二值 / key_data status 六值 / numeric type 五值）
 [ ] 全部 §x.y 内部引用可解析到本仓库真实存在的小节
 [ ] 全部 evidence_ref / evidence_refs[] 在 evidence_registry 中解析到恰好一个条目
 [ ] 全部 observation_refs[] 在对应 key_data.observations[] 中可解析
@@ -1070,6 +1152,9 @@ review_confidence = extraction_coverage × Q × C
 [ ] 每条 finding 的 evidence_refs[] 非空
 [ ] severity >= major 的 finding 均有非空 manual_review.action
 [ ] type = "absence" 的证据均无 quote 字段
+[ ] type = "external" 的证据均由 X1 创建、带响应 hash/版本，且不含凭证或稿件 locator/quote
+[ ] 引用 external evidence 的 finding 以 present evidence 为首锚点，且同时含 present + external
+[ ] X1 失败只产 external_* system_limitation，不产 mismatch signal 或 finding
 [ ] 全部数值为 §2.1 的 numeric 对象，无裸数字、无字符串区间
 [ ] 全部 pixel_estimated 数值满足 §2.4 四项强制约束
 [ ] 全部 provenance 带 derivation，且 source_type × extraction_method 组合合法

@@ -21,7 +21,8 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 
 **每一条稿件级 finding 都必须有可审计的证据支撑。** 针对**已存在内容**给出 `present`
 证据（含结构化 locator）；针对**缺失内容**给出 `absence` 证据（显式检索范围 + 检索词 +
-检索结果），**绝不为不存在的内容伪造引文**。证据的规范存储是**证据登记表**
+检索结果）；公开科学数据源的事实给出 `external` 证据（端点、查询、版本、时间与响应 hash），
+**绝不为不存在的内容伪造引文**。证据的规范存储是**证据登记表**
 `evidence_registry`，一切引用位置只存 `evidence_refs[]`（`references/00-contracts.md §1`）。
 给不出上述任一种证据的判断一律丢弃 —— 这是本 Skill 与「大模型泛泛点评」的根本区别。
 
@@ -31,21 +32,21 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 ### 0.2 当前实现边界与联网增强原则
 
 执行环境允许访问白名单内的公开科学数据源，网络与 12 小时超时**不再构成分期依据**。
-当前提交包已定义论文内部证据与通用规范库的离线流程，并交付五项可独立运行的确定性脚本；
-外部 evidence 契约与解析层尚未落地，因此本版本**不得声称已完成外部数据库核验**。
-后续一期可加入可选联网增强；外部源不可达、
-限流或无权访问时必须产 `system_limitation`，不得据此判稿件有问题，离线流程仍须完整结束。
+离线 Stage 1–5 是保底；可选 X1 位于 Stage 3b 后、Stage 4 前。当前已落地 X1 的
+`external` evidence、无 severity signal 与失败降级契约，但**尚未交付 connector 脚本**，
+因此在 connector 实现并通过录制响应回归前，不得声称已完成任何数据库核验。
 
-| 能力 | 当前离线做法 | 一期联网增强归属 | 接入前置条件 |
+| 能力 | 当前离线做法 | 一期 X1 归属 | 接入前置条件 |
 | --- | --- | --- | --- |
 | 判断结论在科学上是否**为真** | 只做 claim↔evidence 对齐 | M7 | 文献库 MCP（PubMed / Europe PMC） |
 | 判断领域**创新性 / 重要性** | 不判断 | M7 | 文献库 + 引用网络；需先定义可量化新颖度判据 |
 | 判断违背基础常识的结论 | 标记「结论超出证据支持范围」交人工 | M7 | 领域常识规则库；先积累一期误判样本 |
 | 复现统计计算 | 已做 p/CI/计数/GRIM 四类无需原始数据的一致性取证 | M4 | 原始数据可得时重跑主要分析 |
 
-联网增强应**扩展**而非重构主框架：新增 `database` / `query` / `retrieval_date` / `record_id` / `version` /
-`retraction_or_correction_status` / `relation_to_claim` 等元数据。外部证据型与唯一产出阶段
-尚未进入当前 schema；完成契约迁移前不得声称已核验外部数据库。
+X1 只产 `external` evidence、`external_validation_candidate` 与 X1 `system_limitation`，
+禁止产 finding。外部源不可达、未进白名单、限流、接口故障或响应不可解析时按契约降级，
+不得产 mismatch，不得改变现有三项评分，离线流程仍须完成。缓存与重试见
+`references/00-contracts.md §1.6`。
 
 ## 1. 执行模式与依赖图
 
@@ -59,7 +60,7 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 ### 1.1 `full_review`
 
 ```
-Stage 1 → Stage 2 → Stage 3 → Stage 3b → Stage 4 (M2–M7) → Stage 5
+Stage 1 → Stage 2 → Stage 3 → Stage 3b → [可选 X1] → Stage 4 (M2–M7) → Stage 5
 ```
 
 输出：`review_report`、`structured_result_v2`、`figure_records[]`、`table_records[]`、
@@ -135,6 +136,7 @@ Stage 1
 → Stage 2
 → [条件] scoped Stage 3    问题依赖图表，或 v1 的 scope 内存在 `unresolved`
 → scoped Stage 3b
+→ [条件] scoped X1         请求外部核验且消费者属于 M2/M4/M6/M7
 → Stage 4: 仅选定模块
 → Stage 5 (partial aggregation)
 ```
@@ -196,7 +198,7 @@ Stage 1
 本 Skill 含**七个分析模块**：**M1 是前置抽取层，M2–M7 是并行审核模块。**
 
 M2–M7 全部消费 M1（经 Stage 3b 合并后）的产物，因此 **M1 与 M2–M7 不是并行关系**。
-只有在 Stage 2 与 Stage 3b 完成之后，M2–M7 才可并行执行。
+只有在 Stage 2、Stage 3b 与本次已声明的可选 X1 完成之后，M2–M7 才可执行。
 可以说「一个抽取层 + 六个审核模块」，**不要**说「七个模块相互独立」。
 
 ### 2.2 Figure Parser 与 M5 Reviewer 是两个执行角色
@@ -220,6 +222,8 @@ Stage 2  M1 结构化抽取      └─> structured_result_v1, m1_extraction_sig
 Stage 3  图表解析(Parser)   └─> figure_records[], table_records[], stage3_system_limitations[]
 Stage 3b 合并与冲突消解     └─> structured_result_v2, merge_extraction_signals[],
                                 stage3b_system_limitations[]
+X1 可选外部验证层           └─> external evidence, external_validation_signals[],
+                                external_system_limitations[]
 Stage 4  M2–M7 并行审核     └─> m2_findings[] … m7_findings[]
 Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_limitations[],
                                 all_findings[], issue_clusters[], 三项评分, review_report
@@ -241,9 +245,10 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 | `structured_result_v2` | Stage 3b | **M2–M7 全部** |
 | `merge_extraction_signals[]` | Stage 3b | Stage 5 聚合 |
 | `stage{1,2,3,3b}_system_limitations[]` | 对应阶段 | Stage 5 聚合 |
+| `external_validation_signals[]` / `external_system_limitations[]` | 可选 X1 | M2/M4/M6/M7、Stage 5 聚合 |
 | `m2_findings[]` … `m7_findings[]` | 对应审核模块 | Stage 5 |
-| `all_extraction_signals[]` | **Stage 5** 聚合 `m1_` + `merge_` | 报告 |
-| `all_system_limitations[]` | **Stage 5** 聚合四个 stage-local | 报告 |
+| `all_extraction_signals[]` | **Stage 5** 聚合 Stage 2/3/3b + 可选 X1 | 报告 |
+| `all_system_limitations[]` | **Stage 5** 聚合 Stage 1/2/3/3b + 可选 X1 | 报告 |
 | `execution_scope` | **执行规划步骤（Stage 1 前初始化）**；条件阶段触发时由同一步骤先更新再执行 | 全阶段（消费白名单与评分分母） |
 | `all_findings[]` / `issue_clusters[]` / `coverage_breakdown` / `review_report` | **Stage 5** | 评分、报告、用户 |
 
@@ -307,11 +312,26 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 
 完整判定规则见 `references/00-contracts.md` §5.4 与 §5.5。
 
+### 2.8.1 X1 · 可选外部验证层
+
+**前置条件：Stage 3b 已封闭 `structured_result_v2`。** 仅当 v2 中有可规范化的精确标识符、
+注册信息、引文或外部可核验主张，且本次执行 M2/M4/M6/M7 中至少一个消费者时运行。
+
+1. 先为稿件事实登记 `present` evidence，再创建 `lookup_request`；不得从模型记忆构造查询值。
+2. connector 按 `references/00-contracts.md §1.6` 获取、缓存、重试并登记 `external` evidence。
+3. 取得 `retrieval_status: resolved` 的外部原子事实后才可产
+   `external_validation_candidate`；`match/mismatch` 还要求完全可比。signal 无 severity，
+   只路由 M2/M4/M6/M7。
+4. 白名单、权限、429、5xx、超时、DNS/TLS 或响应漂移只产
+   `external_system_limitations[]`。`not_found` / `not_addressed` 不是稿件 finding。
+5. 下游若据外部候选立 finding，`evidence_refs[0]` 必须是稿件内 `present`，并同时引用
+   external evidence；仅有外部记录、absence 或 system limitation 时禁止立 finding。
+
 ### 2.9 Stage 4 · M2–M7 并行审核
 
-**前置条件：Stage 2 与 Stage 3b 均已完成。** 六个审核模块此时可并行执行，
+**前置条件：Stage 2、Stage 3b 与本次声明的可选 X1 均已完成。** 六个审核模块此时可并行执行，
 各自读取自己的 reference 文件，消费 `structured_result_v2`、`figure_records[]`、
-`all` 之前的 stage-local signals，输出统一格式的 `finding`。
+`all` 之前的 stage-local signals 与可用 external evidence，输出统一格式的 `finding`。
 
 | # | 模块 | 负责人 | 规则文件 | 核心问题 |
 | --- | --- | --- | --- | --- |
@@ -347,7 +367,9 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 证据存于 `evidence_registry`，各处只写 `evidence_refs[]`，每个 ref 必须解析到
 **恰好一个**登记条目，否则该 finding 无效。`present` 型必填 `locator` 对象；
 `absence` 型必填 `searched_locations[]` + `search_terms[]` + `search_result`，
-且**禁止**含 `quote` 或 `locator`。
+且**禁止**含 `quote` 或 `locator`。`external` 型必填数据源、端点、规范化查询、记录 id、
+获取时间、数据库版本、HTTP 状态、响应 SHA-256、parser 版本与原子 assertions；失败不得伪装成
+external evidence。
 
 ### 3.2 字段的三个正交维度（§3）
 
@@ -383,8 +405,8 @@ visually_derived   = axis_readable | pixel_estimated
 | 契约 | 产出者 | 含 severity | 影响 |
 | --- | --- | --- | --- |
 | `finding` | **仅 M2–M7** | ✅ `critical`/`major`/`minor`/`info` | 稿件风险分 |
-| `extraction_signal` | Stage 2、Stage 3b | ❌ | 路由给下游判定，本身不是结论 |
-| `system_limitation` | Stage 1/2/3/3b | ❌ | 只降覆盖率与置信度 |
+| `extraction_signal` | Stage 2/3/3b、可选 X1 | ❌ | 路由给下游判定，本身不是结论 |
+| `system_limitation` | Stage 1/2/3/3b、可选 X1 | ❌ | 披露能力限制，不增加稿件风险 |
 
 **M1 不产出 finding。** `coverage_breakdown` 与 `execution_scope` **不是记录**，
 其条目不得称为 finding。**解析失败不得赋予稿件 severity。**

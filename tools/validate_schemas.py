@@ -59,10 +59,14 @@ SIGNAL_TYPE = {"source_value_conflict", "claim_without_resolved_evidence_link",
                # 一期序列与标识符确定性审计
                "sequence_identifier_inconsistent",
                # 一期论文内图像完整性审计
-               "figure_integrity_candidate"}
+               "figure_integrity_candidate",
+               # 一期可选外部验证层 X1
+               "external_validation_candidate"}
 SYSLIM_CATEGORY = {"parse_failed", "figure_unreadable", "table_unparseable",
                    "supplement_inaccessible", "section_missing_from_input",
-                   "ocr_low_quality", "encoding_error", "input_truncated"}
+                   "ocr_low_quality", "encoding_error", "input_truncated",
+                   "external_source_unavailable", "external_access_denied",
+                   "external_rate_limited", "external_response_unparseable"}
 KEY_DATA_STATUS = {"reported", "compatible_multiple_sources", "conflicting",
                    "ambiguous", "pending_visual_resolution", "parse_failed"}
 NUMERIC_TYPE = {"point", "interval", "lower_bound", "upper_bound", "categorical"}
@@ -70,6 +74,7 @@ REVIEW_MODULES = {"M2", "M3", "M4", "M5", "M6", "M7"}
 CONFIDENCE = {"high", "medium", "low"}
 
 STAGE_DEPS = {"stage_2": "stage_1", "stage_3": "stage_1", "stage_3b": "stage_2",
+              "stage_3c_external_validation": "stage_3b",
               "stage_4": "stage_3b", "stage_5": "stage_4"}
 SEVERITY_WEIGHT = {"critical": 25, "major": 10, "minor": 3, "info": 0}
 SEVERITY_RANK = {"critical": 3, "major": 2, "minor": 1, "info": 0}
@@ -171,8 +176,26 @@ def check_schemas(rep):
     rep.check("severity" in json.dumps(sig.get("not", {})),
               "extraction_signal 禁止 severity")
     sig_enum = set(sig.get("properties", {}).get("type", {}).get("enum", []))
-    rep.check(sig_enum == SIGNAL_TYPE, "signal type 十三值且无 parse_failure",
+    rep.check(sig_enum == SIGNAL_TYPE, "signal type 十四值且无 parse_failure",
               f"schema={sorted(sig_enum)}")
+
+    ev = schemas.get("evidence.schema.json", {})
+    ev_defs = ev.get("$defs", {})
+    external = ev_defs.get("external_evidence", {})
+    external_required = set(external.get("required", []))
+    expected_external = {"id", "type", "database", "endpoint", "query", "record_id",
+                         "retrieved_at", "database_version", "http_status",
+                         "retrieval_status", "response_sha256", "parser_version",
+                         "assertions", "created_by"}
+    rep.check(expected_external <= external_required and
+              external.get("properties", {}).get("created_by", {}).get("const") ==
+              "stage_3c_external_validation",
+              "external evidence 可追溯且只能由 X1 创建")
+    sig_blob = json.dumps(sig.get("allOf", []), ensure_ascii=False)
+    rep.check("external_validation_candidate" in sig_blob and
+              "stage_3c_external_validation" in sig_blob and
+              "external_check" in sig_blob,
+              "external signal 强制 X1 产出并携带比较轨迹")
 
     try:
         with open(REPORT_TEMPLATE, encoding="utf-8") as fh:
@@ -255,9 +278,32 @@ def check_instance(rep, name, inst):
         elif e.get("type") == "present":
             if "locator" not in e:
                 ev_bad.append(f"{eid}: present 型缺 locator")
+        elif e.get("type") == "external":
+            required = {"database", "endpoint", "query", "record_id", "retrieved_at",
+                        "database_version", "http_status", "retrieval_status",
+                        "response_sha256", "parser_version", "assertions", "created_by"}
+            if not required.issubset(e):
+                ev_bad.append(f"{eid}: external 型缺 {sorted(required - set(e))}")
+            if e.get("created_by") != "stage_3c_external_validation":
+                ev_bad.append(f"{eid}: external 型非 X1 创建")
+            if "locator" in e or "quote" in e:
+                ev_bad.append(f"{eid}: external 型含稿件 locator/quote")
+            public_request = (str(e.get("endpoint", "")) + " " +
+                              json.dumps(e.get("query", {}), ensure_ascii=False)).lower()
+            if re.search(r"(api[_-]?key|authorization|cookie|access_token|secret)=", public_request):
+                ev_bad.append(f"{eid}: external 型请求元数据疑似含凭证")
+            if not re.match(r"^[a-f0-9]{64}$", str(e.get("response_sha256", ""))):
+                ev_bad.append(f"{eid}: external 型 response_sha256 非法")
+            status = e.get("retrieval_status")
+            if status == "resolved" and (not e.get("record_id") or not e.get("assertions")):
+                ev_bad.append(f"{eid}: resolved external 缺 record/assertions")
+            if status in {"not_found", "not_addressed"} and (e.get("record_id") is not None or
+                                                               e.get("assertions")):
+                ev_bad.append(f"{eid}: 未解析 external 不得带 record/assertions")
         else:
             ev_bad.append(f"{eid}: type 非法")
-    rep.check(not ev_bad, "证据登记表条目合法（absence 无引文）", "; ".join(ev_bad[:5]))
+    rep.check(not ev_bad, "证据登记表三型合法（absence 无引文、external 可追溯）",
+              "; ".join(ev_bad[:5]))
 
     # --- provenance / derivation ---
     prov_bad, pixel_bad = [], []
@@ -500,9 +546,28 @@ def check_instance(rep, name, inst):
                 f_bad.append(f"{f.get('id')}: >=major 无 action")
         if f.get("review_confidence") not in CONFIDENCE:
             f_bad.append(f"{f.get('id')}: review_confidence={f.get('review_confidence')}")
+        ref_types = [(registry.get(ref) or {}).get("type") for ref in f.get("evidence_refs", [])]
+        if "external" in ref_types:
+            if not ref_types or ref_types[0] != "present" or "present" not in ref_types:
+                f_bad.append(f"{f.get('id')}: external finding 缺稿件 present 首锚点")
+            ext_entries = [registry.get(ref, {}) for ref in f.get("evidence_refs", [])
+                           if (registry.get(ref) or {}).get("type") == "external"]
+            if any(e.get("retrieval_status") != "resolved" for e in ext_entries):
+                f_bad.append(f"{f.get('id')}: external finding 引用了未 resolved 的外部记录")
+            derived = set(f.get("derived_from_signals", []))
+            ext_signals = [s for s in inst.get("all_extraction_signals", [])
+                           if s.get("id") in derived and
+                           s.get("type") == "external_validation_candidate"]
+            finding_refs = set(f.get("evidence_refs", []))
+            if not any((s.get("external_check") or {}).get("comparison_result") == "mismatch" and
+                       (s.get("external_check") or {}).get("comparability") == "complete" and
+                       set(s.get("evidence_refs", [])) <= finding_refs
+                       for s in ext_signals):
+                f_bad.append(f"{f.get('id')}: external finding 缺同证据、完全可比的 mismatch signal 血缘")
         for ref in f.get("evidence_refs", []):
             creator = (registry.get(ref) or {}).get("created_by")
-            if creator not in {"stage_1", "stage_2", "stage_3", "stage_3b", f.get("module")}:
+            if creator not in {"stage_1", "stage_2", "stage_3", "stage_3b",
+                               "stage_3c_external_validation", f.get("module")}:
                 f_bad.append(f"{f.get('id')}: 消费了并行模块 {creator} 创建的 {ref}")
     rep.check(not f_bad, "finding 契约成立（无 M1、证据非空、major 有动作）",
               "; ".join(f_bad[:5]))
@@ -516,6 +581,38 @@ def check_instance(rep, name, inst):
             s_bad.append(f"{s.get('id')}: 携带 severity")
         if s.get("type") == "source_value_conflict" and s.get("produced_by") != "stage_3b":
             s_bad.append(f"{s.get('id')}: 冲突 signal 非 Stage 3b 产出")
+        if s.get("type") == "external_validation_candidate":
+            if s.get("produced_by") != "stage_3c_external_validation":
+                s_bad.append(f"{s.get('id')}: external signal 非 X1 产出")
+            if not s.get("external_check"):
+                s_bad.append(f"{s.get('id')}: external signal 缺 external_check")
+            ref_types = [(registry.get(ref) or {}).get("type")
+                         for ref in s.get("evidence_refs", [])]
+            if "present" not in ref_types or "external" not in ref_types:
+                s_bad.append(f"{s.get('id')}: external signal 未同时引用 present/external")
+            if not set(s.get("routed_to", [])) <= {"M2", "M4", "M6", "M7"}:
+                s_bad.append(f"{s.get('id')}: external signal 路由越界")
+            check = s.get("external_check") or {}
+            manuscript_refs = check.get("manuscript_evidence_refs", [])
+            external_refs = check.get("external_evidence_refs", [])
+            if any((registry.get(ref) or {}).get("type") != "present"
+                   for ref in manuscript_refs):
+                s_bad.append(f"{s.get('id')}: manuscript_evidence_refs 含非 present")
+            if any((registry.get(ref) or {}).get("type") != "external"
+                   for ref in external_refs):
+                s_bad.append(f"{s.get('id')}: external_evidence_refs 含非 external")
+            if any((registry.get(ref) or {}).get("retrieval_status") != "resolved"
+                   for ref in external_refs):
+                s_bad.append(f"{s.get('id')}: external_evidence_refs 含未 resolved 记录")
+            if set(s.get("evidence_refs", [])) != set(manuscript_refs) | set(external_refs):
+                s_bad.append(f"{s.get('id')}: external_check 双 refs 与顶层 evidence_refs 不一致")
+            result = check.get("comparison_result")
+            comparability = check.get("comparability")
+            if result in {"match", "mismatch"} and comparability != "complete":
+                s_bad.append(f"{s.get('id')}: match/mismatch 但非 complete")
+            if result == "not_comparable" and (comparability != "none" or
+                                                not check.get("noncomparability_reasons")):
+                s_bad.append(f"{s.get('id')}: not_comparable 缺 none/reasons")
     rep.check(not s_bad, "extraction_signal 契约成立", "; ".join(s_bad[:5]))
 
     l_bad = []
@@ -524,6 +621,9 @@ def check_instance(rep, name, inst):
             l_bad.append(f"{l.get('id')}: category={l.get('category')}")
         if "severity" in l:
             l_bad.append(f"{l.get('id')}: 携带 severity")
+        if str(l.get("category", "")).startswith("external_") and \
+                l.get("produced_by") != "stage_3c_external_validation":
+            l_bad.append(f"{l.get('id')}: external limitation 非 X1 产出")
     rep.check(not l_bad, "system_limitation 契约成立（无 severity）", "; ".join(l_bad[:5]))
 
     # --- execution_scope 依赖图 ---

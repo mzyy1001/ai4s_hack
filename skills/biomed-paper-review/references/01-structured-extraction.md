@@ -786,7 +786,7 @@ M1 **向** Stage 1 建立的 `evidence_registry` **追加**条目，`created_by:
 
 ### 10.2 stage2_system_limitations[]
 
-抽取因技术原因失败时产出，结构与八值枚举见 `00-contracts.md §6.3`。M1 常见触发：
+抽取因技术原因失败时产出，结构与十二值枚举见 `00-contracts.md §6.3`。M1 常见触发：
 
 | category | 场景 |
 | --- | --- |
@@ -959,31 +959,24 @@ M1 输出计算 `extraction_coverage` 所需的**原始计数**，
 
 ---
 
-## 14. 一期联网增强：标识符真实性核验（当前未实现）
+## 14. 一期联网增强：标识符真实性核验（X1 契约已落地，connector 未实现）
 
 当前 `scripts/sequence_identifier_audit.py` 已离线检查常见登录号格式、HGVS 支持子集、
 序列字母表，以及版本化完整参考序列上的范围与参考残基。序列缺 accession、版本或完整性声明时
 只产 `partial_extraction`，不得把片段当完整参考序列。它**不能证明记录真实存在**。联网增强接入权威数据源后逐项核验
-存在性与元数据。接入时应扩展而非重构 `provenance` 与 `evidence` 契约
-（见 `SKILL.md §0.2`）。
+存在性与元数据。联网结果统一写 `external` evidence 与
+`external_validation_candidate`（见 `00-contracts.md §1`、§6.2），不得修改 M1 provenance。
 
 | 标识符 | 核验数据源 | 查出什么 | 结果解读归属 |
 | --- | --- | --- | --- |
 | 临床试验注册号 | ClinicalTrials.gov / ChiCTR / WHO ICTRP | 号码不存在、终点与注册不符、注册晚于入组 | **M6** |
 | 细胞系名称 | Cellosaurus / ICLAC | 已知误认或交叉污染细胞系 | **M3** |
 | 抗体 / 试剂 | RRID (Antibody Registry) | 货号不存在、抗体已被证实无特异性 | **M3** |
-| 基因 / 蛋白符号 | HGNC / UniProt | 符号已废弃或写错、物种不匹配 | **M1**（表述层）/ **M2** |
+| 基因 / 蛋白符号 | HGNC / UniProt | 符号已废弃或写错、物种不匹配 | **M2** |
 | 参考文献 | Crossref / PubMed / Retraction Watch | 文献不存在、已被撤稿或更正 | **M2** |
 | 方案注册号 | PROSPERO | 综述方案未注册或与已注册方案偏离 | **M2** |
 
 外部证据层只负责核验标识符事实并产无 severity signal，**不下审核结论**。
-`identifier_verification` 尚未进入当前 signal enum，当前版本不得输出该 type，也不保留一个
-无法通过现有 schema 的 JSON 示例。
-
-`result` 枚举：`verified` / `not_found` / `mismatch` / `retracted` / `superseded` /
-`lookup_failed`。
-**`lookup_failed`（网络或接口故障）产出 `system_limitation`，不得当作 `not_found`。**
-
-> 启用时需向 `00-contracts.md §6.2` 的 signal type 枚举追加
-> `identifier_verification`，并在 `extraction_signal.schema.json` 中增加
-> 条件必填的 `verification` 块。完成迁移前**不得**提前使用该 type。
+所有 connector 复用单一 type `external_validation_candidate`，不得新增
+`identifier_verification` 平行类型。比较结果只取 `match/mismatch/not_comparable/needs_manual_review`；
+网络或接口故障产 X1 `system_limitation`，不得当作 `not_found` 或 mismatch。

@@ -162,6 +162,14 @@
           "then": {"properties": {"executed_stages": {"contains": {"const": "stage_3b"}}}}
         },
         {
+          "description": "可选 X1 依赖 Stage 3b 的 structured_result_v2；Stage 4 不强制执行 X1",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_3c_external_validation"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_3b"}}}}
+        },
+        {
           "description": "Stage 5 聚合依赖 Stage 4；非审核模式使用输出装配而不是 Stage 5",
           "if": {
             "properties": {"executed_stages": {"contains": {"const": "stage_5"}}},

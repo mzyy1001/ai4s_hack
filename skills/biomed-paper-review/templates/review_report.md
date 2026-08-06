@@ -12,8 +12,10 @@
    分别渲染为点值、[low, high]、≥low、≤high 或分类标签，禁止直接倾倒 JSON。
 3. render_evidence_refs(refs, registry, mode)
    按 refs 原顺序解析；任一 ref 不存在或不唯一时停止渲染并报契约错误。
-   mode=compact：显示 id + 定位；mode=expanded：present 证据显示 id、定位与 quote，
-   absence 证据显示 id、实际检索范围、检索词与 search_result。定位字段固定按
+   mode=compact：显示 id + 定位/数据库记录；mode=expanded：present 证据显示 id、定位与 quote，
+   absence 证据显示 id、实际检索范围、检索词与 search_result；external 证据显示 id、
+   database、record_id、retrieved_at、database_version、retrieval_status、response_sha256
+   前 12 位及 assertions 的 predicate/source_path，不显示整份响应。定位字段固定按
    PDF 物理页 → 印刷页 → section/subsection → paragraph_id/xml_id → figure/panel →
    table → supplement_id/supplement_page 排列并省略 null。quote 仅作定位摘录，显示
    最多 300 个 Unicode 字符；完整条目保留在 JSON evidence_registry。

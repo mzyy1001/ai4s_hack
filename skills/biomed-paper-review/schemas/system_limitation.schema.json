@@ -15,7 +15,9 @@
     "category": {
       "enum": ["parse_failed", "figure_unreadable", "table_unparseable",
                "supplement_inaccessible", "section_missing_from_input",
-               "ocr_low_quality", "encoding_error", "input_truncated"]
+               "ocr_low_quality", "encoding_error", "input_truncated",
+               "external_source_unavailable", "external_access_denied",
+               "external_rate_limited", "external_response_unparseable"]
     },
 
     "impact": {
@@ -54,7 +56,8 @@
     },
 
     "produced_by": {
-      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b"]
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b",
+               "stage_3c_external_validation"]
     }
   },
 
@@ -64,5 +67,21 @@
       {"required": ["manual_review"]}
     ],
     "description": "system_limitation 不得携带 severity，也不产生人工复核动作（那是 finding 的职责）"
-  }
+  },
+
+  "allOf": [
+    {
+      "description": "外部源失败类限制只能由 X1 产出",
+      "if": {
+        "properties": {
+          "category": {
+            "enum": ["external_source_unavailable", "external_access_denied",
+                     "external_rate_limited", "external_response_unparseable"]
+          }
+        },
+        "required": ["category"]
+      },
+      "then": {"properties": {"produced_by": {"const": "stage_3c_external_validation"}}}
+    }
+  ]
 }

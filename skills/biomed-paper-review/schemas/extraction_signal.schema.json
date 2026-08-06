@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "extraction_signal.schema.json",
   "title": "ExtractionSignal",
-  "description": "机器级观察。references/00-contracts.md §6.2。signal 不是结论，没有 severity，不直接影响 manuscript_risk_score。由 Stage 2 (M1) 与 Stage 3b 产出，路由给下游审核模块判定。",
+  "description": "机器级观察。references/00-contracts.md §6.2。signal 不是结论，没有 severity，不直接影响 manuscript_risk_score。由 Stage 2、Stage 3、Stage 3b 或可选 X1 产出，路由给下游审核模块判定。",
 
   "type": "object",
   "required": ["id", "type", "target", "detail", "evidence_refs", "routed_to", "produced_by"],
@@ -24,15 +24,17 @@
                "grim_incompatible_mean",
                "ethics_requirement_unmet",
                "sequence_identifier_inconsistent",
-               "figure_integrity_candidate"],
-      "description": "十三值。其中四种统计取证类由 skills/biomed-paper-review/scripts/statistical_forensics.py 产出、ethics_requirement_unmet 由 skills/biomed-paper-review/scripts/ethics_compliance_check.py 产出，均为一期离线能力。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
+               "figure_integrity_candidate",
+               "external_validation_candidate"],
+      "description": "十四值。external_validation_candidate 仅由 X1 产出；旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
     },
 
     "target": {
       "description": "signal 指向的对象。字符串形式为字段路径或实体 id；对象形式用于携带类型专属元数据。",
       "oneOf": [
         {"type": "string", "description": "如 key_data.KD-007 / article_design.primary_design"},
-        {"$ref": "#/$defs/claim_target"}
+        {"$ref": "#/$defs/claim_target"},
+        {"$ref": "#/$defs/external_target"}
       ]
     },
 
@@ -54,8 +56,61 @@
     },
 
     "produced_by": {
-      "enum": ["stage_2", "stage_3", "stage_3b"],
-      "description": "stage_3 仅用于图像完整性审计"
+      "enum": ["stage_2", "stage_3", "stage_3b", "stage_3c_external_validation"],
+      "description": "stage_3 仅用于图像完整性审计；stage_3c_external_validation 仅用于 X1"
+    },
+
+    "external_check": {
+      "type": "object",
+      "description": "仅 external_validation_candidate 使用。保存稿件事实与 external evidence 的可复算比较，不是稿件结论。",
+      "required": ["connector", "query_kind", "check_type", "manuscript_value",
+                   "external_value", "comparison_result", "comparability",
+                   "manuscript_evidence_refs", "external_evidence_refs", "rule_version"],
+      "additionalProperties": false,
+      "properties": {
+        "connector": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "query_kind": {"type": "string", "minLength": 1},
+        "check_type": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "manuscript_value": {},
+        "external_value": {},
+        "comparison_result": {
+          "enum": ["match", "mismatch", "not_comparable", "needs_manual_review"]
+        },
+        "comparability": {"enum": ["complete", "partial", "none"]},
+        "manuscript_evidence_refs": {
+          "$ref": "evidence.schema.json#/$defs/evidence_refs",
+          "minItems": 1,
+          "description": "必须全部解析到稿件内 present evidence"
+        },
+        "external_evidence_refs": {
+          "$ref": "evidence.schema.json#/$defs/evidence_refs",
+          "minItems": 1,
+          "description": "必须全部解析到 retrieval_status=resolved 的 external evidence；跨登记表约束由契约校验器执行"
+        },
+        "noncomparability_reasons": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "rule_version": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"comparison_result": {"enum": ["match", "mismatch"]}},
+                 "required": ["comparison_result"]},
+          "then": {"properties": {"comparability": {"const": "complete"}}}
+        },
+        {
+          "if": {"properties": {"comparison_result": {"const": "not_comparable"}},
+                 "required": ["comparison_result"]},
+          "then": {
+            "properties": {
+              "comparability": {"const": "none"},
+              "noncomparability_reasons": {"minItems": 1}
+            },
+            "required": ["noncomparability_reasons"]
+          }
+        }
+      ]
     },
 
     "image_audit": {
@@ -219,6 +274,24 @@
         "required": ["ethics"],
         "properties": {"produced_by": {"const": "stage_2"}}
       }
+    },
+    {
+      "description": "外部验证候选必须由 X1 产出、同时引用稿件 present 与 external evidence，且只路由 M2/M4/M6/M7",
+      "if": {
+        "properties": {"type": {"const": "external_validation_candidate"}},
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["external_check"],
+        "properties": {
+          "produced_by": {"const": "stage_3c_external_validation"},
+          "target": {"$ref": "#/$defs/external_target"},
+          "evidence_refs": {"minItems": 2},
+          "routed_to": {
+            "items": {"enum": ["M2", "M4", "M6", "M7"]}
+          }
+        }
+      }
     }
   ],
 
@@ -236,6 +309,16 @@
           "items": {"type": "string"},
           "description": "claims[].supported_by 中解析不到实体的条目原文，如 [\"Fig 5D\"]"
         }
+      }
+    },
+    "external_target": {
+      "type": "object",
+      "required": ["lookup_request_id", "entity_type", "entity_id"],
+      "additionalProperties": false,
+      "properties": {
+        "lookup_request_id": {"type": "string", "pattern": "^XREQ-[0-9]{3,}$"},
+        "entity_type": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "entity_id": {"type": "string", "minLength": 1}
       }
     }
   }

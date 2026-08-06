@@ -12,7 +12,7 @@
 | 文件 | 状态 | 说明 |
 | --- | --- | --- |
 | `schemas/common.schema.json` | **新增** | 全局原子定义（numeric_value / provenance / locator / 三维度枚举） |
-| `schemas/evidence.schema.json` | **新增** | 证据登记表 + present/absence 两型 |
+| `schemas/evidence.schema.json` | **新增** | 证据登记表 + present/absence/external 三型 |
 | `schemas/key_data.schema.json` | **新增** | 观测组 + observation |
 | `schemas/extraction_signal.schema.json` | **新增** | 机器级观察 |
 | `schemas/system_limitation.schema.json` | **新增** | 系统能力限制 |
@@ -60,7 +60,7 @@ if severity ∈ {critical, major}
 | --- | --- |
 | `evidence`（内联对象，`$defs.evidence`） | `evidence_refs[]` → `evidence.schema.json` 登记表 |
 | `evidence.locator`（字符串 + pattern） | `common.schema.json#/$defs/locator` 结构化对象 |
-| `evidence.external_source` | 二期启用，移入 `extraction_signal` 的 `identifier_verification` 块 |
+| `evidence.external_source` | `evidence_registry` 的 `external` 分支 + `extraction_signal.external_check`；仅 X1 创建 |
 
 ### 新增字段
 

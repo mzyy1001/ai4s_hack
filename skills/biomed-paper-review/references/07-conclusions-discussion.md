@@ -4,8 +4,8 @@
 
 全流程的**收口模块**。核心问题：论文的每一条主张，是否被它自己的数据支持？
 
-**当前交付边界**：只判断 **claim ↔ evidence 的对齐关系**。不查外部证据、不判断创新性、
-不做常识校验。违背基础常识的结论（如「面粉可治疗癌症」）标记为
+**当前交付边界**：离线只判断 **claim ↔ evidence 的对齐关系**。X1 契约已落地但 connector
+尚未实现，因此当前仍不查询外部证据、不判断创新性、不做常识校验。违背基础常识的结论标记为
 `claim_beyond_evidence` 交人工复核即可。
 
 这三件事可作为一期联网增强，本模块是它们的归属方，规则见 §11。它们当前均未实现，
@@ -393,7 +393,7 @@ M7 消费 M2–M6 的 findings。**联动只影响 M7 自己 finding 的 severit
 | `discussion_hollow` | 讨论仅复述结果 | minor | §5.8 |
 | `claim_magnitude_mismatch` | 主张的量级与自身数据不符 | major | §5.2 |
 
-**外部增强新增**（完成 schema 迁移前不得使用）：`claim_contradicted_by_literature`、
+**外部增强新增**（connector 与本模块消费规则完成前不得使用）：`claim_contradicted_by_literature`、
 `claim_unreplicated`、`violates_domain_common_sense`。
 
 ---
@@ -487,7 +487,7 @@ the prespecified 5-point MCID」→ 效应大小、精度与 MCID 均可核对 �
 
 ---
 
-## 11. 一期联网增强（当前未实现，规则先写下）
+## 11. 一期联网增强（X1 契约已落地，connector 未实现）
 
 三项能力都归本模块。**现在只写判据，不写实现**；数据源统一走外部证据层，
 本节只声明「需要什么数据」，不要自行实现调用方式。
@@ -516,15 +516,11 @@ the prespecified 5-point MCID」→ 效应大小、精度与 MCID 均可核对 �
   而不是先验地枚举常识。人工复核记录是后续规则的训练材料。
 - 输出 category：`violates_domain_common_sense`(critical)
 
-### 11.4 外部证据的契约扩展
+### 11.4 外部证据契约
 
-引入外部证据时，**扩展而非重构**现有契约（`SKILL.md §0.2`）：
-在 `evidence_registry` 中新增第三种证据型 `external`，至少保存 `database`、`record_id`、
-`query`、`retrieval_date`、`version`、`retraction_or_correction_status`、
-`relation_to_claim` 与外部验证阶段的 `created_by`。当前 schema 尚无 `external` 分支，
-因此本节不提供一个无法通过现有 schema 的 JSON 示例。M7 不得自行创建 external evidence；
-唯一产出者必须在共享契约中先登记。
-
-**规则**：引入 `external` 证据的 finding，其 `evidence_refs[]` 中**必须同时**
-含至少一条 `present` 型稿件内证据 —— 论文内定位不可省略。
-`00-contracts.md §1.2` 的两型表届时扩为三型，`evidence.schema.json` 增加对应分支。
+统一复用 `00-contracts.md §1` 的 `external` evidence 与 §6.2 的
+`external_validation_candidate`。M7 不得创建 external evidence；唯一产出者是
+`stage_3c_external_validation`。M7 据 external signal 立 finding 时，`evidence_refs[0]`
+必须是稿件内 `present`，并同时引用 `retrieval_status: resolved` 的 external evidence；
+还必须溯源到 `comparison_result: mismatch` 且 `comparability: complete` 的 signal。
+`not_found`、`not_addressed`、接口失败或不可比均不得自动成为 finding。

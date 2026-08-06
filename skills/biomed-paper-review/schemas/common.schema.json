@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "common.schema.json",
   "title": "CommonDefs",
-  "description": "全 schema 共用的原子定义。对应 references/00-contracts.md §1.5 / §2 / §3。本文件不定义顶层对象，只提供 $defs。",
+  "description": "全 schema 共用的原子定义。对应 references/00-contracts.md §1.7 / §2 / §3。本文件不定义顶层对象，只提供 $defs。",
 
   "$defs": {
 
@@ -39,7 +39,7 @@
 
     "locator": {
       "type": "object",
-      "description": "00-contracts.md §1.5。结构化对象，禁止用自由文本作为唯一存储形式。",
+      "description": "00-contracts.md §1.7。结构化对象，禁止用自由文本作为唯一存储形式。",
       "required": ["scope"],
       "additionalProperties": false,
       "properties": {
@@ -237,7 +237,8 @@
     },
 
     "stage_id": {
-      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b", "stage_4", "stage_5"]
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b",
+               "stage_3c_external_validation", "stage_4", "stage_5"]
     }
   }
 }

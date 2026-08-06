@@ -40,7 +40,7 @@ M6（本模块）                          判定是否构成 finding、定 seve
 
 **为什么能离线**：规范库是**结构化要求索引**，不是外部数据库查询 ——
 正好落在一期定义内（`SKILL.md §0.2`：论文自身内容 + 通用规范库）。
-批件号真伪、注册号时序等核验需要外部证据层；该层当前未实现，但可作为一期联网增强（§8）。
+批件号真伪、注册号时序等核验需要 X1；其核心契约已落地，connector 尚未实现（§8）。
 
 ### 2.1 规范库覆盖范围
 
@@ -249,7 +249,7 @@ methods 三节均未见 IACUC、伦理委员会、批件号 → **major 报告�
 
 ---
 
-## 8. 一期联网增强（当前未实现，规则先写下）
+## 8. 一期联网增强（X1 契约已落地，connector 未实现）
 
 当前离线层只核对「稿件有没有写」。联网增强核对「外部记录是否支持稿件表述」。
 
@@ -266,6 +266,6 @@ methods 三节均未见 IACUC、伦理委员会、批件号 → **major 报告�
 「首次提交晚于入组开始」标为 `candidate` 而非结论 —— 注册平台的时间戳含义
 在不同平台并不一致。
 
-**契约扩展方式**：新增 `external` 型证据（见 `07-conclusions-discussion.md §11.4`），
-finding 的 `evidence_refs[]` **必须同时**含至少一条稿件内 `present` 证据 ——
-论文内定位不可省略。
+**契约方式**：复用 `00-contracts.md §1` 的 `external` evidence 与 §6.2 的
+`external_validation_candidate`。M6 finding 的 `evidence_refs[0]` 必须是稿件内
+`present`，并同时引用 external evidence；X1 failure 与零命中不得转 finding。

@@ -59,13 +59,13 @@
     "all_extraction_signals": {
       "type": "array",
       "items": {"$ref": "extraction_signal.schema.json"},
-      "description": "Stage 5 聚合 m1_extraction_signals[] + merge_extraction_signals[]"
+      "description": "Stage 5 聚合 Stage 2/3/3b 与可选 X1 的 stage-local extraction signals"
     },
 
     "all_system_limitations": {
       "type": "array",
       "items": {"$ref": "system_limitation.schema.json"},
-      "description": "Stage 5 聚合四个 stage-local 数组。报告中必须单列一节。"
+      "description": "Stage 5 聚合 Stage 1/2/3/3b 与可选 X1 的 stage-local 数组。报告中必须单列一节。"
     },
 
     "manuscript_risk_score": {

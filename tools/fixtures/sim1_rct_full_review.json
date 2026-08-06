@@ -11,7 +11,8 @@
   "execution_scope": {
     "mode": "full_review",
     "submode": null,
-    "executed_stages": ["stage_1", "stage_2", "stage_3", "stage_3b", "stage_4", "stage_5"],
+    "executed_stages": ["stage_1", "stage_2", "stage_3", "stage_3b",
+                        "stage_3c_external_validation", "stage_4", "stage_5"],
     "executed_modules": ["M2", "M3", "M4", "M5", "M6", "M7"],
     "skipped_modules": [],
     "fields": ["objective.primary_endpoint", "design.randomization",
@@ -90,6 +91,34 @@
                   "pdf_file_page": 10, "scope": "paragraph"},
       "quote": "This study was approved by the Ethics Committee (approval no. 2024-KY-081) and registered at ChiCTR (ChiCTR2400081234).",
       "created_by": "stage_2"
+    },
+    "EV-008": {
+      "id": "EV-008", "type": "present",
+      "locator": {"section": "title", "paragraph_id": "title-p01",
+                  "pdf_file_page": 1, "scope": "paragraph"},
+      "quote": "doi:10.1371/journal.pone.0339677",
+      "created_by": "stage_1"
+    },
+    "EV-009": {
+      "id": "EV-009", "type": "external",
+      "database": "Europe PMC",
+      "endpoint": "https://www.ebi.ac.uk/europepmc/webservices/rest/search",
+      "query": {"query_kind": "publication_identity", "normalized_input": "10.1371/journal.pone.0339677"},
+      "record_id": "MED:example",
+      "retrieved_at": "2026-08-07T03:20:00Z",
+      "database_version": null,
+      "http_status": 200,
+      "retrieval_status": "resolved",
+      "response_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "parser_version": "europe_pmc/1.0.0",
+      "assertions": [{
+        "predicate": "publication_doi",
+        "subject": "MED:example",
+        "external_value": "10.1371/journal.pone.0339677",
+        "unit": null,
+        "source_path": "resultList.result[0].doi"
+      }],
+      "created_by": "stage_3c_external_validation"
     }
   },
 
@@ -407,6 +436,28 @@
       "evidence_refs": ["EV-003"],
       "routed_to": ["M2", "M4"],
       "produced_by": "stage_2"
+    },
+    {
+      "id": "SIG-004",
+      "type": "external_validation_candidate",
+      "target": {"lookup_request_id": "XREQ-001", "entity_type": "publication", "entity_id": "10.1371/journal.pone.0339677"},
+      "detail": "Europe PMC 返回的 DOI 与稿件 DOI 完全一致；这是身份核验 signal，不是稿件 finding。",
+      "evidence_refs": ["EV-008", "EV-009"],
+      "routed_to": ["M2", "M7"],
+      "produced_by": "stage_3c_external_validation",
+      "external_check": {
+        "connector": "europe_pmc",
+        "query_kind": "publication_identity",
+        "check_type": "publication_identifier_match",
+        "manuscript_value": "10.1371/journal.pone.0339677",
+        "external_value": "10.1371/journal.pone.0339677",
+        "comparison_result": "match",
+        "comparability": "complete",
+        "manuscript_evidence_refs": ["EV-008"],
+        "external_evidence_refs": ["EV-009"],
+        "noncomparability_reasons": [],
+        "rule_version": "publication_identity/1.0.0"
+      }
     }
   ],
 

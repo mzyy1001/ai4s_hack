@@ -19,10 +19,11 @@
   "$defs": {
 
     "evidence_entry": {
-      "description": "两型之一：present（稿件中已有）或 absence（稿件中不存在）",
+      "description": "三型之一：present（稿件中已有）、absence（稿件中不存在）或 external（外部公开科学数据源的可追溯事实）",
       "oneOf": [
         {"$ref": "#/$defs/present_evidence"},
-        {"$ref": "#/$defs/absence_evidence"}
+        {"$ref": "#/$defs/absence_evidence"},
+        {"$ref": "#/$defs/external_evidence"}
       ]
     },
 
@@ -80,8 +81,97 @@
       }
     },
 
+    "external_evidence": {
+      "type": "object",
+      "description": "X1 从公开科学数据源取得的外部事实。接口失败不得创建本对象；改产 system_limitation。禁止保存凭证、Cookie、Authorization header 或整份响应。",
+      "required": ["id", "type", "database", "endpoint", "query", "record_id",
+                   "retrieved_at", "database_version", "http_status", "retrieval_status",
+                   "response_sha256", "parser_version", "assertions", "created_by"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^EV-[0-9]{3,}$"},
+        "type": {"const": "external"},
+        "database": {"type": "string", "minLength": 1},
+        "endpoint": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "not": {"pattern": "(api[_-]?key|authorization|cookie|access_token|secret)="},
+          "description": "实际调用的公开 HTTPS 端点；不得含凭证或敏感查询参数"
+        },
+        "query": {
+          "type": "object",
+          "required": ["query_kind", "normalized_input"],
+          "additionalProperties": false,
+          "properties": {
+            "query_kind": {"type": "string", "minLength": 1},
+            "normalized_input": {
+              "description": "排序并规范化后的公开查询参数；禁止 API key、Cookie、Authorization header",
+              "type": "string",
+              "minLength": 1,
+              "not": {"pattern": "(api[_-]?key|authorization|cookie|access_token|secret)="}
+            }
+          }
+        },
+        "record_id": {"type": ["string", "null"]},
+        "retrieved_at": {"type": "string", "format": "date-time"},
+        "database_version": {
+          "type": ["string", "null"],
+          "description": "数据源公开的 release/version/timestamp；源不提供时为 null，不得猜测"
+        },
+        "http_status": {"type": "integer", "minimum": 100, "maximum": 599},
+        "retrieval_status": {
+          "enum": ["resolved", "not_found", "not_addressed"],
+          "description": "not_found 仅限格式合法的精确标识符获得权威 404/明确零记录；语义查询零命中为 not_addressed"
+        },
+        "response_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "parser_version": {"type": "string", "minLength": 1},
+        "assertions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/external_assertion"}
+        },
+        "created_by": {"const": "stage_3c_external_validation"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"retrieval_status": {"const": "resolved"}},
+                 "required": ["retrieval_status"]},
+          "then": {
+            "properties": {
+              "record_id": {"type": "string", "minLength": 1},
+              "assertions": {"minItems": 1}
+            }
+          },
+          "else": {
+            "properties": {
+              "record_id": {"type": "null"},
+              "assertions": {"maxItems": 0}
+            }
+          }
+        }
+      ]
+    },
+
+    "external_assertion": {
+      "type": "object",
+      "description": "从外部响应规范化出的原子事实；与稿件的比较结论只写入 extraction_signal.external_check。",
+      "required": ["predicate", "subject", "external_value", "unit", "source_path"],
+      "additionalProperties": false,
+      "properties": {
+        "predicate": {"type": "string", "minLength": 1},
+        "subject": {"type": "string", "minLength": 1},
+        "external_value": {},
+        "unit": {"type": ["string", "null"]},
+        "source_path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "响应内可复核字段路径，如 protocolSection.statusModule.studyFirstSubmitDate"
+        }
+      }
+    },
+
     "created_by": {
-      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b",
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b", "stage_3c_external_validation",
                "M2", "M3", "M4", "M5", "M6", "M7"],
       "description": "用于排障；不影响语义"
     },

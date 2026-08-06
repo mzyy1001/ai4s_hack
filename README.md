@@ -104,7 +104,7 @@ references、schemas、resources、templates 与五个运行时脚本都在
 | --- | --- |
 | `skills/` 下有且仅有一个 skill 目录 | ✅ `biomed-paper-review` |
 | `SKILL.md` frontmatter 含合法 `name` / `description` | ✅ name 19 字符（≤64，小写连字符）；description 199 字符（≤1024，第三人称） |
-| SKILL.md 正文建议 <500 行 | ✅ 正文少于 500 行；契约细节已拆入 `references/00-contracts.md` |
+| SKILL.md 正文建议 <500 行 | ⚠️ 当前正文超过 500 行；X1 连接器细节不得继续堆入主文档，应落到一层 reference |
 | 文件引用只一层深（渐进披露） | ✅ SKILL.md 直接索引全部运行时 reference，不存在只能经另一 reference 才能发现的文件 |
 | 单文件 ≤10MB | ✅ skill 本体内满足；⚠️ 若误打包 `datasets/`，其中一份 PDF 为 18,677,256 bytes，会超限 |
 | 提交包体积 | ✅ `skills/biomed-paper-review/` 小于 0.5 MiB；完整工作区约 200 MiB，不得整仓提交 |
@@ -119,8 +119,9 @@ references、schemas、resources、templates 与五个运行时脚本都在
 **一期（黑客松交付）**：离线核心必须仅凭**论文自身内容 + 通用规范库**跑通；公开科学数据源
 作为可选增强层。连接器不可得、超时或返回不可解析响应时降级为 `system_limitation`，不得据此判稿件有问题。
 
-当前外部证据契约与连接器尚未落地，不能声称已经完成数据库核验。原先统一推到“二期”的注册核验、
-标识符核验与数据登录号核验应按 `docs/proposals/round-4-external-data-components.md` 重新排期；
+当前 X1 的 `external` evidence、signal 与失败降级契约已落地，连接器脚本尚未落地，
+不能声称已经完成数据库核验。原先统一推到“二期”的注册核验、标识符核验与数据登录号核验
+应按 `docs/proposals/round-12-external-verification-layer.md` 的一期垂直切片实施；
 M4 的 p 值反算、CI 自洽、计数/百分比与 GRIM 已实现为一期离线能力；图像取证已实现
 网格对齐重复、列向背景不连续与异常均匀区块的候选筛查，旋转/镜像/缩放验证尚未实现。
 
@@ -136,5 +137,5 @@ M4 的 p 值反算、CI 自洽、计数/百分比与 GRIM 已实现为一期离�
 - ✅ 五个运行时确定性工具，均使用标准库或评测环境预装科学栈，均带自检
 - 🚧 现有四个 fixtures 是契约模拟实例；尚无可复跑的论文输入→最终报告统一执行器与 uplift 结果 artifact
 - 🚧 M2（卓妍）、M3（Peter）一期规则库仍为骨架；M5 已填充 v1，但 Parser / Reviewer 职责冲突待负责人收敛
-- 🚧 外部验证层 X1：网络已确认可用（白名单），连接器与 `external` 证据型待实现
+- 🚧 外部验证层 X1：核心契约已实现；connector、录制响应 fixture 与独立覆盖率仍待实现
 - 🚧 uplift 基线实测：官方统一模型为 GLM / Kimi 系列，尚未在该系列上自测
