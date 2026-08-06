@@ -30,9 +30,9 @@ skills/biomed-paper-review/     ← 交付物本体
 │   ├── 02-macro-logic.md              M2 宏观逻辑与完整性    ZY（卓妍）
 │   ├── 03-experimental-methods.md     M3 实验方法合规性      Peter
 │   ├── 04-statistics.md               M4 统计学方法          JY（蒋运）
-│   ├── 05-figures-and-charts.md       M5 图谱解析与图表规范  MY（敏仪）
+│   ├── 05-figures-and-charts.md       M5 图谱解析与图表规范  MY（敏怡）
 │   ├── 06-ethics-compliance.md        M6 伦理合规            Peter
-│   └── 07-conclusions-discussion.md   M7 结论与讨论          MY（敏仪）
+│   └── 07-conclusions-discussion.md   M7 结论与讨论          MY（敏怡）
 ├── schemas/                    机器可校验的输出模式（模块间的集成契约）
 │   ├── finding.schema.json            ★ 七模块共用，最重要
 │   ├── structured_result.schema.json
