@@ -21,8 +21,9 @@
                "test_statistic_p_mismatch",
                "ci_estimate_mismatch",
                "count_percentage_mismatch",
-               "grim_incompatible_mean"],
-      "description": "十值。后四种为 tools/statistical_forensics.py 的一期确定性一致性检验产出。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
+               "grim_incompatible_mean",
+               "ethics_requirement_unmet"],
+      "description": "十一值。其中四种统计取证类由 tools/statistical_forensics.py 产出、ethics_requirement_unmet 由 tools/ethics_compliance_check.py 产出，均为一期离线能力。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
     },
 
     "target": {

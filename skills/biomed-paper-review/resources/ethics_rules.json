@@ -1,0 +1,673 @@
+{
+  "schema_version": "1.0",
+  "rulebase_version": "2026-08-07",
+  "description": "生物医药论文伦理合规规范库。国际 / 美国 / 中国三法域，覆盖人体临床、动物实验、细胞与干细胞、人类遗传资源、生物安全、数据隐私六个领域。一期离线使用：本文件不含任何受版权保护的规范全文，只含结构化要求条目与可核验的出处引用。",
+
+  "usage_note": "本规范库由 tools/ethics_compliance_check.py 消费，产出 extraction_signal（type=ethics_requirement_unmet），交 M6 判定是否构成 finding。工具层不下稿件结论。",
+
+  "copyright_note": "本文件是对公开规范文件要求的**结构化索引与摘述**，非全文转载。美国联邦法规（CFR）、Belmont Report、PHS/NIH 政策属美国政府作品，无版权；中国法律法规与国务院部门规章依《著作权法》第五条不受著作权保护；ARRIVE 2.0 为 CC-BY。WMA 赫尔辛基宣言、CIOMS 指南、ICH-GCP、NRC《实验动物饲养管理和使用指南》、GB/T 标准等受版权保护，本库**仅引用条款编号与要求要点，不转载原文**。",
+
+  "citation_caveat": "条款编号可能随修订变动（如赫尔辛基宣言 2024 年修订重排了段落号）。每条规则带 citation_confidence 字段；`medium` 及以下的条款号在用于正式审稿意见前应人工核对原文。本规范库产出的是筛查信号，不构成合规裁定。",
+
+  "instruments": {
+    "wma_helsinki": {
+      "title_en": "WMA Declaration of Helsinki – Ethical Principles for Medical Research Involving Human Participants",
+      "title_zh": "世界医学会《赫尔辛基宣言》",
+      "issuer": "World Medical Association",
+      "latest_revision": "2024 (75th WMA General Assembly, Helsinki)",
+      "prior_revision": "2013 (Fortaleza)",
+      "jurisdiction": "international",
+      "binding": "professional_norm",
+      "url": "https://www.wma.net/policies-post/wma-declaration-of-helsinki/",
+      "copyright": "WMA — cite only, do not reproduce"
+    },
+    "cioms_2016": {
+      "title_en": "International Ethical Guidelines for Health-related Research Involving Humans",
+      "title_zh": "CIOMS《涉及人的健康相关研究国际伦理准则》",
+      "issuer": "CIOMS in collaboration with WHO",
+      "latest_revision": "2016 (25 guidelines)",
+      "jurisdiction": "international",
+      "binding": "guidance",
+      "url": "https://cioms.ch/publications/product/international-ethical-guidelines-for-health-related-research-involving-humans/",
+      "copyright": "CIOMS — cite only"
+    },
+    "ich_gcp": {
+      "title_en": "ICH Harmonised Guideline: Good Clinical Practice E6",
+      "title_zh": "ICH《药物临床试验质量管理规范》E6",
+      "issuer": "International Council for Harmonisation",
+      "latest_revision": "E6(R3), adopted January 2025",
+      "prior_revision": "E6(R2), 2016",
+      "jurisdiction": "international",
+      "binding": "regulatory_reference",
+      "url": "https://www.ich.org/page/efficacy-guidelines",
+      "copyright": "ICH — cite only"
+    },
+    "belmont_1979": {
+      "title_en": "The Belmont Report",
+      "title_zh": "《贝尔蒙报告》",
+      "issuer": "US National Commission for the Protection of Human Subjects",
+      "latest_revision": "1979",
+      "jurisdiction": "us",
+      "binding": "foundational_principles",
+      "url": "https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/index.html",
+      "copyright": "US government work — public domain"
+    },
+    "us_common_rule": {
+      "title_en": "Federal Policy for the Protection of Human Subjects (Common Rule), 45 CFR 46",
+      "title_zh": "美国《人类受试者保护通则》45 CFR 46",
+      "issuer": "US HHS / OHRP",
+      "latest_revision": "2018 Requirements (revised Common Rule)",
+      "jurisdiction": "us",
+      "binding": "law",
+      "url": "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-A/part-46",
+      "copyright": "US government work — public domain"
+    },
+    "us_fda_50_56": {
+      "title_en": "FDA Protection of Human Subjects (21 CFR 50) and Institutional Review Boards (21 CFR 56)",
+      "title_zh": "美国 FDA《人类受试者保护》21 CFR 50 与《伦理审查委员会》21 CFR 56",
+      "issuer": "US FDA",
+      "jurisdiction": "us",
+      "binding": "law",
+      "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-A/part-50",
+      "copyright": "US government work — public domain"
+    },
+    "us_hipaa": {
+      "title_en": "HIPAA Privacy Rule, 45 CFR Parts 160 and 164",
+      "title_zh": "美国《健康保险流通与责任法案》隐私规则",
+      "issuer": "US HHS",
+      "jurisdiction": "us",
+      "binding": "law",
+      "url": "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164",
+      "copyright": "US government work — public domain"
+    },
+    "us_phs_olaw": {
+      "title_en": "PHS Policy on Humane Care and Use of Laboratory Animals",
+      "title_zh": "美国公共卫生署《实验动物人道饲养与使用政策》",
+      "issuer": "NIH OLAW",
+      "latest_revision": "2015 reprint",
+      "jurisdiction": "us",
+      "binding": "policy_condition_of_funding",
+      "url": "https://olaw.nih.gov/policies-laws/phs-policy.htm",
+      "copyright": "US government work — public domain"
+    },
+    "us_awa_9cfr": {
+      "title_en": "Animal Welfare Act Regulations, 9 CFR Chapter I Subchapter A (Parts 1-4)",
+      "title_zh": "美国《动物福利法》实施条例 9 CFR",
+      "issuer": "USDA APHIS",
+      "jurisdiction": "us",
+      "binding": "law",
+      "url": "https://www.ecfr.gov/current/title-9/chapter-I/subchapter-A",
+      "copyright": "US government work — public domain"
+    },
+    "nrc_guide_8ed": {
+      "title_en": "Guide for the Care and Use of Laboratory Animals, 8th edition",
+      "title_zh": "《实验动物饲养管理和使用指南》第八版",
+      "issuer": "US National Research Council",
+      "latest_revision": "2011",
+      "jurisdiction": "us",
+      "binding": "referenced_standard",
+      "url": "https://grants.nih.gov/grants/olaw/guide-for-the-care-and-use-of-laboratory-animals.pdf",
+      "copyright": "National Academies Press — cite only"
+    },
+    "arrive_2": {
+      "title_en": "ARRIVE Guidelines 2.0",
+      "title_zh": "ARRIVE 动物研究报告指南 2.0",
+      "issuer": "NC3Rs; Percie du Sert et al., PLOS Biology 2020",
+      "latest_revision": "2020",
+      "jurisdiction": "international",
+      "binding": "reporting_guideline",
+      "url": "https://arriveguidelines.org/arrive-guidelines",
+      "doi": "10.1371/journal.pbio.3000410",
+      "copyright": "CC-BY 4.0 — may be reproduced with attribution"
+    },
+    "avma_euthanasia_2020": {
+      "title_en": "AVMA Guidelines for the Euthanasia of Animals",
+      "title_zh": "美国兽医协会《动物安乐死指南》",
+      "issuer": "American Veterinary Medical Association",
+      "latest_revision": "2020",
+      "jurisdiction": "us",
+      "binding": "referenced_standard",
+      "url": "https://www.avma.org/resources-tools/avma-policies/avma-guidelines-euthanasia-animals",
+      "copyright": "AVMA — cite only"
+    },
+    "isscr_2021": {
+      "title_en": "ISSCR Guidelines for Stem Cell Research and Clinical Translation",
+      "title_zh": "国际干细胞研究学会《干细胞研究与临床转化指南》",
+      "issuer": "International Society for Stem Cell Research",
+      "latest_revision": "2021",
+      "jurisdiction": "international",
+      "binding": "professional_norm",
+      "url": "https://www.isscr.org/guidelines",
+      "copyright": "ISSCR — cite only"
+    },
+    "nagoya_protocol": {
+      "title_en": "Nagoya Protocol on Access to Genetic Resources and Benefit-sharing",
+      "title_zh": "《生物多样性公约》名古屋议定书",
+      "issuer": "Convention on Biological Diversity",
+      "latest_revision": "2010, in force 2014",
+      "jurisdiction": "international",
+      "binding": "treaty",
+      "url": "https://www.cbd.int/abs/",
+      "copyright": "UN — official text"
+    },
+    "icmje": {
+      "title_en": "ICMJE Recommendations for the Conduct, Reporting, Editing, and Publication of Scholarly Work in Medical Journals",
+      "title_zh": "国际医学期刊编辑委员会建议",
+      "issuer": "ICMJE",
+      "latest_revision": "2024 update",
+      "jurisdiction": "international",
+      "binding": "publication_requirement",
+      "url": "https://www.icmje.org/recommendations/",
+      "copyright": "ICMJE — cite only"
+    },
+    "cn_ethics_review_2023": {
+      "title_en": "Measures for Ethical Review of Life Science and Medical Research Involving Humans",
+      "title_zh": "《涉及人的生命科学和医学研究伦理审查办法》",
+      "issuer": "国家卫生健康委、教育部、科技部、国家中医药局",
+      "latest_revision": "2023年2月18日发布并施行（国卫科教发〔2023〕4号）",
+      "jurisdiction": "cn",
+      "binding": "departmental_regulation",
+      "url": "http://www.nhc.gov.cn/qjjys/s7946/202302/c3374c6cb9f04dcfb8ffc55e4c30bf0f.shtml",
+      "copyright": "中国官方文件，依《著作权法》第五条不受著作权保护"
+    },
+    "cn_hgr_regulation": {
+      "title_en": "Regulations on the Administration of Human Genetic Resources",
+      "title_zh": "《中华人民共和国人类遗传资源管理条例》",
+      "issuer": "国务院（令第717号）",
+      "latest_revision": "2019年5月28日公布，2019年7月1日施行；《实施细则》2023年5月26日公布，2023年7月1日施行",
+      "jurisdiction": "cn",
+      "binding": "administrative_regulation",
+      "url": "https://www.gov.cn/zhengce/content/2019-06/10/content_5398829.htm",
+      "copyright": "中国官方文件"
+    },
+    "cn_gcp_2020": {
+      "title_en": "Good Clinical Practice for Drug Trials (China GCP)",
+      "title_zh": "《药物临床试验质量管理规范》",
+      "issuer": "国家药监局、国家卫生健康委（2020年第57号公告）",
+      "latest_revision": "2020年4月23日发布，2020年7月1日施行",
+      "jurisdiction": "cn",
+      "binding": "departmental_regulation",
+      "url": "https://www.nmpa.gov.cn/xxgk/ggtg/qtggtg/20200426162401243.html",
+      "copyright": "中国官方文件"
+    },
+    "cn_lab_animal_regulation": {
+      "title_en": "Regulations for the Administration of Affairs Concerning Experimental Animals",
+      "title_zh": "《实验动物管理条例》",
+      "issuer": "国家科委（1988年发布），2017年修订",
+      "latest_revision": "2017年3月1日国务院令第676号修订",
+      "jurisdiction": "cn",
+      "binding": "administrative_regulation",
+      "url": "https://www.gov.cn/gongbao/content/2017/content_5219148.htm",
+      "copyright": "中国官方文件"
+    },
+    "cn_animal_welfare_opinion": {
+      "title_en": "Guiding Opinions on the Humane Treatment of Laboratory Animals",
+      "title_zh": "《关于善待实验动物的指导性意见》",
+      "issuer": "科技部（国科发财字〔2006〕398号）",
+      "latest_revision": "2006",
+      "jurisdiction": "cn",
+      "binding": "guidance",
+      "url": "https://www.most.gov.cn/",
+      "copyright": "中国官方文件"
+    },
+    "cn_gbt_35892_2018": {
+      "title_en": "Laboratory animal — Guideline for ethical review of animal welfare",
+      "title_zh": "GB/T 35892-2018《实验动物 福利伦理审查指南》",
+      "issuer": "国家标准化管理委员会",
+      "latest_revision": "2018年2月6日发布，2018年9月1日实施",
+      "jurisdiction": "cn",
+      "binding": "recommended_national_standard",
+      "url": "https://openstd.samr.gov.cn/",
+      "copyright": "SAC — cite only"
+    },
+    "cn_biosecurity_law": {
+      "title_en": "Biosecurity Law of the People's Republic of China",
+      "title_zh": "《中华人民共和国生物安全法》",
+      "issuer": "全国人民代表大会常务委员会",
+      "latest_revision": "2020年10月17日通过，2021年4月15日施行",
+      "jurisdiction": "cn",
+      "binding": "law",
+      "url": "https://www.gov.cn/xinwen/2020-10/18/content_5552108.htm",
+      "copyright": "中国官方文件"
+    },
+    "cn_pathogen_biosafety": {
+      "title_en": "Regulations on Biosafety Management of Pathogenic Microorganism Laboratories",
+      "title_zh": "《病原微生物实验室生物安全管理条例》",
+      "issuer": "国务院（令第424号）",
+      "latest_revision": "2004年公布，2018年修订",
+      "jurisdiction": "cn",
+      "binding": "administrative_regulation",
+      "url": "https://www.gov.cn/gongbao/content/2018/content_5296011.htm",
+      "copyright": "中国官方文件"
+    },
+    "cn_pipl": {
+      "title_en": "Personal Information Protection Law of the PRC",
+      "title_zh": "《中华人民共和国个人信息保护法》",
+      "issuer": "全国人民代表大会常务委员会",
+      "latest_revision": "2021年8月20日通过，2021年11月1日施行",
+      "jurisdiction": "cn",
+      "binding": "law",
+      "url": "https://www.gov.cn/xinwen/2021-08/20/content_5632486.htm",
+      "copyright": "中国官方文件"
+    },
+    "cn_hesc_2003": {
+      "title_en": "Ethical Guiding Principles for Human Embryonic Stem Cell Research",
+      "title_zh": "《人胚胎干细胞研究伦理指导原则》",
+      "issuer": "科技部、卫生部（国科发生字〔2003〕460号）",
+      "latest_revision": "2003",
+      "jurisdiction": "cn",
+      "binding": "guidance",
+      "url": "https://www.most.gov.cn/",
+      "copyright": "中国官方文件"
+    }
+  },
+
+  "rules": [
+    {
+      "rule_id": "ETH-HUM-001",
+      "domain": "human_clinical",
+      "title_zh": "伦理委员会批准与批件号",
+      "applies_when": {"has_human_subjects": true},
+      "requirement_zh": "涉及人的研究必须经独立伦理委员会/机构审查委员会审查批准；稿件应报告审批机构名称与批件号。",
+      "manuscript_must_report": ["ethics_committee_name", "approval_number"],
+      "citations": [
+        {"instrument": "wma_helsinki", "locus": "研究伦理委员会条款（2013 Fortaleza 版第23段）", "citation_confidence": "medium"},
+        {"instrument": "us_common_rule", "locus": "45 CFR 46.109", "citation_confidence": "high"},
+        {"instrument": "us_fda_50_56", "locus": "21 CFR 56.109", "citation_confidence": "high"},
+        {"instrument": "cn_ethics_review_2023", "locus": "第二章 伦理审查委员会", "citation_confidence": "high"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.ethics_statement"},
+      "severity_hint": "critical",
+      "consumer": "M6",
+      "false_positive_guard": "补充材料不可得时字段应为 parse_failed，不得判缺失（00-contracts §6.4）。综述、荟萃分析、纯计算研究不适用本条。"
+    },
+    {
+      "rule_id": "ETH-HUM-002",
+      "domain": "human_clinical",
+      "title_zh": "知情同意",
+      "applies_when": {"has_human_subjects": true},
+      "requirement_zh": "应报告已获得受试者书面知情同意；若豁免或口头同意，须说明豁免依据与批准豁免的伦理委员会。",
+      "manuscript_must_report": ["informed_consent_obtained", "consent_form_type_or_waiver_basis"],
+      "citations": [
+        {"instrument": "wma_helsinki", "locus": "知情同意条款（2013 版第25–32段）", "citation_confidence": "medium"},
+        {"instrument": "us_common_rule", "locus": "45 CFR 46.116", "citation_confidence": "high"},
+        {"instrument": "us_fda_50_56", "locus": "21 CFR 50.25 知情同意要素", "citation_confidence": "high"},
+        {"instrument": "cioms_2016", "locus": "Guideline 9 知情同意", "citation_confidence": "medium"},
+        {"instrument": "cn_ethics_review_2023", "locus": "第三章 知情同意", "citation_confidence": "high"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.informed_consent"},
+      "severity_hint": "critical",
+      "consumer": "M6",
+      "false_positive_guard": "回顾性去标识数据、公开数据集二次分析可合法豁免；此时应检查是否报告了豁免依据，而不是直接判缺失。"
+    },
+    {
+      "rule_id": "ETH-HUM-003",
+      "domain": "human_clinical",
+      "title_zh": "知情同意豁免的依据",
+      "applies_when": {"has_human_subjects": true, "consent_waived": true},
+      "requirement_zh": "豁免知情同意须满足法定条件（最小风险、不豁免则无法实施、不损害受试者权益等），并经伦理委员会批准；稿件应写明豁免依据。",
+      "manuscript_must_report": ["waiver_justification", "waiver_approving_committee"],
+      "citations": [
+        {"instrument": "us_common_rule", "locus": "45 CFR 46.116(f) 知情同意的更改或豁免", "citation_confidence": "high"},
+        {"instrument": "cioms_2016", "locus": "Guideline 10 知情同意的更改与豁免", "citation_confidence": "medium"},
+        {"instrument": "cn_ethics_review_2023", "locus": "第32条 免除伦理审查与免除知情同意的情形", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.informed_consent", "expect_substring_any": ["waiver", "waived", "豁免", "免除"]},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "只有当稿件明确声称豁免时才触发；未提及同意的情形归 ETH-HUM-002。"
+    },
+    {
+      "rule_id": "ETH-HUM-004",
+      "domain": "human_clinical",
+      "title_zh": "赫尔辛基宣言遵循声明",
+      "applies_when": {"has_human_subjects": true},
+      "requirement_zh": "涉及人的医学研究宜声明遵循《赫尔辛基宣言》或等效准则。",
+      "manuscript_must_report": ["declaration_of_helsinki_statement"],
+      "citations": [
+        {"instrument": "wma_helsinki", "locus": "全文适用范围", "citation_confidence": "high"},
+        {"instrument": "icmje", "locus": "Protection of Research Participants", "citation_confidence": "high"}
+      ],
+      "check": "field_contains_any",
+      "check_args": {"field": "declarations.ethics_statement", "any": ["Helsinki", "赫尔辛基"]},
+      "severity_hint": "minor",
+      "consumer": "M6",
+      "false_positive_guard": "许多合规研究不写此声明而写本国法规依据；缺失只作 minor 提示，不得单独据此判定不合规。"
+    },
+    {
+      "rule_id": "ETH-HUM-005",
+      "domain": "clinical_trial_registration",
+      "title_zh": "临床试验前瞻性注册",
+      "applies_when": {"design_family": "human_interventional"},
+      "requirement_zh": "干预性临床试验须在首例受试者入组前于公开可及的注册平台注册；稿件应报告注册号与注册平台。",
+      "manuscript_must_report": ["registry_name", "registration_number", "registration_date"],
+      "citations": [
+        {"instrument": "wma_helsinki", "locus": "研究注册条款（2013 版第35段）", "citation_confidence": "medium"},
+        {"instrument": "icmje", "locus": "Clinical Trial Registration", "citation_confidence": "high"},
+        {"instrument": "cioms_2016", "locus": "Guideline 24 公开责任", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "design.registration"},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "观察性研究、动物与细胞实验不适用。注册号真伪与注册时序核验属二期（需 ClinicalTrials.gov / ChiCTR 接口）。"
+    },
+    {
+      "rule_id": "ETH-HUM-006",
+      "domain": "human_clinical",
+      "title_zh": "弱势群体的额外保护",
+      "applies_when": {"has_human_subjects": true, "vulnerable_population": true},
+      "requirement_zh": "涉及儿童、孕妇、认知障碍者、受监禁者等弱势群体时，须说明额外保护措施与相应的法定代理人同意安排。",
+      "manuscript_must_report": ["vulnerable_group_safeguards", "proxy_consent_arrangement"],
+      "citations": [
+        {"instrument": "us_common_rule", "locus": "45 CFR 46 Subpart B（孕妇、胎儿、新生儿）/ Subpart C（受监禁者）/ Subpart D（儿童）", "citation_confidence": "high"},
+        {"instrument": "cioms_2016", "locus": "Guideline 15 弱势个体与群体", "citation_confidence": "medium"},
+        {"instrument": "cn_ethics_review_2023", "locus": "涉及弱势群体的特别要求", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "population.subjects", "requires_vulnerable_flag": true},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "弱势群体识别依赖 population.subjects 的抽取质量；抽取为 ambiguous 时不触发，改出 partial_extraction。"
+    },
+    {
+      "rule_id": "ETH-HUM-007",
+      "domain": "human_clinical",
+      "title_zh": "未成年人的同意与许可",
+      "applies_when": {"has_human_subjects": true, "includes_minors": true},
+      "requirement_zh": "涉及未成年人须取得父母或法定监护人许可（permission），并在其理解能力允许时取得本人赞同（assent）。",
+      "manuscript_must_report": ["parental_permission", "child_assent"],
+      "citations": [
+        {"instrument": "us_common_rule", "locus": "45 CFR 46.408 儿童的赞同与父母许可", "citation_confidence": "high"},
+        {"instrument": "cioms_2016", "locus": "Guideline 17 涉及儿童与青少年的研究", "citation_confidence": "medium"},
+        {"instrument": "cn_ethics_review_2023", "locus": "限制民事行为能力人的知情同意", "citation_confidence": "medium"}
+      ],
+      "check": "field_contains_any",
+      "check_args": {"field": "declarations.informed_consent", "any": ["assent", "guardian", "parental", "监护人", "赞同"]},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "仅当已确认纳入 18 岁以下受试者时触发。"
+    },
+    {
+      "rule_id": "ETH-HUM-008",
+      "domain": "data_privacy",
+      "title_zh": "个人健康数据的去标识化与隐私保护",
+      "applies_when": {"has_human_subjects": true, "uses_identifiable_data": true},
+      "requirement_zh": "使用可识别健康数据须说明去标识化方法或合法性基础。",
+      "manuscript_must_report": ["deidentification_method_or_legal_basis"],
+      "citations": [
+        {"instrument": "us_hipaa", "locus": "45 CFR 164.514(b) Safe Harbor 18 项标识符 / Expert Determination", "citation_confidence": "high"},
+        {"instrument": "cn_pipl", "locus": "第二章 个人信息处理规则；第28条 敏感个人信息（含医疗健康）", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.data_availability"},
+      "severity_hint": "minor",
+      "consumer": "M6",
+      "false_positive_guard": "汇总统计数据不涉及可识别信息，不触发。"
+    },
+
+    {
+      "rule_id": "ETH-ANI-001",
+      "domain": "animal",
+      "title_zh": "动物伦理委员会批准与方案号",
+      "applies_when": {"has_animal_experiment": true},
+      "requirement_zh": "动物实验须经机构动物护理与使用委员会（IACUC / 动物伦理委员会）批准；稿件应报告批准机构与方案号。",
+      "manuscript_must_report": ["iacuc_or_committee_name", "protocol_number"],
+      "citations": [
+        {"instrument": "us_phs_olaw", "locus": "PHS Policy IV.C 机构动物护理与使用委员会审查", "citation_confidence": "high"},
+        {"instrument": "us_awa_9cfr", "locus": "9 CFR 2.31 IACUC 组成与职责", "citation_confidence": "high"},
+        {"instrument": "arrive_2", "locus": "Essential 10 — Item 'Ethical statement'", "citation_confidence": "high"},
+        {"instrument": "cn_lab_animal_regulation", "locus": "全文；实验动物使用许可证制度", "citation_confidence": "medium"},
+        {"instrument": "cn_gbt_35892_2018", "locus": "福利伦理审查程序", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.ethics_statement", "scoped_to_design_type": "in_vivo_animal"},
+      "severity_hint": "critical",
+      "consumer": "M6",
+      "false_positive_guard": "仅对 design_components 中 type=in_vivo_animal 的实验触发；同一论文的 in_vitro 部分应判 not_applicable（见 01-structured-extraction §5.3.6）。"
+    },
+    {
+      "rule_id": "ETH-ANI-002",
+      "domain": "animal",
+      "title_zh": "3R 原则",
+      "applies_when": {"has_animal_experiment": true},
+      "requirement_zh": "应体现替代（Replacement）、减少（Reduction）、优化（Refinement）三原则，尤其是样本量的合理性与减少痛苦的措施。",
+      "manuscript_must_report": ["three_rs_consideration"],
+      "citations": [
+        {"instrument": "nrc_guide_8ed", "locus": "Chapter 1 — Key Concepts, 3Rs", "citation_confidence": "high"},
+        {"instrument": "arrive_2", "locus": "Recommended Set — Item 'Ethical statement / 3Rs'", "citation_confidence": "medium"},
+        {"instrument": "cn_animal_welfare_opinion", "locus": "善待实验动物的基本原则", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "measurement.sample_size_justification", "scoped_to_design_type": "in_vivo_animal"},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "3R 常不以该词出现；应同时接受『样本量计算』『麻醉镇痛』『人道终点』等实质表述，避免关键词式误判。"
+    },
+    {
+      "rule_id": "ETH-ANI-003",
+      "domain": "animal",
+      "title_zh": "动物基本信息报告（ARRIVE Essential 10）",
+      "applies_when": {"has_animal_experiment": true},
+      "requirement_zh": "应报告物种、品系、性别、年龄或体重、来源与健康/微生物学状态。",
+      "manuscript_must_report": ["species", "strain", "sex", "age_or_weight", "source"],
+      "citations": [
+        {"instrument": "arrive_2", "locus": "Essential 10 — Item 'Experimental animals'", "citation_confidence": "high"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "population.subjects", "scoped_to_design_type": "in_vivo_animal"},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "性别缺失单独构成 minor 而非 major；不得因缺一项要素就判整条不合规。"
+    },
+    {
+      "rule_id": "ETH-ANI-004",
+      "domain": "animal",
+      "title_zh": "麻醉、镇痛与人道终点",
+      "applies_when": {"has_animal_experiment": true, "involves_pain_or_distress": true},
+      "requirement_zh": "涉及可能引起疼痛或痛苦的操作，须报告麻醉与镇痛方案，以及预设的人道终点。",
+      "manuscript_must_report": ["anesthesia_regimen", "analgesia_regimen", "humane_endpoints"],
+      "citations": [
+        {"instrument": "nrc_guide_8ed", "locus": "Chapter 4 — Veterinary Care, Pain and Distress", "citation_confidence": "high"},
+        {"instrument": "us_awa_9cfr", "locus": "9 CFR 2.31(d)(1)(iv)(A) 疼痛与痛苦的最小化", "citation_confidence": "medium"},
+        {"instrument": "arrive_2", "locus": "Essential 10 — Item 'Experimental procedures'", "citation_confidence": "high"},
+        {"instrument": "cn_animal_welfare_opinion", "locus": "实验过程中善待实验动物", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "design.interventions", "scoped_to_design_type": "in_vivo_animal"},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "非侵入性观察研究不触发；需先由 M3 判定是否涉及疼痛操作。"
+    },
+    {
+      "rule_id": "ETH-ANI-005",
+      "domain": "animal",
+      "title_zh": "安乐死方法",
+      "applies_when": {"has_animal_experiment": true, "animals_euthanized": true},
+      "requirement_zh": "应报告安乐死方法，且方法须符合公认指南（如 AVMA 2020）。",
+      "manuscript_must_report": ["euthanasia_method"],
+      "citations": [
+        {"instrument": "avma_euthanasia_2020", "locus": "全文；可接受与有条件接受的方法", "citation_confidence": "high"},
+        {"instrument": "arrive_2", "locus": "Essential 10 — Item 'Experimental procedures'", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "design.interventions", "expect_substring_any": ["euthan", "sacrific", "安乐死", "处死"]},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "颈椎脱臼、CO2 等方法本身合规与否需人工判断；本条只查是否报告，不判方法优劣。"
+    },
+    {
+      "rule_id": "ETH-ANI-006",
+      "domain": "animal",
+      "title_zh": "中国实验动物许可证制度",
+      "applies_when": {"has_animal_experiment": true, "jurisdiction_hint": "cn"},
+      "requirement_zh": "在中国境内开展动物实验，实验动物及其使用单位须持有实验动物生产许可证/使用许可证。",
+      "manuscript_must_report": ["license_number_or_qualified_facility"],
+      "citations": [
+        {"instrument": "cn_lab_animal_regulation", "locus": "实验动物许可证管理", "citation_confidence": "medium"},
+        {"instrument": "cn_gbt_35892_2018", "locus": "审查要点", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.ethics_statement", "expect_substring_any": ["许可证", "SYXK", "SCXK"]},
+      "severity_hint": "minor",
+      "consumer": "M6",
+      "false_positive_guard": "国际期刊上的中国研究常不写许可证号，缺失只作 minor 提示。仅当能判定研究在中国境内进行时触发。"
+    },
+
+    {
+      "rule_id": "ETH-CELL-001",
+      "domain": "human_derived_cells_tissue",
+      "title_zh": "人源细胞/组织的供者同意与伦理批准",
+      "applies_when": {"uses_human_derived_primary_material": true},
+      "requirement_zh": "使用人源原代细胞、组织或体液须报告供者知情同意与伦理委员会批准。",
+      "manuscript_must_report": ["donor_consent", "ethics_approval_for_tissue"],
+      "citations": [
+        {"instrument": "wma_helsinki", "locus": "可识别人体材料与数据的研究", "citation_confidence": "medium"},
+        {"instrument": "us_common_rule", "locus": "45 CFR 46.102(e) human subject 定义（含可识别生物标本）", "citation_confidence": "high"},
+        {"instrument": "cn_ethics_review_2023", "locus": "涉及人的生物样本研究", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.informed_consent"},
+      "severity_hint": "critical",
+      "consumer": "M6",
+      "false_positive_guard": "**关键防误报**：已建立的商业化永生细胞系（HeLa、HEK293、A549、HepG2、Huh7 等）通常不构成 human subjects research，不需要供者同意；见 exempt_cell_lines 列表。"
+    },
+    {
+      "rule_id": "ETH-CELL-002",
+      "domain": "cell_line_general",
+      "title_zh": "商业化细胞系的伦理豁免",
+      "applies_when": {"uses_established_cell_line_only": true},
+      "requirement_zh": "仅使用已建立的商业化细胞系时，通常无需伦理审批；此时相关字段应判 not_applicable 而非缺失。",
+      "manuscript_must_report": [],
+      "citations": [
+        {"instrument": "us_common_rule", "locus": "45 CFR 46.102(e) —— 不可识别的生物标本不构成 human subject", "citation_confidence": "high"}
+      ],
+      "check": "assert_not_applicable",
+      "check_args": {"field": "declarations.ethics_statement"},
+      "severity_hint": "info",
+      "consumer": "M6",
+      "false_positive_guard": "本条是**反向规则**：它的作用是阻止 ETH-CELL-001 与 ETH-HUM-001 对纯细胞系研究误报缺失。"
+    },
+    {
+      "rule_id": "ETH-CELL-003",
+      "domain": "stem_cell_embryo",
+      "title_zh": "人胚胎干细胞研究的专门监督",
+      "applies_when": {"uses_human_embryonic_stem_cells": true},
+      "requirement_zh": "hESC 研究须经专门的干细胞研究监督委员会（如 ESCRO/EMBO 或等效机构）审查；应报告细胞系来源与登记信息。",
+      "manuscript_must_report": ["stem_cell_oversight_committee", "cell_line_provenance"],
+      "citations": [
+        {"instrument": "isscr_2021", "locus": "Section 2 — Categories of research and oversight", "citation_confidence": "medium"},
+        {"instrument": "cn_hesc_2003", "locus": "全文；禁止性规定与审查要求", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.ethics_statement", "expect_substring_any": ["stem cell", "ESCRO", "干细胞"]},
+      "severity_hint": "critical",
+      "consumer": "M6",
+      "false_positive_guard": "iPSC 通常不适用 hESC 的专门监督，但若涉及配子/胚胎生成则适用。区分 hESC 与 iPSC 是本条的前提。"
+    },
+    {
+      "rule_id": "ETH-CELL-004",
+      "domain": "stem_cell_embryo",
+      "title_zh": "人胚胎体外培养期限",
+      "applies_when": {"cultures_human_embryos": true},
+      "requirement_zh": "人胚胎体外培养历来以受精后 14 天或原条出现为限。ISSCR 2021 已将其从『禁止』改为『须经专门审查的类别』，但多数法域仍以 14 天为法定或事实上限。",
+      "manuscript_must_report": ["culture_duration", "specialized_review_approval"],
+      "citations": [
+        {"instrument": "isscr_2021", "locus": "从 Prohibited 调整为 Category 3A（须专门审查）", "citation_confidence": "medium"},
+        {"instrument": "cn_hesc_2003", "locus": "体外培养期限不得超过受精或核移植后 14 天", "citation_confidence": "medium"}
+      ],
+      "check": "manual_only",
+      "check_args": {},
+      "severity_hint": "critical",
+      "consumer": "M6",
+      "false_positive_guard": "本条**一律交人工**：各法域规定不一且 ISSCR 2021 后处于变动期，自动判定风险过高。"
+    },
+
+    {
+      "rule_id": "ETH-HGR-001",
+      "domain": "genetic_resources",
+      "title_zh": "中国人类遗传资源行政许可",
+      "applies_when": {"uses_chinese_human_genetic_resources": true},
+      "requirement_zh": "采集、保藏、利用中国人类遗传资源，或对外提供/开展国际合作的，须依《人类遗传资源管理条例》履行审批或备案。",
+      "manuscript_must_report": ["hgr_approval_or_filing_number"],
+      "citations": [
+        {"instrument": "cn_hgr_regulation", "locus": "第三章 采集、保藏、利用、对外提供；国际合作审批", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "declarations.ethics_statement", "expect_substring_any": ["人类遗传资源", "human genetic resources", "HGRAC"]},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "仅当研究涉及中国人群样本且有境外合作方或样本出境时触发；纯境内研究要求不同。"
+    },
+    {
+      "rule_id": "ETH-HGR-002",
+      "domain": "genetic_resources",
+      "title_zh": "遗传资源获取与惠益分享（名古屋议定书）",
+      "applies_when": {"uses_foreign_genetic_resources": true},
+      "requirement_zh": "跨境获取生物遗传资源应说明事先知情同意（PIC）与共同商定条件（MAT）。",
+      "manuscript_must_report": ["abs_permit_or_pic_mat"],
+      "citations": [
+        {"instrument": "nagoya_protocol", "locus": "Article 6 获取与事先知情同意；Article 5 惠益分享", "citation_confidence": "medium"}
+      ],
+      "check": "manual_only",
+      "check_args": {},
+      "severity_hint": "minor",
+      "consumer": "M6",
+      "false_positive_guard": "适用性判断依赖样本来源国，自动判定不可靠，交人工。"
+    },
+
+    {
+      "rule_id": "ETH-BIO-001",
+      "domain": "biosafety",
+      "title_zh": "病原微生物实验的生物安全等级",
+      "applies_when": {"uses_pathogens": true},
+      "requirement_zh": "涉及病原微生物的实验应报告生物安全等级（BSL）与实验室资质。",
+      "manuscript_must_report": ["biosafety_level", "facility_certification"],
+      "citations": [
+        {"instrument": "cn_pathogen_biosafety", "locus": "实验室分级与资格认可", "citation_confidence": "medium"},
+        {"instrument": "cn_biosecurity_law", "locus": "第五章 病原微生物实验室生物安全", "citation_confidence": "medium"}
+      ],
+      "check": "field_present",
+      "check_args": {"field": "measurement.assays", "expect_substring_any": ["BSL", "biosafety", "生物安全"]},
+      "severity_hint": "major",
+      "consumer": "M6",
+      "false_positive_guard": "仅当能确认使用了活体病原微生物时触发；灭活样本、质粒、假病毒不适用。"
+    },
+    {
+      "rule_id": "ETH-BIO-002",
+      "domain": "biosafety",
+      "title_zh": "两用性研究关切（DURC）",
+      "applies_when": {"uses_pathogens": true, "gain_of_function": true},
+      "requirement_zh": "涉及增强病原体传播力或致病力的研究应说明生物安全审查与风险评估。",
+      "manuscript_must_report": ["durc_review"],
+      "citations": [
+        {"instrument": "cn_biosecurity_law", "locus": "生物安全风险防控体制", "citation_confidence": "low"}
+      ],
+      "check": "manual_only",
+      "check_args": {},
+      "severity_hint": "critical",
+      "consumer": "M6",
+      "false_positive_guard": "本条**一律交人工**：功能获得性研究的界定高度依赖领域判断，自动判定会产生严重误报。"
+    }
+  ],
+
+  "exempt_cell_lines": {
+    "note": "这些是已广泛分发的永生化细胞系，使用它们通常不构成 human subjects research，不应因缺伦理批件而报缺失（防 ETH-CELL-001 / ETH-HUM-001 误报）。列表非穷尽。",
+    "lines": ["HeLa", "HEK293", "HEK293T", "A549", "HepG2", "Huh7", "MCF-7", "MDA-MB-231",
+              "U2OS", "SH-SY5Y", "Jurkat", "K562", "THP-1", "Caco-2", "HCT116", "SW480",
+              "PC-3", "LNCaP", "U87MG", "CHO", "NIH3T3", "RAW264.7", "Vero", "COS-7",
+              "HUVEC", "BEAS-2B", "16HBE", "AGS", "SGC-7901", "BGC-823"]
+  },
+
+  "vulnerable_population_markers": {
+    "note": "用于 ETH-HUM-006 / ETH-HUM-007 的适用性触发；命中需人工确认。",
+    "en": ["children", "pediatric", "infant", "neonate", "minors", "pregnant", "fetus",
+           "prisoner", "incarcerated", "cognitive impairment", "dementia", "intellectual disability",
+           "unconscious", "critically ill", "refugee", "students"],
+    "zh": ["儿童", "婴幼儿", "新生儿", "未成年", "孕妇", "胎儿", "受试囚犯", "认知障碍",
+           "痴呆", "智力障碍", "昏迷", "危重", "学生"]
+  }
+}
