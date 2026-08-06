@@ -19,12 +19,25 @@
       "type": "object",
       "required": ["figure_label"],
       "properties": {
-        "figure_label": {"type": "string", "description": "如 Figure 3"},
-        "panel": {"type": ["string", "null"]},
+        "figure_label": {"type": "string", "description": "如 Figure 3。保留原始标签，含 Extended Data Fig. 1c 这类形式"},
+        "panel": {"type": ["string", "null"], "description": "无 panel 时填 NA"},
         "page": {"type": ["integer", "null"], "description": "PDF 输入时必填；缺页码视为无效定位"},
         "first_cited_at": {"type": ["string", "null"], "description": "正文首次引用位置，locator 格式"},
-        "image_file": {"type": ["string", "null"], "description": "抽出的图像文件相对路径"}
+        "image_file": {"type": ["string", "null"], "description": "抽出的图像文件相对路径"},
+        "placement": {
+          "enum": ["main_text", "supplementary", "unknown"],
+          "description": "图所在位置。M5 §B.2 据此判断证据权重与位置是否匹配"
+        }
       }
+    },
+
+    "research_scene": {
+      "type": ["string", "null"],
+      "description": "该图试图回答的研究场景，取自 M5 §A.2 知识库，如 药效评估 / 组间比较 / 实验流程 / 空间定位 / 临床生存分析"
+    },
+    "scientific_question": {
+      "type": ["string", "null"],
+      "description": "该 figure/panel 试图回答的科学问题。解析第一步就要确定，后续所有判断都依赖它"
     },
 
     "experimental_conditions": {

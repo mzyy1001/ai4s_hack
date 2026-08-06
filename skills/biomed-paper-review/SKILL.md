@@ -77,9 +77,9 @@ description: 生物医药论文 AI 审稿与图谱解析。输入一篇论文（
 | M2 | 宏观逻辑与格式 | ZY（卓妍） | `references/02-macro-logic.md` | 抛开生物专业性，整体逻辑链是否闭环？各部分是否完整？有无数据泄露、前后矛盾？ |
 | M3 | 实验方法合规性 | Peter | `references/03-experimental-methods.md` | 方法有无 reference 依据？实验动物是否必要？有无异常实验对象/非通用流程？ |
 | M4 | 统计学方法 | JY（蒋运） | `references/04-statistics.md` | 统计方法是否匹配数据类型？样本量是否过小？多重比较是否校正？ |
-| M5 | 图表使用规范 | MY（敏仪） | `references/05-figures-and-charts.md` | 图表类型是否匹配研究目的？创新画法有无足够证据支撑？ |
+| M5 | 图表使用规范 | MY（敏怡） | `references/05-figures-and-charts.md` | 图表类型是否匹配研究目的？呈现是否规范？正文图与 supplement 图的位置是否合理？ |
 | M6 | 伦理合规 | Peter | `references/06-ethics-compliance.md` | 动物/人体试验流程是否合规？有无对应伦理批件号与知情同意？ |
-| M7 | 结论与讨论 | MY（敏仪） | `references/07-conclusions-discussion.md` | 结论是否被数据支持？讨论有无过度外推、避谈局限？ |
+| M7 | 结论与讨论 | MY（敏怡） | `references/07-conclusions-discussion.md` | 结论是否被数据支持？讨论有无过度外推、避谈局限？ |
 
 > 与会议纪要"分层审核"的映射：第一层内部逻辑校验 = M2；第二层实验方法 = M3；第三层统计学 = M4；第四层呈现规范 = M5；第五层特殊场景合规 = M6。M1 是全部层的输入，M7 是全部层的收口。
 
@@ -181,7 +181,7 @@ description: 生物医药论文 AI 审稿与图谱解析。输入一篇论文（
 | `references/02-macro-logic.md` | 逻辑链校验、章节完整性、数据泄露场景库 | 阶段 ④ M2 |
 | `references/03-experimental-methods.md` | 实验设计惯例库、动物实验必要性判据 | 阶段 ④ M3 |
 | `references/04-statistics.md` | 统计方法选择表、样本量下限、多重比较 | 阶段 ④ M4 |
-| `references/05-figures-and-charts.md` | 图表类型解析规则、图表规范库 | 阶段 ③ + ④ M5 |
+| `references/05-figures-and-charts.md` | 图表类型知识库、解析流程、设计规范、正文/supplement 位置适配 | 阶段 ③ + ④ M5 |
 | `references/06-ethics-compliance.md` | 伦理批件、知情同意、3R 原则核查 | 阶段 ④ M6 |
 | `references/07-conclusions-discussion.md` | 结论-证据对齐、过度外推识别 | 阶段 ④ M7 |
 | `schemas/*.json` | 全部输出的机器可校验模式 | 输出前自检 |

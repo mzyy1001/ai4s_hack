@@ -1,6 +1,6 @@
 # M7 · 结论与讨论合理性
 
-**负责人：MY（敏仪）** · 状态：**骨架 — 待负责人填充判据**
+**负责人：MY（敏怡）** · 状态：**骨架 — 待负责人填充判据**
 
 全流程的**收口模块**。核心问题：论文的每一条主张，是否被它自己的数据支持？
 
@@ -42,7 +42,7 @@
 - 特定剂量/时间窗 → 主张任意条件下有效
 - 相关性研究 → 主张因果
 
-**待填充**：敏仪梳理"实验层级 → 允许的主张层级"对照表。
+**待填充**：敏怡梳理"实验层级 → 允许的主张层级"对照表。
 
 ### 2.3 讨论质量
 
@@ -57,9 +57,13 @@
 本模块必须消费 M2–M6 的 findings：
 
 ```
-若 M4 报出 wrong_test / sample_size(critical)  → 依赖该分析的 claim 自动降级为 unsupported
-若 M3 报出 missing_control                     → 相关因果主张自动降级
-若 M5 报出 image_manipulation_suspected        → 相关 claim 标记 critical，直送人工
+若 M4 报出 wrong_test / sample_size(critical)   → 依赖该分析的 claim 自动降级为 unsupported
+若 M3 报出 missing_control                      → 相关因果主张自动降级
+若 M5 报出 figure_text_contradiction            → 依赖该图的 claim 降级并标注图文矛盾
+若 M5 报出 chart_type_mismatch                  → 依赖该图的 claim 置信度降一级
+若 M5 报出 figure_should_be_main_text           → 提示核心证据被放在 supplement，claim 可读性存疑
+（二期）若 M5 报出 duplicate_region_within_paper / splice_artifact_suspected
+                                                → 相关 claim 标记 critical，直送编辑
 ```
 
 ## 3. category slug（待补全）
