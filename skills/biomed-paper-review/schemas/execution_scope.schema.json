@@ -13,7 +13,7 @@
     "execution_scope": {
       "type": "object",
       "required": ["mode", "submode", "executed_stages", "executed_modules",
-                   "skipped_modules", "fields", "assets", "supplements"],
+                   "skipped_modules", "fields", "assets", "observations", "supplements"],
       "additionalProperties": false,
       "properties": {
         "mode": {
@@ -29,31 +29,43 @@
         "executed_stages": {
           "type": "array",
           "minItems": 1,
+          "uniqueItems": true,
           "items": {"$ref": "common.schema.json#/$defs/stage_id"},
           "description": "消费权限白名单：任何阶段不得消费未在此声明的上游产物"
         },
         "executed_modules": {
           "type": "array",
+          "uniqueItems": true,
           "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
           "description": "实际运行的审核模块；非审核模式为空数组"
         },
         "skipped_modules": {
           "type": "array",
+          "uniqueItems": true,
           "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
           "description": "full_review 下为空数组"
         },
         "fields": {
           "type": "array",
+          "uniqueItems": true,
           "items": {"type": "string"},
           "description": "进入覆盖率分母的字段路径全集"
         },
         "assets": {
           "type": "array",
+          "uniqueItems": true,
           "items": {"type": "string"},
           "description": "进入 asset_readability_rate 分母的图表 id"
         },
+        "observations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"},
+          "description": "进入 pixel/OCR 比率与冲突计数分母的 observation_id 全集"
+        },
         "supplements": {
           "type": "array",
+          "uniqueItems": true,
           "items": {"type": "string"},
           "description": "进入 supplement_accessibility 分母的补充材料 id"
         },
@@ -74,7 +86,8 @@
           "then": {
             "properties": {
               "executed_modules": {"minItems": 6},
-              "skipped_modules": {"maxItems": 0}
+              "skipped_modules": {"maxItems": 0},
+              "executed_stages": {"contains": {"const": "stage_3"}}
             }
           }
         },
@@ -89,9 +102,48 @@
           "then": {"properties": {"executed_modules": {"maxItems": 0}}}
         },
         {
+          "description": "structured_extraction 至少执行 Stage 1 与 Stage 2",
+          "if": {"properties": {"mode": {"const": "structured_extraction"}}, "required": ["mode"]},
+          "then": {"properties": {"executed_stages": {
+            "allOf": [
+              {"contains": {"const": "stage_1"}},
+              {"contains": {"const": "stage_2"}}
+            ]
+          }}}
+        },
+        {
+          "description": "interpretation_only 至少执行 Stage 1 与 scoped Stage 3",
+          "if": {"properties": {"submode": {"const": "interpretation_only"}}, "required": ["submode"]},
+          "then": {"properties": {"executed_stages": {
+            "allOf": [
+              {"contains": {"const": "stage_1"}},
+              {"contains": {"const": "stage_3"}}
+            ]
+          }}}
+        },
+        {
           "description": "figure_review 只跑 M5",
           "if": {"properties": {"submode": {"const": "figure_review"}}, "required": ["submode"]},
-          "then": {"properties": {"executed_modules": {"const": ["M5"]}}}
+          "then": {"properties": {
+            "executed_modules": {"const": ["M5"]},
+            "executed_stages": {"contains": {"const": "stage_3"}}
+          }}
+        },
+        {
+          "description": "Stage 2 依赖 Stage 1 的 normalized_document",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_2"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_1"}}}}
+        },
+        {
+          "description": "Stage 3 依赖 Stage 1 的 asset_inventory",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_3"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_1"}}}}
         },
         {
           "description": "Stage 3b 依赖 Stage 2 的 structured_result_v1",
@@ -108,6 +160,27 @@
             "required": ["executed_stages"]
           },
           "then": {"properties": {"executed_stages": {"contains": {"const": "stage_3b"}}}}
+        },
+        {
+          "description": "Stage 5 聚合依赖 Stage 4；非审核模式使用输出装配而不是 Stage 5",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_5"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_4"}}}}
+        },
+        {
+          "description": "执行审核模块必须声明 Stage 4 与 Stage 5",
+          "if": {
+            "properties": {"executed_modules": {"minItems": 1}},
+            "required": ["executed_modules"]
+          },
+          "then": {"properties": {"executed_stages": {
+            "allOf": [
+              {"contains": {"const": "stage_4"}},
+              {"contains": {"const": "stage_5"}}
+            ]
+          }}}
         }
       ]
     },
@@ -121,6 +194,7 @@
       "properties": {
         "resolved_fields": {
           "type": "array",
+          "uniqueItems": true,
           "items": {"type": "string"},
           "description": "status ∈ {reported, not_reported} 的条件必填字段。not_reported 属于已解析。"
         },
@@ -142,7 +216,8 @@
           }
         },
         "unreadable_assets": {"type": "array", "items": {"type": "string"}},
-        "inaccessible_supplements": {"type": "array", "items": {"type": "string"}},
+        "inaccessible_supplements": {"type": "array", "uniqueItems": true,
+                                     "items": {"type": "string"}},
         "scope_denominators": {
           "type": "object",
           "required": ["required_fields_total", "assets_total", "supplements_total"],

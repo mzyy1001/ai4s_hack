@@ -17,6 +17,7 @@
     "fields": ["declarations.ethics_statement", "declarations.informed_consent",
                "population.subjects"],
     "assets": [],
+    "observations": [],
     "supplements": ["S1"],
     "scope_rationale": "用户只问『动物伦理声明是否齐全』，仅运行 M6 及其依赖字段",
     "stage_3b_executed": true

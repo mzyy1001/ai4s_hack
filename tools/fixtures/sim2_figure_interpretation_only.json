@@ -16,6 +16,7 @@
     "skipped_modules": ["M2", "M3", "M4", "M5", "M6", "M7"],
     "fields": [],
     "assets": ["fig:3"],
+    "observations": ["OBS-001", "OBS-002"],
     "supplements": [],
     "scope_rationale": "用户只要求解读 Figure 3 的剂量响应曲线，未要求审稿",
     "stage_3b_executed": false

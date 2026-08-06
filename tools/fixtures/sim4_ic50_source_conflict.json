@@ -17,6 +17,7 @@
     "fields": ["objective.primary_endpoint", "measurement.assays",
                "measurement.statistical_methods"],
     "assets": ["fig:2"],
+    "observations": ["OBS-014", "OBS-015", "OBS-016"],
     "supplements": [],
     "scope_rationale": "整篇论文完整审核",
     "stage_3b_executed": true
@@ -69,6 +70,24 @@
                   "pdf_file_page": 9, "scope": "paragraph"},
       "quote": "The sub-micromolar potency of Compound A supports its development as a clinical candidate.",
       "created_by": "M7"
+    },
+    "EV-006": {
+      "id": "EV-006", "type": "absence", "scope": "document",
+      "searched_locations": [
+        {"section": "methods", "scope": "section"},
+        {"section": "results", "scope": "section"}
+      ],
+      "search_terms": ["sample size", "power", "effect size", "样本量", "效能"],
+      "search_result": "no_match", "created_by": "stage_2"
+    },
+    "EV-007": {
+      "id": "EV-007", "type": "absence", "scope": "document",
+      "searched_locations": [
+        {"section": "discussion", "scope": "section"},
+        {"section": "conclusion", "scope": "section"}
+      ],
+      "search_terms": ["limitation", "limitations", "局限", "不足"],
+      "search_result": "no_match", "created_by": "stage_2"
     }
   },
 
@@ -99,7 +118,7 @@
         "field_path": "objective.hypothesis", "applicability": "applicable",
         "requiredness": "optional", "status": "reported",
         "value": "化合物 A 以剂量依赖方式抑制肝癌细胞活力",
-        "evidence_refs": ["EV-004"], "extraction_confidence": "medium"
+        "evidence_refs": ["EV-004"], "extraction_confidence": "high"
       },
       "primary_endpoint": {
         "field_path": "objective.primary_endpoint", "applicability": "applicable",
@@ -199,7 +218,7 @@
       "sample_size_justification": {
         "field_path": "measurement.sample_size_justification", "applicability": "applicable",
         "requiredness": "recommended", "status": "not_reported", "value": null,
-        "evidence_refs": ["EV-004"], "extraction_confidence": "medium"
+        "evidence_refs": ["EV-006"], "extraction_confidence": "high"
       }
     },
     "conclusion": {
@@ -215,7 +234,7 @@
       "limitations": {
         "field_path": "conclusion.limitations", "applicability": "applicable",
         "requiredness": "recommended", "status": "not_reported", "value": null,
-        "evidence_refs": ["EV-005"], "extraction_confidence": "medium"
+        "evidence_refs": ["EV-007"], "extraction_confidence": "high"
       },
       "generalization_scope": {
         "field_path": "conclusion.generalization_scope", "applicability": "applicable",
@@ -348,7 +367,7 @@
       "category": "internal_inconsistency",
       "severity": "major",
       "title": "同一实验的 IC50 在图注与正文/摘要间不一致",
-      "detail": "Fig 2C 图注报告 IC50 = 12.4 μM (95% CI 9.8-15.7)，Results 正文与 Abstract 均报告 15.1 μM。两值属同一 grouping_key（EXP-02 / Compound A / 72h / cell_viability），单位归一后按四舍五入容差 0.05 判定，差值 2.7 远超容差，且 15.1 落在图注 CI 上界之外，构成稿件内部矛盾。",
+      "detail": "Fig 2C 图注报告 IC50 = 12.4 μM (95% CI 9.8-15.7)，Results 正文与 Abstract 均报告 15.1 μM。两值属同一 grouping_key（EXP-02 / Compound A / 72h / cell_viability）；只有图注提供区间，因此按两个点估计的四舍五入容差 0.05 判定，差值 2.7 远超容差，构成稿件内部矛盾。",
       "evidence_refs": ["EV-001", "EV-002", "EV-003"],
       "rule_ref": "02-macro-logic#internal-value-inconsistency",
       "review_confidence": "high",

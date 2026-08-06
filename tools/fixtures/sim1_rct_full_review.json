@@ -17,6 +17,7 @@
     "fields": ["objective.primary_endpoint", "design.randomization",
                "measurement.missing_data_handling"],
     "assets": ["fig:1", "fig:2"],
+    "observations": ["OBS-001"],
     "supplements": [],
     "scope_rationale": "用户提交整篇论文未指明范围，默认完整审核",
     "stage_3b_executed": true

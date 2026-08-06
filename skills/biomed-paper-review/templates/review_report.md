@@ -1,143 +1,146 @@
 # 论文审核报告 · {{paper.title}}
 
-> DOI: {{paper.doi}} ｜ 输入格式: {{paper.input_format}} ｜ 执行模块: {{paper.reviewed_modules}}
-> **本报告由 AI 生成，仅覆盖审稿的基础环节，不构成录用或退稿决定。**
+<!-- `collect_extracted_fields` 是渲染辅助函数，不是机器 JSON 字段，不得写回契约。
+     固定算法：仅遍历 objective / population / design / measurement / design_specific /
+     conclusion / declarations；遇到同时含 applicability、requiredness、status、value、
+     evidence_refs、extraction_confidence 的对象即收录且不再下钻；最后按 field_path
+     字典序排列。arms[]、claims[]、key_data[] 不由此函数渲染。 -->
 
----
+> DOI：{{paper.doi}} ｜ 期刊：{{paper.journal}} ｜ 输入格式：{{paper.input_format}}
 
-## 一、整体置信度
+## 一、执行摘要
 
-**{{confidence_score.score}} / 100 — {{confidence_score.band}}**
+> {{disclaimer}}
 
-| critical | major | minor | info | 抽取缺口扣分 |
+| 执行模式 | submode | 已执行阶段 | 已执行模块 | 跳过模块 |
 | --- | --- | --- | --- | --- |
-| {{n_critical}} | {{n_major}} | {{n_minor}} | {{n_info}} | {{extraction_gap_penalty}} |
+| {{execution_scope.mode}} | {{execution_scope.submode}} | {{execution_scope.executed_stages}} | {{execution_scope.executed_modules}} | {{execution_scope.skipped_modules}} |
 
-{{#if confidence_score.priority_manual_review}}
-> ⚠️ **存在 critical 级发现，无论分数高低均需人工优先复核。**
+**范围依据**：{{execution_scope.scope_rationale}}
+
+{{#if manuscript_risk_score}}
+- 稿件风险分：`{{manuscript_risk_score.value}}/100`（`{{manuscript_risk_score.band}}`；
+  `partial={{manuscript_risk_score.partial}}`；
+  `comparable_to_full_review={{manuscript_risk_score.comparable_to_full_review}}`）
+- 阈值声明：{{manuscript_risk_score.threshold_caveat}}
+{{else}}
+- 稿件风险分：本模式未执行审核模块，不输出。
 {{/if}}
-
-{{#each paper.skipped_modules}}
-- 已跳过 {{module}}：{{reason}}
-{{/each}}
-
----
+- 抽取覆盖率：`{{extraction_coverage.value}}`
+{{#if review_confidence}}
+- 审核置信度：`{{review_confidence.value}}`
+{{#if review_confidence.weak_evidence_warning}}
+> ⚠️ {{review_confidence.weak_evidence_warning}}
+{{/if}}
+{{else}}
+- 输出置信度：`{{output_confidence.value}}`
+{{/if}}
 
 ## 二、结构化结果表
 
-### 研究目标
+{{#if structured_result}}
+结构化结果版本：`{{structured_result.version}}`；
+`stage_3b_executed={{structured_result.stage_3b_executed}}`。
 
-| 项 | 内容 | 出处 |
-| --- | --- | --- |
-| 研究问题 | {{objective.research_question}} | {{locator}} |
-| 假设 | {{objective.hypothesis}} | |
-| 研究类型 | {{objective.study_type}} | |
-| 主要终点 | {{objective.primary_endpoint}} | |
+{{#each (collect_extracted_fields structured_result)}}
+| 字段 | applicability | requiredness | status | 值 | 单位 | extraction_confidence | 证据 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| {{field_path}} | {{applicability}} | {{requiredness}} | {{status}} | {{value}} | {{unit}} | {{extraction_confidence}} | {{evidence_refs}} |
+{{/each}}
 
-### 实验方法
+### 核心数据观测组
 
-| 项 | 内容 |
-| --- | --- |
-| 受试对象 | {{methods.subjects}} |
-| 分组 | {{#each methods.groups}}{{name}} (n={{n}}, {{intervention}} {{dose}} {{route}} × {{duration}}){{/each}} |
-| 对照类型 | {{methods.control_type}} |
-| 随机化 / 盲法 | {{methods.randomization}} / {{methods.blinding}} |
-| 统计方法 | {{#each methods.stats_methods}}{{test}}（{{applied_to}}，校正: {{correction}}）{{/each}} |
-| 样本量依据 | {{methods.sample_size_justification}} |
-
-### 核心数据
-
-| ID | 指标 | 数值 | 单位 | n | 误差 | p | 来源 | 置信度 | 出处 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| {{id}} | {{metric}} | {{value}} | {{unit}} | {{n}} | {{ci.type}} {{ci.low}}–{{ci.high}} | {{p_value}} | {{source}} | {{confidence}} | {{evidence.locator}} |
-
-### 初步结论
-
-| 主张 | 适用范围 | 支撑证据 |
-| --- | --- | --- |
-| {{statement}} | {{scope}} | {{supported_by}} |
-
-### 评估矩阵
-
-| 键 | 值 | | 键 | 值 |
-| --- | --- | --- | --- | --- |
-| 含动物实验 | {{has_animal_experiment}} | | 含人体受试 | {{has_human_subjects}} |
-| 有伦理声明 | {{has_ethics_statement}} | | 有随机化 | {{has_randomization}} |
-| 有盲法 | {{has_blinding}} | | 有效能分析 | {{has_power_analysis}} |
-| 多重比较校正 | {{has_multiple_comparison_correction}} | | 最小组 n | {{min_group_n}} |
-| 图 / 表数 | {{figure_count}} / {{table_count}} | | 图表全部被引用 | {{all_figures_cited_in_text}} |
-
-### 抽取缺口
-
-| 字段 | 原因 | 已检索位置 | 影响 |
-| --- | --- | --- | --- |
-| {{field}} | {{reason}} | {{searched}} | {{impact}} |
-
----
+{{#each structured_result.key_data}}
+- `{{id}}` · {{metric_name}}（`{{metric_family}}`）：status=`{{status}}`；
+  canonical=`{{canonical_observation}}`；依据：{{canonical_rationale}}
+  - grouping_key：{{grouping_key}}
+  - observations：{{observations}}
+  - compatible：{{compatible_observations}}；conflicting：{{conflicting_observations}}
+  - reporting_completeness=`{{reporting_completeness}}`；缺失要素：{{missing_elements}}
+{{/each}}
+{{else}}
+本模式未执行 Stage 2，不产出结构化结果。
+{{/if}}
 
 ## 三、图表解读与原图定位
 
 {{#each figure_records}}
+### {{figure_id}} · {{chart_type}}
 
-### {{location.figure_label}}{{location.panel}} · {{chart_type}}
-
-**原图定位**：{{location.figure_label}}{{location.panel}} ｜ p.{{location.page}} ｜ 正文首次引用于 {{location.first_cited_at}}
-
-**解读**：{{interpretation}}
-
-**实验条件**：分组 {{experimental_conditions.groups}}；剂量 {{experimental_conditions.dose_levels}}；
-时间点 {{experimental_conditions.timepoints}}；n={{experimental_conditions.n_per_group}}（{{experimental_conditions.replicate_type}}）
-
-**坐标轴**：x = {{axes.x.label}} ({{axes.x.unit}}, {{axes.x.scale}})；
-y = {{axes.y.label}} ({{axes.y.unit}}, {{axes.y.scale}}{{#if axes.y.truncated}}，**已截断**{{/if}})
-
-**抽取数值**：
-
-| 指标 | 数值 | 来源 | 置信度 |
-| --- | --- | --- | --- |
-| {{metric}} | {{value}} {{unit}} | {{source}} | {{confidence}} |
-
-{{#if curve_fit}}
-**拟合**：{{curve_fit.model}}，IC50/EC50 = {{curve_fit.ic50_ec50}} {{curve_fit.unit}}，
-Hill = {{curve_fit.hill_slope}}，拟合优度 {{curve_fit.goodness_of_fit}}
-{{/if}}
-
-**置信度**：{{confidence}}{{#if manual_review_needed}} ⚠️ 含像素估读或信息缺失，需人工核对原图{{/if}}
-
+- 原图证据：{{location.evidence_ref}}；正文首次引用：{{location.first_cited_at}}
+- 科学问题：{{scientific_question}}
+- 解读：{{interpretation}}
+- 观测：{{observations}}
+- 抽取置信度：`{{extraction_confidence}}`；`manual_review_needed={{manual_review_needed}}`
+- 解析限制：{{parse_limitations}}
+{{else}}
+本模式未执行 Stage 3，或执行范围内没有图记录。
 {{/each}}
 
----
-
-## 四、七维审核发现
-
-按 severity 降序。每条均附原文出处；无出处的发现已在生成阶段丢弃。
-
-{{#each findings}}
-
-### [{{severity}}] {{id}} · {{title}}
-
-- **模块**：{{module}} ｜ **类别**：{{category}} ｜ **置信度**：{{confidence}}
-- **出处**：`{{evidence.locator}}`
-- **原文**：> {{evidence.quote}}
-- **说明**：{{detail}}
-- **依据规则**：`{{rule_ref}}`
-{{#if related_findings}}
-- **关联发现**：{{related_findings}}
-{{/if}}
-
+{{#each table_records}}
+{{this}}
 {{/each}}
 
----
+## 四、审核发现
 
-## 五、人工复核建议
+{{#each issue_clusters}}
+### [{{max_severity}}] {{cluster_id}} · 代表 finding {{representative_finding}}
+
+- 成员：{{member_findings}}
+- 类别：{{categories}}
+- 主锚点：{{anchor}}
+- 证据：{{evidence_refs}}
+{{else}}
+{{#if execution_scope.executed_modules}}
+执行范围内未产出 finding。
+{{else}}
+本模式未执行审核模块。
+{{/if}}
+{{/each}}
+
+{{#each all_findings}}
+- `{{id}}`（{{module}} / {{category}} / {{severity}} / {{review_confidence}}）：
+  {{title}}。{{detail}} 证据：{{evidence_refs}}；规则：`{{rule_ref}}`
+{{/each}}
+
+> 证据渲染规则：逐个解析 `evidence_refs[]`。`present` 展开 locator 与原文；
+> `absence` 只展开检索范围、检索词与检索结果，禁止生成引文。
+
+## 五、抽取信号
+
+{{#each all_extraction_signals}}
+- `{{id}}` · `{{type}}`：{{detail}}；目标：{{target}}；证据：{{evidence_refs}}；
+  路由：{{routed_to}}
+{{else}}
+无抽取信号。
+{{/each}}
+
+## 六、系统限制
+
+{{#each all_system_limitations}}
+- `{{id}}` · `{{category}}`：{{impact}}；受影响目标：{{affected_targets}}；
+  建议动作：{{recommended_action}}
+{{else}}
+无已知系统限制。
+{{/each}}
+
+## 七、覆盖率明细
+
+| 子率 | resolved | total | rate |
+| --- | ---: | ---: | ---: |
+| 条件必填字段解析率 | {{extraction_coverage.field_resolution.resolved}} | {{extraction_coverage.field_resolution.total}} | {{extraction_coverage.field_resolution.rate}} |
+| 图表可读率 | {{extraction_coverage.asset_readability.resolved}} | {{extraction_coverage.asset_readability.total}} | {{extraction_coverage.asset_readability.rate}} |
+| 补充材料可得率 | {{extraction_coverage.supplement_accessibility.resolved}} | {{extraction_coverage.supplement_accessibility.total}} | {{extraction_coverage.supplement_accessibility.rate}} |
+
+- 已解析字段：{{coverage_breakdown.resolved_fields}}
+- 未解析必填字段：{{coverage_breakdown.unresolved_required_fields}}
+- 不可读图表：{{coverage_breakdown.unreadable_assets}}
+- 不可得补充材料：{{coverage_breakdown.inaccessible_supplements}}
+
+## 八、人工复核建议
 
 {{#each manual_review_plan}}
-
-**[{{priority}}] {{action}}**
-— 建议由：{{who}} ｜ 对应发现：{{finding_ids}}
-
+- **[{{priority}}]** {{action}}（执行者：`{{who}}`；对应 findings：{{finding_ids}}）
+{{else}}
+执行范围内没有需要列入复核计划的 `major` / `critical` finding。
 {{/each}}
-
----
-
-*{{confidence_score.disclaimer}}*

@@ -39,7 +39,8 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 
 二期应**扩展**而非重构主框架：新增 `database` / `query` / `retrieval_date` / `record_id` /
 `version` / `retraction_or_correction_status` / `relation_to_claim` 等 provenance 元数据；
-外部数据源接入清单见 `docs/phase2-external-sources.md`。
+外部数据源接入方案见 `docs/proposals/round-1-contracts-consistency.md`；提案未采纳前，
+不得在一期输出中声称已核验外部数据库。
 
 ---
 
@@ -214,7 +215,8 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 | `m2_findings[]` … `m7_findings[]` | 对应审核模块 | Stage 5 |
 | `all_extraction_signals[]` | **Stage 5** 聚合 `m1_` + `merge_` | 报告 |
 | `all_system_limitations[]` | **Stage 5** 聚合四个 stage-local | 报告 |
-| `all_findings[]` / `issue_clusters[]` / `execution_scope` / `coverage_breakdown` / `review_report` | **Stage 5** | 评分、报告、用户 |
+| `execution_scope` | **执行规划步骤（Stage 1 前初始化）**；条件阶段触发时由同一步骤先更新再执行 | 全阶段（消费白名单与评分分母） |
+| `all_findings[]` / `issue_clusters[]` / `coverage_breakdown` / `review_report` | **Stage 5** | 评分、报告、用户 |
 
 ### 2.5 Stage 1 · 文档归一化与切分
 
@@ -381,7 +383,7 @@ visually_derived   = axis_readable | pixel_estimated
 
 `evaluation_matrix` 是**路由与索引**工具，每个条目是状态感知对象而非裸布尔
 （`{status, applicability, requiredness, applies_to[], evidence_refs[],
-extraction_confidence}`，见 `01-structured-extraction.md §8`）：
+extraction_confidence}`，见 `01-structured-extraction.md §11`）：
 
 1. **可以**用它决定跑哪些规则集、定位相关证据。
 2. **不得**仅凭它直接立 finding —— M2–M7 必须回查 `evidence_refs`，
@@ -458,7 +460,8 @@ review_confidence = extraction_coverage × Q × C
   C = max(0, 1 − 0.10 × min(未消解 conflicting 组数, 5))
 ```
 
-全部变量均可从 `provenance.source_type`、`provenance.derivation.ocr_used`、
+scope 内 observation 由 `execution_scope.observations[]` 唯一圈定；全部变量均可从
+`provenance.source_type`、`provenance.derivation.ocr_used`、`finding.evidence_refs[]`、
 `finding.review_confidence`、`key_data.status` 直接算出（`00-contracts.md §8.3`）。
 `review_confidence < 0.5` 时，报告首屏必须提示「本次审核证据基础较弱，结论仅供参考」。
 

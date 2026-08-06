@@ -118,18 +118,30 @@
       "additionalProperties": false,
       "properties": {
         "type": {"enum": ["SD", "SEM", "95CI", "IQR", "range", "none"]},
-        "value": {"type": ["number", "null"]},
-        "low": {"type": ["number", "null"]},
-        "high": {"type": ["number", "null"]}
+        "value": {"type": "number", "minimum": 0},
+        "low": {"type": "number"},
+        "high": {"type": "number"}
       },
       "allOf": [
         {
           "if": {"properties": {"type": {"enum": ["95CI", "IQR", "range"]}}, "required": ["type"]},
-          "then": {"required": ["low", "high"]}
+          "then": {
+            "required": ["low", "high"],
+            "not": {"required": ["value"]}
+          }
         },
         {
           "if": {"properties": {"type": {"enum": ["SD", "SEM"]}}, "required": ["type"]},
-          "then": {"required": ["value"]}
+          "then": {
+            "required": ["value"],
+            "not": {"anyOf": [{"required": ["low"]}, {"required": ["high"]}]}
+          }
+        },
+        {
+          "if": {"properties": {"type": {"const": "none"}}, "required": ["type"]},
+          "then": {"not": {"anyOf": [
+            {"required": ["value"]}, {"required": ["low"]}, {"required": ["high"]}
+          ]}}
         }
       ]
     },
@@ -153,7 +165,18 @@
       "properties": {
         "extraction_method": {"$ref": "#/$defs/extraction_method"},
         "ocr_used": {"type": "boolean"}
-      }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"extraction_method": {"const": "ocr_text"}},
+                 "required": ["extraction_method"]},
+          "then": {"properties": {"ocr_used": {"const": true}}}
+        },
+        {
+          "if": {"properties": {"ocr_used": {"const": true}}, "required": ["ocr_used"]},
+          "then": {"properties": {"extraction_method": {"const": "ocr_text"}}}
+        }
+      ]
     },
 
     "provenance": {

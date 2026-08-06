@@ -24,6 +24,8 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCHEMA_DIR = os.path.join(ROOT, "skills", "biomed-paper-review", "schemas")
 FIXTURE_DIR = os.path.join(ROOT, "tools", "fixtures")
+REPORT_TEMPLATE = os.path.join(ROOT, "skills", "biomed-paper-review", "templates",
+                               "review_report.md")
 
 # ---------------------------------------------------------------- 契约枚举
 # 与 references/00-contracts.md 保持同步；任一处改动必须同步另一处。
@@ -58,7 +60,10 @@ NUMERIC_TYPE = {"point", "interval", "lower_bound", "upper_bound", "categorical"
 REVIEW_MODULES = {"M2", "M3", "M4", "M5", "M6", "M7"}
 CONFIDENCE = {"high", "medium", "low"}
 
-STAGE_DEPS = {"stage_3b": "stage_2", "stage_4": "stage_3b", "stage_3": "stage_1"}
+STAGE_DEPS = {"stage_2": "stage_1", "stage_3": "stage_1", "stage_3b": "stage_2",
+              "stage_4": "stage_3b", "stage_5": "stage_4"}
+SEVERITY_WEIGHT = {"critical": 25, "major": 10, "minor": 3, "info": 0}
+SEVERITY_RANK = {"critical": 3, "major": 2, "minor": 1, "info": 0}
 
 
 class Report:
@@ -151,6 +156,20 @@ def check_schemas(rep):
     rep.check(sig_enum == SIGNAL_TYPE, "signal type 六值且无 parse_failure",
               f"schema={sorted(sig_enum)}")
 
+    try:
+        with open(REPORT_TEMPLATE, encoding="utf-8") as fh:
+            template = fh.read()
+        stale = [token for token in ("confidence_score", "extraction_gap_penalty", "min_group_n",
+                                     "methods.groups", "evidence.locator", "七维审核")
+                 if token in template]
+        headings = ["## 一、执行摘要", "## 二、结构化结果表", "## 三、图表解读与原图定位",
+                    "## 四、审核发现", "## 五、抽取信号", "## 六、系统限制",
+                    "## 七、覆盖率明细", "## 八、人工复核建议"]
+        rep.check(not stale and all(template.count(h) == 1 for h in headings),
+                  "报告模板已迁移到八节新契约且无废弃字段", ", ".join(stale))
+    except OSError as exc:
+        rep.check(False, "报告模板可读取", str(exc))
+
     return schemas
 
 
@@ -173,6 +192,10 @@ def collect_observations(inst):
         if isinstance(node, dict) and "observation_id" in node and "provenance" in node:
             obs.append((path, node))
     return obs
+
+
+def close_enough(actual, expected, tolerance=0.0005):
+    return isinstance(actual, (int, float)) and abs(actual - expected) <= tolerance
 
 
 def check_instance(rep, name, inst):
@@ -232,6 +255,8 @@ def check_instance(rep, name, inst):
             continue
         if der["extraction_method"] not in METHOD_BY_SOURCE[st]:
             prov_bad.append(f"{path}: {st} 不允许 {der['extraction_method']}")
+        if (der["extraction_method"] == "ocr_text") != (der["ocr_used"] is True):
+            prov_bad.append(f"{path}: ocr_text 与 ocr_used=true 必须同时成立")
         if st == "pixel_estimated":
             val = node.get("value", {})
             if not isinstance(val, dict) or val.get("type") not in {"interval", "lower_bound", "upper_bound"}:
@@ -250,6 +275,18 @@ def check_instance(rep, name, inst):
             v = node.get("value")
             if not isinstance(v, dict) or v.get("type") not in NUMERIC_TYPE:
                 num_bad.append(f"{path}: value 非 numeric 对象")
+            elif v.get("type") == "interval" and v.get("low", 0) > v.get("high", 0):
+                num_bad.append(f"{path}: interval.low > interval.high")
+            unc = node.get("uncertainty")
+            if not isinstance(unc, dict):
+                num_bad.append(f"{path}: 缺 uncertainty")
+            elif unc.get("type") in {"95CI", "IQR", "range"}:
+                if not isinstance(unc.get("low"), (int, float)) or not isinstance(unc.get("high"), (int, float)):
+                    num_bad.append(f"{path}: 区间型 uncertainty 缺数值 low/high")
+                elif unc["low"] > unc["high"]:
+                    num_bad.append(f"{path}: uncertainty.low > uncertainty.high")
+            elif unc.get("type") in {"SD", "SEM"} and not isinstance(unc.get("value"), (int, float)):
+                num_bad.append(f"{path}: SD/SEM 缺数值 value")
     rep.check(not num_bad, "全部观测数值为 numeric 变体对象", "; ".join(num_bad[:5]))
 
     # --- structured_result 状态机 ---
@@ -287,6 +324,10 @@ def check_instance(rep, name, inst):
                 field_bad.append(f"{path}: not_applicable 缺 na_reason")
             if s == "parse_failed" and not node.get("system_limitation_ref"):
                 field_bad.append(f"{path}: parse_failed 缺 system_limitation_ref")
+            if s == "parse_failed":
+                sys_ids = {x.get("id") for x in inst.get("all_system_limitations", [])}
+                if node.get("system_limitation_ref") not in sys_ids:
+                    field_bad.append(f"{path}: system_limitation_ref 无法解析")
             if s == "unresolved":
                 pending.append(path)
                 if not node.get("resolution_state"):
@@ -295,6 +336,15 @@ def check_instance(rep, name, inst):
                     field_bad.append(f"{path}: unresolved 不得填 system_limitation_ref")
             if s in {"reported", "not_reported"} and not node.get("evidence_refs"):
                 field_bad.append(f"{path}: {s} 缺证据")
+            if s == "reported" and node.get("evidence_refs"):
+                if not any((registry.get(ref) or {}).get("type") == "present"
+                           for ref in node["evidence_refs"]):
+                    field_bad.append(f"{path}: reported 缺 present 证据")
+            if s == "not_reported" and node.get("evidence_refs"):
+                if not any((registry.get(ref) or {}).get("type") == "absence" and
+                           (registry.get(ref) or {}).get("search_result") == "no_match"
+                           for ref in node["evidence_refs"]):
+                    field_bad.append(f"{path}: not_reported 缺 no_match absence 证据")
         rep.check(not field_bad, "extracted_field 三维度与状态机合法", "; ".join(field_bad[:5]))
         rep.check(not matrix_bad, "evaluation_matrix 条目为纯索引（不复制字段属性）",
                   "; ".join(matrix_bad[:5]))
@@ -323,8 +373,37 @@ def check_instance(rep, name, inst):
                 kd_bad.append(f"{k.get('id')}: 选出 canonical 但无理由")
             if st == "conflicting" and len(k.get("conflicting_observations", [])) < 2:
                 kd_bad.append(f"{k.get('id')}: conflicting 但冲突观测不足 2")
-            ids_in = {o.get("observation_id") for o in k.get("observations", [])}
-            for ref in k.get("conflicting_observations", []) + k.get("compatible_observations", []):
+            obs_list = k.get("observations", [])
+            obs_ids = [o.get("observation_id") for o in obs_list]
+            ids_in = set(obs_ids)
+            if len(obs_ids) != len(ids_in):
+                kd_bad.append(f"{k.get('id')}: observation_id 重复")
+            canonical = k.get("canonical_observation")
+            if st == "reported":
+                if len(obs_list) != 1 or canonical not in ids_in:
+                    kd_bad.append(f"{k.get('id')}: reported 必须恰有一个且选中 canonical")
+                if k.get("compatible_observations") or k.get("conflicting_observations"):
+                    kd_bad.append(f"{k.get('id')}: reported 不得登记配对关系")
+            if st == "compatible_multiple_sources":
+                if len(obs_list) < 2 or canonical not in ids_in:
+                    kd_bad.append(f"{k.get('id')}: compatible_multiple_sources 缺合法 canonical")
+                if set(k.get("compatible_observations", [])) != ids_in:
+                    kd_bad.append(f"{k.get('id')}: 全兼容组必须列出全部 observation id")
+                if k.get("conflicting_observations"):
+                    kd_bad.append(f"{k.get('id')}: 全兼容组不得含冲突观测")
+            if st in {"pending_visual_resolution", "parse_failed"} and obs_list:
+                kd_bad.append(f"{k.get('id')}: {st} 时 observations 必须为空")
+            if st == "parse_failed":
+                ref = k.get("system_limitation_ref")
+                sys_ids = {x.get("id") for x in inst.get("all_system_limitations", [])}
+                if ref not in sys_ids:
+                    kd_bad.append(f"{k.get('id')}: parse_failed 的 system_limitation_ref 无法解析")
+            pair_refs = k.get("conflicting_observations", []) + k.get("compatible_observations", [])
+            for key in ("conflicting_observations", "compatible_observations"):
+                refs = k.get(key, [])
+                if len(refs) != len(set(refs)):
+                    kd_bad.append(f"{k.get('id')}: {key} 内部存在重复 id")
+            for ref in pair_refs:
                 if ref not in ids_in:
                     kd_bad.append(f"{k.get('id')}: 引用了不存在的 {ref}")
         rep.check(not kd_bad, "key_data 观测组约束成立", "; ".join(kd_bad[:5]))
@@ -384,6 +463,41 @@ def check_instance(rep, name, inst):
     mode = scope.get("mode")
     sub = scope.get("submode")
     mods = scope.get("executed_modules", [])
+    scope_bad = []
+    for key in ("executed_stages", "executed_modules", "skipped_modules", "fields",
+                "assets", "observations", "supplements"):
+        values = scope.get(key, [])
+        if len(values) != len(set(values)):
+            scope_bad.append(f"{key} 含重复值")
+    if set(mods) & set(scope.get("skipped_modules", [])):
+        scope_bad.append("executed_modules 与 skipped_modules 重叠")
+    if mods and set(mods) | set(scope.get("skipped_modules", [])) != REVIEW_MODULES:
+        scope_bad.append("已执行与跳过模块未完整划分 M2–M7")
+    if mods and not {"stage_4", "stage_5"}.issubset(stages):
+        scope_bad.append("执行审核模块但未声明 stage_4/stage_5")
+    if mode == "structured_extraction" and not {"stage_1", "stage_2"}.issubset(stages):
+        scope_bad.append("structured_extraction 缺 stage_1/stage_2")
+    if sub == "interpretation_only" and not {"stage_1", "stage_3"}.issubset(stages):
+        scope_bad.append("interpretation_only 缺 stage_1/stage_3")
+    if sub == "figure_review" and "stage_3" not in stages:
+        scope_bad.append("figure_review 缺 stage_3")
+    if mode == "full_review" and "stage_3" not in stages:
+        scope_bad.append("full_review 缺 stage_3")
+
+    obs_by_id = {}
+    for path, obs in collect_observations(inst):
+        obs_by_id.setdefault(obs.get("observation_id"), []).append((path, obs))
+    for oid in scope.get("observations", []):
+        copies = obs_by_id.get(oid, [])
+        if not copies:
+            scope_bad.append(f"scope observation 无法解析: {oid}")
+            continue
+        signatures = {json.dumps({"value": o.get("value"), "provenance": o.get("provenance")},
+                                 sort_keys=True, ensure_ascii=False) for _, o in copies}
+        if len(signatures) != 1:
+            scope_bad.append(f"scope observation 重复副本不一致: {oid}")
+    rep.check(not scope_bad, "execution_scope 集合、模式与 observation 分母合法",
+              "; ".join(scope_bad[:8]))
     if mode == "figure_analysis":
         rep.check(sub in {"interpretation_only", "figure_review"},
                   "figure_analysis 声明了 submode", str(sub))
@@ -416,6 +530,63 @@ def check_instance(rep, name, inst):
             rep.check(risk.get("comparable_to_full_review") is False,
                       "partial 分数标记为不可与完整审核比较")
 
+        score_bad = []
+        if risk.get("executed_modules") != mods or risk.get("skipped_modules") != scope.get("skipped_modules", []):
+            score_bad.append("risk_score 模块范围与 execution_scope 不一致")
+        finding_by_id = {f.get("id"): f for f in findings}
+        clusters = inst.get("issue_clusters", [])
+        seen_members = []
+        category_scores = {}
+        critical_seen = False
+        for c in clusters:
+            member_ids = c.get("member_findings", [])
+            members = [finding_by_id.get(fid) for fid in member_ids]
+            if not member_ids or any(m is None for m in members):
+                score_bad.append(f"{c.get('cluster_id')}: member finding 无法解析")
+                continue
+            seen_members.extend(member_ids)
+            expected_rep = sorted(members, key=lambda f: (-SEVERITY_RANK[f["severity"]], f["id"]))[0]
+            if c.get("representative_finding") != expected_rep["id"]:
+                score_bad.append(f"{c.get('cluster_id')}: representative 不符合 severity/id 顺序")
+            max_severity = expected_rep["severity"]
+            if c.get("max_severity") != max_severity:
+                score_bad.append(f"{c.get('cluster_id')}: max_severity 错误")
+            if set(c.get("categories", [])) != {m["category"] for m in members}:
+                score_bad.append(f"{c.get('cluster_id')}: categories 与成员不一致")
+            member_evidence = {ref for m in members for ref in m.get("evidence_refs", [])}
+            if set(c.get("evidence_refs", [])) != member_evidence:
+                score_bad.append(f"{c.get('cluster_id')}: evidence_refs 未完整合并")
+            category_scores.setdefault(expected_rep["category"], 0)
+            category_scores[expected_rep["category"]] += SEVERITY_WEIGHT[max_severity]
+            critical_seen = critical_seen or max_severity == "critical"
+        if sorted(seen_members) != sorted(finding_by_id):
+            score_bad.append("all_findings 未被 issue_clusters 恰好覆盖一次")
+        expected_risk = min(100, sum(min(30, value) for value in category_scores.values()))
+        if risk.get("value") != expected_risk:
+            score_bad.append(f"risk value={risk.get('value')} expected={expected_risk}")
+        expected_band = ("routine_review" if expected_risk <= 19 else
+                         "clarification_needed" if expected_risk <= 49 else
+                         "major_revision_suggested")
+        if risk.get("band") != expected_band:
+            score_bad.append(f"band={risk.get('band')} expected={expected_band}")
+        if risk.get("priority_manual_review") is not critical_seen:
+            score_bad.append("priority_manual_review 与 critical 簇不一致")
+        rep.check(not score_bad, "issue_clusters 与 manuscript_risk_score 可复算",
+                  "; ".join(score_bad[:8]))
+
+        plan_bad = []
+        major_ids = {f["id"] for f in findings if f.get("severity") in {"critical", "major"}}
+        planned_ids = []
+        for item in inst.get("manual_review_plan", []):
+            for fid in item.get("finding_ids", []):
+                if fid not in finding_by_id:
+                    plan_bad.append(f"复核计划引用不存在 finding: {fid}")
+                planned_ids.append(fid)
+        if not major_ids.issubset(set(planned_ids)):
+            plan_bad.append(f"major/critical 未全部进入复核计划: {sorted(major_ids - set(planned_ids))}")
+        rep.check(not plan_bad, "major/critical findings 均有报告级复核动作",
+                  "; ".join(plan_bad[:5]))
+
     # --- 覆盖率分母 ---
     cov = inst.get("extraction_coverage")
     cb = inst.get("coverage_breakdown", {})
@@ -433,6 +604,99 @@ def check_instance(rep, name, inst):
             r = cov.get(key, {})
             if r.get("total") == 0:
                 rep.check(r.get("rate") == 1.0, f"{key} 分母为 0 时记 1.0", str(r))
+
+        cov_bad = []
+        if den.get("assets_total") != len(scope.get("assets", [])):
+            cov_bad.append("assets_total 不等于 execution_scope.assets 长度")
+        if den.get("supplements_total") != len(scope.get("supplements", [])):
+            cov_bad.append("supplements_total 不等于 execution_scope.supplements 长度")
+        covered_fields = set(cb.get("resolved_fields", [])) | {
+            x.get("field_path") for x in cb.get("unresolved_required_fields", [])
+        }
+        if not covered_fields.issubset(set(scope.get("fields", []))):
+            cov_bad.append("coverage 字段超出 execution_scope.fields")
+        parts = [
+            ("field_resolution", len(cb.get("resolved_fields", [])), den.get("required_fields_total", 0)),
+            ("asset_readability", den.get("assets_total", 0) - len(cb.get("unreadable_assets", [])),
+             den.get("assets_total", 0)),
+            ("supplement_accessibility",
+             den.get("supplements_total", 0) - len(cb.get("inaccessible_supplements", [])),
+             den.get("supplements_total", 0)),
+        ]
+        exact_rates = []
+        for key, resolved, total in parts:
+            item = cov.get(key, {})
+            expected_rate = 1.0 if total == 0 else resolved / total
+            exact_rates.append(expected_rate)
+            if item.get("resolved") != resolved or item.get("total") != total:
+                cov_bad.append(f"{key} 分子分母错误")
+            if not close_enough(item.get("rate"), expected_rate):
+                cov_bad.append(f"{key}.rate={item.get('rate')} expected={expected_rate:.3f}")
+        expected_cov = round(0.60 * exact_rates[0] + 0.25 * exact_rates[1] + 0.15 * exact_rates[2], 3)
+        if not close_enough(cov.get("value"), expected_cov):
+            cov_bad.append(f"coverage={cov.get('value')} expected={expected_cov}")
+        if not set(cb.get("unreadable_assets", [])).issubset(set(scope.get("assets", []))):
+            cov_bad.append("unreadable_assets 超出 execution_scope.assets")
+        if not set(cb.get("inaccessible_supplements", [])).issubset(set(scope.get("supplements", []))):
+            cov_bad.append("inaccessible_supplements 超出 execution_scope.supplements")
+        rep.check(not cov_bad, "extraction_coverage 由 scope 分子分母复算成立",
+                  "; ".join(cov_bad[:8]))
+
+        confidence_bad = []
+        scope_obs_ids = scope.get("observations", [])
+        scope_obs = [obs_by_id[oid][0][1] for oid in scope_obs_ids if oid in obs_by_id]
+        obs_den = max(1, len(scope_obs_ids))
+        pixel_share = sum(o.get("provenance", {}).get("source_type") == "pixel_estimated"
+                          for o in scope_obs) / obs_den
+        ocr_share = sum(o.get("provenance", {}).get("derivation", {}).get("ocr_used") is True
+                        for o in scope_obs) / obs_den
+        if has_oc:
+            out = inst["output_confidence"]
+            expected = round(expected_cov * max(0, 1 - 0.30 * pixel_share - 0.20 * ocr_share), 3)
+            if not close_enough(out.get("pixel_share"), pixel_share):
+                confidence_bad.append("output pixel_share 错误")
+            if not close_enough(out.get("ocr_share"), ocr_share):
+                confidence_bad.append("output ocr_share 错误")
+            if not close_enough(out.get("value"), expected):
+                confidence_bad.append(f"output_confidence={out.get('value')} expected={expected}")
+        if has_rc:
+            review = inst["review_confidence"]
+            finding_den = max(1, len(findings))
+            pixel_evidence = {o["provenance"]["evidence_ref"] for o in scope_obs
+                              if o.get("provenance", {}).get("source_type") == "pixel_estimated"}
+            ocr_evidence = {o["provenance"]["evidence_ref"] for o in scope_obs
+                            if o.get("provenance", {}).get("derivation", {}).get("ocr_used") is True}
+            pixel_dep = sum(bool(set(f.get("evidence_refs", [])) & pixel_evidence)
+                            for f in findings) / finding_den
+            ocr_dep = sum(bool(set(f.get("evidence_refs", [])) & ocr_evidence)
+                          for f in findings) / finding_den
+            low_rate = sum(f.get("review_confidence") == "low" for f in findings) / finding_den
+            conflict_count = 0
+            scope_obs_set = set(scope_obs_ids)
+            if sr:
+                conflict_count = sum(k.get("status") == "conflicting" and
+                                     bool({o.get("observation_id") for o in k.get("observations", [])} & scope_obs_set)
+                                     for k in sr.get("key_data", []))
+            q = max(0, 1 - 0.30 * pixel_dep - 0.20 * ocr_dep - 0.10 * low_rate)
+            c_factor = max(0, 1 - 0.10 * min(conflict_count, 5))
+            expected = round(expected_cov * q * c_factor, 3)
+            expected_parts = {
+                "pixel_dependency_rate": pixel_dep,
+                "ocr_dependency_rate": ocr_dep,
+                "low_conf_finding_rate": low_rate,
+            }
+            for key, expected_part in expected_parts.items():
+                if not close_enough(review.get(key), expected_part):
+                    confidence_bad.append(f"{key} 错误")
+            if review.get("unresolved_conflict_count") != conflict_count:
+                confidence_bad.append("unresolved_conflict_count 错误")
+            if not close_enough(review.get("value"), expected):
+                confidence_bad.append(f"review_confidence={review.get('value')} expected={expected}")
+            warning = review.get("weak_evidence_warning")
+            if (expected < 0.5) != (warning == "本次审核证据基础较弱，结论仅供参考"):
+                confidence_bad.append("weak_evidence_warning 与阈值不一致")
+        rep.check(not confidence_bad, "review/output confidence 由 scope observation 复算成立",
+                  "; ".join(confidence_bad[:8]))
 
 
 def main():

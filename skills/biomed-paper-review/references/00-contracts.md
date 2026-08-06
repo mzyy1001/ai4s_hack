@@ -179,6 +179,8 @@ text_parse | table_parse | caption_parse | axis_read | visual_estimation | ocr_t
 ```
 
 **`derivation.ocr_used`**：布尔，`true` 表示该数值经过 OCR 文本层。
+`extraction_method = ocr_text` 当且仅当 `ocr_used = true`；其余五种方法的
+`ocr_used` 必须为 `false`。
 
 **`source_type` × `extraction_method` 合法组合**（其余组合为契约违规）：
 
@@ -190,7 +192,7 @@ text_parse | table_parse | caption_parse | axis_read | visual_estimation | ocr_t
 | `axis_readable` | `axis_read` |
 | `pixel_estimated` | `visual_estimation` |
 
-**两级来源分类**（§5.4 兼容性判定与 canonical 选择的基础）：
+**两级来源分类**（§5.5 canonical 选择的基础）：
 
 ```
 explicit_reported  = {explicit_main_text, explicit_table, explicit_figure_caption}
@@ -427,11 +429,14 @@ reported | compatible_multiple_sources | conflicting | ambiguous
 | `reported` | 单一来源，正常报告 | 该唯一 `observation_id` |
 | `compatible_multiple_sources` | 多来源且已判定兼容 | 按 §5.5 选出的 id |
 | `conflicting` | 多来源且已判定不兼容 | **`null`** |
-| `ambiguous` | 无法建立可比性（单位不可归一 / 分组键不匹配） | **`null`** |
+| `ambiguous` | 同组观测无法建立可比性（单位不可归一 / 数值变体不可比） | **`null`** |
 | `pending_visual_resolution` | 仅 v1 合法，等待 Stage 3 | **`null`** |
 | `parse_failed` | Stage 3 尝试后仍无法读出 | **`null`** |
 
 **`pending_visual_resolution` 不得出现在 v2**（与 §4 规则 5 同）。
+`pending_visual_resolution` 与 `parse_failed` 的 `observations[]` 为空；前者必须带
+`resolution_state`，后者必须带 `system_limitation_ref`。`reported` 恰有一个 observation；
+`compatible_multiple_sources` 与 `conflicting` 至少两个。
 
 ### 5.4 分组与兼容性判定（Stage 3b 执行）
 
@@ -440,21 +445,37 @@ reported | compatible_multiple_sources | conflicting | ambiguous
 （`null` 与 `null` 视为相等；一方为 `null` 另一方有值视为**不相等**）。
 分组键不匹配 → 是两个不同的 `key_data`，**不是冲突**。
 
-**第二步 · 可比性。** 同组内两两判定，顺序固定：
+**第二步 · 可比性。** 同组内对全部无序 observation 对逐对判定，顺序固定；
+每一对必须得到 `compatible` / `conflicting` / `ambiguous` 中的恰好一个结果：
 
-1. **单位归一化**。`unit_normalized` 无法归一到同一量纲 → `ambiguous`，判定终止。
-2. **变体兼容**。`categorical` 与数值型不可比 → `ambiguous`。
-3. **区间重叠**。双方都有 `uncertainty` 区间（`95CI` / `IQR` / `range`）或
-   `value.type = interval`：区间**有重叠**即 `compatible`，无重叠即 `conflicting`。
-4. **四舍五入容差**。双方均为 `point` 且至少一方无区间：
-   取**精度较低**一方的最后一位有效数字单位 `u`，容差 `tol = 0.5 × u`。
-   `|a − b| ≤ tol` → `compatible`（属四舍五入差异，**不得**判冲突）；否则 `conflicting`。
+1. **单位门控**。双方 `unit_normalized` 相同（含无量纲时均为 `null`）才继续；
+   一方为 `null` 另一方非 `null`、值不同、或没有已登记的确定性换算规则 → `ambiguous`。
+   禁止仅凭名称猜测单位；质量浓度与摩尔浓度之间无分子量时不得换算。
+2. **分类值**。双方均为 `categorical` 且 `label` 完全相同 → `compatible`；
+   标签不同 → `ambiguous`。`categorical` 与任一数值型组合 → `ambiguous`。
+3. **同型不确定区间**。双方的 `uncertainty.type` 相同且属于
+   `95CI` / `IQR` / `range`：闭区间有重叠 → `compatible`，无重叠 → `conflicting`。
+   不同类型的不确定区间不得互比，继续按数值本体判定。
+4. **点值**。双方均为 `point`：取精度较低一方在稿件原表示中的最后一位有效数字单位
+   `u`，`tol = 0.5 × u`。`|a − b| ≤ tol` → `compatible`；否则 `conflicting`。
+   若证据原文不足以恢复有效数字，无法计算 `u` → `ambiguous`。
    例：`12.4` vs `12.43` → `u = 0.1`，`tol = 0.05`，差 `0.03` → **兼容**。
    例：`12.4` vs `15.1` → `tol = 0.05`，差 `2.7` → **冲突**。
-5. **单边界**。`lower_bound` / `upper_bound` 与点值：点值落在界内 → `compatible`，否则 `conflicting`。
+5. **区间与边界**。把 `interval`、`lower_bound`、`upper_bound` 分别解释为闭约束
+   `[low, high]`、`[low, +∞)`、`(-∞, high]`；点值解释为
+   `[number − tol, number + tol]`。两个约束交集非空 → `compatible`，否则 `conflicting`。
+   点值的 `tol` 无法恢复时 → `ambiguous`。
+6. **兜底**。以上均未覆盖 → `ambiguous`。不得把未实现的比较分支默认为冲突。
 
-**第三步 · 归档。** 判定为兼容的 id 进 `compatible_observations[]`，
-不兼容的**双方 id 都**进 `conflicting_observations[]`。
+**第三步 · 组状态与归档。** `compatible_observations[]` 收录至少参加一对
+`compatible` 关系的 id；`conflicting_observations[]` 收录至少参加一对
+`conflicting` 关系的 id，同一 id 可以同时出现在两者中。数组按 id 字典序去重。
+
+- 只有一个 observation → `reported`；
+- 存在任一 `conflicting` 对 → `conflicting`；
+- 无冲突但存在任一 `ambiguous` 对 → `ambiguous`；
+- 至少两个 observation 且全部配对均 `compatible` → `compatible_multiple_sources`。
+
 **全部 observation 一律保留在 `observations[]`，禁止删除或静默覆盖。**
 
 **第四步 · 出信号。** 存在 `conflicting_observations[]` → 产出一条
@@ -468,7 +489,10 @@ reported | compatible_multiple_sources | conflicting | ambiguous
 **唯一保留的绝对规则**：`explicit_reported` 一律优先于 `visually_derived`。
 若组内同时存在两类且已判定兼容，canonical 必须取自 `explicit_reported`。
 
-`explicit_reported` 内部按下列**有序**判据选择，命中即停：
+只有 `reported` 与 `compatible_multiple_sources` 可选择 canonical：前者直接选择唯一 observation；
+后者先应用绝对来源规则，再按下列判据做**稳定的逐层筛选**。每一层只保留该判据最优的
+候选；剩一项即停止，多项并列才进入下一层。某判据所需信息无法从 observation 与其
+`evidence_ref` 恢复时跳过该判据，不得猜测。
 
 | # | 判据 | 说明 |
 | --- | --- | --- |
@@ -479,11 +503,12 @@ reported | compatible_multiple_sources | conflicting | ambiguous
 | 5 | 该指标族要素更齐全 | 依 `01-structured-extraction.md §6.3` |
 | 6 | 以上全部持平 | 取 `observation_id` 字典序最小者，保证可复现 |
 
-选中后**必须**在 `canonical_rationale` 写明命中的判据编号与理由，
+单一 observation 的理由写 `single_observation`。多来源选中后**必须**在
+`canonical_rationale` 写明首个排除其他候选的判据编号与理由，
 如 `"criterion_2: fig:2C 带 95% CI，results-p8 为裸点值"`。
 
-**无法给出可辩护选择时，`canonical_observation` 置 `null`**，
-组 status 判 `ambiguous`，不得随便挑一个。
+`ambiguous` / `conflicting` / `pending_visual_resolution` / `parse_failed` 的
+`canonical_observation` 一律为 `null`；不得在这些状态下运行上述排序。
 
 ### 5.6 reporting_completeness 与指标族
 
@@ -649,6 +674,7 @@ parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
     "fields": ["declarations.ethics_statement", "declarations.informed_consent",
                "population.subjects"],
     "assets": [],
+    "observations": [],
     "supplements": ["S1"],
     "scope_rationale": "用户仅询问伦理声明是否齐全"
   }
@@ -664,6 +690,7 @@ parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
 | `skipped_modules[]` | `full_review` 下为空数组 |
 | `fields[]` | 进入覆盖率分母的字段路径全集 |
 | `assets[]` | 进入 `asset_readability_rate` 分母的图表 id |
+| `observations[]` | 进入 pixel/OCR 比率与冲突计数分母的 `observation_id` 全集 |
 | `supplements[]` | 进入 `supplement_accessibility` 分母的补充材料 id |
 
 **硬性规则**：任何阶段**不得**消费未在 `executed_stages[]` 中声明的上游产物。
@@ -707,7 +734,9 @@ parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
 
 ### 8.1 manuscript_risk_score · 稿件风险分（0–100）
 
-以 §9.2 的 `issue_clusters[]` 为计分单位（防止一个问题拆成多条放大分数）：
+以 §9.3 的 `issue_clusters[]` 为计分单位（防止一个问题拆成多条放大分数）。
+每簇只归入 `representative_finding` 的 `category` 计分；`categories[]` 仅用于展示，
+不得让同一簇在多个 category 下重复得分：
 
 ```
 每簇权重 w：critical 25 / major 10 / minor 3 / info 0
@@ -775,6 +804,9 @@ extraction_coverage = 0.60 × field_resolution_rate
                     + 0.15 × supplement_accessibility
 ```
 
+各子率的 `rate` 与三项最终小数分数均以**未舍入的分子/分母**计算，最后四舍五入到
+小数点后三位；不得用已显示的三位子率继续连乘。`manuscript_risk_score` 保持整数。
+
 **报告必须给出显式分子分母**，不只给加权结果：
 
 ```json
@@ -799,10 +831,10 @@ extraction_coverage = 0.60 × field_resolution_rate
 **`output_confidence`**（无审核结论可言，只反映抽取本身的稳固程度）：
 
 ```
-pixel_share = |scope 内 provenance.source_type = pixel_estimated 的 observation|
-              / max(1, |scope 内 observation 总数|)
-ocr_share   = |scope 内 provenance.derivation.ocr_used = true 的 observation|
-              / max(1, |scope 内 observation 总数|)
+pixel_share = |execution_scope.observations 中 source_type = pixel_estimated 的 id|
+              / max(1, |execution_scope.observations|)
+ocr_share   = |execution_scope.observations 中 derivation.ocr_used = true 的 id|
+              / max(1, |execution_scope.observations|)
 
 Q_out = max(0, 1 − 0.30 × pixel_share − 0.20 × ocr_share)
 output_confidence = extraction_coverage × Q_out
@@ -811,9 +843,9 @@ output_confidence = extraction_coverage × Q_out
 **`review_confidence`**（系统对自身审核结论的支撑强度）：
 
 ```
-pixel_dependency_rate = |evidence_refs 关联到 pixel_estimated observation 的 finding|
+pixel_dependency_rate = |evidence_refs 关联到 scope 内 pixel_estimated observation 的 finding|
                         / max(1, |finding 总数|)
-ocr_dependency_rate   = |evidence_refs 关联到 ocr_used=true observation 的 finding|
+ocr_dependency_rate   = |evidence_refs 关联到 scope 内 ocr_used=true observation 的 finding|
                         / max(1, |finding 总数|)
 low_conf_finding_rate = |review_confidence = low 的 finding| / max(1, |finding 总数|)
 
@@ -824,6 +856,13 @@ C = max(0, 1 − 0.10 × min(|status=conflicting 且未消解的 key_data 组|, 
 
 review_confidence = extraction_coverage × Q × C
 ```
+
+**关联算法固定如下**：先用 `execution_scope.observations[]` 取得 scope 内 observation，
+再把 observation 的 `provenance.evidence_ref` 与 finding 的 `evidence_refs[]` 求交；交集非空
+即认定该 finding 依赖该 observation。一个 observation id 在 `structured_result` 与
+`figure_records` 重复出现时按一个计数，重复副本的 `value` 与 `provenance` 必须完全一致。
+`finding 总数` 取 `all_findings[]` 长度。冲突数只统计至少含一个 scope observation 的
+`key_data.status = conflicting` 组。
 
 **可计算性保证**：上述每个变量都能从已声明字段直接算出 ——
 `provenance.source_type`（§2.3）、`provenance.derivation.ocr_used`（§2.3）、
@@ -855,6 +894,10 @@ review_confidence = extraction_coverage × Q × C
 **每个数组有且只有一个产出者。** 跨阶段同名数组一律拆为阶段本地数组，
 再由单一聚合器合并 —— 这是旧契约「一个产物一个产出者」被违反的根因。
 
+`execution_scope` 不是 Stage 5 产物：由执行规划步骤在 Stage 1 前初始化；遇到条件阶段时，
+规划步骤必须先把该阶段加入 `executed_stages[]`，再允许阶段读取上游产物。Stage 5 只读取并
+原样写入最终报告，不得重建或改写执行历史。
+
 | 阶段本地数组 | 产出者 |
 | --- | --- |
 | `stage1_system_limitations[]` | Stage 1 |
@@ -879,10 +922,13 @@ review_confidence = extraction_coverage × Q × C
 
 1. **同模块内合并** —— 同一模块内 `category` 相同、且**主锚点**相同的 findings 合并为一条。
    **主锚点定义**：`evidence_refs[0]` 解析出的证据，比较其 locator 的
-   `figure`+`panel`（有图时）或 `paragraph_id`（无图时）或 `table`。
-   保留 `severity` 最高者为代表，其余进 `related_findings[]`。
+   `figure`+`panel`（有图时）或 `paragraph_id`（无图时）或 `table`；上述定位均不存在，
+   或证据为 `absence` 时，退回比较 `evidence_refs[0]` 本身。
+   保留 `severity` 最高者为代表；同 severity 时取 finding id 字典序最小者，
+   其余进 `related_findings[]`。
 2. **跨模块聚簇** —— 不同模块命中同一主锚点且语义重合时构成一个 `issue_cluster`。
-   保留 `severity` 最高的一条为簇代表。**不要把同一个问题报告六遍。**
+   保留 `severity` 最高的一条为簇代表；同 severity 时取 finding id 字典序最小者。
+   **不要把同一个问题报告六遍。**
 3. **簇内证据合并** —— 簇代表的 `evidence_refs[]` 并入各成员的 refs，按 id 去重后保留。
 
 ```json
@@ -923,7 +969,7 @@ review_confidence = extraction_coverage × Q × C
 | `"value": 12.4` | `{"type": "point", "number": 12.4}` | §2.1 |
 | `status: parse_failed` + `pending_visual_resolution: true` | `status: unresolved` + `resolution_state` 块 | §4 |
 | 扁平 `key_data` 单值对象 | 观测组（`observations[]`） | §5.2 |
-| `evaluation_matrix.min_group_n` 整数 | `group_sizes[]` 数组 | `01-…md §8.4` |
+| `evaluation_matrix.min_group_n` 整数 | `group_sizes[]` 数组 | `01-…md §11.4` |
 | `reporting_completeness: "not_applicable"` | `not_assessed` | §3.5 |
 | 绝对来源顺序「正文>表>图注>轴>像素」 | 两级分类 + §5.5 有序判据 | §5.5 |
 
