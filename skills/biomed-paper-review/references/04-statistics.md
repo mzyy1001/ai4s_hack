@@ -42,8 +42,9 @@
 | **`ci_estimate_mismatch`** | 同上 | 是否构成区间报告错误 |
 | **`count_percentage_mismatch`** | 同上 | 是否构成数据报告错误 |
 | **`grim_incompatible_mean`** | 同上 | 是否构成汇总统计不可能 |
+| **`table_total_mismatch`** | 同上 | 互斥穷尽分类的合计是否与声明分母矛盾 |
 
-> **加粗的四种是一期已实现的确定性取证**
+> **加粗的五种是一期已实现的确定性取证**
 >（`skills/biomed-paper-review/scripts/statistical_forensics.py`），
 > 不需要原始数据，只用论文自己印出来的数字。它们**已从二期提前到一期**
 > —— 本文件旧版把它们列在「§5 二期扩展」，现已更正。
@@ -51,14 +52,15 @@
 
 ### 2.1 统计取证 signal 的消费门
 
-四种取证 signal 不能按 type 直接翻译为 finding。M4 必须逐条执行：
+五种取证 signal 不能按 type 直接翻译为 finding。M4 必须逐条执行：
 
 1. 确认 `produced_by = stage_2`、`forensics.ran = true`，并复算 `forensics` 中的输入与区间；
 2. 用稿件证据确认所有输入属于**同一终点、同一比较、同一分析集和同一时间点**；无法绑定时不立 finding，产 `partial_extraction`；
 3. `test_statistic_p_mismatch` 还须确认检验族、自由度和单/双尾；`count_percentage_mismatch`
    还须确认分母口径与 count 语义（受试者数、事件数或样本数）；
 4. `grim_incompatible_mean` 还须确认原文报告的是等权整数得分的未调整算术均值，且 n 是该均值的实际分母；
-5. signal 的 `evidence_refs[]` 为空不构成违规；M4 立 finding 时必须另行加入报告这些数字的稿件内
+5. `table_total_mismatch` 还须确认各分类互斥且穷尽、属于同一分析集/时间点，缺失值已单列或纳入合计；多选题、重叠事件类别和允许一人多事件的安全性表不得运行；
+6. signal 的 `evidence_refs[]` 为空不构成违规；M4 立 finding 时必须另行加入报告这些数字的稿件内
    `present` evidence。`forensics.ran = false` 的 `partial_extraction` 只表示工具前提不足，
    **不得自动转成统计报告缺陷**。
 
@@ -358,12 +360,13 @@ finding 判据；它们会误伤合理的小样本探索研究，也可能放过
 | **`ci_self_inconsistent`** | 点估计与自身 CI 不自洽 | major | 由 `ci_estimate_mismatch` signal 判定 |
 | **`percentage_mismatch`** | 百分比与分子分母算不出来 | minor；改变关键分母或主要效应量时为 major | 由 `count_percentage_mismatch` signal 判定 |
 | **`grim_violation`** | 均值在给定 n 下数学上不可能 | major；人工排除口径差异后才可升级 critical | 由 `grim_incompatible_mean` signal 判定 |
+| **`table_total_mismatch`** | 互斥穷尽分类合计与声明分母不一致 | minor；影响主要终点、受试者流或安全性分母时为 major | 由同名 signal 判定 |
 
-> 加粗四项由 §2 的一期取证 signal 触发。**据 signal 立 finding 时，
+> 加粗五项由 §2 的一期取证 signal 触发。**据 signal 立 finding 时，
 > 必须在 `evidence_refs[]` 中独立给出稿件证据**（报告该数值的原文位置），
 > 不得仅引用 signal id（`00-contracts.md §6.1` 规则 5）。
 
-**四类取证 finding 的 severity 算法**：
+**五类取证 finding 的 severity 算法**：
 
 1. `p_value_inconsistent` 默认 `major`。仅当它属于预设主要终点、反算 p 与报告 p 位于
    预设 α 的两侧，且正文结论明确依赖“显著 / 不显著”分类时，才标 `critical`。
@@ -373,6 +376,8 @@ finding 判据；它们会误伤合理的小样本探索研究，也可能放过
    分母、效应量或受试者流判断时，才标 `major`；不得自动标 `critical`。
 4. `grim_violation` 默认 `major`。只有人工回查确认它是主要结果、原文确为等权整数原始均值、
    n 与报告精度均无抄录歧义，且该结果是核心结论的必要支撑时，才标 `critical`。
+5. `table_total_mismatch` 默认 `minor`。只有分类互斥且穷尽的前提有稿件证据，且差异改变主要终点、
+   CONSORT 受试者流或安全性分析分母时，才标 `major`；不得自动标 `critical`。
 
 **检验选择与模型前提的 severity 算法**：
 
@@ -441,6 +446,15 @@ finding 判据；它们会误伤合理的小样本探索研究，也可能放过
 **不该报警**：方法开发型 `in_vitro` pilot 使用 2 个独立批次，明确目标是估计流程变异并
 报告全部原始点与宽区间，未作确证性生物学结论 → 不以固定 n 下限立 finding；可在报告中
 保留探索性范围说明。
+
+### 10.7 `table_total_mismatch`
+
+**该报警**：同一分析集的 Table 1 明确把受试者分为互斥且穷尽的轻/中/重三类，计数为
+12、18、9，表头声明 `n = 42`，且无缺失类别 → 合计 39 与分母 42 矛盾 → 默认 **minor**；
+若该分母用于主要终点或安全性发生率则为 **major**。
+
+**不该报警**：不良事件表按事件类型列数，同一受试者可出现多个事件 → 类别不互斥，
+即使各行合计超过受试者总数也**不运行**，只在语义无法确认时产 `partial_extraction`。
 
 ---
 

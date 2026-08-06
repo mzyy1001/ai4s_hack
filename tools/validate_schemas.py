@@ -51,7 +51,7 @@ SEVERITY = {"critical", "major", "minor", "info"}
 SIGNAL_TYPE = {"source_value_conflict", "claim_without_resolved_evidence_link",
                "ambiguous_study_design", "unresolved_cross_reference",
                "partial_extraction", "ambiguous_extraction",
-               # 一期统计取证（tools/statistical_forensics.py），不需要原始数据
+               # 一期统计取证（Skill 内 statistical_forensics.py），不需要原始数据
                "test_statistic_p_mismatch", "ci_estimate_mismatch",
                "count_percentage_mismatch", "grim_incompatible_mean",
                "table_total_mismatch",
@@ -177,7 +177,7 @@ def check_schemas(rep):
     rep.check("severity" in json.dumps(sig.get("not", {})),
               "extraction_signal 禁止 severity")
     sig_enum = set(sig.get("properties", {}).get("type", {}).get("enum", []))
-    rep.check(sig_enum == SIGNAL_TYPE, "signal type 十四值且无 parse_failure",
+    rep.check(sig_enum == SIGNAL_TYPE, "signal type 十五值且无 parse_failure",
               f"schema={sorted(sig_enum)}")
 
     ev = schemas.get("evidence.schema.json", {})
@@ -919,7 +919,7 @@ def _collect_tool_signals():
 
     sigs, skipped = [], []
 
-    # --- 统计取证：四种检查各造一个必然触发的输入 ---
+    # --- 统计取证：五种检查各造一个必然触发的输入 ---
     try:
         import statistical_forensics as sf
         sigs += sf.check_all([
@@ -929,6 +929,8 @@ def _collect_tool_signals():
             {"check": "count_percentage", "count": 42, "n": 84,
              "reported_percent": 60.0, "reported_percent_text": "60.0"},
             {"check": "grim", "scale_is_integer": True, "n": 10, "mean_text": "3.14"},
+            {"check": "table_total", "counts": [12, 18], "declared_total": 28,
+             "categories_exhaustive": True},
             {"check": "grim", "scale_is_integer": False},          # -> partial_extraction
         ])
     except Exception as exc:
@@ -992,6 +994,7 @@ SIGNAL_EVIDENCE_BLOCK = {
     "ci_estimate_mismatch": "forensics",
     "count_percentage_mismatch": "forensics",
     "grim_incompatible_mean": "forensics",
+    "table_total_mismatch": "forensics",
     "sequence_identifier_inconsistent": "sequence_audit",
     "figure_integrity_candidate": "image_audit",
     "ethics_requirement_unmet": "ethics",

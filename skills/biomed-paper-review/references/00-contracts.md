@@ -692,7 +692,7 @@ finding id 升序排列。
 }
 ```
 
-**`type` 枚举（十四值）**
+**`type` 枚举（十五值）**
 
 | type | 触发条件 | 路由到 | 下游判定什么 |
 | --- | --- | --- | --- |
@@ -712,7 +712,9 @@ finding id 升序排列。
 | `figure_integrity_candidate` | 图像审计检出候选重复区域、背景拼接不连续或异常均匀区块 | M5 | 人工核对原图、图注与合法复用说明后，是否构成图像完整性问题 |
 | `external_validation_candidate` | X1 对稿件 `present` 事实与 `external` 原子事实完成可比性判定 | M2、M4、M6、M7 | 回查稿件与外部记录后，是否存在身份、注册、统计或主张不一致 |
 
-> 后四种由 `skills/biomed-paper-review/scripts/statistical_forensics.py` 在 Stage 2 产出，
+> 五种统计取证 signal（`test_statistic_p_mismatch`、`ci_estimate_mismatch`、
+> `count_percentage_mismatch`、`grim_incompatible_mean`、`table_total_mismatch`）由
+> `skills/biomed-paper-review/scripts/statistical_forensics.py` 在 Stage 2 产出，
 > **不需要原始数据**，
 > 是一期就能做的确定性一致性检验（`produced_by: "stage_2"`，`routed_to: ["M4"]`）。
 > 它们**仍然只是 signal** —— 工具层不下稿件结论，是否构成稿件问题由 M4 判定。
@@ -1139,7 +1141,7 @@ review_confidence = extraction_coverage × Q × C
 
 ```
 [ ] 全部 enum 取值合法（source_type 五值 / extraction_method 六值 / status 七值 /
-    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十四值 /
+    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十五值 /
     system_limitation category 十二值 / key_data status 六值 / numeric type 五值）
 [ ] 全部 §x.y 内部引用可解析到本仓库真实存在的小节
 [ ] 全部 evidence_ref / evidence_refs[] 在 evidence_registry 中解析到恰好一个条目

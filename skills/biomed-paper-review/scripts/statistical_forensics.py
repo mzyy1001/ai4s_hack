@@ -403,7 +403,7 @@ def check_grim(item, signal_id="SIG-104"):
 
 # ================================================================ 检查 5
 
-def check_table_total(item, signal_id="SIG-F05"):
+def check_table_total(item, signal_id="SIG-105"):
     """分类计数之和是否等于声明的分母。
 
     前提：`counts`（互斥且穷尽的各类别计数）与 `declared_total` 齐备。

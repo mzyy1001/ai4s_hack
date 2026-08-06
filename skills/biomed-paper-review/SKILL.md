@@ -41,7 +41,7 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 | 判断结论在科学上是否**为真** | 只做 claim↔evidence 对齐 | M7 | 文献库 MCP（PubMed / Europe PMC） |
 | 判断领域**创新性 / 重要性** | 不判断 | M7 | 文献库 + 引用网络；需先定义可量化新颖度判据 |
 | 判断违背基础常识的结论 | 标记「结论超出证据支持范围」交人工 | M7 | 领域常识规则库；先积累一期误判样本 |
-| 复现统计计算 | 已做 p/CI/计数/GRIM 四类无需原始数据的一致性取证 | M4 | 原始数据可得时重跑主要分析 |
+| 复现统计计算 | 已做 p/CI/计数-百分比/GRIM/表格合计五类无需原始数据的一致性取证 | M4 | 原始数据可得时重跑主要分析 |
 
 X1 只产 `external` evidence、`external_validation_candidate` 与 X1 `system_limitation`，
 禁止产 finding。外部源不可达、未进白名单、限流、接口故障或响应不可解析时按契约降级，
@@ -536,14 +536,15 @@ critical 及直接阻断核心解释的 major）；P1=给出修改要求前核�
 `scripts/` 下的五个脚本是**可执行工具**，不是参考资料。
 实测发现模型倾向于把它们当源码阅读而从不执行 —— 那样它们贡献为零。
 
-**正确用法：用 Bash 直接调用。** 每个脚本都可 `import` 后调用，也都带 `--selftest`：
+**先把工作目录切换到本 `SKILL.md` 所在目录，再调用脚本。** 不得假定仓库根目录或把
+Skill 路径写死。每个脚本都可 `import` 后调用，也都带 `--selftest`：
 
 ```bash
 # 单位归一化：判断两个数值能否比较（Stage 3b 兼容性判定）
 python3 -c "import sys; sys.path.insert(0,'scripts'); \
 from normalize_biomed_units import compare_units; print(compare_units('mg/mL','g/L'))"
 
-# 统计取证：p 值反算 / CI 自洽 / 计数-百分比 / GRIM
+# 统计取证：p 值反算 / CI 自洽 / 计数-百分比 / GRIM / 互斥穷尽分类合计
 python3 -c "import sys; sys.path.insert(0,'scripts'); \
 from statistical_forensics import check_all; \
 print(check_all([{'check':'count_percentage','count':30,'n':28, \
@@ -551,7 +552,9 @@ print(check_all([{'check':'count_percentage','count':30,'n':28, \
 
 # 伦理规范库筛查（传入 structured_result）
 python3 -c "import sys; sys.path.insert(0,'scripts'); \
-from ethics_compliance_check import screen; print(len(screen(sr)))"
+from ethics_compliance_check import screen; \
+print(len(screen({'article_design':{'primary_design':{'family':'human_interventional',\
+'type':'randomized_controlled_trial'},'design_components':[]}})))"
 
 # 序列与标识符：HGVS / 位点越界 / 登录号 / 基因符号 / 引物
 python3 -c "import sys; sys.path.insert(0,'scripts'); \
@@ -564,6 +567,7 @@ python3 scripts/figure_integrity_audit.py <图像目录>
 
 **什么时候必须运行**：
 - 论文报告了「计数 + 百分比」或「均值 + 整数量表 + n」→ 跑统计取证
+- 表格给出互斥穷尽分类及声明总数 → 跑统计取证的 `table_total` 检查
 - 论文报告了检验统计量与自由度 → 跑 p 值反算
 - 出现两个不同单位的同一指标 → 跑单位归一化
 - 出现变异命名、登录号、引物序列、基因符号 → 跑序列审计
@@ -587,7 +591,7 @@ python3 scripts/figure_integrity_audit.py <图像目录>
 | `references/06-ethics-compliance.md` | 伦理批件、知情同意、3R 原则核查 | Stage 4 M6 |
 | `references/07-conclusions-discussion.md` | 结论-证据对齐、过度外推识别 | Stage 4 M7 |
 | `scripts/normalize_biomed_units.py` | 单位归一化（fail-closed，只做同量纲确定性换算） | Stage 3b 兼容性判定 |
-| `scripts/statistical_forensics.py` | 统计取证：p 反算 / CI 自洽 / 计数-百分比 / GRIM | Stage 2，产 signal 交 M4 |
+| `scripts/statistical_forensics.py` | 统计取证：p 反算 / CI 自洽 / 计数-百分比 / GRIM / 表格合计 | Stage 2，产 signal 交 M4 |
 | `scripts/ethics_compliance_check.py` | 伦理规范库筛查 | Stage 2，产 signal 交 M6 |
 | `scripts/sequence_identifier_audit.py` | 序列与标识符审计：HGVS 支持子集、版本化完整参考序列上的位点/残基核对、登录号格式、基因符号物种惯例、引物 QC；参考上下文不全时只产 `partial_extraction` | Stage 2，产 signal 交 M2 / M3 |
 | `scripts/figure_integrity_audit.py` | 论文内图像完整性：候选重复区域、拼接不连续、异常均匀区块。**只出候选，禁止自动定性** | Stage 3，产 signal 交 M5 |

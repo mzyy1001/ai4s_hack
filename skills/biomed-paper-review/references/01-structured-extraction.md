@@ -730,7 +730,7 @@ v1 顶层必须带 `"version": "v1"` 与 `"stage_3b_executed": false`，
 ## 9. extraction_signals
 
 M1 产出的数组名为 **`m1_extraction_signals[]`**（阶段本地，Stage 5 聚合）。
-**signal 不带 `severity`，不是结论。** 结构与当前全部十一种 type 见
+**signal 不带 `severity`，不是结论。** 结构与当前全部十五种 type 见
 `00-contracts.md §6.2`；本节只列 M1 核心抽取流程直接涉及的子集。
 
 ### 9.1 M1 可产出的五种 signal

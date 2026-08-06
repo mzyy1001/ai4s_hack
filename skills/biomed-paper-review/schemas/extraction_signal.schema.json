@@ -27,7 +27,7 @@
                "sequence_identifier_inconsistent",
                "figure_integrity_candidate",
                "external_validation_candidate"],
-      "description": "十四值。external_validation_candidate 仅由 X1 产出；旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
+      "description": "十五值。external_validation_candidate 仅由 X1 产出；旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
     },
 
     "target": {
