@@ -71,6 +71,7 @@ STAGE_DEPS = {"stage_2": "stage_1", "stage_3": "stage_1", "stage_3b": "stage_2",
               "stage_4": "stage_3b", "stage_5": "stage_4"}
 SEVERITY_WEIGHT = {"critical": 25, "major": 10, "minor": 3, "info": 0}
 SEVERITY_RANK = {"critical": 3, "major": 2, "minor": 1, "info": 0}
+PRIORITY_RANK = {"P0": 0, "P1": 1, "P2": 2}
 
 
 class Report:
@@ -180,7 +181,11 @@ def check_schemas(rep):
         headings = ["## 一、执行摘要", "## 二、结构化结果表", "## 三、图表解读与原图定位",
                     "## 四、审核发现", "## 五、抽取信号", "## 六、系统限制",
                     "## 七、覆盖率明细", "## 八、人工复核建议"]
-        rep.check(not stale and all(template.count(h) == 1 for h in headings),
+        usability_tokens = ["render_evidence_refs", "comparable_to_full_review=false",
+                            "未执行模块没有被判定为“无问题”", "P0 > P1 > P2",
+                            "不是稿件问题"]
+        rep.check(not stale and all(template.count(h) == 1 for h in headings) and
+                  all(token in template for token in usability_tokens),
                   "报告模板已迁移到八节新契约且无废弃字段", ", ".join(stale))
     except OSError as exc:
         rep.check(False, "报告模板可读取", str(exc))
@@ -645,16 +650,44 @@ def check_instance(rep, name, inst):
                   "; ".join(score_bad[:8]))
 
         plan_bad = []
-        major_ids = {f["id"] for f in findings if f.get("severity") in {"critical", "major"}}
+        required_plan_ids = {
+            f["id"] for f in findings
+            if f.get("severity") in {"critical", "major"}
+            or f.get("manual_review", {}).get("priority") == "P2"
+        }
         planned_ids = []
         for item in inst.get("manual_review_plan", []):
+            item_priorities = []
             for fid in item.get("finding_ids", []):
                 if fid not in finding_by_id:
                     plan_bad.append(f"复核计划引用不存在 finding: {fid}")
+                else:
+                    priority = finding_by_id[fid].get("manual_review", {}).get("priority")
+                    if priority:
+                        item_priorities.append(priority)
                 planned_ids.append(fid)
-        if not major_ids.issubset(set(planned_ids)):
-            plan_bad.append(f"major/critical 未全部进入复核计划: {sorted(major_ids - set(planned_ids))}")
-        rep.check(not plan_bad, "major/critical findings 均有报告级复核动作",
+            if item_priorities:
+                expected_priority = min(item_priorities, key=lambda p: PRIORITY_RANK[p])
+                if item.get("priority") != expected_priority:
+                    plan_bad.append(
+                        f"复核计划 priority={item.get('priority')} expected={expected_priority}"
+                    )
+        duplicate_ids = sorted({fid for fid in planned_ids if planned_ids.count(fid) > 1})
+        if duplicate_ids:
+            plan_bad.append(f"finding 在复核计划中重复: {duplicate_ids}")
+        missing_ids = required_plan_ids - set(planned_ids)
+        if missing_ids:
+            plan_bad.append(f"应复核 finding 未全部进入计划: {sorted(missing_ids)}")
+        for finding in findings:
+            severity = finding.get("severity")
+            priority = finding.get("manual_review", {}).get("priority")
+            if severity == "critical" and priority != "P0":
+                plan_bad.append(f"{finding.get('id')}: critical 必须为 P0")
+            elif severity == "major" and priority not in {"P0", "P1"}:
+                plan_bad.append(f"{finding.get('id')}: major 只能为 P0/P1")
+            elif severity in {"minor", "info"} and priority is not None and priority != "P2":
+                plan_bad.append(f"{finding.get('id')}: minor/info 若设置 priority 必须为 P2")
+        rep.check(not plan_bad, "报告级复核计划覆盖完整且优先级可解释",
                   "; ".join(plan_bad[:5]))
 
     # --- 覆盖率分母 ---

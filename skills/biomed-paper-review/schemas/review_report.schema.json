@@ -188,13 +188,14 @@
 
     "manual_review_plan": {
       "type": "array",
-      "description": "每条 severity >= major 的 finding 必须对应一条可执行复核动作",
+      "description": "每条 severity >= major 的 finding 必须对应一条可执行复核动作；带 P2 priority 的 minor/info 也必须进入。按 P0→P1→P2 渲染。",
       "items": {
         "type": "object",
         "required": ["finding_ids", "action", "who", "priority"],
         "additionalProperties": false,
         "properties": {
-          "finding_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "finding_ids": {"type": "array", "minItems": 1, "uniqueItems": true,
+                          "items": {"type": "string", "pattern": "^M[2-7]-[0-9]{3}$"}},
           "action": {"type": "string", "minLength": 1},
           "who": {
             "enum": ["statistical_reviewer", "domain_reviewer", "ethics_committee",

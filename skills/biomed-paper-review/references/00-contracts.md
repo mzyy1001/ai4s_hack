@@ -589,6 +589,17 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
   `editor` / `author`
 - `manual_review.priority`: `P0` / `P1` / `P2`
 
+**人工复核优先级的唯一口径**
+
+- `P0`：不先核对就无法可靠解释核心结论、伦理授权或数据完整性；全部 critical 固定为
+  P0，直接阻断核心结论解释的 major 也可为 P0。
+- `P1`：不阻断其他结论阅读，但会改变 major finding 的成立、严重度或作者必须补交的
+  分析/材料。major 若不满足 P0 条件则固定为 P1。
+- `P2`：minor/info 的报告澄清、定位核对或编辑性修正，不改变当前核心推断。
+
+P0/P1/P2 是核对顺序，不是 severity，不进入风险分。同一优先级内按 severity 降序、
+finding id 升序排列。
+
 **硬性规则**
 
 1. `evidence_refs[]` **必须非空**，且每项在登记表中可解析。
@@ -599,6 +610,9 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
    必须**另行**给出稿件证据（`present` 或合规的 `absence`）。
 5. `derived_from_signals[]` 只作溯源，**不得**替代 `evidence_refs[]`
    —— 仅凭 signal id 立 finding 为契约违规。
+6. critical 的 `manual_review.priority` 必须为 P0；major 只能为 P0/P1；minor/info 若设置
+   priority 只能为 P2。每条 critical/major 必须进入报告级 `manual_review_plan`；minor/info
+   设置了 P2 且 action 非空时也必须进入。
 
 ### 6.2 extraction_signal · 机器级观察
 

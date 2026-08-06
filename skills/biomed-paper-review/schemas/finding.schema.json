@@ -95,6 +95,22 @@
           }
         }
       }
+    },
+    {
+      "description": "critical 会阻断审稿结论，人工复核固定为 P0",
+      "if": {"properties": {"severity": {"const": "critical"}}, "required": ["severity"]},
+      "then": {"properties": {"manual_review": {
+        "required": ["priority"],
+        "properties": {"priority": {"const": "P0"}}
+      }}}
+    },
+    {
+      "description": "minor/info 若进入报告级人工复核计划，只能作为 P2",
+      "if": {"properties": {"severity": {"enum": ["minor", "info"]}},
+             "required": ["severity"]},
+      "then": {"properties": {"manual_review": {
+        "properties": {"priority": {"const": "P2"}}
+      }}}
     }
   ]
 }

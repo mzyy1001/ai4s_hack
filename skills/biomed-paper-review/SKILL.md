@@ -303,7 +303,8 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 2. **去重与聚簇**：按 `references/00-contracts.md` §9.3 归并为 `issue_clusters[]`。
 3. **评分**：计算 §5 的三项指标，分母全部取自 `execution_scope`。
 4. **人工复核动作**：每一条 `severity >= major` 的 finding 必须对应一条可执行动作，
-   写明「看哪里、核什么、若属实该补什么」。
+   写明「看哪里、核什么、若属实该补什么」。报告级 `manual_review_plan` 按 P0 → P1 →
+   P2、severity 降序、finding id 升序排列；P0/P1/P2 的唯一口径见 §6。
 5. **渲染**：按 `templates/review_report.md` 输出 Markdown；需要机器消费时同时输出
    符合 `schemas/review_report.schema.json` 的 JSON（含完整 `evidence_registry`）。
 
@@ -461,19 +462,22 @@ scope 内 observation 由 `execution_scope.observations[]` 唯一圈定；变量
 ## 6. 输出规范
 
 主输出为 `templates/review_report.md` 渲染的 Markdown，固定八节：
-①**执行摘要**（`execution_scope` + 三项评分含 partial 标记 + §0 声明原文）
-②**结构化结果表**（须标明 v1 还是 v2，每字段带三维度与证据引用）
-③**图表解读与原图定位**（`figure_records[]` / `table_records[]`）
-④**审核发现**（`issue_clusters[]`，severity 降序，每条附证据）
-⑤**抽取信号**（`all_extraction_signals[]` 及路由去向）
-⑥**系统限制**（`all_system_limitations[]`，即「哪些地方我们没看清」）
-⑦**覆盖率明细**（`coverage_breakdown`，显式分子分母）
-⑧**人工复核建议**（按 P0/P1/P2 排序的可执行动作）
-
-机器消费时同时输出符合 `schemas/review_report.schema.json` 的 JSON，
-**必须**内含完整 `evidence_registry` 以保证 ref 自洽可校验。
-非 `full_review` 模式下，未执行阶段对应的节写明「本模式未执行」，
-**不得**省略节标题（避免读者误以为该维度无问题）。
+①**执行摘要**（范围、三项评分、partial、前三条 P0/P1）；②**结构化结果表**（v1/v2、
+三维度、定位）；③**图表解读与原图定位**；④**审核发现**（每簇一次）；⑤**抽取信号**
+（明示非稿件问题）；⑥**系统限制**（明示非作者问题）；⑦**覆盖率明细**（显式分子分母）；
+⑧**人工复核建议**（动作、执行者、finding、展开证据）。详细渲染算法以模板注释为准。
+**证据必须解析，禁止只打印 `EV-*`：** `present` 按 PDF 物理页→印刷页→章节/段落/XML→
+图/表/补充材料输出非 null 定位与至多 300 字摘录；无 quote 明示按定位核对。`absence` 只显示
+检索范围、检索词与结果。ref 不存在或不唯一即渲染失败。
+**排序：** cluster 按 critical→major→minor→info、id 排序且 finding 不重复；计划按
+P0→P1→P2、关联 finding 最高 severity、首个 finding id 排序。
+**优先级：** P0=形成审稿结论前必须核对的核心结论/伦理授权/数据完整性阻断项（全部
+critical 及直接阻断核心解释的 major）；P1=给出修改要求前核对的其他 major；P2=不改变核心
+推断的 minor/info 澄清。它是核对顺序，不是 severity，不进风险分。critical/major 必须入
+`manual_review_plan`；minor/info 仅在 priority=P2 且 action 非空时进入；渲染其证据并集。
+机器消费时同时输出符合 schema 且内含完整 `evidence_registry` 的 JSON。八节不得省略；
+`structured_extraction`/`interpretation_only` 明示未审核，`figure_review` 明示仅 M5，
+`targeted_check` 明示仅 `executed_modules[]`；零 finding 只能写「已执行范围内未产出」。
 
 ## 7. 参考文件索引（按需读取，不要一次性全部载入）
 

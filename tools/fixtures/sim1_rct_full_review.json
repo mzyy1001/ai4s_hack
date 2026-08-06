@@ -467,6 +467,12 @@
       "action": "核对次要终点检验次数；要求作者补充多重比较校正后的结果，或明确声明次要终点仅作探索性分析",
       "who": "statistical_reviewer",
       "priority": "P1"
+    },
+    {
+      "finding_ids": ["M2-001"],
+      "action": "要求作者写明缺失数据处理的具体方法与缺失比例",
+      "who": "author",
+      "priority": "P2"
     }
   ],
 
