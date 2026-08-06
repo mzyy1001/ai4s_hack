@@ -149,6 +149,14 @@ def check_schemas(rep):
     neg = json.dumps(figrec.get("not", {}))
     rep.check("issues" in neg and "findings" in neg,
               "figure_record 禁止携带 finding（Figure Parser 不评判）")
+    fig_items = (figrec.get("properties", {}).get("observations", {}).get("items", {}))
+    fig_refs = {x.get("$ref") for x in fig_items.get("allOf", []) if isinstance(x, dict)}
+    key_defs = schemas.get("key_data.schema.json", {}).get("$defs", {})
+    rep.check("key_data.schema.json#/$defs/observation_core" in fig_refs and
+              fig_items.get("unevaluatedProperties") is False and
+              "observation_core" in key_defs and
+              key_defs.get("observation", {}).get("unevaluatedProperties") is False,
+              "figure observation 可追加路由字段且两种落盘形状均封闭")
 
     syslim = schemas.get("system_limitation.schema.json", {})
     rep.check("severity" in json.dumps(syslim.get("not", {})),
@@ -271,7 +279,39 @@ def check_instance(rep, name, inst):
             if node.get("manual_review_needed") is not True:
                 pixel_bad.append(f"{path}: pixel 未置 manual_review_needed")
     rep.check(not prov_bad, "provenance 带 derivation 且组合合法", "; ".join(prov_bad[:5]))
-    rep.check(not pixel_bad, "pixel_estimated 满足四项强制约束", "; ".join(pixel_bad[:5]))
+    rep.check(not pixel_bad, "pixel_estimated 满足数值与人工复核强制约束", "; ".join(pixel_bad[:5]))
+
+    # --- Figure Parser → Stage 3b 路由包络 ---
+    fig_bad = []
+    route_keys = {"experiment_id", "group", "comparison", "timepoint", "endpoint"}
+    for fig in inst.get("figure_records", []):
+        fobs = fig.get("observations", [])
+        if any((o.get("provenance") or {}).get("source_type") == "pixel_estimated"
+               for o in fobs):
+            if fig.get("extraction_confidence") != "low":
+                fig_bad.append(f"{fig.get('figure_id')}: 含 pixel observation 但整条记录非 low")
+            if fig.get("manual_review_needed") is not True:
+                fig_bad.append(f"{fig.get('figure_id')}: 含 pixel observation 但未强制人工复核")
+        for obs in fobs:
+            route = obs.get("target_grouping_key")
+            if not isinstance(route, dict) or set(route) != route_keys:
+                fig_bad.append(f"{fig.get('figure_id')}/{obs.get('observation_id')}: 五键路由不完整")
+            if not isinstance(obs.get("metric_name"), str) or not obs.get("metric_name"):
+                fig_bad.append(f"{fig.get('figure_id')}/{obs.get('observation_id')}: 缺规范 metric_name")
+            if obs.get("metric_family") not in {
+                    "continuous_summary", "effect_estimate", "count", "proportion", "p_value",
+                    "correlation", "time_to_event", "dose_response", "classification_metric",
+                    "diagnostic_accuracy"}:
+                fig_bad.append(f"{fig.get('figure_id')}/{obs.get('observation_id')}: metric_family 非法")
+        curve = fig.get("curve_fit")
+        if isinstance(curve, dict) and "reported_in_manuscript" not in curve:
+            fig_bad.append(f"{fig.get('figure_id')}: curve_fit 未声明 reported_in_manuscript")
+        for marker in fig.get("significance_markers", []):
+            required = {"marker", "comparison", "p_value", "defined_in_caption"}
+            if not required.issubset(marker):
+                fig_bad.append(f"{fig.get('figure_id')}: significance_marker 字段不完整")
+    rep.check(not fig_bad, "figure observation 路由与 panel 级像素降级成立",
+              "; ".join(fig_bad[:5]))
 
     # --- 数值形式 ---
     num_bad = []

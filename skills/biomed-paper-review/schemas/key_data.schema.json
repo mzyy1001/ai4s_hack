@@ -195,12 +195,17 @@
   "$defs": {
 
     "observation": {
+      "allOf": [{"$ref": "#/$defs/observation_core"}],
+      "unevaluatedProperties": false,
+      "description": "key_data 内的单个来源观测；禁止携带 Figure Parser 的临时路由字段。"
+    },
+
+    "observation_core": {
       "type": "object",
-      "description": "单个来源的一次观测。00-contracts.md §5.2。",
+      "description": "可组合的观测核心。00-contracts.md §5.2。figure_record 在此核心上追加 Stage 3b 路由字段；直接存入 key_data 时由 observation 封闭额外属性。",
       "required": ["observation_id", "value", "unit", "unit_normalized", "uncertainty",
                    "n", "replicate_type", "provenance", "extraction_confidence",
                    "manual_review_needed"],
-      "additionalProperties": false,
       "properties": {
         "observation_id": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"},
         "value": {"$ref": "common.schema.json#/$defs/numeric_value"},

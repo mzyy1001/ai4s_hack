@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "figure_record.schema.json",
   "title": "FigureRecord",
-  "description": "Stage 3 图表解析的产物，每张图一条。产出者是 Figure Parser（解析角色），不是 M5 Reviewer（Stage 4 审核角色）—— Figure Parser 只解读，不评判，不产出 finding。references/05-figures-and-charts.md。",
+  "description": "Stage 3 图表解析的产物。每个可独立解读的 panel 一条；不可拆分的组合图才按整图一条。产出者是 Figure Parser（解析角色），不是 M5 Reviewer（Stage 4 审核角色）—— Figure Parser 只解读，不评判，不产出 finding。references/05-figures-and-charts.md。",
 
   "type": "object",
   "required": ["figure_id", "chart_type", "chart_type_confidence", "location",
@@ -11,7 +11,7 @@
   "additionalProperties": false,
 
   "properties": {
-    "figure_id": {"type": "string", "description": "如 fig:3 或 fig:3B"},
+    "figure_id": {"type": "string", "description": "稳定记录 id，如 fig:3B；不可拆分的整图才用 fig:3"},
     "caption": {"type": ["string", "null"]},
 
     "chart_type": {
@@ -84,17 +84,18 @@
 
     "observations": {
       "type": "array",
-      "description": "从图中读出的观测。回流至 Stage 3b，由后者按 grouping_key 并入 key_data 组并判定兼容性。Figure Parser 不做合并判定。",
+      "description": "从图中读出的观测。每个定量结果（含 curve fit 参数与显著性 p 值）只有进入此数组才可回流。Stage 3b 按指标身份与 target_grouping_key 并入 key_data；临时路由字段在入组后移除，observation_id、value、provenance 保持不变。Figure Parser 不做合并判定。",
       "items": {
         "allOf": [
-          {"$ref": "key_data.schema.json#/$defs/observation"},
+          {"$ref": "key_data.schema.json#/$defs/observation_core"},
           {
             "type": "object",
             "properties": {
               "target_grouping_key": {
                 "type": "object",
-                "description": "该观测预期归入的 key_data 组的分组键；Stage 3b 据此归组",
+                "description": "该观测预期归入的 key_data 组的五键；五键与指标身份完全相同时并入既有组，否则新建组，不得就近猜配。",
                 "required": ["experiment_id", "group", "comparison", "timepoint", "endpoint"],
+                "additionalProperties": false,
                 "properties": {
                   "experiment_id": {"type": ["string", "null"]},
                   "group": {"type": ["string", "null"]},
@@ -103,19 +104,25 @@
                   "endpoint": {"type": ["string", "null"]}
                 }
               },
-              "metric_name": {"type": "string"},
+              "metric_name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "项目指标词表中的规范名；原图写法留在证据 quote，不参与分组。"
+              },
               "metric_family": {"$ref": "common.schema.json#/$defs/metric_family"}
             },
             "required": ["target_grouping_key", "metric_name", "metric_family"]
           }
-        ]
+        ],
+        "unevaluatedProperties": false
       }
     },
 
     "curve_fit": {
       "type": ["object", "null"],
-      "description": "仅 dose_response / survival / roc_curve 类型填写",
+      "description": "仅 dose_response / survival / roc_curve 类型填写的辅助注释，不是 Stage 3b 合并接口。任何供 M2–M7 使用的拟合参数还必须写入 observations[] 并携带 provenance；不得只填本对象绕过像素估读约束。",
       "additionalProperties": false,
+      "required": ["reported_in_manuscript"],
       "properties": {
         "model": {"type": ["string", "null"]},
         "parameter_name": {"type": ["string", "null"], "description": "如 IC50 / EC50 / AUC"},
@@ -143,9 +150,11 @@
 
     "significance_markers": {
       "type": "array",
+      "description": "图形标记的辅助注释，不是 Stage 3b 合并接口；可数值化 p 值若供审核使用，必须同时写入 observations[]。",
       "items": {
         "type": "object",
         "additionalProperties": false,
+        "required": ["marker", "comparison", "p_value", "defined_in_caption"],
         "properties": {
           "marker": {"type": "string"},
           "comparison": {"type": ["string", "null"]},
@@ -178,6 +187,36 @@
     ],
     "description": "Stage 3 不产出 finding。图表使用规范的 finding 由 Stage 4 的 M5 Reviewer 产出，存于 m5_findings[]。"
   },
+
+  "allOf": [
+    {
+      "description": "任一像素估读观测都会把整条 panel 记录降为 low 并强制人工复核。",
+      "if": {
+        "properties": {
+          "observations": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "provenance": {
+                  "type": "object",
+                  "properties": {"source_type": {"const": "pixel_estimated"}},
+                  "required": ["source_type"]
+                }
+              },
+              "required": ["provenance"]
+            }
+          }
+        },
+        "required": ["observations"]
+      },
+      "then": {
+        "properties": {
+          "extraction_confidence": {"const": "low"},
+          "manual_review_needed": {"const": true}
+        }
+      }
+    }
+  ],
 
   "$defs": {
     "axis": {

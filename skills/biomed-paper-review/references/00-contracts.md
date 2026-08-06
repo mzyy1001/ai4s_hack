@@ -209,7 +209,8 @@ visually_derived   = {axis_readable, pixel_estimated}
 
 `source_type: "pixel_estimated"` 时**同时**满足，缺一即为契约违规：
 
-1. `value.type` 必须为 `interval`（或 `lower_bound` / `upper_bound`），**不得为 `point`**；
+1. `value.type` 必须为 `interval`，仅当图像可见范围把真实值截在边界外、只能支持
+   单侧约束时才可用 `lower_bound` / `upper_bound`；三者均**不得伪装成 `point`**；
 2. `extraction_confidence` 必须为 `low`；
 3. `manual_review_needed` 必须为 `true`；
 4. **不得**作为 M4 任何统计复算或一致性检验的输入；
@@ -452,13 +453,20 @@ reported | compatible_multiple_sources | conflicting | ambiguous
 
 ### 5.4 分组与兼容性判定（Stage 3b 执行）
 
-**第一步 · 分组。** 先要求两个 observation 的 `metric_family` 与规范化后
-`metric_name` 相同，再比较 `grouping_key` 的**五个键全部相等**：
+**第一步 · 分组。** Stage 2 文本观测使用所在组的 `grouping_key`；Stage 3 图观测
+必须携带 `metric_family`、规范化 `metric_name` 与 `target_grouping_key`。Stage 3b 先要求
+两个 observation 的指标身份相同，再比较五键**全部相等**：
 `experiment_id` / `group` / `comparison` / `timepoint` / `endpoint`
 （`null` 与 `null` 视为相等；一方为 `null` 另一方有值视为**不相等**）。
 指标身份或分组键不匹配 → 是两个不同的 `key_data`，**不是冲突**。
 `metric_name` 使用本项目指标词表的规范名（如 `IC50`）；原文写法保留在
 observation 的证据与 `quote`，不用原始大小写或别名参与分组。
+
+Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就新建组，不按相似名称
+猜配。入组时移除 `target_grouping_key` / `metric_name` / `metric_family` 三个临时路由字段，
+由组级字段承载它们；`observation_id`、`value`、`provenance` 必须原样保留。
+同一 `observation_id` 的重复副本若 `value` 或 `provenance` 不完全一致，Stage 3b 必须
+停止该 id 入组并产出 `category: "parse_failed"` 的 `system_limitation`，不得择一覆盖。
 
 **第二步 · 可比性。** 同组内对全部无序 observation 对逐对判定，顺序固定；
 每一对必须得到 `compatible` / `conflicting` / `ambiguous` 中的恰好一个结果：

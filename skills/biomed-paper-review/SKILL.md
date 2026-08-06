@@ -246,14 +246,13 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 
 ### 2.7 Stage 3 · 图表解析（Figure Parser）
 
-对每张图产出 `figure_record`，每张表产出 `table_record`。
+每个可独立解读的 panel 产出一条 `figure_record`；只有共享科学问题、坐标与图型且不可独立解释时才按整图产出。每张表产出 `table_record`。
 规则见 `references/05-figures-and-charts.md`。关键约束：
 
-- 先确定该图试图回答的**科学问题**，再判断图表类型是否匹配（判断结果交 Stage 4 的 M5）。
+- Figure Parser 只记录**科学问题**、图型、条件、坐标与可见结果；**图型是否匹配、呈现是否规范只由 Stage 4 的 M5 判断**。
 - 从图中读出的数值必须带 `provenance`（含 `derivation`）。
-- **像素估读一律 `source_type: "pixel_estimated"` + `value.type: "interval"` +
-  `extraction_confidence: "low"` + `manual_review_needed: true`** ——
-  编造精确读数是本 Skill 最严重的失败模式。
+- **像素估读一律 `pixel_estimated` + `interval` + `low` + `manual_review_needed: true`**；仅图像边界只能支持单侧约束时可用 `lower_bound` / `upper_bound`，不得编造点值。
+- `curve_fit` 与 `significance_markers` 只是 panel 注释；任何拟合参数、p 值或其他定量结果若要进入审核，必须同时写入 `observations[]`。
 - 图像不可读产出 `stage3_system_limitations[]`（`figure_unreadable`），不是 finding。
 
 ### 2.8 Stage 3b · 证据合并与冲突消解
@@ -263,9 +262,8 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 1. **收敛 pending** —— 每个 `status: "unresolved"` 必须解析为 `reported` /
    `not_reported` / `ambiguous` / `conflicting` / `parse_failed`。
    **v2 中不得残留 `unresolved`。**
-2. **观测分组** —— 先按 `metric_family + metric_name` 分流，再按
-   `grouping_key` 五键（`experiment_id` / `group` / `comparison` / `timepoint` /
-   `endpoint`）归组。指标身份或五键不匹配都是两个组，**不是冲突**。
+2. **观测分组** —— 对 `figure_record.observations[]`，先比较 `metric_family + metric_name`，再逐项比较 `target_grouping_key` 与 `key_data.grouping_key` 五键。完全相同则并入，否则新建组，**不得猜配或判冲突**。入组时移除临时路由字段，保持 `observation_id`、`value`、`provenance`；同一 id 的重复副本不一致时终止入组，产出
+   `category: "parse_failed"` 的 Stage 3b `system_limitation`，不得择一覆盖。
 3. **兼容性判定** —— 单位归一化 → 变体兼容 → 区间重叠 → 四舍五入容差 → 单边界。
    **四舍五入差异不得判为冲突**；无法建立可比性判 `ambiguous`，不判 `conflicting`。
 4. **canonical 选择** —— `explicit_reported` 优先于 `visually_derived`；其内部按
