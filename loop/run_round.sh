@@ -124,9 +124,9 @@ fi
 echo "--- 自检 ---" | tee -a "$LOG"
 CHECKS=(
   "python3 tools/validate_schemas.py"
-  "python3 tools/normalize_biomed_units.py --selftest"
-  "python3 tools/statistical_forensics.py --selftest"
-  "python3 tools/ethics_compliance_check.py --selftest"
+  "python3 skills/biomed-paper-review/scripts/normalize_biomed_units.py --selftest"
+  "python3 skills/biomed-paper-review/scripts/statistical_forensics.py --selftest"
+  "python3 skills/biomed-paper-review/scripts/ethics_compliance_check.py --selftest"
 )
 FAILED_CHECK=""
 for chk in "${CHECKS[@]}"; do

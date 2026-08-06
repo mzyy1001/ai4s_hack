@@ -93,10 +93,12 @@ skills/biomed-paper-review/
 │   ├── 01-structured-extraction.md M1 前置抽取层：字段清单、设计路由、指标族、v1/v2、signals
 │   ├── 02-macro-logic.md          M2（**别人负责，禁止修改**）
 │   ├── 03-experimental-methods.md M3（**别人负责，禁止修改**）
-│   ├── 04-statistics.md           M4（**别人负责，禁止修改**）
+│   ├── 04-statistics.md           M4 统计学（**可修改**，已交本方维护）
 │   ├── 05-figures-and-charts.md   M5（**别人负责，禁止修改**）
-│   ├── 06-ethics-compliance.md    M6（**别人负责，禁止修改**）
+│   ├── 06-ethics-compliance.md    M6 伦理合规（**可修改**，已交本方维护）
 │   └── 07-conclusions-discussion.md M7 结论与讨论（可修改）
+├── scripts/*.py                   运行时脚本（单位归一化 / 统计取证 / 伦理筛查）
+├── resources/ethics_rules.json    伦理规范库（三法域 25 部规范）
 ├── schemas/*.json                 10 份 JSON Schema
 └── templates/review_report.md     报告渲染模板
 
@@ -151,7 +153,8 @@ skills/biomed-paper-review/resources/*.json                     ← 伦理规范
 skills/biomed-paper-review/schemas/*.json
 skills/biomed-paper-review/templates/review_report.md
 docs/**
-tools/*.py
+tools/validate_schemas.py
+skills/biomed-paper-review/scripts/*.py
 tools/fixtures/*.json
 README.md
 ```
@@ -161,9 +164,9 @@ README.md
 | 文件 | 能力 | 自检命令 |
 | --- | --- | --- |
 | `tools/validate_schemas.py` | 契约校验器 | `python3 tools/validate_schemas.py` |
-| `tools/normalize_biomed_units.py` | 单位归一化（fail-closed） | `python3 tools/normalize_biomed_units.py --selftest` |
-| `tools/statistical_forensics.py` | 统计取证（p 反算 / CI / 计数 / GRIM） | `python3 tools/statistical_forensics.py --selftest` |
-| `tools/ethics_compliance_check.py` | 伦理规范库筛查 | `python3 tools/ethics_compliance_check.py --selftest` |
+| `skills/biomed-paper-review/scripts/normalize_biomed_units.py` | 单位归一化（fail-closed） | `python3 skills/biomed-paper-review/scripts/normalize_biomed_units.py --selftest` |
+| `skills/biomed-paper-review/scripts/statistical_forensics.py` | 统计取证（p 反算 / CI / 计数 / GRIM） | `python3 skills/biomed-paper-review/scripts/statistical_forensics.py --selftest` |
+| `skills/biomed-paper-review/scripts/ethics_compliance_check.py` | 伦理规范库筛查 | `python3 skills/biomed-paper-review/scripts/ethics_compliance_check.py --selftest` |
 
 ## 语言与风格
 
@@ -178,9 +181,9 @@ README.md
 
 ```bash
 python3 tools/validate_schemas.py
-python3 tools/normalize_biomed_units.py --selftest
-python3 tools/statistical_forensics.py --selftest
-python3 tools/ethics_compliance_check.py --selftest
+python3 skills/biomed-paper-review/scripts/normalize_biomed_units.py --selftest
+python3 skills/biomed-paper-review/scripts/statistical_forensics.py --selftest
+python3 skills/biomed-paper-review/scripts/ethics_compliance_check.py --selftest
 ```
 
 它们必须都输出「全部通过」。如果你的改动让任何一个失败，要么修好，要么把改动撤回。

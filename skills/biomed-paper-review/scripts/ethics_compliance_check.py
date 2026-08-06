@@ -39,9 +39,10 @@ import os
 import re
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RULEBASE = os.path.join(ROOT, "skills", "biomed-paper-review",
-                        "resources", "ethics_rules.json")
+# 脚本位于 skills/<name>/scripts/，规范库在同级的 resources/。
+# 用 __file__ 相对定位，不写死任何绝对路径（L1 明确扣硬编码路径的分）。
+SKILL_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RULEBASE = os.path.join(SKILL_ROOT, "resources", "ethics_rules.json")
 
 
 def load_rulebase(path=RULEBASE):
