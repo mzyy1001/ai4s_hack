@@ -28,8 +28,9 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 ### 0.2 当前实现边界与联网增强原则
 
 执行环境允许访问白名单内的公开科学数据源，网络与 12 小时超时**不再构成分期依据**。
-当前提交包已实现论文内部证据与通用规范库的离线流程；外部 evidence 契约与解析层尚未落地，
-因此本版本**不得声称已完成外部数据库核验**。后续一期可加入可选联网增强；外部源不可达、
+当前提交包已定义论文内部证据与通用规范库的离线流程，并交付四项可独立运行的确定性脚本；
+外部 evidence 契约与解析层尚未落地，因此本版本**不得声称已完成外部数据库核验**。
+后续一期可加入可选联网增强；外部源不可达、
 限流或无权访问时必须产 `system_limitation`，不得据此判稿件有问题，离线流程仍须完整结束。
 
 | 能力 | 当前离线做法 | 一期联网增强归属 | 接入前置条件 |
@@ -40,7 +41,8 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 | 复现统计计算 | 已做 p/CI/计数/GRIM 四类无需原始数据的一致性取证 | M4 | 原始数据可得时重跑主要分析 |
 
 联网增强应**扩展**而非重构主框架：新增 `database` / `query` / `retrieval_date` / `record_id` / `version` /
-`retraction_or_correction_status` / `relation_to_claim` 等元数据。接入方案见 `docs/proposals/round-1-contracts-consistency.md`；提案未采纳前不得声称已核验外部数据库。
+`retraction_or_correction_status` / `relation_to_claim` 等元数据。外部证据型与唯一产出阶段
+尚未进入当前 schema；完成契约迁移前不得声称已核验外部数据库。
 
 ## 1. 执行模式与依赖图
 
@@ -290,8 +292,6 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 | M5 | 图表使用规范（Reviewer 角色） | MY（敏怡） | `references/05-figures-and-charts.md` | 图表类型是否匹配研究目的？呈现与位置是否规范？ |
 | M6 | 伦理合规 | Peter | `references/06-ethics-compliance.md` | 动物/人体试验是否合规？有无批件号与知情同意？ |
 | M7 | 结论与讨论 | MY（敏怡） | `references/07-conclusions-discussion.md` | 结论是否被本文数据支持？有无过度外推、避谈局限？ |
-
-> 与会议纪要「五层审核」的映射见 `docs/architecture.md`。
 
 **模块路由**：各模块依据 `structured_result_v2.article_design` 与 `evaluation_matrix`
 决定跑哪些规则集。路由字段仅用于**选择规则**与**定位证据**，

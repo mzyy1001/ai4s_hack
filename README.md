@@ -1,9 +1,9 @@
 # 生物医药论文 AI 审稿 Skill
 
 黑客松项目 · 方向：**AI 辅助生物医药论文审稿工具**
-目标：替代人工审稿的**基础环节**，大幅提升审稿人的工作效率。
+目标：自动化并辅助人工审稿的**基础环节**，提升审稿人的取证与复核效率。
 
-**最终交付物：一个完整、可复用的 Skill 文档** → [`skills/biomed-paper-review/SKILL.md`](skills/biomed-paper-review/SKILL.md)
+**最终交付物：一个自包含、可复用的 Skill 包** → [`skills/biomed-paper-review/`](skills/biomed-paper-review/)
 
 ---
 
@@ -39,7 +39,8 @@ skills/biomed-paper-review/     ← 交付物本体
 ├── scripts/                    运行时确定性能力（纯标准库）
 │   ├── normalize_biomed_units.py      单位归一化，fail-closed
 │   ├── statistical_forensics.py       p 反算 / CI 自洽 / 计数 / GRIM
-│   └── ethics_compliance_check.py     伦理规范库筛查
+│   ├── ethics_compliance_check.py     伦理规范库筛查
+│   └── sequence_identifier_audit.py   序列 / HGVS / 登录号 / 引物候选审计
 ├── resources/ethics_rules.json 伦理规范库：三法域 25 部规范 / 22 条要求
 ├── schemas/                    10 份 JSON Schema（模块间集成契约）
 │   ├── finding.schema.json            ★ 六个审核模块共用
@@ -56,7 +57,7 @@ datasets/                       测试语料：10 篇 PLOS 开放获取论文（
     └── figures/                逐图图像（max 1400px JPEG）
 
 tools/fetch_papers.py           语料抓取脚本（可重跑）
-tools/validate_schemas.py       契约校验器：schema + 四个模拟实例，135 项检查
+tools/validate_schemas.py       契约校验器：schema + 四个模拟实例，140 项检查
 tools/fixtures/*.json           四个端到端模拟实例
 docs/architecture.md            架构说明：七个模块如何合成一个 Skill
 docs/schema-migration.md        schema 逐字段迁移方案
@@ -81,8 +82,9 @@ docs/proposals/                 codex 评审循环产出的提案
 | `toxicology` | 毒理剂量爬坡 |
 | `survival_km` | Kaplan-Meier 生存曲线 |
 
-**PDF 不入库**：仅用于本地测试页码级定位，为控制仓库体积未纳入。
-重新抓取可完整重建原始语料（含全分辨率图像与全部 PDF），仅用 Python 标准库、无需额外依赖：
+**PDF 仅属于本地测试语料，不属于 Skill 提交包**。当前 `datasets/` 含 10 份 PDF，
+其中 `toxicology` PDF 超过 10 MB；提交时不得把 `datasets/` 打入 Skill 包。
+重新抓取可完整重建原始语料（含全分辨率图像与 PDF），仅用 Python 标准库、无需额外依赖：
 
 ```bash
 python3 tools/fetch_papers.py
@@ -90,23 +92,21 @@ python3 tools/fetch_papers.py
 
 ## 使用
 
-遵循 opencode / Anthropic Agent Skill 标准格式。**skill 目录自包含**：
-references、schemas、resources、templates 与三个运行时脚本都在
+采用 `SKILL.md` frontmatter + 渐进披露资源目录的通用 Agent Skill 格式。**skill 目录自包含**：
+references、schemas、resources、templates 与四个运行时脚本都在
 `skills/biomed-paper-review/` 之内，拷贝该目录即可获得全部能力，无外部依赖。
 （`tools/validate_schemas.py` 是开发期契约校验器，不参与运行时，故留在仓库根。）
-
-在 Claude Code 中，本仓库已通过 `.claude/skills/` 软链接自动加载。
 
 ## 提交合规自查（对照 04-提交规范 / 05-自动评审规则）
 
 | 检查项 | 状态 |
 | --- | --- |
 | `skills/` 下有且仅有一个 skill 目录 | ✅ `biomed-paper-review` |
-| `SKILL.md` frontmatter 含合法 `name` / `description` | ✅ name 19 字符（≤64，小写连字符）；description 200 字符（≤1024，第三人称） |
-| SKILL.md 正文建议 <500 行 | ✅ 正文 496 行（文件含 frontmatter 共 501 行）；契约细节已拆入 `references/00-contracts.md` |
-| 文件引用只一层深（渐进披露） | ✅ SKILL.md → `references/*.md`，无二层跳转 |
+| `SKILL.md` frontmatter 含合法 `name` / `description` | ✅ name 19 字符（≤64，小写连字符）；description 199 字符（≤1024，第三人称） |
+| SKILL.md 正文建议 <500 行 | ✅ 正文 491 行（文件含 frontmatter 共 496 行）；契约细节已拆入 `references/00-contracts.md` |
+| 文件引用只一层深（渐进披露） | ✅ SKILL.md 直接索引全部运行时 reference，不存在只能经另一 reference 才能发现的文件 |
 | 单文件 ≤10MB | ✅ skill 本体内满足；⚠️ 若误打包 `datasets/`，其中一份 PDF 为 18,677,256 bytes，会超限 |
-| 提交包体积 | ✅ `skills/biomed-paper-review/` 约 396 KiB；完整工作区约 200 MiB，不得整仓提交 |
+| 提交包体积 | ✅ `skills/biomed-paper-review/` 小于 0.5 MiB；完整工作区约 200 MiB，不得整仓提交 |
 | `requirements.txt` | ✅ 无需额外安装 —— 已实现工具使用标准库或评测环境预装科学栈 |
 | 结构化输入/输出 schema | ✅ `schemas/` 10 份 JSON Schema |
 | 无诱导评分 / 注入语句 | ✅ |
@@ -131,8 +131,8 @@ M4 的 p 值反算、CI 自洽、计数/百分比与 GRIM 已实现为一期离�
 - ✅ M4 统计学（三步判定法 + 九张检验选择对照表）
 - ✅ M6 伦理合规（三法域规范库 + 离线筛查器，待 Peter 复核）
 - ✅ M7 结论与讨论（证据层级 × 主张层级对照表）
-- ✅ 三个运行时确定性工具，均纯标准库、均带自检
-- ✅ opencode 端到端实测通过（targeted_check 模式，rct_clinical 语料）
-- 🚧 M2（卓妍）、M3（Peter）、M5（敏怡）一期规则库待各负责人填充
+- ✅ 四个运行时确定性工具，均纯标准库、均带自检
+- 🚧 现有四个 fixtures 是契约模拟实例；尚无可复跑的论文输入→最终报告统一执行器与 uplift 结果 artifact
+- 🚧 M2（卓妍）、M3（Peter）一期规则库仍为骨架；M5 已填充 v1，但 Parser / Reviewer 职责冲突待负责人收敛
 - 🚧 外部验证层 X1：网络已确认可用（白名单），连接器与 `external` 证据型待实现
 - 🚧 uplift 基线实测：官方统一模型为 GLM / Kimi 系列，尚未在该系列上自测

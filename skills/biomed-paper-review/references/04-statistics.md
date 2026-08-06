@@ -63,7 +63,7 @@
 | `n_groups` | `1` / `2` / `>=3` | `design.arms[]` 或 `group_sizes[]` |
 | `relatedness` | `independent` / `paired_or_repeated` / `clustered` | 设计描述（前后测、交叉、同一动物多细胞） |
 | `design_shape` | `parallel` / `crossover` / `factorial` / `longitudinal` / `dose_response` | `article_design` + `arms[]` |
-| `distribution_evidence` | `normal_reported` / `nonnormal_reported` / `not_reported` | 方法节是否报告正态性检验 |
+| `distribution_evidence` | `approximately_normal_supported` / `nonnormal_supported` / `not_assessed` | 残差图、Q-Q 图、分布描述与样本量；正式正态性检验只能作为其中一项证据 |
 | `covariate_adjustment` | `yes` / `no` | 是否声明校正混杂 |
 
 ### 3.2 第二步 · 查应选检验（§4 对照表）
@@ -81,8 +81,8 @@
 | --- | --- | --- |
 | `match` | 实际检验 ∈ `{primary} ∪ acceptable` | **无 finding** |
 | `conditionally_acceptable` | 实际检验 ∈ `conditional`，且前提已报告 | **无 finding** |
-| `assumption_unstated` | 实际检验 ∈ `conditional`，但前提**未报告** | `assumption_unchecked`（major） |
-| `mismatch` | 实际检验 ∈ `misuse`，或与 `outcome_type` 根本不兼容 | `wrong_test`（critical） |
+| `assumption_unstated` | 实际检验 ∈ `conditional`，关键前提未评估，且 §3.4 的风险门成立 | `assumption_unchecked`（默认 minor；满足 §9 升级条件才 major） |
+| `mismatch` | 实际检验 ∈ `misuse`，或与 `outcome_type` 根本不兼容 | `wrong_test`（默认 major；满足 §9 升级条件才 critical） |
 | `undetermined` | §3.1 任一特征无法确定 | **不立 finding**，出 `partial_extraction` |
 
 **`mismatch` 的两条硬性前提**（缺一即降级为 `undetermined`）：
@@ -102,6 +102,11 @@
   （`00-contracts.md §2.4`：像素估读**不得**用于任何统计判定）;
 - 同一实验存在多个终点、各自适用不同检验，而抽取无法对应到具体终点。
 
+**未报告正式正态性检验本身不构成 finding。** Shapiro-Wilk 等检验的 `p > 0.05`
+只是“未拒绝正态性”，不能证明分布正态；小样本时检验效能尤其有限。只有同时满足以下条件，
+才输出 `assumption_unchecked`：①所用方法对该前提敏感；②样本量小或明显不均衡，且原始点、
+残差图或文字描述提示强偏态/离群；③未见变换、稳健/置换敏感性分析或残差诊断。
+
 ---
 
 ## 4. 数据类型 × 设计 → 应选检验对照表
@@ -110,10 +115,10 @@
 
 | 情形 | primary | acceptable | conditional（前提） | 典型误用 |
 | --- | --- | --- | --- | --- |
-| 两组独立、正态 | 独立样本 t 检验（**Welch 校正为默认更稳妥**） | Welch t、置换检验、Mann-Whitney（更保守） | Student t（前提：方差齐性已检验并报告） | 用配对 t；对同一数据做多次两两 t |
+| 两组独立、近似正态 | 独立样本 t 检验（**Welch 校正为默认更稳妥**） | Welch t、置换检验、Mann-Whitney（检验分布差异，不自动等同中位数差） | Student t（前提：方差齐性有诊断依据） | 用配对 t；对同一数据做多次两两 t |
 | 两组配对/前后 | 配对 t 检验 | Wilcoxon 符号秩、混合效应模型 | —— | **用独立样本 t**（丢失配对信息，最常见） |
-| 两组、非正态或极小样本 | Mann-Whitney U | 置换检验、变换后 t、Welch t | —— | 直接用 t 且未报告正态性 |
-| ≥3 组独立、正态 | one-way ANOVA + 事后多重比较（Tukey/Dunnett） | Welch ANOVA + Games-Howell、线性模型 | ANOVA（前提：正态性 + 方差齐性已检验） | **两两 t 检验不校正**；只报总体 ANOVA 的 p 却下组间结论 |
+| 两组、非正态或极小样本 | Mann-Whitney U（检验分布差异；只有分布形状相近时才可解释为位置差异） | 置换检验、变换后 t、Welch t | —— | 直接用 t 且无分布诊断或稳健性依据 |
+| ≥3 组独立、近似正态 | one-way ANOVA + 事后多重比较（Tukey/Dunnett） | Welch ANOVA + Games-Howell、线性模型 | 经典 ANOVA（前提：残差与方差结构有诊断依据） | **两两 t 检验不校正**；只报总体 ANOVA 的 p 却下组间结论 |
 | ≥3 组独立、非正态 | Kruskal-Wallis + Dunn 事后 | 置换 ANOVA | —— | 强行 ANOVA 且未验前提 |
 | ≥3 组配对/重复测量 | 重复测量 ANOVA 或线性混合效应模型 | Friedman + Nemenyi | RM-ANOVA（前提：球形性检验或 Greenhouse-Geisser 校正） | **当作独立样本**；逐时点两两比较不校正 |
 | 两因素析因 | two-way ANOVA（含交互项） | 线性模型含交互 | —— | **拆成多个 one-way**（丢失交互，且放大 I 类错误） |
@@ -292,9 +297,9 @@
 
 | slug | 说明 | severity | 规则 |
 | --- | --- | --- | --- |
-| `wrong_test` | 检验方法与数据类型/设计根本不匹配 | critical | §3.3 `mismatch` |
+| `wrong_test` | 检验方法与数据类型/设计根本不匹配 | major / critical | §3.3 `mismatch`；按下述算法升级 |
 | `pseudoreplication` | 技术重复/亚样本被当作统计学 n | critical | §4.9 |
-| `assumption_unchecked` | 未验证正态性/方差齐性/球形性/比例风险/过离散 | major | §3.3 `assumption_unstated` |
+| `assumption_unchecked` | 有风险证据时仍未评估关键模型前提 | minor / major | §3.3–§3.4；按下述算法升级 |
 | `no_multiple_comparison_correction` | 多重比较未校正 | major | §8 |
 | `sample_size` | 低于领域惯例或无效能分析 | minor / major | §5 |
 | `agreement_by_correlation` | 用相关系数证明测量一致性 | major | §4.6 |
@@ -327,6 +332,14 @@
 4. `grim_violation` 默认 `major`。只有人工回查确认它是主要结果、原文确为等权整数原始均值、
    n 与报告精度均无抄录歧义，且该结果是核心结论的必要支撑时，才标 `critical`。
 
+**检验选择与模型前提的 severity 算法**：
+
+1. `wrong_test` 默认 `major`。只有错误分析直接作用于预设主要终点，且会改变效应方向、
+   显著性分类或有效分析单位（如忽略删失、把亚样本当独立 n），才标 `critical`。
+   将配对数据按独立样本分析通常损失效率，不能仅凭方法名称自动判 `critical`。
+2. `assumption_unchecked` 默认 `minor`。只有满足 §3.4 三项风险门，且该模型支撑主要结论时，
+   才标 `major`；不得因未报告 Shapiro-Wilk 检验单独立项。
+
 ---
 
 ## 10. 正例 / 反例
@@ -334,7 +347,8 @@
 ### 10.1 `wrong_test`
 
 **该报警**：同一批小鼠给药前后各测一次血糖（配对设计，`relatedness = paired`），
-方法节写「independent samples t-test」→ `mismatch` → **critical**。
+方法节写「independent samples t-test」→ `mismatch` → 默认 **major**；只有重算证明其改变
+主要结论方向或显著性分类时才升 `critical`。
 
 **不该报警**：两组独立小鼠比较，作者用 Welch t 而非 Student t，并说明方差不齐
 → Welch 在 `acceptable` 集内 → **不报**。
@@ -350,11 +364,11 @@
 
 ### 10.3 `assumption_unchecked`
 
-**该报警**：4 组比较用 one-way ANOVA，方法节与结果节均未见任何正态性或方差齐性检验
-→ ANOVA 在 `conditional` 集内且前提未报告 → **major**。
+**该报警**：4 个极小且不均衡组使用经典 one-way ANOVA；原始点显示强偏态与离群，
+全文未见残差诊断、变换、Welch/稳健分析或置换敏感性分析 → 满足 §3.4 风险门 → **major**。
 
-**不该报警**：同样 4 组，作者写「Shapiro-Wilk 检验确认正态性（均 p > 0.05），
-Levene 检验确认方差齐性」→ 前提已报告 → **不报**。
+**不该报警**：同样 4 组，未报告正式正态性检验，但残差 Q-Q 图无明显偏离，组间方差相近，
+并用 Welch ANOVA 或置换分析得到一致结论 → 有充分诊断与稳健性证据 → **不报**。
 
 ### 10.4 `agreement_by_correlation`
 
@@ -397,9 +411,10 @@ Levene 检验确认方差齐性」→ 前提已报告 → **不报**。
 
 ---
 
-## 12. 二期扩展（本期不实现，规则先写下）
+## 12. 后续增强（当前未实现，规则先写下）
 
-一期已实现「不依赖原始数据」的取证（§2）。二期做需要**外部数据或原始数据**的部分。
+当前已实现「不依赖原始数据」的取证（§2）。本节能力不再按网络或 12 小时超时划为二期；
+原始数据或外部记录可取得时可纳入一期可选增强，取不到时按契约降级。
 
 ### 12.1 依赖原始数据的复算
 
@@ -407,7 +422,7 @@ Levene 检验确认方差齐性」→ 前提已报告 → **不报**。
 - 范围：按论文声明的方法重跑主要分析，比对统计量与 p 值
 - 输出 category：`recomputation_mismatch`（critical）
 - **风险**：软件版本、默认参数、缺失值处理差异都会造成数值不一致而非真实错误。
-  二期必须区分「数值有出入」（minor）与「结论方向不同」（critical）。
+  实现时必须区分「数值有出入」（minor）与「结论方向不同」（critical）。
 
 ### 12.2 从图表反推数据后复算
 
@@ -419,7 +434,7 @@ Levene 检验确认方差齐性」→ 前提已报告 → **不报**。
 ### 12.3 SPRITE / GRIMMER 扩展
 
 GRIMMER（针对 SD）与 SPRITE（重构可能的原始分布）比 GRIM 的假设更多、
-可行解更多。二期实现时**只输出候选并强制人工复核**，不得直接下稿件判断。
+可行解更多。实现时**只输出候选并强制人工复核**，不得直接下稿件判断。
 
 ### 12.4 需要外部数据的检查
 

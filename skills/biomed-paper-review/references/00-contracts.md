@@ -630,13 +630,18 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 | `count_percentage_mismatch` | 计数与百分比不自洽（计数超分母，或百分比超出舍入区间） | M4、M2 | 是否构成数据报告错误 |
 | `grim_incompatible_mean` | 整数量表均值在给定 n 下不存在可行整数总和（GRIM） | M4 | 是否构成汇总统计不可能 |
 | `ethics_requirement_unmet` | 规范库某条伦理要求适用，但稿件未见对应报告 | M6 | 是否构成伦理合规问题 |
-| `sequence_identifier_inconsistent` | 变异命名/序列/登录号/基因符号存在语法违规、位置越界、参考残基不符或惯例偏离 | M2、M3 | 是否构成表述或方法学错误 |
+| `sequence_identifier_inconsistent` | 变异命名/序列/登录号/基因符号存在明确违规，或表达式超出本地解析子集、需人工复核 | M2、M3 | 是否构成表述或方法学错误 |
 
 > 后四种由 `skills/biomed-paper-review/scripts/statistical_forensics.py` 在 Stage 2 产出，
 > **不需要原始数据**，
 > 是一期就能做的确定性一致性检验（`produced_by: "stage_2"`，`routed_to: ["M4"]`）。
 > 它们**仍然只是 signal** —— 工具层不下稿件结论，是否构成稿件问题由 M4 判定。
 > 每种检验的适用前提见该脚本文档；**前提不满足一律产出 `partial_extraction` 而不是猜**。
+
+`ethics_requirement_unmet` 与 `sequence_identifier_inconsistent` 分别由
+`scripts/ethics_compliance_check.py`、`scripts/sequence_identifier_audit.py` 在 Stage 2 产出。
+序列工具只把位点越界、明确参考残基不符、受支持数据库的格式违规和非法字母表视为
+确定性检查；超出其 HGVS 子集的表达式必须标 `candidate: true`，不得当作语法错误。
 
 **规则**
 

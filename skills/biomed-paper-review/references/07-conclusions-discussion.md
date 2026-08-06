@@ -4,12 +4,12 @@
 
 全流程的**收口模块**。核心问题：论文的每一条主张，是否被它自己的数据支持？
 
-**一期边界**：只判断 **claim ↔ evidence 的对齐关系**。不查外部证据、不判断创新性、
+**当前交付边界**：只判断 **claim ↔ evidence 的对齐关系**。不查外部证据、不判断创新性、
 不做常识校验。违背基础常识的结论（如「面粉可治疗癌症」）标记为
 `claim_beyond_evidence` 交人工复核即可。
 
-**这三件事二期都要做**，本模块是它们的归属方，规则见 §11。一期先把 claim 抽取和对齐做扎实 ——
-二期的三项能力全都建立在「已经准确抽出每一条 claim 及其支撑证据」之上，这一步做不好，
+这三件事可作为一期联网增强，本模块是它们的归属方，规则见 §11。它们当前均未实现，
+且全都建立在「已经准确抽出每一条 claim 及其支撑证据」之上；这一步做不好，
 接外部数据库也只是把错误的 claim 拿去比对。
 
 **本文件依赖 `00-contracts.md`。** finding 结构、`evidence_refs[]`、severity 枚举、
@@ -318,7 +318,7 @@ M7 **不得**因此立 finding，也不得自创“观察”记录；终止 M7�
   探索性亚组与主要总体方向不同，只能提示人工，不自动触发。
 - **severity**：`major`。
 - **证据要求**：Discussion 原文 + 被回避的自身结果的 `present` 证据。
-- **一期不做**：判断作者是否漏引外部反证文献 —— 那需要文献库，归 §11.1；
+- **当前不做**：判断作者是否漏引外部反证文献 —— 那需要文献库，归 §11.1；
   因此不得使用 `selective_citation` 这个会暗示外部检索已完成的 slug。
 
 ### 5.8 `discussion_hollow` · 讨论仅复述结果
@@ -350,7 +350,7 @@ M7 消费 M2–M6 的 findings。**联动只影响 M7 自己 finding 的 severit
 | M5 `figure_should_be_main_text` | claim 引用该 supplement 图 | 不改 severity，在 detail 中提示核心证据位置不当 |
 | M2 `internal_inconsistency` | claim 引用了冲突数值 | 按 §5.2 情形 3 检查全部候选值；禁止见冲突即判 unsupported |
 | M6 任何 finding | —— | 不影响 M7（伦理合规不改变结论是否成立） |
-| **（二期）** M5 `duplicate_region_within_paper` / `splice_artifact_suspected` | claim 引用该图 | 只生成编辑人工复核候选；取证未经人工确认前不得自动生成 M7 critical finding |
+| **（未实现）** M5 `duplicate_region_within_paper` / `splice_artifact_suspected` | claim 引用该图 | 只生成编辑人工复核候选；取证未经人工确认前不得自动生成 M7 critical finding |
 
 **实现约束**：只有同时满足四项才联动：①上游 finding 与 claim 指向同一 `figure+panel`、
 `table` 或 `paragraph_id`；②该锚点是 `supported_by` 的直接支撑，不只是同段背景；
@@ -393,7 +393,7 @@ M7 消费 M2–M6 的 findings。**联动只影响 M7 自己 finding 的 severit
 | `discussion_hollow` | 讨论仅复述结果 | minor | §5.8 |
 | `claim_magnitude_mismatch` | 主张的量级与自身数据不符 | major | §5.2 |
 
-**二期新增**（一期不得使用）：`claim_contradicted_by_literature`、
+**外部增强新增**（完成 schema 迁移前不得使用）：`claim_contradicted_by_literature`、
 `claim_unreplicated`、`violates_domain_common_sense`。
 
 ---
@@ -487,18 +487,18 @@ the prespecified 5-point MCID」→ 效应大小、精度与 MCID 均可核对 �
 
 ---
 
-## 11. 二期扩展（本期不实现，规则先写下）
+## 11. 一期联网增强（当前未实现，规则先写下）
 
-三项能力都归本模块。**现在只写判据，不写实现**；数据源统一走 MCP 接口，
+三项能力都归本模块。**现在只写判据，不写实现**；数据源统一走外部证据层，
 本节只声明「需要什么数据」，不要自行实现调用方式。
 
 ### 11.1 结论科学真伪核验
 
-- 数据源：PubMed / Europe PMC 文献库 MCP
+- 数据源：PubMed / Europe PMC
 - 判据草案：抽出每条 claim 的核心断言 → 检索同主题既往研究 → 分类为
   `consistent` / `contradicted` / `novel_unreplicated` / `insufficient_evidence`
 - 输出 category：`claim_contradicted_by_literature`(critical) / `claim_unreplicated`(info)
-- **风险**：检索召回不全会造成「查无反证 = 结论正确」的假阴性。二期必须要求
+- **风险**：检索召回不全会造成「查无反证 = 结论正确」的假阴性。实现时必须要求
   `review_confidence: low` 起步，且此类 finding 一律强制人工复核。
 
 ### 11.2 领域创新性 / 重要性
@@ -507,34 +507,23 @@ the prespecified 5-point MCID」→ 效应大小、精度与 MCID 均可核对 �
 - 前置：**先定义可量化的新颖度判据**，否则会退化成主观打分。候选方向：
   claim 与既有文献的语义距离、方法组合是否首次出现、研究对象是否为空白领域
 - 输出定位：不给「创新性高/低」的结论，只给「该主张在检索范围内未见同类报道」
-  这类**事实性描述**，由人工判断价值 —— 这条边界二期也不要越。
+  这类**事实性描述**，由人工判断价值 —— 联网增强也不得越过这条边界。
 
 ### 11.3 基础常识校验
 
 - 数据源：领域常识规则库（需自建）
-- 建库方式：**先积累一期人工复核环节的误判样本**，把真实出现过的常识性错误沉淀成规则，
-  而不是先验地枚举常识。一期的人工复核记录就是二期的训练材料。
+- 建库方式：**先积累当前人工复核环节的误判样本**，把真实出现过的常识性错误沉淀成规则，
+  而不是先验地枚举常识。人工复核记录是后续规则的训练材料。
 - 输出 category：`violates_domain_common_sense`(critical)
 
 ### 11.4 外部证据的契约扩展
 
-二期引入外部证据后，**扩展而非重构**现有契约（`SKILL.md §0.2`）：
-在 `evidence_registry` 中新增第三种证据型 `external`：
-
-```json
-{
-  "id": "EV-101",
-  "type": "external",
-  "database": "pubmed",
-  "record_id": "PMID:12345678",
-  "query": "compound A hepatocellular carcinoma IC50",
-  "retrieval_date": "2026-09-01",
-  "version": "2024-03-11",
-  "retraction_or_correction_status": "none",
-  "relation_to_claim": "contradicts",
-  "created_by": "M7"
-}
-```
+引入外部证据时，**扩展而非重构**现有契约（`SKILL.md §0.2`）：
+在 `evidence_registry` 中新增第三种证据型 `external`，至少保存 `database`、`record_id`、
+`query`、`retrieval_date`、`version`、`retraction_or_correction_status`、
+`relation_to_claim` 与外部验证阶段的 `created_by`。当前 schema 尚无 `external` 分支，
+因此本节不提供一个无法通过现有 schema 的 JSON 示例。M7 不得自行创建 external evidence；
+唯一产出者必须在共享契约中先登记。
 
 **规则**：引入 `external` 证据的 finding，其 `evidence_refs[]` 中**必须同时**
 含至少一条 `present` 型稿件内证据 —— 论文内定位不可省略。

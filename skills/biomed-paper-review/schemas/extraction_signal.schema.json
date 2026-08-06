@@ -63,14 +63,15 @@
       "additionalProperties": true,
       "properties": {
         "check": {
-          "enum": ["hgvs_syntax_invalid", "variant_position_out_of_range",
+          "enum": ["hgvs_syntax_invalid", "hgvs_syntax_unresolved",
+                   "variant_position_out_of_range",
                    "variant_reference_mismatch", "gene_symbol_species_mismatch",
                    "accession_format_invalid", "primer_qc_out_of_range",
                    "sequence_alphabet_invalid"]
         },
         "candidate": {
           "type": "boolean",
-          "description": "true = 惯例类判据，只作候选交人工；false = 语法/范围类确定性违规"
+          "description": "true = 惯例偏离或解析器未覆盖，只作候选交人工；false = 明确语法/范围类确定性违规"
         },
         "rule_version": {"type": "string"}
       }

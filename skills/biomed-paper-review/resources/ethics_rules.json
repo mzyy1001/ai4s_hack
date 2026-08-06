@@ -278,9 +278,9 @@
       ],
       "check": "field_present",
       "check_args": {"field": "declarations.ethics_statement"},
-      "severity_hint": "critical",
+      "severity_hint": "major",
       "consumer": "M6",
-      "false_positive_guard": "补充材料不可得时字段应为 parse_failed，不得判缺失（00-contracts §6.4）。综述、荟萃分析、纯计算研究不适用本条。"
+      "false_positive_guard": "补充材料不可得时字段应为 parse_failed，不得判缺失（00-contracts §6.4）。综述、荟萃分析、纯计算研究不适用本条。not_reported 只证明报告缺口，默认 major；只有明确未获批准且规则适用时才可升 critical。"
     },
     {
       "rule_id": "ETH-HUM-002",
@@ -298,9 +298,9 @@
       ],
       "check": "field_present",
       "check_args": {"field": "declarations.informed_consent"},
-      "severity_hint": "critical",
+      "severity_hint": "major",
       "consumer": "M6",
-      "false_positive_guard": "回顾性去标识数据、公开数据集二次分析可合法豁免；此时应检查是否报告了豁免依据，而不是直接判缺失。"
+      "false_positive_guard": "回顾性去标识数据、公开数据集二次分析可合法豁免；此时应检查是否报告了豁免依据，而不是直接判缺失。not_reported 只证明报告缺口，默认 major；只有明确未获同意或豁免且规则适用时才可升 critical。"
     },
     {
       "rule_id": "ETH-HUM-003",
@@ -425,9 +425,9 @@
       ],
       "check": "field_present",
       "check_args": {"field": "declarations.ethics_statement", "scoped_to_design_type": "in_vivo_animal"},
-      "severity_hint": "critical",
+      "severity_hint": "major",
       "consumer": "M6",
-      "false_positive_guard": "仅对 design_components 中 type=in_vivo_animal 的实验触发；同一论文的 in_vitro 部分应判 not_applicable（见 01-structured-extraction §5.3.6）。"
+      "false_positive_guard": "仅对 design_components 中 type=in_vivo_animal 的实验触发；同一论文的 in_vitro 部分应判 not_applicable（见 01-structured-extraction §5.3.6）。not_reported 只证明报告缺口，默认 major；只有明确未获批准时才可升 critical。"
     },
     {
       "rule_id": "ETH-ANI-002",
@@ -531,9 +531,9 @@
       ],
       "check": "field_present",
       "check_args": {"field": "declarations.informed_consent"},
-      "severity_hint": "critical",
+      "severity_hint": "major",
       "consumer": "M6",
-      "false_positive_guard": "**关键防误报**：已建立的商业化永生细胞系（HeLa、HEK293、A549、HepG2、Huh7 等）通常不构成 human subjects research，不需要供者同意；见 exempt_cell_lines 列表。"
+      "false_positive_guard": "**关键防误报**：已建立的商业化永生细胞系（HeLa、HEK293、A549、HepG2、Huh7 等）通常不构成 human subjects research，不需要供者同意；见 exempt_cell_lines 列表。not_reported 只证明报告缺口，默认 major；只有明确未获授权且规则适用时才可升 critical。"
     },
     {
       "rule_id": "ETH-CELL-002",

@@ -6,7 +6,7 @@
 
 七类检查
 --------
-1. `hgvs_syntax_invalid`        —— HGVS 变异命名法语法违规
+1. `hgvs_syntax_invalid` / `hgvs_syntax_unresolved` —— 明确语法违规 / 超出本工具支持子集
 2. `variant_position_out_of_range` —— 变异位点超出所给序列长度
 3. `variant_reference_mismatch` —— HGVS 参考氨基酸与序列实际残基不符
 4. `gene_symbol_species_mismatch` —— 基因符号书写惯例与所述物种不符
@@ -16,7 +16,9 @@
 
 设计原则 · 只报「确定性违规」与「候选」
 --------------------------------------
-- **语法与范围类**（1/2/3/5/7）是**确定性**的：违反即为错误，无需领域判断。
+- **范围、参考残基、登录号格式与字母表**（2/3/5/7）在参考版本明确时是确定性检查。
+- HGVS 本地解析器只覆盖常见替换、del/dup/ins/delins 与部分蛋白表达式；表达式超出该子集时
+  标 `hgvs_syntax_unresolved + candidate: true`，不得把“解析器不支持”写成稿件语法错误。
 - **惯例类**（4/6）只产出**候选**：基因符号大小写惯例有例外，引物参数因体系而异，
   一律标 `candidate: true`，由下游模块交人工，**不得**自动判定稿件有错。
 - 输入不足时不猜：缺序列就不做位置检查，缺物种就不做符号惯例检查。
@@ -141,7 +143,7 @@ def _norm_aa(tok):
     return None
 
 
-def check_hgvs(item, sid="SIG-S01"):
+def check_hgvs(item, sid="SIG-001"):
     """HGVS 语法 + 位置范围 + 参考残基三合一检查。
 
     item: {hgvs, sequence(可选), sequence_type(protein/dna), target(可选)}
@@ -155,8 +157,9 @@ def check_hgvs(item, sid="SIG-S01"):
         m = HGVS_PROTEIN.match(h)
         if not m:
             return _sig(sid, "sequence_identifier_inconsistent", target,
-                        f"HGVS 蛋白命名 {h!r} 不符合语法（期望形如 p.Arg273His 或 p.R273H）。",
-                        {"check": "hgvs_syntax_invalid", "candidate": False, "hgvs": h})
+                        f"HGVS 蛋白表达式 {h!r} 超出本地解析器支持的常见子集；"
+                        f"不能据此判定语法错误，需用完整 HGVS 解析器或人工复核。",
+                        {"check": "hgvs_syntax_unresolved", "candidate": True, "hgvs": h})
         ref = _norm_aa(m.group("ref"))
         pos = int(m.group("pos"))
         alt_raw = m.group("alt")
@@ -191,15 +194,17 @@ def check_hgvs(item, sid="SIG-S01"):
     if h.startswith("c."):
         if not HGVS_CODING.match(h):
             return _sig(sid, "sequence_identifier_inconsistent", target,
-                        f"HGVS 编码区命名 {h!r} 不符合语法（期望形如 c.76A>T / c.76_78del）。",
-                        {"check": "hgvs_syntax_invalid", "candidate": False, "hgvs": h})
+                        f"HGVS 编码区表达式 {h!r} 超出本地解析器支持的常见子集；"
+                        f"不能据此判定语法错误，需用完整 HGVS 解析器或人工复核。",
+                        {"check": "hgvs_syntax_unresolved", "candidate": True, "hgvs": h})
         return None
 
     if h.startswith("g."):
         if not HGVS_GENOMIC.match(h):
             return _sig(sid, "sequence_identifier_inconsistent", target,
-                        f"HGVS 基因组命名 {h!r} 不符合语法。",
-                        {"check": "hgvs_syntax_invalid", "candidate": False, "hgvs": h})
+                        f"HGVS 基因组表达式 {h!r} 超出本地解析器支持的常见子集；"
+                        f"不能据此判定语法错误，需用完整 HGVS 解析器或人工复核。",
+                        {"check": "hgvs_syntax_unresolved", "candidate": True, "hgvs": h})
         return None
 
     return _sig(sid, "sequence_identifier_inconsistent", target,
@@ -208,7 +213,7 @@ def check_hgvs(item, sid="SIG-S01"):
 
 
 # ================================================================ 4 基因符号
-def check_gene_symbol(item, sid="SIG-S02"):
+def check_gene_symbol(item, sid="SIG-002"):
     """基因符号书写惯例与所述物种是否相符。**只报候选。**"""
     sym = (item.get("symbol") or "").strip()
     species = item.get("species") or detect_species(item.get("context"))
@@ -242,7 +247,7 @@ def check_gene_symbol(item, sid="SIG-S02"):
 
 
 # ================================================================ 5 登录号
-def check_accession(item, sid="SIG-S03"):
+def check_accession(item, sid="SIG-003"):
     """登录号格式是否符合所声明数据库的规范。**确定性。**"""
     acc = (item.get("accession") or "").strip()
     db = item.get("database")
@@ -281,7 +286,7 @@ def _tm_gc_formula(seq):
     return 64.9 + 41.0 * (gc - 16.4) / n
 
 
-def check_primer(item, sid="SIG-S04"):
+def check_primer(item, sid="SIG-004"):
     """引物基本 QC。**只报候选** —— 参数区间因体系与应用而异。"""
     seq = (item.get("sequence") or "").strip().upper()
     target = item.get("target", "primer")
@@ -323,7 +328,7 @@ def check_primer(item, sid="SIG-S04"):
 
 
 # ================================================================ 7 序列字母表
-def check_sequence_alphabet(item, sid="SIG-S05"):
+def check_sequence_alphabet(item, sid="SIG-005"):
     seq = (item.get("sequence") or "").strip().upper()
     kind = item.get("sequence_type", "dna")
     target = item.get("target", "sequence")
@@ -355,7 +360,7 @@ def audit(items):
         fn = CHECKS.get(item.get("check"))
         if fn is None:
             continue
-        sig = fn(item, sid=f"SIG-S{i:02d}")
+        sig = fn(item, sid=f"SIG-{i:03d}")
         if sig is not None:
             out.append(sig)
     return out
@@ -383,6 +388,11 @@ def _selftest():
     s = check_hgvs({"hgvs": "R273H"})
     expect("缺 HGVS 前缀 -> 报警", s["sequence_audit"]["check"] if s else None,
            "hgvs_syntax_invalid")
+    s = check_hgvs({"hgvs": "p.Arg273HisfsTer5"})
+    expect("合法但超出子集的 HGVS -> 人工候选",
+           s["sequence_audit"]["check"] if s else None, "hgvs_syntax_unresolved")
+    expect("超出子集不得判确定性错误",
+           s["sequence_audit"]["candidate"] if s else None, True)
 
     # --- 位置越界（确定性）---
     s = check_hgvs({"hgvs": "p.Arg273His", "sequence": P53, "sequence_type": "protein"})
@@ -447,6 +457,8 @@ def _selftest():
     expect("type 统一", {x["type"] for x in sigs}, {"sequence_identifier_inconsistent"})
     expect("均有 rule_version",
            all(x["sequence_audit"].get("rule_version") for x in sigs), True)
+    expect("signal id 符合 schema",
+           all(re.match(r"^SIG-[0-9]{3,}$", x["id"]) for x in sigs), True)
 
     print("\n全部通过" if ok else "\n存在失败项")
     return 0 if ok else 1

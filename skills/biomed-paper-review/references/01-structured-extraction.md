@@ -959,10 +959,12 @@ M1 输出计算 `extraction_coverage` 所需的**原始计数**，
 
 ---
 
-## 14. 二期扩展：标识符核验（本期不实现，规则先写下）
+## 14. 一期联网增强：标识符真实性核验（当前未实现）
 
-一期只抽取标识符，不核验其真实性。二期接入 MCP 后逐项核验。
-**二期应扩展而非重构** `provenance` 与 `evidence` 契约（见 `SKILL.md §0.2`）。
+当前 `scripts/sequence_identifier_audit.py` 已离线检查常见登录号格式、HGVS 支持子集、
+序列字母表与参考序列范围；它**不能证明记录真实存在**。联网增强接入权威数据源后逐项核验
+存在性与元数据。接入时应扩展而非重构 `provenance` 与 `evidence` 契约
+（见 `SKILL.md §0.2`）。
 
 | 标识符 | 核验数据源 | 查出什么 | 结果解读归属 |
 | --- | --- | --- | --- |
@@ -973,35 +975,14 @@ M1 输出计算 `extraction_coverage` 所需的**原始计数**，
 | 参考文献 | Crossref / PubMed / Retraction Watch | 文献不存在、已被撤稿或更正 | **M2** |
 | 方案注册号 | PROSPERO | 综述方案未注册或与已注册方案偏离 | **M2** |
 
-**M1 二期只负责核验标识符本身的真实性**，产出 `identifier_verification` 类 signal，
-**不下审核结论**：
-
-```json
-{
-  "id": "SIG-011",
-  "type": "identifier_verification",
-  "target": "design.registration",
-  "identifier": {"scheme": "clinicaltrials", "value": "NCT01234567"},
-  "verification": {
-    "database": "ClinicalTrials.gov",
-    "query": "NCT01234567",
-    "retrieval_date": "2026-08-07",
-    "record_id": "NCT01234567",
-    "version": "2024-03-11",
-    "retraction_or_correction_status": "none",
-    "result": "not_found",
-    "relation_to_claim": "registration_unverifiable"
-  },
-  "evidence_refs": ["EV-052"],
-  "routed_to": ["M6"],
-  "produced_by": "stage_2"
-}
-```
+外部证据层只负责核验标识符事实并产无 severity signal，**不下审核结论**。
+`identifier_verification` 尚未进入当前 signal enum，当前版本不得输出该 type，也不保留一个
+无法通过现有 schema 的 JSON 示例。
 
 `result` 枚举：`verified` / `not_found` / `mismatch` / `retracted` / `superseded` /
 `lookup_failed`。
 **`lookup_failed`（网络或接口故障）产出 `system_limitation`，不得当作 `not_found`。**
 
-> 二期启用时需向 `00-contracts.md §6.2` 的 signal type 枚举追加
+> 启用时需向 `00-contracts.md §6.2` 的 signal type 枚举追加
 > `identifier_verification`，并在 `extraction_signal.schema.json` 中增加
-> 条件必填的 `verification` 块。一期**不得**提前使用该 type。
+> 条件必填的 `verification` 块。完成迁移前**不得**提前使用该 type。
