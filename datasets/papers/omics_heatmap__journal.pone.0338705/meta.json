@@ -31,43 +31,43 @@
       "label": "Fig 2",
       "caption": "Identification of epithelial-related DEGs associated with immune infiltration.(A) Correlation analysis between 23 epithelial-related DEGs and immune scores calculated using the ESTIMATE algorithm; MAGEA3 and MAGEA6 show strongest correlations. (B) Boxplots comparing MAGEA3 and MAGEA6 expression between tumor and adjacent normal tissues in TCGA-STAD. (C) Consensus clustering of 410 TCGA-STAD samples based on MAGEA3 and MAGEA6 expression, revealing two molecular subtypes. (D) Expression levels of MAGEA3 and MAGEA6 in Group 1 (high expression) and Group 2 (low expression). (E) Spearman correlation analysis between MAGEA3 and MAGEA6 expression levels.",
       "graphic": "info:doi/10.1371/journal.pone.0338705.g002",
-      "image_file": "figures/g002.png"
+      "image_file": "figures/g002.jpg"
     },
     {
       "label": "Fig 3",
       "caption": "Functional enrichment analysis of DEGs between Group 1 and Group 2.(A) Heatmap of DEGs shows clear separation between Group 1 and Group 2. (B) Volcano plot of DEGs between Group 1 and Group 2. (C) GO enrichment analysis of DEGs. (D) KEGG pathway analysis of DEGs. (E) Gene Set Enrichment Analysis (GSEA) of Hallmark gene sets showing enrichment of immune/inflammatory pathways.",
       "graphic": "info:doi/10.1371/journal.pone.0338705.g003",
-      "image_file": "figures/g003.png"
+      "image_file": "figures/g003.jpg"
     },
     {
       "label": "Fig 4",
       "caption": "Comparison of immune infiltration between the two molecular subtypes.(A) CIBERSORT analysis showing relative immune cell proportions. (B) ssGSEA scores of 28 immune cell types. (C) ESTIMATE-derived stromal, immune, and ESTIMATE scores. (D) Xcell analysis of 64 immune cell types.",
       "graphic": "info:doi/10.1371/journal.pone.0338705.g004",
-      "image_file": "figures/g004.png"
+      "image_file": "figures/g004.jpg"
     },
     {
       "label": "Fig 5",
       "caption": "Weighted gene co-expression network analysis (WGCNA) identifies immune-related gene modules.(A) Analysis of network topology for soft powers. (B) Gene dendrogram and module colors. (C-D) Correlation between module eigengenes and immune traits. (E) GO enrichment analysis of yellow module genes. (F) KEGG pathway analysis of yellow module genes.",
       "graphic": "info:doi/10.1371/journal.pone.0338705.g005",
-      "image_file": "figures/g005.png"
+      "image_file": "figures/g005.jpg"
     },
     {
       "label": "Fig 6",
       "caption": "Clinical significance and mutation profiles of molecular subtypes.(A) Survival analysis of 2 groups. (B) Forest plot from Cox regression analysis identifying CTLA4, TAP1, BCL11B, and PAEP. (C) Boxplots comparing expression of CTLA4, TAP1, BCL11B and PAEP between Group 1 and Group 2. (D) Correlation analysis of MAGEA3/6 with BCL11B and PAEP expression.",
       "graphic": "info:doi/10.1371/journal.pone.0338705.g006",
-      "image_file": "figures/g006.png"
+      "image_file": "figures/g006.jpg"
     },
     {
       "label": "Fig 7",
       "caption": "Immune infiltration analysis based on BCL11B expression levels.(A) CIBERSORT analysis showing relative immune cell proportions. (B) ssGSEA scores of 28 immune cell types. (C) ESTIMATE-derived stromal, immune, and ESTIMATE scores. (D) Xcell analysis of 64 immune cell types.",
       "graphic": "info:doi/10.1371/journal.pone.0338705.g007",
-      "image_file": "figures/g007.png"
+      "image_file": "figures/g007.jpg"
     },
     {
       "label": "Fig 8",
       "caption": "Immune infiltration analysis based on PAEP expression levels.(A) CIBERSORT analysis showing relative immune cell proportions. (B) ssGSEA scores of 28 immune cell types. (C) ESTIMATE-derived stromal, immune, and ESTIMATE scores. (D) Xcell analysis of 64 immune cell types.",
       "graphic": "info:doi/10.1371/journal.pone.0338705.g008",
-      "image_file": "figures/g008.png"
+      "image_file": "figures/g008.jpg"
     }
   ]
 }

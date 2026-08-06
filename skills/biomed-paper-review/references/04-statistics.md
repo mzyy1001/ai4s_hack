@@ -11,8 +11,13 @@
 
 ## 1. 输入
 
-`structured_result.methods.stats_methods[]`、`key_data[]`（含 n、误差类型、p 值、检验名）、
-`evaluation_matrix.{min_group_n, has_power_analysis, has_multiple_comparison_correction}`。
+`structured_result_v2.measurement.statistical_methods[]`、`key_data[]`（含 n、
+`uncertainty`、p 值、`metric_family`、`reporting_completeness`）、
+`evaluation_matrix.{group_sizes, sample_size_justification, multiple_comparison_correction}`、
+以及路由到本模块的 `extraction_signals[]`（`source_value_conflict` / `partial_extraction`）。
+
+**消费 `v2` 而非 `v1`** —— `v1` 不含图表来源数值。
+`evaluation_matrix` 仅用于路由与定位证据，立 finding 前必须回查 `evidence_refs`。
 
 ## 2. 校验清单
 
@@ -36,7 +41,8 @@
 ### 2.2 样本量
 
 - 是否有效能分析（power analysis）或样本量依据？
-- `min_group_n` 是否低于该研究类型的通行下限？**待填充**：分研究类型的 n 下限建议值。
+- 按 `evaluation_matrix.group_sizes[]` 逐实验、逐组检查 n 是否低于该研究类型的通行下限
+  （**待填充**：分研究类型的 n 下限建议值）。不要把所有实验压成一个最小值。
 - n 是生物学重复还是技术重复？（技术重复冒充生物学重复是高频问题）
 - 临床试验：是否报告了实际入组 vs 计划入组、失访率、是否 ITT 分析？
 
@@ -113,8 +119,8 @@
 ### 5.3 从图表反推数据后复算
 
 与 M5 联动：从 `figure_record.extracted_data` 拿到反推数值，再做 §5.1 的一致性检验。
-**硬性约束**：来源为 `figure_pixel` 的数值不得用于复算 —— 估读误差会制造大量假阳性。
-只有 `figure_caption` / `figure_axis` 来源的数值可以进入复算。
+**硬性约束**：来源为 `pixel_estimated` 的数值不得用于复算 —— 估读误差会制造大量假阳性。
+只有 `explicit_figure_caption` / `axis_readable` 来源的数值可以进入复算。
 
 ### 5.4 二期新增 category
 

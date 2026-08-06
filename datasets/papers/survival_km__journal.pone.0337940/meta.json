@@ -26,31 +26,31 @@
       "label": "Fig 1",
       "caption": "The age distribution of patients with gastrinoma.",
       "graphic": "info:doi/10.1371/journal.pone.0337940.g001",
-      "image_file": "figures/g001.png"
+      "image_file": "figures/g001.jpg"
     },
     {
       "label": "Fig 2",
       "caption": "Overall survival (OS) and cancer-specific survival (CSS) of patients with gastrinoma.A. OS; B CSS.",
       "graphic": "info:doi/10.1371/journal.pone.0337940.g002",
-      "image_file": "figures/g002.png"
+      "image_file": "figures/g002.jpg"
     },
     {
       "label": "Fig 3",
       "caption": "Overall survival (OS) and cancer-specific survival (CSS) of patients with gastrinoma after surgery.A. OS; B CSS.",
       "graphic": "info:doi/10.1371/journal.pone.0337940.g003",
-      "image_file": "figures/g003.png"
+      "image_file": "figures/g003.jpg"
     },
     {
       "label": "Fig 4",
       "caption": "Comparison of overall survival between patients with gastrinoma located in the duodenum and those in the pancreas.",
       "graphic": "info:doi/10.1371/journal.pone.0337940.g004",
-      "image_file": "figures/g004.png"
+      "image_file": "figures/g004.jpg"
     },
     {
       "label": "Fig 5",
       "caption": "Comparison of cancer-specific survival between patients with gastrinoma located in the duodenum and those in the pancreas.",
       "graphic": "info:doi/10.1371/journal.pone.0337940.g005",
-      "image_file": "figures/g005.png"
+      "image_file": "figures/g005.jpg"
     }
   ]
 }

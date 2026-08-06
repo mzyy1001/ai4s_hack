@@ -465,7 +465,7 @@ M1（Stage 2）与 Stage 3b 产出。**signal 不带 `severity`，不是结论�
 
 ### 8.2 system_limitations（不是 finding）
 
-抽取因技术原因失败时产出，结构与枚举见 `SKILL.md §4.3`。M1 常见触发：
+抽取因技术原因失败时产出，结构与枚举见 `00-contracts.md` §2.3。M1 常见触发：
 
 | category | 场景 |
 | --- | --- |

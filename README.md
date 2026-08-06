@@ -40,13 +40,12 @@ skills/biomed-paper-review/     ← 交付物本体
 │   └── review_report.schema.json
 └── templates/review_report.md  报告渲染模板
 
-datasets/                       测试语料：10 篇 PLOS 开放获取论文（CC-BY）
+datasets/                       测试语料：10 篇 PLOS 开放获取论文（CC-BY）· 非提交必需
 ├── manifest.json               每篇覆盖哪个审核维度、图表数量
 └── papers/<slot>__<doi>/
     ├── meta.json               书目 + 图注索引（作为 ground truth）
     ├── fulltext.xml            JATS 全文
-    ├── paper.pdf               原始 PDF（用于页码级原图定位）
-    └── figures/                逐图高清图像
+    └── figures/                逐图图像（max 1400px JPEG）
 
 tools/fetch_papers.py           语料抓取脚本（可重跑）
 docs/architecture.md            架构说明：七个模块如何合成一个 Skill
@@ -69,7 +68,8 @@ docs/architecture.md            架构说明：七个模块如何合成一个 Sk
 | `toxicology` | 毒理剂量爬坡 |
 | `survival_km` | Kaplan-Meier 生存曲线 |
 
-重新抓取：
+**PDF 不入库**：仅用于本地测试页码级定位，为控制仓库体积未纳入。
+重新抓取可完整重建原始语料（含全分辨率图像与全部 PDF），仅用 Python 标准库、无需额外依赖：
 
 ```bash
 python3 tools/fetch_papers.py
@@ -77,9 +77,25 @@ python3 tools/fetch_papers.py
 
 ## 使用
 
-在 Claude Code 中，本仓库已通过 `.claude/skills/` 软链接自动加载该 Skill。
-在其他环境复用时，把 `skills/biomed-paper-review/` 整个目录拷贝到对应的 skills 目录即可 —— 
-目录自包含，无外部依赖。
+遵循 opencode / Anthropic Agent Skill 标准格式。把 `skills/biomed-paper-review/`
+整个目录拷贝到目标环境的 skills 目录即可 —— 目录自包含，无外部依赖、无需联网。
+
+在 Claude Code 中，本仓库已通过 `.claude/skills/` 软链接自动加载。
+
+## 提交合规自查（对照 04-提交规范 / 05-自动评审规则）
+
+| 检查项 | 状态 |
+| --- | --- |
+| `skills/` 下有且仅有一个 skill 目录 | ✅ `biomed-paper-review` |
+| `SKILL.md` frontmatter 含合法 `name` / `description` | ✅ name 19 字符（≤64，小写连字符）；description 200 字符（≤1024，第三人称） |
+| SKILL.md 正文 <500 行 | ✅ 444 行；契约细节拆入 `references/00-contracts.md` |
+| 文件引用只一层深（渐进披露） | ✅ SKILL.md → `references/*.md`，无二层跳转 |
+| 单文件 ≤10MB | ✅ 最大文件 <3MB |
+| 提交包体积 | ✅ 工作区 ~8MB（历史体积见下方待办） |
+| `requirements.txt` | ✅ 无需 —— `tools/` 仅用 Python 标准库 |
+| 结构化输入/输出 schema | ✅ `schemas/` 四份 JSON Schema |
+| 无诱导评分 / 注入语句 | ✅ |
+| 沙箱可运行（无网络、无 GPU、900s） | ✅ 一期不调用任何外部数据库 |
 
 ## 分期范围
 

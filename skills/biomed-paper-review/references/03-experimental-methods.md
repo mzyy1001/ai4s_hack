@@ -9,8 +9,9 @@
 
 ## 1. 输入
 
-`structured_result.methods`（分组、剂量、给药途径、周期、assay 列表）+ `evaluation_matrix`。
-路由：仅当 `study_type ∈ {in_vitro, in_vivo_animal, clinical_trial}` 时启动完整检查。
+`structured_result_v2` 的 `design`（`arms[]` 含剂量/途径/周期、`controls`、`randomization`、
+`blinding`）与 `measurement.assays[]`，加 `evaluation_matrix`（仅用于路由与定位证据）。
+路由：仅当 `study_design.family ∈ {experimental, human_interventional}` 时启动完整检查。
 
 ## 2. 校验清单
 

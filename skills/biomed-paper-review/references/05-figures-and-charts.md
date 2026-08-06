@@ -51,15 +51,17 @@
 
 ### A.3 数值抽取的证据分级
 
-严格按此优先级取值，并在 `key_data.source` 中如实标注：
+严格按此优先级取值，并在 `provenance.source_type` 中如实标注
+（枚举见 `00-contracts.md` §1.4，全局唯一）：
 
 ```
-figure_caption（图注明文）> text（正文明文）> table > figure_axis（读坐标轴刻度）> figure_pixel（像素估读）
+explicit_main_text > explicit_table > explicit_figure_caption > axis_readable > pixel_estimated
 ```
 
 **硬性规则**：
-- `figure_pixel` 来源的数值一律 `confidence: low`，且必须写成区间（如 `estimated ~40–50%`），
-  **禁止给点值**，并在 `manual_review.action` 中说明原因。
+- `pixel_estimated` 来源的数值一律 `extraction_confidence: low`，且必须写成区间
+  （如 `"40–50"`），**禁止给点值**，并置 `manual_review_needed = true`、
+  在 `manual_review.action` 中说明原因。
 - 坐标轴为对数轴时，线性估读必然错误 —— 先确认轴类型再读数。
 - 误差棒长度不得直接当作 SD/SEM 报告，除非图注写明。
 - 图中显著性星号必须回查图注中的星号定义（`*p<0.05` 的阈值各刊不同）。
@@ -68,20 +70,22 @@ figure_caption（图注明文）> text（正文明文）> table > figure_axis（
 
 ### A.4 原图定位
 
-每条 `figure_record` 必须给出（locator 语法见 `SKILL.md §3`）：
+每条 `figure_record` 必须给出（locator 语法见 `00-contracts.md` §1.2）：
 
 ```json
 "location": {
   "figure_label": "Figure 3",
   "panel": "B",
-  "page": 7,
-  "first_cited_at": "sec:results§3.2",
-  "image_file": "figures/g003.png"
+  "placement": "main_text",
+  "locator": {"figure": "3", "panel": "B", "pdf_file_page": 7, "scope": "panel"},
+  "first_cited_at": {"section": "results", "subsection": "3.2", "scope": "paragraph"},
+  "image_file": "figures/g003.jpg"
 }
 ```
 
-PDF 输入时 `page` 必填；缺页码的定位视为无效定位。
-`finding.evidence.locator` 写作 `fig:3B | p.7`，**不要**用自由文本描述位置 —— 跨模块去重靠它对齐。
+PDF 输入时 `locator.pdf_file_page` 必填；缺页码的定位视为无效定位。
+`locator` 一律以**结构化对象**存储，`fig:3B | p.7` 只是报告渲染形式 ——
+跨模块去重靠对象字段对齐，**不要**用自由文本描述位置。
 
 ### A.5 输出
 
@@ -151,7 +155,7 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 
 ## C. category slug 与 severity
 
-**severity 必须使用全局枚举 `critical / major / minor / info`**（见 `SKILL.md §2`）。
+**severity 必须使用全局枚举 `critical / major / minor / info`**（见 `00-contracts.md` §2.1）。
 敏怡初稿中的 `high / medium / low` 按下表映射后使用：
 
 | 初稿 | 全局枚举 | 判据 |
@@ -241,8 +245,8 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 
 ### F.3 数值反推精度提升
 
-一期从图中读数依赖 `figure_axis` 与 `figure_pixel`，二期可引入曲线/柱高的像素级测量 + 坐标轴标定。
-**即便如此，§A.3 的硬性规则不变**：反推数值仍标 `figure_pixel`，仍给区间，
+一期从图中读数依赖 `axis_readable` 与 `pixel_estimated`，二期可引入曲线/柱高的像素级测量 + 坐标轴标定。
+**即便如此，§A.3 的硬性规则不变**：反推数值仍标 `pixel_estimated`，仍给区间，
 仍不得用于 M4 的统计复算。精度提升不改变证据等级。
 
 ### F.4 领域惯例对照（完整版）
@@ -260,4 +264,4 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 | `duplicate_image_across_papers` | 与已发表图像重复（疑似） | critical |
 | `chart_type_against_field_convention` | 图表类型显著偏离领域惯例 | minor |
 
-前三条**全部**强制 `manual_review.who = 编辑`，且 `confidence` 上限为 `medium`。
+前三条**全部**强制 `manual_review.who = editor`，且 `review_confidence` 上限为 `medium`。

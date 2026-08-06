@@ -26,25 +26,25 @@
       "label": "Table 1",
       "caption": "Sequence of the primers used in this study.",
       "graphic": "info:doi/10.1371/journal.pone.0337215.t001",
-      "image_file": "figures/t001.png"
+      "image_file": "figures/t001.jpg"
     },
     {
       "label": "Fig 2",
       "caption": "Immunohistochemistry results of aromatase (a.control group,b.obese group) and insulin receptor (c. control group,d.obese group) in SD rats. Magnification of 200x (scale – 50μm).",
       "graphic": "info:doi/10.1371/journal.pone.0337215.g002",
-      "image_file": "figures/g002.png"
+      "image_file": "figures/g002.jpg"
     },
     {
       "label": "Fig 3",
       "caption": "(A) Amplication and melt curves (B) Relative mRNA expression of IR and CYP19A1.",
       "graphic": "info:doi/10.1371/journal.pone.0337215.g003",
-      "image_file": "figures/g003.png"
+      "image_file": "figures/g003.jpg"
     },
     {
       "label": "Fig 4",
       "caption": "(A) electrophoresis results (B) quantification of IR and CYP19A1.",
       "graphic": "info:doi/10.1371/journal.pone.0337215.g004",
-      "image_file": "figures/g004.png"
+      "image_file": "figures/g004.jpg"
     }
   ]
 }

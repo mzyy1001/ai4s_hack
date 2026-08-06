@@ -14,8 +14,8 @@
       "n_figures": 4,
       "n_tables": 6,
       "n_images_downloaded": 4,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pone.0339322"
+      "url": "https://doi.org/10.1371/journal.pone.0339322",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "animal_invivo",
@@ -28,8 +28,8 @@
       "n_figures": 7,
       "n_tables": 0,
       "n_images_downloaded": 1,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.ppat.1013811"
+      "url": "https://doi.org/10.1371/journal.ppat.1013811",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "rct_clinical",
@@ -42,8 +42,8 @@
       "n_figures": 3,
       "n_tables": 6,
       "n_images_downloaded": 2,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pone.0339677"
+      "url": "https://doi.org/10.1371/journal.pone.0339677",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "microscopy_ihc",
@@ -56,8 +56,8 @@
       "n_figures": 4,
       "n_tables": 9,
       "n_images_downloaded": 4,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pone.0337215"
+      "url": "https://doi.org/10.1371/journal.pone.0337215",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "flow_cytometry",
@@ -70,8 +70,8 @@
       "n_figures": 7,
       "n_tables": 0,
       "n_images_downloaded": 6,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pone.0335165"
+      "url": "https://doi.org/10.1371/journal.pone.0335165",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "small_sample_pilot",
@@ -84,8 +84,8 @@
       "n_figures": 4,
       "n_tables": 10,
       "n_images_downloaded": 3,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pmen.0000202"
+      "url": "https://doi.org/10.1371/journal.pmen.0000202",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "meta_analysis",
@@ -98,8 +98,8 @@
       "n_figures": 4,
       "n_tables": 2,
       "n_images_downloaded": 3,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pgph.0005425"
+      "url": "https://doi.org/10.1371/journal.pgph.0005425",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "omics_heatmap",
@@ -112,8 +112,8 @@
       "n_figures": 8,
       "n_tables": 0,
       "n_images_downloaded": 7,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pone.0338705"
+      "url": "https://doi.org/10.1371/journal.pone.0338705",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "toxicology",
@@ -126,8 +126,8 @@
       "n_figures": 6,
       "n_tables": 14,
       "n_images_downloaded": 6,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pone.0339571"
+      "url": "https://doi.org/10.1371/journal.pone.0339571",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     },
     {
       "slot": "survival_km",
@@ -140,8 +140,9 @@
       "n_figures": 5,
       "n_tables": 12,
       "n_images_downloaded": 5,
-      "has_pdf": true,
-      "url": "https://doi.org/10.1371/journal.pone.0337940"
+      "url": "https://doi.org/10.1371/journal.pone.0337940",
+      "figure_format": "jpg (downsampled to max 1400px for repo size limits)"
     }
-  ]
+  ],
+  "notes": "测试语料，非提交必需内容。图像已压缩为 max 1400px JPEG；PDF 仅用于本地测试页码级定位，未纳入仓库 —— 运行 python3 tools/fetch_papers.py 可完整重建（含全分辨率图像与全部 PDF）。"
 }
