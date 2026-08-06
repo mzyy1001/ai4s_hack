@@ -107,7 +107,7 @@ echo "改动文件：" | tee -a "$LOG"
 echo "$CHANGED" | sed 's/^/  /' | tee -a "$LOG"
 
 FORBIDDEN=$(echo "$CHANGED" | grep -E \
-  '^(skills/biomed-paper-review/references/0[23456]-|datasets/|loop/|\.gitignore)' || true)
+  '^(skills/biomed-paper-review/references/0[235]-|datasets/|loop/|\.gitignore)' || true)
 
 if [ -n "$FORBIDDEN" ]; then
   echo "GUARD-FAIL 改动触碰禁止路径，整轮回滚：" | tee -a "$LOG"
@@ -119,20 +119,32 @@ if [ -n "$FORBIDDEN" ]; then
   exit 0
 fi
 
-# ---------------------------------------------------------------- 守卫二：校验器
-echo "--- 校验器 ---" | tee -a "$LOG"
-set +e
-VALIDATOR_OUT=$(python3 tools/validate_schemas.py 2>&1)
-VALIDATOR_RC=$?
-set -e
-echo "$VALIDATOR_OUT" | tail -20 | tee -a "$LOG"
+# ---------------------------------------------------------------- 守卫二：四项自检
+# 契约校验器 + 三个一期工具的自检必须全部通过。
+echo "--- 自检 ---" | tee -a "$LOG"
+CHECKS=(
+  "python3 tools/validate_schemas.py"
+  "python3 tools/normalize_biomed_units.py --selftest"
+  "python3 tools/statistical_forensics.py --selftest"
+  "python3 tools/ethics_compliance_check.py --selftest"
+)
+FAILED_CHECK=""
+for chk in "${CHECKS[@]}"; do
+  set +e
+  OUT=$($chk 2>&1)
+  RC=$?
+  set -e
+  echo "  [$([ $RC -eq 0 ] && echo OK || echo FAIL)] $chk" | tee -a "$LOG"
+  echo "$OUT" | tail -5 >> "$LOG"
+  if [ $RC -ne 0 ]; then FAILED_CHECK="$chk"; break; fi
+done
 
-if [ $VALIDATOR_RC -ne 0 ]; then
-  echo "GUARD-FAIL 校验器不通过，整轮回滚。" | tee -a "$LOG"
+if [ -n "$FAILED_CHECK" ]; then
+  echo "GUARD-FAIL 自检不通过（$FAILED_CHECK），整轮回滚。" | tee -a "$LOG"
   git reset --hard "$BASE_SHA" >> "$LOG" 2>&1
   git clean -fd >> "$LOG" 2>&1
-  printf -- '- **R%s** %s · `%s` · ❌ 回滚（校验器失败）\n' \
-    "$ROUND" "$STAMP" "$THEME_SLUG" >> "$HISTORY"
+  printf -- '- **R%s** %s · `%s` · ❌ 回滚（自检失败：%s）\n' \
+    "$ROUND" "$STAMP" "$THEME_SLUG" "$FAILED_CHECK" >> "$HISTORY"
   exit 0
 fi
 

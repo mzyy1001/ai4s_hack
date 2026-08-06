@@ -1,102 +1,260 @@
-# M6 · 伦理合规校验
+# M6 · 伦理合规
 
-**负责人：Peter** · 状态：**骨架 — 待负责人填充核查表**
+**原负责人：Peter** · 状态：**一期规则库已填充（框架层代填，待 Peter 复核）**
 
-对应会议纪要"第五层：特殊场景合规校验"。针对涉及动物实验、人群临床试验的论文，
-额外核查实验流程是否符合通用伦理规范、是否具备对应的伦理审批说明。
+核心问题：这项研究**该不该做**、**做之前有没有获得授权**、**稿件有没有把授权说清楚**。
 
-**路由**：仅当 `evaluation_matrix.has_animal_experiment` 或 `has_human_subjects` 为 true 时启动。
-两者皆为 false 时，本模块只做一件事：确认论文确实不涉及（而非漏报）。
+**本模块与其他审核模块的关键差异**：伦理要求是**成文的规范**，不是领域惯例。
+因此本模块的判定不靠经验，而靠一份可引用的规范库
+——`resources/ethics_rules.json`（25 部规范、22 条结构化要求，三法域）。
+**每一条 finding 都必须引用到具体规范的具体条款。**
+
+**本文件依赖 `00-contracts.md`。** finding 结构、`evidence_refs[]`、severity 枚举
+的定义都在那里。
 
 ---
 
-## 1. 动物实验
+## 1. 输入
 
-### 1.1 批件与声明
-
-- [ ] 是否有伦理委员会审批声明？是否给出**批件编号**与**机构名称**？
-- [ ] 是否声明遵循相关指南（ARRIVE 2.0 / 机构 IACUC / 当地法规）？
-- [ ] 安乐死方式是否说明且符合规范？
-- [ ] 人道终点（humane endpoint）是否预先定义？
-
-### 1.2 3R 原则
-
-| 原则 | 核查点 |
+| 来源 | 用途 |
 | --- | --- |
-| Replacement 替代 | 是否论证了无法用体外/计算方法替代？（与 M3 §2.2 联动） |
-| Reduction 减少 | 样本量是否为达成效能的最小值？（与 M4 联动） |
-| Refinement 优化 | 麻醉、镇痛、饲养条件、应激控制是否说明？ |
+| `structured_result_v2.article_design` | 判定适用哪些规范（人体 / 动物 / 细胞 / 计算） |
+| `structured_result_v2.population.subjects` | 物种、人群、细胞来源、是否弱势群体 |
+| `structured_result_v2.declarations.*` | 伦理声明、知情同意、资助、利益冲突、数据可及性 |
+| `structured_result_v2.design.registration` | 临床试验注册号 |
+| `evaluation_matrix.{has_animal_experiment, has_human_subjects, ethics_statement, informed_consent}` | 路由 |
+| **`ethics_requirement_unmet` signals** | 由 `tools/ethics_compliance_check.py` 产出，见 §2 |
+| `all_system_limitations[]` | 补充材料不可得时**不得**判缺失 |
 
-### 1.3 常见缺失
+## 2. 规范库与筛查工具
 
-**待填充**：Peter 梳理动物实验伦理声明的典型缺失场景与严重度分级。
+```
+resources/ethics_rules.json          规范库（数据）
+tools/ethics_compliance_check.py     筛查器（产 signal，不产 finding）
+        ↓  ethics_requirement_unmet
+M6（本模块）                          判定是否构成 finding、定 severity
+```
 
-## 2. 人体研究 / 临床试验
+这与 `statistical_forensics.py → M4` 是同一个模式：
+**工具层给出「规范要求 X，稿件未见 X」的机器级观察；M6 决定它是否构成稿件问题。**
 
-- [ ] 伦理委员会（IRB/EC）审批声明与编号
-- [ ] 知情同意：是否获得？未成年人/无行为能力者的代理同意？豁免是否说明理由？
-- [ ] 是否声明遵循《赫尔辛基宣言》
-- [ ] 临床试验注册号（ClinicalTrials.gov / ChiCTR 等）与注册时间是否早于入组
-- [ ] 数据隐私与去标识化处理
-- [ ] 涉及弱势群体（儿童、孕妇、囚犯、认知障碍者）时的额外保护措施
-- [ ] 生物样本库 / 人类遗传资源相关合规声明
+**为什么能离线**：规范库是**结构化要求索引**，不是外部数据库查询 ——
+正好落在一期定义内（`SKILL.md §0.2`：论文自身内容 + 通用规范库）。
+批件号真伪、注册号时序等**需要外部数据源**的核验属二期（§7）。
 
-## 3. 通用
+### 2.1 规范库覆盖范围
 
-- [ ] 利益冲突声明是否存在？
-- [ ] 资助来源是否披露？资助方是否参与研究设计与数据解读？
-- [ ] 数据可得性声明
-- [ ] 涉及病原体/基因编辑等特殊场景的生物安全等级声明
+| 法域 | 主要规范 |
+| --- | --- |
+| 国际 | 赫尔辛基宣言、CIOMS 2016、ICH-GCP E6、ARRIVE 2.0、ISSCR 2021、名古屋议定书、ICMJE |
+| 美国 | Common Rule (45 CFR 46)、FDA (21 CFR 50/56)、HIPAA、PHS-OLAW、动物福利法 (9 CFR)、NRC Guide、AVMA 安乐死指南、贝尔蒙报告 |
+| 中国 | 涉及人的生命科学和医学研究伦理审查办法 (2023)、人类遗传资源管理条例、GCP (2020)、实验动物管理条例、GB/T 35892-2018、生物安全法、个人信息保护法、人胚胎干细胞研究伦理指导原则 |
 
-## 4. category slug（待补全）
+领域：`human_clinical` / `animal` / `human_derived_cells_tissue` / `cell_line_general` /
+`stem_cell_embryo` / `genetic_resources` / `biosafety` / `data_privacy` /
+`clinical_trial_registration`。
 
-| slug | 说明 | severity |
-| --- | --- | --- |
-| `missing_ethics_approval` | 无伦理审批声明 | critical |
-| `ethics_approval_no_id` | 有声明但无批件号/机构 | major |
-| `missing_informed_consent` | 人体研究无知情同意说明 | critical |
-| `missing_trial_registration` | 临床试验无注册号 | major |
-| `retrospective_registration` | 注册时间晚于入组 | major |
-| `no_3r_statement` | 无 3R / 人道终点说明 | major |
-| `missing_coi_statement` | 无利益冲突声明 | minor |
-| `biosafety_undeclared` | 特殊场景无生物安全声明 | major |
+### 2.2 规范库的使用纪律
 
-## 5. TODO（一期）
-
-- [ ] 填充 §1.3 动物实验伦理典型缺失场景
-- [ ] 补充中国大陆 / 国际期刊在伦理声明要求上的差异
-- [ ] 与 M3 划清边界：**是否必要**归 M3，**是否合规、有无批件**归 M6
-- [ ] 明确"论文未提及"与"论文声明不适用"的判定差异（后者不应报 critical）
+1. **引用要精确到条款。** finding 的 `rule_ref` 写 `ethics_rules#<rule_id>`，
+   `detail` 中列出该规则的 `citations`（规范名 + 条款）。
+2. **注意 `citation_confidence`。** 规范库对每条引用标了置信度；
+   `medium` 及以下的条款号在写入正式审稿意见前应人工核对原文
+   （赫尔辛基宣言 2024 年修订重排过段落号）。
+3. **规范库不是法律意见。** 输出是筛查信号，不构成合规裁定。
 
 ---
 
-## 6. 二期扩展：注册与批件核验（本期不实现，规则先写下）
+## 3. 判定流程
 
-一期只能查"有没有写批件号/注册号"，二期查"这个号码对不对"。
+```
+1. 适用性路由    ← article_design + population.subjects 决定哪些规则适用
+2. 状态门控      ← 字段 parse_failed / unresolved → 不判缺失，出人工复核项
+3. 反向豁免      ← 商业化细胞系等情形主动压制误报
+4. 立 finding    ← 独立给出稿件证据，引用规范条款
+```
 
-### 6.1 临床试验注册核验
+### 3.1 适用性路由
 
-- 数据源：ClinicalTrials.gov / ChiCTR / WHO ICTRP（标识符核验由 M1 执行，本模块解读）
-- 检查项：
-  - 注册号是否真实存在
-  - **注册的主要终点是否与论文报告的主要终点一致** —— 终点事后更换是选择性报告的硬证据，
-    与 M4 的 `selective_reporting` 联动
-  - 注册时间 vs 首例入组时间（回顾性注册）
-  - 注册的样本量、干预方式与论文是否一致
+| 触发条件 | 适用规则域 |
+| --- | --- |
+| `family ∈ {human_interventional, human_observational}` | `human_clinical` + `data_privacy` |
+| `type = randomized_controlled_trial` 等干预性 | 追加 `clinical_trial_registration` |
+| `design_components[] 含 in_vivo_animal` | `animal`（**按实验级判定**，不是全文级） |
+| `population.subjects` 含原代人源材料 | `human_derived_cells_tissue` |
+| `population.subjects` 只含已建立商业细胞系 | **反向豁免**，见 §3.3 |
+| 含 hESC / 人胚胎 | `stem_cell_embryo` |
+| 中国人群样本 + 境外合作/样本出境 | `genetic_resources` |
+| 活体病原微生物 | `biosafety` |
 
-> 这是二期本模块最有价值的一条：判定客观、证据确凿、且是真实审稿人会查但很花时间的工作。
+**实验级判定**：一篇论文含 `in_vitro`(EXP-01) + `in_vivo_animal`(EXP-02) 时，
+动物伦理只对 EXP-02 适用；EXP-01 的 `ethics_statement` 应为 `not_applicable`
+（`01-structured-extraction.md §5.3.6`）。`evaluation_matrix.ethics_statement`
+会拆成两个条目，**不取「或」**。
 
-### 6.2 伦理批件核验
+### 3.2 状态门控（最重要的防误报）
 
-- 各国伦理批件通常无公开可查库，短期内**无法自动核验真实性**。
-- 二期可做的是**格式与一致性校验**：批件号格式是否符合该机构惯例、
-  机构名称与作者单位是否一致、审批日期是否早于实验开始日期。
+| 字段 status | M6 的动作 |
+| --- | --- |
+| `reported` | 检查内容是否满足规则要求 |
+| `not_reported`（已完整检索） | **可以**立 finding |
+| `not_applicable` | 合规，不立 finding |
+| `parse_failed` / `unresolved` / `ambiguous` | **绝不立 finding** —— 出人工复核项，说明「我们没看清」 |
 
-### 6.3 二期新增 category
+**补充材料不可得时的铁律**：许多论文把伦理批件号写在 Supplementary Methods。
+`system_limitation: supplement_inaccessible` 时，依赖它的伦理字段一律 `parse_failed`，
+**不得**判 `not_reported` —— 我们没看过，就不能说稿件没写
+（`00-contracts.md §6.4`）。这是本模块最容易冤枉作者的地方。
 
-| slug | 说明 | severity |
+### 3.3 反向豁免规则
+
+| 情形 | 被压制的规则 | 理由 |
 | --- | --- | --- |
-| `registration_not_found` | 注册号查无此记录 | critical |
-| `endpoint_changed_vs_registration` | 主要终点与注册不符 | critical |
-| `registration_detail_mismatch` | 样本量/干预与注册不符 | major |
-| `approval_date_after_experiment` | 伦理审批晚于实验开始 | critical |
+| 只用已建立的商业化细胞系（HeLa/HEK293/HepG2/Huh7 等，规范库列了 30 个） | `ETH-CELL-001`、`ETH-HUM-001`、`ETH-HUM-002` | 不可识别的既有细胞系不构成 human subjects research（45 CFR 46.102(e)） |
+| 纯计算 / 二次文献研究 | 全部 `human_clinical` 与 `animal` 规则 | 无受试者 |
+| 病例报告 | 注册、样本量类要求 | 见 `01-…md §5.3.5` |
+| 公开去标识数据集二次分析 | `ETH-HUM-002`（知情同意） | 应改查是否说明数据来源与使用许可 |
+
+---
+
+## 4. 规则清单（摘自规范库，完整定义见 `resources/ethics_rules.json`）
+
+### 4.1 人体研究
+
+| rule_id | 要求 | severity |
+| --- | --- | --- |
+| `ETH-HUM-001` | 伦理委员会批准 + 批件号 | critical |
+| `ETH-HUM-002` | 知情同意 | critical |
+| `ETH-HUM-003` | 豁免知情同意须说明依据 | major |
+| `ETH-HUM-004` | 赫尔辛基宣言遵循声明 | minor |
+| `ETH-HUM-005` | 干预性试验前瞻性注册 | major |
+| `ETH-HUM-006` | 弱势群体额外保护 | major |
+| `ETH-HUM-007` | 未成年人：监护人许可 + 本人赞同 | major |
+| `ETH-HUM-008` | 可识别健康数据的去标识化或合法性基础 | minor |
+
+### 4.2 动物实验
+
+| rule_id | 要求 | severity |
+| --- | --- | --- |
+| `ETH-ANI-001` | IACUC / 动物伦理委员会批准 + 方案号 | critical |
+| `ETH-ANI-002` | 3R 原则（替代/减少/优化） | major |
+| `ETH-ANI-003` | 物种、品系、性别、年龄或体重、来源 | major |
+| `ETH-ANI-004` | 麻醉、镇痛与人道终点 | major |
+| `ETH-ANI-005` | 安乐死方法 | major |
+| `ETH-ANI-006` | 中国实验动物许可证（SYXK/SCXK） | minor |
+
+### 4.3 细胞、干细胞与胚胎
+
+| rule_id | 要求 | severity |
+| --- | --- | --- |
+| `ETH-CELL-001` | 人源原代细胞/组织的供者同意 + 伦理批准 | critical |
+| `ETH-CELL-002` | **反向规则**：商业化细胞系豁免 | info |
+| `ETH-CELL-003` | hESC 研究的专门监督委员会 | critical |
+| `ETH-CELL-004` | 人胚胎体外培养期限（14 天规则）——**一律交人工** | critical |
+
+### 4.4 遗传资源与生物安全
+
+| rule_id | 要求 | severity |
+| --- | --- | --- |
+| `ETH-HGR-001` | 中国人类遗传资源审批/备案 | major |
+| `ETH-HGR-002` | 名古屋议定书 PIC/MAT ——**一律交人工** | minor |
+| `ETH-BIO-001` | 病原微生物实验的生物安全等级 | major |
+| `ETH-BIO-002` | 两用性研究关切（DURC）——**一律交人工** | critical |
+
+> **三条 `manual_only` 规则**（`ETH-CELL-004`、`ETH-HGR-002`、`ETH-BIO-002`）
+> 的共同点：适用性判断高度依赖领域与法域，自动判定误报风险过高。
+> 它们只产出人工复核项，**不自动定 severity**。
+
+---
+
+## 5. finding 的证据要求
+
+伦理类 finding 的证据形态与其他模块不同，须特别注意：
+
+| 情形 | 证据要求 |
+| --- | --- |
+| 稿件未见伦理声明 | **必须**有 `absence` 证据，`searched_locations` 至少覆盖 `declarations` / `ethics` / `methods` 三节，`search_terms` 含中英双语（`ethics`、`IRB`、`IACUC`、`approval`、`伦理`、`批件`、`审查`） |
+| 声明存在但缺批件号 | `present` 证据指向该声明原文，`detail` 说明缺的是哪个要素 |
+| 声明与设计矛盾（如称无动物实验但方法节有小鼠） | 两条 `present` 证据，分别指向声明与方法节 |
+| 补充材料不可得 | **不立 finding**；在人工复核建议中写明需索取哪份材料 |
+
+**`severity >= major` 必须有可执行的 `manual_review.action`**，
+写明「向作者索取什么」或「请伦理委员会核实什么」。
+`manual_review.who` 对 critical 类伦理问题通常为 `ethics_committee` 或 `editor`。
+
+---
+
+## 6. 正例 / 反例
+
+### 6.1 `ETH-ANI-001` 动物伦理批准
+
+**该报警**：方法节写「C57BL/6 小鼠腹腔注射…」，全文检索 declarations / ethics /
+methods 三节均未见 IACUC、伦理委员会、批件号 → **critical**，
+`action: 向作者索取动物实验伦理批件号与批准机构名称`。
+
+**不该报警**：同样实验，Supplementary Methods S1 不可得且正文写
+「All animal procedures are described in Supplementary Methods S1」
+→ `ethics_statement.status = parse_failed` + `SYS-xxx (supplement_inaccessible)`
+→ **不立 finding**，只在人工复核建议中写「需索取 S1 后复核」。
+
+### 6.2 `ETH-CELL-001` 人源材料同意
+
+**该报警**：方法节写「原代肝细胞取自接受肝切除术的患者」，
+未见供者知情同意与伦理批准 → **critical**。
+
+**不该报警**：方法节写「HepG2 与 Huh7 细胞购自 ATCC」
+→ 命中商业化细胞系反向豁免 → **不报**。
+这是本模块最常见的误报来源，规范库专门列了 30 个细胞系来压制它。
+
+### 6.3 `ETH-HUM-002` 知情同意
+
+**该报警**：前瞻性临床试验，未见任何知情同意表述 → **critical**。
+
+**不该报警**：回顾性病历分析，作者写「本研究经伦理委员会批准免除知情同意
+（回顾性去标识数据）」→ 属 `ETH-HUM-003` 的合规豁免路径 → **不报**
+（但应检查豁免依据是否写明）。
+
+### 6.4 `ETH-HUM-005` 试验注册
+
+**该报警**：随机对照试验，全文未见任何注册号 → **major**。
+
+**不该报警**：观察性队列研究未注册 → `ETH-HUM-005` 的
+`applies_when.design_family = human_interventional` 不成立 → **不适用，不报**。
+
+---
+
+## 7. TODO（一期）
+
+- [x] 建立可引用的三法域规范库（`resources/ethics_rules.json`）
+- [x] 实现离线筛查器与三条防误报机制
+- [x] 填充适用性路由表与状态门控规则
+- [x] 每条规则配正例/反例
+- [ ] **请 Peter 复核**：规范库的条款引用、severity 分级、以及中国法规部分的完备性
+- [ ] 补充「伦理声明与研究设计矛盾」的检测规则（如声明无人体研究但有患者数据）
+- [ ] 扩充 `exempt_cell_lines` 列表（当前 30 个，建议对照 ATCC/ECACC 目录扩到 100+）
+- [ ] 与 M3 划清边界：动物**必要性**（该不该做动物实验）归 M3，
+      动物**授权**（有没有批件）归 M6
+- [ ] 在 `datasets/` 的 `animal_invivo` 与 `rct_clinical` 两篇语料上实测误报率
+
+---
+
+## 8. 二期扩展（本期不实现，规则先写下）
+
+一期只核对「稿件有没有写」。二期核对「写的是不是真的」。
+
+| 能力 | 数据源 | 查出什么 |
+| --- | --- | --- |
+| 临床试验注册号核验 | ClinicalTrials.gov API v2 / ChiCTR / WHO ICTRP | 号码不存在、终点与注册不符、**注册晚于首例入组**（回顾性注册） |
+| 伦理批件号核验 | 暂无公开可查接口 | —— 一期二期都做不到，应明确告知用户 |
+| 机构 AAALAC 认证状态 | AAALAC 认证机构名录 | 动物设施是否具备认证 |
+| 中国人类遗传资源审批 | 科技部行政许可公示 | 是否履行审批/备案 |
+| 撤稿与伦理关切 | Retraction Watch / PubPeer | 该研究或其前序研究是否已被标注伦理问题 |
+
+**二期的假阳性风险**：注册记录与论文的终点表述常有合理措辞差异，
+语义不一致**只交人工**，不得自动判定为选择性报告。
+「首次提交晚于入组开始」标为 `candidate` 而非结论 —— 注册平台的时间戳含义
+在不同平台并不一致。
+
+**契约扩展方式**：新增 `external` 型证据（见 `07-conclusions-discussion.md §11.4`），
+finding 的 `evidence_refs[]` **必须同时**含至少一条稿件内 `present` 证据 ——
+论文内定位不可省略。

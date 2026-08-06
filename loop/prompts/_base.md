@@ -54,15 +54,14 @@ datasets/                          10 篇 PLOS 开放获取论文语料（勿改
 ```
 skills/biomed-paper-review/references/02-macro-logic.md
 skills/biomed-paper-review/references/03-experimental-methods.md
-skills/biomed-paper-review/references/04-statistics.md
 skills/biomed-paper-review/references/05-figures-and-charts.md
-skills/biomed-paper-review/references/06-ethics-compliance.md
 datasets/**
 .gitignore
 loop/**
 ```
 
-前五个是**队友本人负责的模块**，动了会造成合并冲突和信任问题。
+这三个是**队友本人负责的模块**（M2 卓妍、M3 Peter、M5 敏怡），
+动了会造成合并冲突和信任问题。
 你可以**指出**它们与主框架的衔接问题，写进提案文件，但**不要动文件本身**。
 
 ## 允许修改的路径
@@ -71,14 +70,26 @@ loop/**
 skills/biomed-paper-review/SKILL.md
 skills/biomed-paper-review/references/00-contracts.md
 skills/biomed-paper-review/references/01-structured-extraction.md
+skills/biomed-paper-review/references/04-statistics.md          ← M4，已交本方维护
+skills/biomed-paper-review/references/06-ethics-compliance.md   ← M6，已交本方维护
 skills/biomed-paper-review/references/07-conclusions-discussion.md
+skills/biomed-paper-review/resources/*.json                     ← 伦理规范库
 skills/biomed-paper-review/schemas/*.json
 skills/biomed-paper-review/templates/review_report.md
 docs/**
-tools/validate_schemas.py
+tools/*.py
 tools/fixtures/*.json
 README.md
 ```
+
+**已实现的一期工具能力**（改动它们时必须保持自检通过）：
+
+| 文件 | 能力 | 自检命令 |
+| --- | --- | --- |
+| `tools/validate_schemas.py` | 契约校验器 | `python3 tools/validate_schemas.py` |
+| `tools/normalize_biomed_units.py` | 单位归一化（fail-closed） | `python3 tools/normalize_biomed_units.py --selftest` |
+| `tools/statistical_forensics.py` | 统计取证（p 反算 / CI / 计数 / GRIM） | `python3 tools/statistical_forensics.py --selftest` |
+| `tools/ethics_compliance_check.py` | 伦理规范库筛查 | `python3 tools/ethics_compliance_check.py --selftest` |
 
 ## 语言与风格
 
@@ -89,13 +100,16 @@ README.md
 
 ## 必须保持通过的校验
 
-改完之后**必须**运行：
+改完之后**必须**运行**全部四个**自检并保持通过：
 
 ```bash
 python3 tools/validate_schemas.py
+python3 tools/normalize_biomed_units.py --selftest
+python3 tools/statistical_forensics.py --selftest
+python3 tools/ethics_compliance_check.py --selftest
 ```
 
-它必须输出「全部通过」。如果你的改动让它失败，要么修好，要么把改动撤回。
+它们必须都输出「全部通过」。如果你的改动让任何一个失败，要么修好，要么把改动撤回。
 **不要为了让校验通过而放宽校验器本身** —— 除非校验器规则确实写错了，
 那种情况下要在提案文件里单独说明理由。
 
@@ -162,10 +176,38 @@ python3 tools/validate_schemas.py
     终点与注册是否一致、注册是否晚于入组
   - **文献与撤稿**：Europe PMC / Crossref / Retraction Watch —— 引用了已撤稿文献
   - **数据可及性**：GEO / SRA / PRIDE / Zenodo —— 声称「数据已上传」的登录号是否真实存在
-  - **不依赖外部数据的统计取证**：GRIM / GRIMMER / SPRITE / statcheck /
-    p 值反算 / CI 自洽性 —— 这类**一期就能做**，判定确定、无召回率风险
-- **图像取证**：论文内重复区域检测、拼接痕迹、印迹条带异常
-- 你自己想到的、比上面更有价值的方向
+  - **不依赖外部数据的统计取证**：GRIMMER / SPRITE / statcheck —— 已实现的四项见上表，
+    这些是**尚未实现**的扩展
+
+**本轮特别要求：提案要更「专业」，要像领域专家而不是通用工程师。**
+下面是几个值得深入的硬核方向，选你最有把握的深入论证：
+
+- **图像取证（image forensics）**——生物医学论文最高发的学术不端形态：
+  - 论文**内部**重复区域检测：同一张图或跨图的相同区域（旋转/镜像/缩放后仍可检出）。
+    可用感知哈希 + 分块 ORB/SIFT 特征匹配，纯本地计算，**一期就能做**
+  - Western blot 条带异常：背景不连续、条带边缘锐利度突变、矩形拼接痕迹
+  - 显微图重复视野、流式散点图形状异常
+  - **注意**：图像取证的输出必须是「候选区域 + 相似度 + 人工复核」，
+    **绝不能自动下「造假」结论** —— 这是名誉风险最高的一类判断
+- **蛋白质与结构层面的佐证**：
+  - 论文声称某蛋白有某功能/某结构域/某互作 → 与 UniProt 功能注释、
+    InterPro/Pfam 结构域、STRING 互作证据比对
+  - 声称的突变位点是否落在已知功能域内；氨基酸编号是否与该 UniProt
+    序列长度相容（**编号越界是可确定性检出的错误**）
+  - AlphaFold DB / PDB：声称的结构特征（如某段为 α 螺旋）能否与已解析结构或
+    预测模型的 pLDDT 相容
+  - 抗体表位与声称识别的蛋白区段是否一致
+- **序列与标识符层面的确定性检查（一期可做）**：
+  - 论文中给出的引物序列能否在声称的靶基因上找到匹配（本地比对，不需联网
+    只要有参考序列）；引物长度、GC 含量、Tm 是否与所述扩增条件相容
+  - 基因符号与物种是否匹配（HGNC 是人类专用，写成小鼠基因即为错误）
+  - 氨基酸/核苷酸编号越界、密码子与氨基酸不对应
+- **剂量与药理合理性**：报告的剂量是否远超已知 LD50 或治疗窗；
+  IC50 与已知同类化合物是否差数个数量级
+- 你自己想到的、比上面更硬核的方向
+
+**判据**：一个好的提案，评委看完会觉得「这个团队真的懂生物医药审稿」。
+「建议接入大模型增强分析能力」这种谁都能说的话不要写。
 
 对每个提案，请明确：
 1. 它属于**一期能做**还是**二期**（一期 = 不调用外部数据库）；
