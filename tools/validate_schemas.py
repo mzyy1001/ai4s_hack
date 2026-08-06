@@ -804,10 +804,169 @@ def check_instance(rep, name, inst):
                   "; ".join(confidence_bad[:8]))
 
 
+
+# ---------------------------------------------------- 工具产出 signal 的契约符合性
+
+SCRIPTS_DIR = os.path.join(ROOT, "skills", "biomed-paper-review", "scripts")
+
+
+def _collect_tool_signals():
+    """实际调用各工具，收集它们吐出的 signal。返回 (signals, skipped)。"""
+    import sys as _sys
+    if SCRIPTS_DIR not in _sys.path:
+        _sys.path.insert(0, SCRIPTS_DIR)
+
+    sigs, skipped = [], []
+
+    # --- 统计取证：四种检查各造一个必然触发的输入 ---
+    try:
+        import statistical_forensics as sf
+        sigs += sf.check_all([
+            {"check": "test_statistic_p", "test_family": "t", "statistic": 2.228,
+             "df": 10, "tail": "two", "reported_p": "0.001"},
+            {"check": "ci_estimate", "estimate": 20.0, "ci_low": 9.8, "ci_high": 15.7},
+            {"check": "count_percentage", "count": 42, "n": 84,
+             "reported_percent": 60.0, "reported_percent_text": "60.0"},
+            {"check": "grim", "scale_is_integer": True, "n": 10, "mean_text": "3.14"},
+            {"check": "grim", "scale_is_integer": False},          # -> partial_extraction
+        ])
+    except Exception as exc:
+        skipped.append(f"statistical_forensics: {exc}")
+
+    # --- 伦理筛查 ---
+    try:
+        import ethics_compliance_check as ec
+        f = lambda st, v=None: {"applicability": "applicable", "requiredness": "required",
+                                "status": st, "value": v, "evidence_refs": ["EV-001"],
+                                "extraction_confidence": "high"}
+        sigs += ec.screen({
+            "article_design": {"primary_design": {"family": "experimental",
+                                                  "type": "in_vivo_animal"},
+                               "design_components": []},
+            "population": {"subjects": f("reported", "C57BL/6 小鼠")},
+            "declarations": {"ethics_statement": f("not_reported")},
+            "measurement": {"sample_size_justification": f("not_reported")},
+            "design": {"interventions": f("reported", "腹腔注射")},
+        })
+    except Exception as exc:
+        skipped.append(f"ethics_compliance_check: {exc}")
+
+    # --- 序列与标识符 ---
+    try:
+        import sequence_identifier_audit as sa
+        sigs += sa.audit([
+            {"check": "hgvs", "hgvs": "R273H"},
+            {"check": "hgvs", "hgvs": "p.Arg273His",
+             "sequence": "MEEPQSDPSV", "sequence_type": "protein"},
+            {"check": "gene_symbol", "symbol": "TP53", "species": "mouse"},
+            {"check": "accession", "accession": "NCT123", "database": "clinicaltrials"},
+            {"check": "primer", "sequence": "ATATATATATATATATAT"},
+        ])
+    except Exception as exc:
+        skipped.append(f"sequence_identifier_audit: {exc}")
+
+    # --- 图像完整性（依赖 numpy/PIL，缺失则跳过而非失败）---
+    try:
+        import figure_integrity_audit as fi
+        if not fi.DEPS_OK:
+            skipped.append(f"figure_integrity_audit: {fi.DEPS_ERR}")
+        else:
+            import numpy as _np
+            rng = _np.random.default_rng(7)
+            base = rng.integers(0, 255, size=(256, 256)).astype(float)
+            base[128:192, 128:192] = base[0:64, 0:64]      # 植入网格对齐的重复
+            sigs += fi.find_duplicate_regions({"synthetic.png": base})
+            spliced = rng.normal(120, 6, size=(128, 256))
+            spliced[:, 128:] += 60
+            sigs += fi.find_splice_discontinuity("blot.png", spliced)
+    except Exception as exc:
+        skipped.append(f"figure_integrity_audit: {exc}")
+
+    return sigs, skipped
+
+
+# type -> 该类型必须携带的判据块（schema 的条件约束）
+SIGNAL_EVIDENCE_BLOCK = {
+    "test_statistic_p_mismatch": "forensics",
+    "ci_estimate_mismatch": "forensics",
+    "count_percentage_mismatch": "forensics",
+    "grim_incompatible_mean": "forensics",
+    "sequence_identifier_inconsistent": "sequence_audit",
+    "figure_integrity_candidate": "image_audit",
+    "ethics_requirement_unmet": "ethics",
+}
+
+
+def check_tool_signals(rep, schemas):
+    """把五个工具真正吐出的 signal 拿去比对 extraction_signal.schema.json。
+
+    这一层补的是一个真实漏洞：工具自检只测工具自身逻辑，
+    fixture 校验只测手写实例，二者之间没有连接 ——
+    工具产出不合契约的 signal 时无人发现。
+    """
+    rep.section("工具产出 signal 的契约符合性")
+
+    sig_schema = schemas.get("extraction_signal.schema.json", {})
+    if not sig_schema:
+        rep.check(False, "extraction_signal.schema.json 可读")
+        return
+
+    type_enum = set(sig_schema.get("properties", {}).get("type", {}).get("enum", []))
+    produced_enum = set(sig_schema.get("properties", {}).get("produced_by", {}).get("enum", []))
+    required = set(sig_schema.get("required", []))
+
+    sigs, skipped = _collect_tool_signals()
+    for s in skipped:
+        print(f"  (跳过) {s}")
+
+    rep.check(len(sigs) > 0, "至少收集到一条工具产出的 signal",
+              f"skipped={skipped}")
+    if not sigs:
+        return
+
+    bad_type = sorted({x.get("type") for x in sigs} - type_enum)
+    rep.check(not bad_type, "工具产出的 type 全部在契约枚举内", f"越界: {bad_type}")
+
+    bad_req = [f"{x.get('id')}: 缺 {sorted(required - set(x))}"
+               for x in sigs if not required.issubset(set(x))]
+    rep.check(not bad_req, "工具产出的 signal 必填字段齐全", "; ".join(bad_req[:4]))
+
+    bad_prod = sorted({x.get("produced_by") for x in sigs} - produced_enum)
+    rep.check(not bad_prod, "工具产出的 produced_by 合法", f"越界: {bad_prod}")
+
+    bad_route = [x.get("id") for x in sigs
+                 if not set(x.get("routed_to") or []) <= REVIEW_MODULES]
+    rep.check(not bad_route, "工具产出的 routed_to 全在 M2–M7", "; ".join(bad_route[:4]))
+
+    has_sev = [x.get("id") for x in sigs if "severity" in x]
+    rep.check(not has_sev, "工具产出的 signal 一律无 severity", "; ".join(has_sev[:4]))
+
+    bad_block = []
+    for x in sigs:
+        need = SIGNAL_EVIDENCE_BLOCK.get(x.get("type"))
+        if need and need not in x:
+            bad_block.append(f"{x.get('id')}({x.get('type')}) 缺 {need}")
+    rep.check(not bad_block, "各类 signal 携带其判据块", "; ".join(bad_block[:4]))
+
+    # 图像审计的定性禁令：schema 层已强制，这里再验实际产出
+    img = [x for x in sigs if x.get("type") == "figure_integrity_candidate"]
+    if img:
+        bad_img = [x.get("id") for x in img
+                   if x["image_audit"].get("severity_hint") is not None
+                   or x["image_audit"].get("candidate") is not True
+                   or x["image_audit"].get("manual_review_required") is not True]
+        rep.check(not bad_img,
+                  "图像审计信号恒为候选、无 severity_hint、强制人工复核",
+                  "; ".join(bad_img[:4]))
+
+    print(f"  （共校验 {len(sigs)} 条工具产出的 signal）")
+
 def main():
     args = set(sys.argv[1:])
     rep = Report(quiet="--quiet" in args)
-    check_schemas(rep)
+    schemas = check_schemas(rep)
+    if "--no-tools" not in args:
+        check_tool_signals(rep, schemas)
 
     if "--schema" not in args:
         if os.path.isdir(FIXTURE_DIR):
