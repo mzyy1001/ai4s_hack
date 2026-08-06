@@ -167,6 +167,7 @@ README.md
 | `skills/biomed-paper-review/scripts/normalize_biomed_units.py` | 单位归一化（fail-closed） | `python3 skills/biomed-paper-review/scripts/normalize_biomed_units.py --selftest` |
 | `skills/biomed-paper-review/scripts/statistical_forensics.py` | 统计取证（p 反算 / CI / 计数 / GRIM） | `python3 skills/biomed-paper-review/scripts/statistical_forensics.py --selftest` |
 | `skills/biomed-paper-review/scripts/ethics_compliance_check.py` | 伦理规范库筛查 | `python3 skills/biomed-paper-review/scripts/ethics_compliance_check.py --selftest` |
+| `skills/biomed-paper-review/scripts/sequence_identifier_audit.py` | 序列与标识符审计（HGVS / 位点越界 / 登录号 / 基因符号 / 引物） | `python3 skills/biomed-paper-review/scripts/sequence_identifier_audit.py --selftest` |
 
 ## 语言与风格
 
@@ -177,13 +178,14 @@ README.md
 
 ## 必须保持通过的校验
 
-改完之后**必须**运行**全部四个**自检并保持通过：
+改完之后**必须**运行**全部五个**自检并保持通过：
 
 ```bash
 python3 tools/validate_schemas.py
 python3 skills/biomed-paper-review/scripts/normalize_biomed_units.py --selftest
 python3 skills/biomed-paper-review/scripts/statistical_forensics.py --selftest
 python3 skills/biomed-paper-review/scripts/ethics_compliance_check.py --selftest
+python3 skills/biomed-paper-review/scripts/sequence_identifier_audit.py --selftest
 ```
 
 它们必须都输出「全部通过」。如果你的改动让任何一个失败，要么修好，要么把改动撤回。

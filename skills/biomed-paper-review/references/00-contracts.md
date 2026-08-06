@@ -615,7 +615,7 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 }
 ```
 
-**`type` 枚举（十一值）**
+**`type` 枚举（十二值）**
 
 | type | 触发条件 | 路由到 | 下游判定什么 |
 | --- | --- | --- | --- |
@@ -630,6 +630,7 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 | `count_percentage_mismatch` | 计数与百分比不自洽（计数超分母，或百分比超出舍入区间） | M4、M2 | 是否构成数据报告错误 |
 | `grim_incompatible_mean` | 整数量表均值在给定 n 下不存在可行整数总和（GRIM） | M4 | 是否构成汇总统计不可能 |
 | `ethics_requirement_unmet` | 规范库某条伦理要求适用，但稿件未见对应报告 | M6 | 是否构成伦理合规问题 |
+| `sequence_identifier_inconsistent` | 变异命名/序列/登录号/基因符号存在语法违规、位置越界、参考残基不符或惯例偏离 | M2、M3 | 是否构成表述或方法学错误 |
 
 > 后四种由 `skills/biomed-paper-review/scripts/statistical_forensics.py` 在 Stage 2 产出，
 > **不需要原始数据**，
@@ -1023,7 +1024,7 @@ review_confidence = extraction_coverage × Q × C
 
 ```
 [ ] 全部 enum 取值合法（source_type 五值 / extraction_method 六值 / status 七值 /
-    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十一值 /
+    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十二值 /
     system_limitation category 八值 / key_data status 六值 / numeric type 五值）
 [ ] 全部 §x.y 内部引用可解析到本仓库真实存在的小节
 [ ] 全部 evidence_ref / evidence_refs[] 在 evidence_registry 中解析到恰好一个条目

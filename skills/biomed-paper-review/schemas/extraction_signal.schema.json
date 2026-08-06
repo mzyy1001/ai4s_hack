@@ -22,8 +22,9 @@
                "ci_estimate_mismatch",
                "count_percentage_mismatch",
                "grim_incompatible_mean",
-               "ethics_requirement_unmet"],
-      "description": "十一值。其中四种统计取证类由 skills/biomed-paper-review/scripts/statistical_forensics.py 产出、ethics_requirement_unmet 由 skills/biomed-paper-review/scripts/ethics_compliance_check.py 产出，均为一期离线能力。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
+               "ethics_requirement_unmet",
+               "sequence_identifier_inconsistent"],
+      "description": "十二值。其中四种统计取证类由 skills/biomed-paper-review/scripts/statistical_forensics.py 产出、ethics_requirement_unmet 由 skills/biomed-paper-review/scripts/ethics_compliance_check.py 产出，均为一期离线能力。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
     },
 
     "target": {
@@ -53,6 +54,26 @@
 
     "produced_by": {
       "enum": ["stage_2", "stage_3b"]
+    },
+
+    "sequence_audit": {
+      "type": "object",
+      "description": "仅 sequence_identifier_inconsistent 使用。记录判据与是否为候选。由 scripts/sequence_identifier_audit.py 产出。",
+      "required": ["check", "candidate", "rule_version"],
+      "additionalProperties": true,
+      "properties": {
+        "check": {
+          "enum": ["hgvs_syntax_invalid", "variant_position_out_of_range",
+                   "variant_reference_mismatch", "gene_symbol_species_mismatch",
+                   "accession_format_invalid", "primer_qc_out_of_range",
+                   "sequence_alphabet_invalid"]
+        },
+        "candidate": {
+          "type": "boolean",
+          "description": "true = 惯例类判据，只作候选交人工；false = 语法/范围类确定性违规"
+        },
+        "rule_version": {"type": "string"}
+      }
     },
 
     "forensics": {
@@ -134,6 +155,13 @@
       "description": "claim 链接类 signal 必须携带 claim 元数据",
       "if": {"properties": {"type": {"const": "claim_without_resolved_evidence_link"}}, "required": ["type"]},
       "then": {"properties": {"target": {"$ref": "#/$defs/claim_target"}}}
+    },
+    {
+      "description": "序列/标识符审计类 signal 必须带 sequence_audit 判据记录",
+      "if": {"properties": {"type": {"const": "sequence_identifier_inconsistent"}},
+             "required": ["type"]},
+      "then": {"required": ["sequence_audit"],
+               "properties": {"produced_by": {"const": "stage_2"}}}
     },
     {
       "description": "统计取证类 signal 必须带 forensics 复算记录，且只能由 Stage 2 产出",

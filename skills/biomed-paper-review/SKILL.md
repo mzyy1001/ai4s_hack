@@ -490,6 +490,7 @@ scope 内 observation 由 `execution_scope.observations[]` 唯一圈定；变量
 | `scripts/normalize_biomed_units.py` | 单位归一化（fail-closed，只做同量纲确定性换算） | Stage 3b 兼容性判定 |
 | `scripts/statistical_forensics.py` | 统计取证：p 反算 / CI 自洽 / 计数-百分比 / GRIM | Stage 2，产 signal 交 M4 |
 | `scripts/ethics_compliance_check.py` | 伦理规范库筛查 | Stage 2，产 signal 交 M6 |
+| `scripts/sequence_identifier_audit.py` | 序列与标识符确定性审计：HGVS 语法、变异位点越界、参考残基不符、登录号格式、基因符号物种惯例、引物 QC | Stage 2，产 signal 交 M2 / M3 |
 | `resources/ethics_rules.json` | 三法域伦理规范库（25 部规范 / 22 条要求） | M6 |
 | `schemas/*.json` | 全部输出的机器可校验模式 | 输出前自检 |
 | `templates/review_report.md` | 报告渲染模板 | Stage 5 |
