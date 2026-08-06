@@ -8,7 +8,7 @@
 不做常识校验。违背基础常识的结论（如「面粉可治疗癌症」）标记为
 `claim_beyond_evidence` 交人工复核即可。
 
-**这三件事二期都要做**，本模块是它们的归属方，规则见 §9。一期先把 claim 抽取和对齐做扎实 ——
+**这三件事二期都要做**，本模块是它们的归属方，规则见 §11。一期先把 claim 抽取和对齐做扎实 ——
 二期的三项能力全都建立在「已经准确抽出每一条 claim 及其支撑证据」之上，这一步做不好，
 接外部数据库也只是把错误的 claim 拿去比对。
 
@@ -44,16 +44,17 @@ Stage 4 的并行执行中，M7 的调度顺序排在 M2–M6 之后。
 | `claim_tier` | C0–C6，见 §3.2 | `statement` 的语义 |
 | `assertion_mode` | `assertive` / `hedged` | `statement` 的措辞，见 §4 |
 | `scope_qualified` | `true` / `false` | `scope` 字段是否写明物种/剂量/人群/时间窗限定 |
-| `location` | `abstract` / `discussion` / `conclusion` | 该 claim 的 `evidence_refs[0]` 的 locator |
+| `location` | `abstract` / `discussion` / `conclusion` | 在 `evidence_refs[]` 中选择 `quote` 覆盖该 claim 原文的证据，再读取其 locator；不得默认取数组首项 |
 
 四者缺一不可 —— 越界判定（§5.1）同时依赖这四个属性。
 
 ### 2.2 claim 抽取的边界
 
 M7 **不重新抽取** claim —— `claims[]` 由 M1 在 Stage 2 产出。
-若 `claims[]` 为空数组而稿件明显有结论段，说明 M1 抽取失败，
-M7 **不得**因此立 finding，应确认是否存在对应的 `system_limitation`；
-没有则产出**一条** `discussion_hollow` 以外的观察交人工 —— 具体见 §7 的边界说明。
+若 `claims[]` 为空数组而稿件明显有结论段，说明 M1 抽取失败。
+M7 **不得**因此立 finding，也不得自创“观察”记录；终止 M7、要求 Stage 2 重跑，
+并确认 Stage 2 是否已有 `parse_failed` 类 `system_limitation`。Stage 4 无权补写
+`system_limitation`，因此缺少该记录时应作为流水线输入契约错误返回给编排器。
 
 ---
 
@@ -101,17 +102,28 @@ M7 **不得**因此立 finding，应确认是否存在对应的 `system_limitati
 | --- | --- | --- | --- |
 | `E0` 计算 | `C1` 关联 | `C2` 机制 | 预测结果**不构成**机制证据，须有湿实验验证 |
 | `E1` 分子 | `C2` 机制 | `C3` 因果 | 无细胞体系的因果限于该生化反应本身 |
-| `E2` 细胞 | `C2` 机制 | `C4` 转化潜力 | **细胞实验不得直陈 C3 整体因果**；C4 必须限定「潜在」 |
+| `E2` 细胞 | `C3` 因果* | `C4` 转化潜力 | C3 仅限被操纵的细胞体系；C4 必须明确为待动物/人体验证的候选 |
 | `E3` 类器官 | `C3` 因果 | `C4` 转化潜力 | 因果限于该模型体系 |
 | `E4` 动物 | `C3` 因果 | `C4` 转化潜力 | **因果必须限定物种**；不得直陈 C5 临床疗效 |
-| `E5` 人体观察 | `C1` 关联 | `C3` 因果 | 因果需满足 §5.3 的三项附加条件，否则仍限 C1 |
-| `E6` 非随机干预 | `C3` 因果 | `C5` 临床疗效 | 无随机化，混杂无法排除 |
-| `E7` RCT | `C5` 临床疗效 | `C6` 临床推荐 | 疗效**必须限定试验人群、剂量、随访时长** |
-| `E8` 证据合成 | `C6` 临床推荐 | `C6` | 推荐强度受纳入研究质量制约（由 M4 的 `risk_of_bias` 结果调制） |
+| `E5` 人体观察 | `C1` 关联 | `C1` 关联** | 观察性因果推断走 §5.3 专门路径，不由“用了温和措辞”自动升级 |
+| `E6` 非随机对照干预 | `C3` 因果 | `C5` 临床疗效 | C5 仅限有并行对照、明确时间零点与混杂控制的目标人群 |
+| `E6` 单臂干预 | `C0` 描述 | `C4` 转化潜力 | 可直陈观察到的缓解率/变化，不得把自然病程或回归均值当疗效 |
+| `E7` RCT | `C5` 临床疗效 | `C5` 临床疗效 | 疗效必须限定试验人群、干预/对照、终点与随访时长；单个 RCT 不自动支持推荐 |
+| `E8` 证据合成 | `C5` 临床疗效 | `C6` 临床推荐*** | 普通 meta-analysis 不得直陈推荐；C6 还需证据确定性、获益-伤害与适用性评估 |
 
-> `diagnostic_accuracy` 脚注：允许直陈的最高主张是「在本研究的受试者谱下，
-> 指标试验相对该参照标准的敏感度/特异度为 X」（等价 `C1`）。
-> 主张「可用于临床筛查」等价 `C5`，需要 `E6` 及以上的前瞻性验证队列。
+\* `E2 → C3` 必须同时具备干预、匹配对照、直接终点，以及 rescue 或第二种正交干预；
+只有表达相关、单一药物处理或单一 siRNA 时仍限 `C1/C2`。
+
+\** 孟德尔随机化、自然实验、目标试验模拟等不套用单一三项清单；按 §5.3 核对
+该设计自己的识别假设，假设无法从稿件确认时交人工，不自动定 `critical`。
+
+\*** `E8 → C6` 只有在系统综述同时报告证据确定性、绝对获益与伤害、适用人群，
+且推荐措辞与这些结果一致时成立；否则最高为 `C5`。
+
+> `diagnostic_accuracy` 脚注：不得把诊断主张硬塞进“关联→疗效”轴。
+> 「在本研究受试者谱和参照标准下，敏感度/特异度为 X」按 `C0`；
+> 外部队列复现后主张可泛化的诊断性能按 `C4`；证明使用该检测改善患者结局按 `C5`；
+> 推荐用于筛查按 `C6`，还必须有目标筛查人群中的获益-伤害证据。
 
 ### 3.4 层级差与 severity
 
@@ -121,17 +133,25 @@ M7 **不得**因此立 finding，应确认是否存在对应的 `system_limitati
 
 Δ ≤ 0          → 不构成 finding
 Δ = 1          → major
-Δ ≥ 2          → critical
+Δ ≥ 2          → major；仅满足下述 critical 条件时升级
 ```
+
+**critical 条件**（满足任一）：
+
+1. `E0–E4` 证据被用于直陈 `C5/C6`，且该句是摘要或正文的主要结论；
+2. claim 的全部直接支撑经 §6 的同锚点核对后均被证明不能用于该推断，且 claim 仍被直陈为主要结论。
 
 **修正项**（先算 Δ，再依次应用）：
 
 | 条件 | 修正 |
 | --- | --- |
-| `scope_qualified = true`（明确写了物种/剂量/人群限定） | Δ 减 1 |
-| claim 出现在 **Abstract 的结论句**中 | Δ 加 1（摘要是传播面最大的位置） |
-| claim 出现在 Discussion 的「未来方向」段且 hedged | Δ 减 1 |
-| 支撑该 claim 的分析被 M4 判为 `critical` | 直接置 `unsupported_claim` (critical)，不再算 Δ |
+| `scope_qualified = false`，且 claim 确实删除了支撑证据中的细胞系/物种/人群/剂量/时间窗/终点限定 | Δ 加 1，最多加一次 |
+| claim 位于 Abstract 结论句 | 不改 Δ；`manual_review.priority` 提升一级，最高 `P0` |
+| claim 位于未来方向段且 `hedged` | 不改 Δ；`hedged` 已在上限中计入，禁止重复减分 |
+| 存在同锚点上游 finding | 不直接改 Δ；按 §6 逐条判断该 finding 是否使直接支撑失效 |
+
+`scope_qualified = true` 只表示没有额外的范围越界，**不得**把机制、因果、疗效或推荐层级
+自动降低一级。位置影响传播风险和人工复核优先级，不改变主张在科学上是否成立。
 
 ---
 
@@ -139,15 +159,15 @@ M7 **不得**因此立 finding，应确认是否存在对应的 `system_limitati
 
 ### 4.1 限定动词白名单（判为 `hedged`）
 
-命中**任一**即为 `hedged`：
+只有限定词在依存关系上修饰 **claim 的核心谓词** 时才判 `hedged`；字符串命中本身不够：
 
 ```
 英文：may / might / could / suggest(s) / indicate(s) that ... may /
       appear(s) to / seem(s) to / potential / potentially / possible /
-      is associated with / warrants further study / merits investigation /
+      warrants further study / merits investigation /
       these findings raise the possibility / preliminary evidence
 中文：可能 / 提示 / 或可 / 有望 / 潜在 / 似乎 / 值得进一步研究 /
-      初步提示 / 相关（用于描述关联而非因果时）
+      初步提示
 ```
 
 ### 4.2 直陈动词（判为 `assertive`）
@@ -162,15 +182,17 @@ M7 **不得**因此立 finding，应确认是否存在对应的 `system_limitati
 
 ### 4.3 三条判定规则
 
-1. **同句中限定词与直陈词并存时，以直陈词为准。**
-   「These results demonstrate that X may improve outcomes」判 `assertive`
-   —— `demonstrate` 已经把不确定性收走了。
+1. **按限定词的作用域判，不按词表优先级判。**
+   「These results demonstrate that X may improve outcomes」对“改善结局”判 `hedged`；
+   「These results demonstrate a 30% reduction」判 `assertive`。`did not demonstrate`、
+   `failed to establish` 中的否定必须与动词一起解析，不得命中 `demonstrate/establish` 后判直陈。
 2. **限定词修饰的必须是主张本身，不是次要成分。**
    「X significantly reduced tumor volume, which may involve apoptosis」——
    主张「X 降低瘤体积」是 `assertive`（`may` 只修饰机制猜测）。
    拆成两条 claim 分别判定。
-3. **`is associated with` 只有在描述 `C1` 时算限定。**
-   用它描述 `C3` 及以上（「X is associated with causing Y」）判 `assertive`。
+3. **`is associated with` 是 `C1` 的直陈，不是 hedging。**
+   「X is associated with Y」判 `C1 + assertive`；「X may be associated with Y」才判
+   `C1 + hedged`。若宾语本身含因果谓词（「associated with causing Y」），把因果子句另拆一条 claim。
 
 ---
 
@@ -180,8 +202,9 @@ M7 **不得**因此立 finding，应确认是否存在对应的 `system_limitati
 
 ### 5.1 `claim_beyond_evidence` · 外推超出实验条件
 
-- **触发**：§3.4 的 Δ > 0，且不属于 §5.3 / §5.4 的专门情形。
-- **severity**：按 §3.4（Δ=1 → major；Δ≥2 → critical）。
+- **触发**：§3.4 的 Δ > 0，或 claim 把支撑证据明确限定的细胞系/物种/人群/
+  剂量/时间窗/终点扩成更宽范围；且不属于 §5.3 / §5.4 的专门情形。
+- **severity**：按 §3.4；仅有范围扩张而层级未越界时为 `major`。
 - **证据要求**：至少两条 `present` ——
   ①该 claim 的原文（`evidence_refs` 取自 `claims[].evidence_refs`）；
   ②确立证据层级的方法学原文（如「HepG2 cells were treated…」）。
@@ -192,83 +215,111 @@ M7 **不得**因此立 finding，应确认是否存在对应的 `system_limitati
 
 | 越界模式 | 层级表达 |
 | --- | --- |
-| 细胞实验 → 直接主张临床疗效 | E2 → C5，Δ=3 → critical |
-| 单一物种/品系 → 主张普适生物学机制 | E4 → C2 但无 scope 限定 → 见 §5.5 |
+| 细胞实验 → 直接主张临床疗效 | E2 → C5，Δ=2 且命中 critical 条件 1 → critical |
+| 单一物种/品系 → 主张人类或普适机制 | 层级可未越界，但范围轴扩张 → major |
 | 单中心小样本 → 主张人群层面推荐 | E5/E6 → C6，Δ≥1 → major 起 |
-| 特定剂量/时间窗 → 主张任意条件下有效 | `scope_qualified = false` → 不得减 1 |
+| 特定剂量/时间窗 → 主张任意条件下有效 | `scope_qualified = false` 且范围确实扩大 → Δ 加 1 |
 | 相关性研究 → 主张因果 | 见 §5.3 `causal_overreach` |
 
 ### 5.2 `unsupported_claim` · 主张无数据支撑
 
 - **触发**（满足任一）：
-  1. `claims[].supported_by` 为空数组；
-  2. 存在指向该 `claim_id` 的 `claim_without_resolved_evidence_link` signal
-     （`supported_by` 解析不到任何 `key_data.id` 或证据）；
-  3. `supported_by` 指向的 `key_data` 组 `status ∈ {conflicting, ambiguous, parse_failed}`
-     —— 支撑数值本身没定下来，主张就谈不上被支持；
-  4. 支撑数值与主张**方向相反或量级不符**（如主张「亚微摩尔级」但数值为两位数微摩尔）。
-- **severity**：`critical`。
+  1. `claims[].supported_by` 为空数组，且按 `00-contracts.md §1.2` 完成目标章节与图表范围检索后
+     仍找不到任何直接支撑；
+  2. 存在指向该 `claim_id` 的 `claim_without_resolved_evidence_link` signal，且 M7 复核
+     `supported_by` 中每一项后确认全部无法解析；
+  3. `supported_by` 指向 `conflicting` 组，且**每个**候选 observation 都与 claim 的方向不相容；
+  4. 支撑数值与主张方向相反。
+- **不触发**：`ambiguous` / `parse_failed` 表示抽取或能力限制，不是“稿件无证据”；
+  M7 应跳过该 claim 的自动判定并要求人工读取原文。`conflicting` 组只要存在一个候选值
+  可支持 claim，也不得自动立本条。
+- **severity**：默认 `major`；claim 是摘要或正文主要结论，且全部直接支撑均不存在或方向相反时为 `critical`。
 - **证据要求**：claim 原文 + 检索支撑的 `absence` 证据（情形 1、2），
   或指向该 `key_data` 全部观测的 `present` 证据（情形 3、4）。
 - **注意**：情形 2 **不得**仅引用 signal id 结案 —— 必须自行确认
   `supported_by` 中每一项确实无法解析，并把检索过程写成 `absence` 证据。
 
+数值量级与措辞不符（如“亚微摩尔级”对应 15 μM）使用
+`claim_magnitude_mismatch` (`major`)，不得升级成 `unsupported_claim` (`critical`)。
+
 ### 5.3 `causal_overreach` · 相关性表述为因果
 
-- **触发**：`evidence_tier = E5`（人体观察性）且 `claim_tier ≥ C3`，
-  且**未同时满足**下列三项附加条件：
-  1. 明确的**时序**（暴露先于结局，`follow_up` 字段为 `reported` 且为纵向设计）；
-  2. **混杂控制**（`confounders` 字段为 `reported`，且 `statistical_methods` 含多因素校正）；
-  3. **剂量-反应关系**或工具变量/孟德尔随机化等因果推断设计。
-- **severity**：三项全不满足 → `critical`；满足 1–2 项 → `major`。
+- **触发**：`evidence_tier = E5`（人体观察性）且 `claim_tier ≥ C3`，并且下列
+  A/B 两条路径均不成立：
+  - **A · 常规纵向观察路径**：暴露先于结局；预先定义混杂因素并作适当控制；
+    报告至少一项针对未测量混杂/反向因果的敏感性分析；claim 明确限定目标人群、
+    暴露、对照、结局与时间窗。剂量-反应只作增强证据，不是必填替代项。
+  - **B · 专门因果设计路径**：稿件明确使用孟德尔随机化、自然实验、工具变量、
+    断点回归、差分中的差分或目标试验模拟，并逐项报告该设计的识别假设与敏感性分析。
+- **severity**：横断面或病例对照资料直陈因果且无专门因果设计 → `critical`；
+  纵向研究或专门因果设计缺关键识别假设、敏感性分析或范围限定 → `major`。
 - **证据要求**：claim 原文 + 设计描述原文 + 缺失项的 `absence` 证据。
-- **不触发的情形**：`cross_sectional` 研究若使用了明确的因果推断框架并自陈局限，
-  且 claim 为 `hedged`，则 Δ 计算已覆盖，不另立本条。
+- **不触发的情形**：claim 只陈述 `associated with` / `predicts`，不含干预反事实含义；
+  或 B 路径完整且 M4 未指出识别假设/分析失效。仅“自陈局限”或使用 `may` 不足以豁免。
 
 ### 5.4 `negative_result_misread` · 不显著误读为无差异
 
-- **触发**：claim 表述为「无差异 / 无影响 / 与对照相当 / X does not affect Y」，
-  且**未满足**下列任一：
-  1. 报告了效能分析或等效性/非劣效性边界（`sample_size_justification` 为 `reported`
-     且明确为等效性设计）；
-  2. 报告了效应量的置信区间且区间落在预设等效界内。
+- **触发**：主分析未达到优效性显著阈值，而 claim 把结果写成「无差异 / 无影响 /
+  无获益 / 相似 / 相当 / 不劣于 / 未显示优于 / does not affect / no benefit /
+  similar / comparable / not inferior / not superior」，且未满足下列任一：
+  1. 预先设定等效界，双侧置信区间完整落入等效界；
+  2. 预先设定非劣效界，采用与设计一致的分析集和置信区间，且区间未跨越该界；
+  3. claim 明确写成“未发现支持差异/获益的证据”，并同时报告效应估计与置信区间，
+     没有把证据不足改写为效果为零。
 - **severity**：`major`。
 - **证据要求**：claim 原文 + 该比较的统计结果原文 + 效能/等效界的 `absence` 证据。
 - **常见形态**：`p = 0.21` → 「两组无显著差异，说明 X 不影响 Y」。
   **不显著只说明没有证据支持有差异，不等于有证据支持无差异。**
 
+事后效能或“样本量依据”不能证明等效，禁止把它们当作不触发条件。
+
 ### 5.5 `significance_overstated` · 夸大统计显著性
 
 - **触发**（满足任一）：
-  1. `p` 位于 0.01–0.05 且被描述为「显著改善 / 强效 / 明显优于」而未报效应量；
-  2. 报告了 `p` 但主张的是**临床意义**（`C5` 及以上）而未讨论最小临床重要差值（MCID）；
-  3. 多重比较未校正（M4 已报出 `multiple_comparison_correction`）却仍称某个亚组结果「显著」。
+  1. 仅凭 `p` 值使用「强效 / 大幅改善 / substantial / large effect」等**效应量**措辞，
+     但未报告对应效应估计与置信区间；“统计学显著”本身不触发；
+  2. 对存在公认 MCID 的连续量表或患者报告结局，claim 直陈**临床重要改善**，
+     但未把效应估计/置信区间与预设 MCID 对照；死亡、住院等硬终点不得机械要求 MCID，
+     应核对绝对风险差、置信区间及获益-伤害；
+  3. M4 已报出同一分析的 `no_multiple_comparison_correction`，claim 却把探索性亚组/
+     次要终点写成确证性“显著”结果。
 - **severity**：`major`。
-- **证据要求**：claim 原文 + `p` 值与效应量所在位置的 `present` 证据
-  （或效应量的 `absence` 证据）。
+- **证据要求**：claim 原文 + `p` 值、效应估计与区间所在位置的 `present` 证据
+  （或效应估计/MCID 的合规 `absence` 证据）；情形 3 还须引用 M4 finding 的稿件锚点证据。
 
 ### 5.6 `limitations_evasive` · 回避核心局限
 
-- **触发**：M2–M6 中存在 `severity ≥ major` 的 finding，
+- **触发**：M2–M6 中存在下表列出的、与推断边界直接相关且 `severity ≥ major` 的 finding，
   而 `conclusion.limitations` 满足任一：
   1. `status = not_reported`；
-  2. `status = reported` 但其文本**未覆盖**任何一条 major finding 所指的问题域。
-- **覆盖判定**：把每条 major finding 的 `category` 映射到局限性关键词集
-  （如 `sample_size_reporting` → {样本量, sample size, underpowered, 样本较少}），
-  局限性文本命中该集合中任一词即视为已覆盖该条。
+  2. `status = reported`，但文本未按下表同时承认**问题域**与它对精度、归因或
+     假阳性风险的影响。
+
+| 上游 category | 问题域（至少命中一项） | 影响（至少命中一项） |
+| --- | --- | --- |
+| M4 `sample_size` | 样本量 / sample size / underpowered | 精度或 CI / 检出能力 / 不确定性 / 可推广性 |
+| M3 `missing_control` | 对照 / comparator / placebo / control | 无法归因 / 替代解释 / 因果受限 |
+| M4 `no_multiple_comparison_correction` | 多重比较 / 亚组 / exploratory / multiplicity | 假阳性 / 偶然发现 / 需独立验证 |
+
+只出现关键词不算覆盖：「样本量足够」含“样本量”但否认问题；「使用多个对照」含“对照”
+但未承认缺失。否定范围必须解析。作者若说明缓解措施，还必须陈述措施后的剩余限制。
+未在表中的 category（如统计检验错误、图文矛盾、伦理声明缺失）是应修正的错误或合规问题，
+不是靠 Limitations 披露即可解决的研究边界，**不得**触发本条。
 - **severity**：全部未覆盖 → `major`；部分覆盖 → `minor`。
-- **证据要求**：`limitations` 原文（或其 `absence` 证据）+ 被回避的那条 finding 的锚点证据。
+- **证据要求**：`limitations` 原文；若判未覆盖，还须给出以表中问题域词与影响词为
+  `search_terms[]` 的 `absence` 证据；另引用被回避 finding 的稿件锚点证据。
 - **注意**：这是 M7 唯一一条**以其他模块 finding 为触发条件**的规则，
   但证据仍须独立给出 —— 不得只写「M4 报了问题而作者没提」。
 
-### 5.7 `selective_citation` · 选择性引用文献
+### 5.7 `selective_result_interpretation` · 选择性解读自身结果
 
-- **一期能做的部分**：只判**论文自身内部**的选择性，不查外部文献。
-  - **触发**：Discussion 中出现「与既往研究一致」类表述，
-    但该论文自身的某个结果与该表述矛盾（如某亚组结果方向相反却未被讨论）。
+- **触发**：Discussion 用一个方向概括论文结果，但同一预设终点或同一总体中的
+  结果存在方向相反、明确不相容的 observation，且 Discussion 未披露该异质性。
+  探索性亚组与主要总体方向不同，只能提示人工，不自动触发。
 - **severity**：`major`。
 - **证据要求**：Discussion 原文 + 被回避的自身结果的 `present` 证据。
-- **一期不做**：判断作者是否漏引了外部反证文献 —— 那需要文献库，归 §11.1。
+- **一期不做**：判断作者是否漏引外部反证文献 —— 那需要文献库，归 §11.1；
+  因此不得使用 `selective_citation` 这个会暗示外部检索已完成的 slug。
 
 ### 5.8 `discussion_hollow` · 讨论仅复述结果
 
@@ -289,22 +340,23 @@ M7 消费 M2–M6 的 findings。**联动只影响 M7 自己 finding 的 severit
 
 | 上游 finding | 触发条件 | 对 M7 的影响 |
 | --- | --- | --- |
-| M4 `wrong_statistical_test` (critical) | claim 的 `supported_by` 指向该分析 | 该 claim 直接判 `unsupported_claim` (critical)，不再算 Δ |
-| M4 `sample_size_reporting` (critical) | 同上 | 同上 |
-| M4 `multiple_comparison_correction` | claim 引用了未校正的亚组结果 | 触发 §5.5 情形 3 |
-| M3 `missing_control` | claim 为 `C3` 及以上 | Δ 加 1（无对照则因果主张再降一级） |
-| M3 `unnecessary_animal_use` | —— | 不影响 M7（属伦理与设计，不影响结论成立性） |
-| M5 `figure_text_contradiction` | claim 引用该图 | 该 claim 判 `unsupported_claim` (critical)，detail 标注图文矛盾 |
-| M5 `chart_type_mismatch` | claim 引用该图 | 该 claim 的 finding `review_confidence` 降一级 |
+| M4 `wrong_test` (critical) | 同一分析是 claim 的全部直接支撑，且 M4 明确说明估计/检验不可解释 | `unsupported_claim`；主要结论可为 critical，否则 major |
+| M4 `sample_size` (major) | claim 引用该分析 | 不自动判 unsupported；只进入 §5.6 的局限披露核对 |
+| M4 `no_multiple_comparison_correction` | claim 引用了同一未校正的探索性亚组/次要终点 | 触发 §5.5 情形 3 |
+| M3 `missing_control` | 同一实验是 `C3+` claim 的全部直接支撑 | `claim_beyond_evidence`；默认 major，禁止机械给 Δ 加分 |
+| M3 `animal_use_unjustified` | —— | 不影响 M7（属伦理与设计，不直接改变数据方向） |
+| M5 `figure_text_contradiction` | claim 引用该图，且矛盾涉及 claim 所用方向/数值 | 无其他支撑时判 `unsupported_claim`；默认 major，主要结论且方向相反时 critical |
+| M5 `chart_type_mismatch` | claim 引用该图 | 不自动改变 M7；只有该问题使数值无法唯一读取时才把新 M7 finding 的 `review_confidence` 上限设为 medium |
 | M5 `figure_should_be_main_text` | claim 引用该 supplement 图 | 不改 severity，在 detail 中提示核心证据位置不当 |
-| M2 `internal_inconsistency` | claim 引用了冲突数值 | 触发 §5.2 情形 3 |
+| M2 `internal_inconsistency` | claim 引用了冲突数值 | 按 §5.2 情形 3 检查全部候选值；禁止见冲突即判 unsupported |
 | M6 任何 finding | —— | 不影响 M7（伦理合规不改变结论是否成立） |
-| **（二期）** M5 `duplicate_region_within_paper` / `splice_artifact_suspected` | claim 引用该图 | 相关 claim 标 `critical`，`manual_review.who = editor`，直送编辑 |
+| **（二期）** M5 `duplicate_region_within_paper` / `splice_artifact_suspected` | claim 引用该图 | 只生成编辑人工复核候选；取证未经人工确认前不得自动生成 M7 critical finding |
 
-**实现约束**：联动依据是上游 finding 的 `evidence_refs[]` 与 claim 的
-`supported_by` / `evidence_refs[]` 是否指向同一锚点（同一 `figure`+`panel`、
-`table`、或 `paragraph_id`）。锚点对不上就不联动 —— **不得**因为「M4 报了个问题」
-就把全文所有 claim 降级。
+**实现约束**：只有同时满足四项才联动：①上游 finding 与 claim 指向同一 `figure+panel`、
+`table` 或 `paragraph_id`；②该锚点是 `supported_by` 的直接支撑，不只是同段背景；
+③上游 finding 的 `review_confidence ∈ {high, medium}`；④检查 claim 的其他
+`supported_by` 后确认没有独立直接支撑。任一项不满足就不联动。M7 finding 必须重新引用
+稿件证据并写明推理，不得把上游 severity 复制过来。
 
 ---
 
@@ -331,15 +383,15 @@ M7 消费 M2–M6 的 findings。**联动只影响 M7 自己 finding 的 severit
 
 | slug | 说明 | severity | 规则 |
 | --- | --- | --- | --- |
-| `unsupported_claim` | 主张无数据支撑 | critical | §5.2 |
+| `unsupported_claim` | 主张无数据支撑 | major / critical | §5.2 |
 | `claim_beyond_evidence` | 外推超出实验条件 | major / critical（按 Δ） | §5.1 |
 | `causal_overreach` | 相关性表述为因果 | major / critical | §5.3 |
 | `negative_result_misread` | 不显著误读为无差异 | major | §5.4 |
 | `significance_overstated` | 夸大统计显著性 | major | §5.5 |
 | `limitations_evasive` | 回避核心局限 | major / minor | §5.6 |
-| `selective_citation` | 选择性引用（一期限论文内部） | major | §5.7 |
+| `selective_result_interpretation` | 选择性解读论文自身结果 | major | §5.7 |
 | `discussion_hollow` | 讨论仅复述结果 | minor | §5.8 |
-| `claim_magnitude_mismatch` | 主张的量级与自身数据不符 | major | §5.2 情形 4 |
+| `claim_magnitude_mismatch` | 主张的量级与自身数据不符 | major | §5.2 |
 
 **二期新增**（一期不得使用）：`claim_contradicted_by_literature`、
 `claim_unreplicated`、`violates_domain_common_sense`。
@@ -371,25 +423,49 @@ evaluation as a potential therapeutic candidate in HCC models」。
 **不该报警**：前瞻队列（E5）中早孕期 MHR 测定先于子痫前期发生（时序 ✓），
 多因素 logistic 校正 BMI/年龄/血压（混杂 ✓），且报告了限制性立方样条剂量反应（✓），
 结论写「Higher early-pregnancy MHR was independently associated with increased
-risk of preeclampsia」→ 仍是 C1 表述，三项条件齐备 → **不报**。
+risk of preeclampsia」→ 是 `C1 + assertive`，没有因果反事实含义 → **不报**。
 
 ### 9.3 `negative_result_misread`
 
 **该报警**：`p = 0.31`，n=8/组，无效能分析，结论写
 「X 对肿瘤生长无影响」→ **major**。
 
-**不该报警**：预设非劣效界 Δ=10%，实测差值 95% CI 为 (−3.2%, 4.1%)，全部落在界内，
-结论写「X 在预设非劣效界内不劣于 Y」→ **不报**。
+**不该报警**：预设等效界 (−10%, 10%)，实测差值 95% CI 为 (−3.2%, 4.1%)，
+按预设分析集完成等效性检验，结论写「X 在预设等效界内与 Y 等效」→ **不报**。
 
-### 9.4 `limitations_evasive`
+### 9.4 `significance_overstated`
 
-**该报警**：M4 报出 `sample_size_reporting` (major)，`limitations` 只写
+**该报警**：`p=0.04`，只报告 p 值，摘要写「X produced a large clinically meaningful
+improvement」→ 未给效应量/CI，且把显著性当效应大小 → **major**。
+
+**不该报警**：摘要写「X reduced mean score by 6.2 points (95% CI 3.1–9.3), exceeding
+the prespecified 5-point MCID」→ 效应大小、精度与 MCID 均可核对 → **不报**。
+
+### 9.5 `unsupported_claim`
+
+**该报警**：主要结论宣称 X 降低死亡率，但 `supported_by=[]`；全文以
+{mortality, death, survival, X} 检索正文、表格与图注均无结果 → 有合规 absence 证据，**critical**。
+
+**不该报警**：唯一 key_data 组为 `parse_failed`，对应低分辨率 supplement；这是系统能力限制，
+不是稿件无支撑 → 跳过自动判断并交人工，**不报 M7 finding**。
+
+### 9.6 `limitations_evasive`
+
+**该报警**：M4 报出 `sample_size` (major)，`limitations` 只写
 「本研究为单中心研究」，未提样本量或效能 → **major**。
 
 **不该报警**：同样情形，`limitations` 写「样本量偏小，效能不足以检出小效应，
 结果需在更大队列中验证」→ 命中关键词集 → **不报**。
 
-### 9.5 `discussion_hollow`
+### 9.7 `selective_result_interpretation`
+
+**该报警**：预设主要终点在两个时间点方向相反，Discussion 只概括有利时间点并写
+「all analyses consistently favored X」→ 自身结果并不一致 → **major**。
+
+**不该报警**：一个事后探索亚组方向相反，Discussion 将其标为 exploratory 并要求独立验证
+→ 已披露异质性，且未把总体结果写成“所有亚组一致” → **不报**。
+
+### 9.8 `discussion_hollow`
 
 **该报警**：Discussion 三段全部为 Results 数值的复述，无文献比较、无机制、无局限。
 
@@ -405,9 +481,8 @@ risk of preeclampsia」→ 仍是 C1 表述，三项条件齐备 → **不报**�
 - [x] 明确「温和措辞」白名单（§4）
 - [ ] 在 `datasets/` 的 10 篇语料上逐篇标注 claim_tier 与 evidence_tier，
       校准 §3.3 对照表与 §3.4 的 Δ 阈值是否过严
-- [ ] 补齐 §5.6 的 category → 局限性关键词映射表（现只给了 `sample_size_reporting` 一例）
-- [ ] 与 M4 确认 §6 中 `wrong_statistical_test` 与 `sample_size_reporting`
-      的准确 slug 名（M4 reference 填完后核对）
+- [x] §5.6 只纳入可由 Limitations 合理披露的三类问题，并定义“问题域 + 影响”双条件
+- [x] §6 已按 M3/M4/M5 当前 reference 核对 category slug；未登记 slug 不得用于联动
 - [ ] 为 §4.1/§4.2 的中英措辞表补充实际语料中出现过的变体
 
 ---
