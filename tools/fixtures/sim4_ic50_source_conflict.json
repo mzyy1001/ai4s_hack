@@ -363,12 +363,12 @@
     {
       "id": "M7-002",
       "module": "M7",
-      "category": "overextrapolation",
+      "category": "claim_magnitude_mismatch",
       "severity": "major",
       "title": "结论称『亚微摩尔级效力』，与本文任一 IC50 读数矛盾",
       "detail": "Discussion 称化合物 A 具 sub-micromolar potency 并据此主张临床开发价值，但本文报告的两个 IC50（12.4 μM 与 15.1 μM）均在两位数微摩尔量级，比亚微摩尔高约一个数量级以上。该主张不被本文数据支持。",
       "evidence_refs": ["EV-005", "EV-001", "EV-002"],
-      "rule_ref": "07-conclusions-discussion#claim-magnitude-mismatch",
+      "rule_ref": "07-conclusions-discussion#5-2-unsupported-claim",
       "review_confidence": "high",
       "derived_from_signals": [],
       "related_findings": [],
@@ -400,7 +400,7 @@
       "cluster_id": "CL-001",
       "representative_finding": "M7-002",
       "member_findings": ["M7-002"],
-      "categories": ["overextrapolation"],
+      "categories": ["claim_magnitude_mismatch"],
       "max_severity": "major",
       "anchor": {"paragraph_id": "discussion-p03"},
       "evidence_refs": ["EV-005", "EV-001", "EV-002"]
