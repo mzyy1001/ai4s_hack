@@ -70,6 +70,22 @@
         "quote": {
           "type": "string",
           "description": "论文原文片段，用于人工核对"
+        },
+        "external_source": {
+          "type": "object",
+          "description": "二期预留：外部证据来源。一期不填。引入外部证据后，locator 仍必填 —— 论文内定位不可省略。",
+          "required": ["type", "id", "relation"],
+          "properties": {
+            "type": {
+              "enum": ["pubmed", "crossref", "clinicaltrials", "chictr", "cellosaurus",
+                       "rrid", "retraction_watch", "image_fingerprint", "other"]
+            },
+            "id": {"type": "string", "description": "如 PMID:12345678 / NCT01234567"},
+            "relation": {
+              "enum": ["contradicts", "supports", "not_found", "mismatch", "retracted", "duplicate"]
+            },
+            "note": {"type": "string"}
+          }
         }
       }
     }

@@ -145,9 +145,28 @@ structured_result
 
 ---
 
-## 5. TODO（本模块）
+## 5. TODO（一期）
 
 - [ ] 补齐 `study_type` 判定的边界样例（如 ex vivo、类器官算哪一类）
 - [ ] 补齐单位归一化表（μM/µM/uM、mg/kg vs mg·kg⁻¹）
 - [ ] 与 M5 对齐 `key_data.source = figure_*` 时的字段交接口
 - [ ] 在 `datasets/` 的 10 篇语料上跑一遍，统计必填字段实际缺失率
+
+---
+
+## 6. 二期扩展：标识符核验（本期不实现，规则先写下）
+
+一期只抽取，不核验"抽出来的标识符是否真实存在"。二期接入 MCP 后逐项核验：
+
+| 标识符 | 核验数据源 | 查出什么 |
+| --- | --- | --- |
+| 临床试验注册号 | ClinicalTrials.gov / ChiCTR | 号码不存在、与论文描述的终点不符、注册晚于入组（→ M6） |
+| 细胞系名称 | Cellosaurus / ICLAC | 已知误认或交叉污染细胞系 |
+| 抗体 / 试剂 | RRID (Antibody Registry) | 货号不存在、抗体已被证实无特异性 |
+| 基因 / 蛋白符号 | HGNC / UniProt | 符号已废弃或写错、物种不匹配 |
+| 参考文献 | Crossref / PubMed | 引用的文献不存在、已被撤稿（→ M2/M3） |
+
+**注意**：本模块二期只负责**核验标识符本身的真实性**，核验结果的解读归对应模块 ——
+注册号问题归 M6，撤稿引用归 M2，抗体特异性归 M3。不要在 M1 里下审核结论。
+
+新增 category：`identifier_not_found`(major) / `identifier_mismatch`(major)
