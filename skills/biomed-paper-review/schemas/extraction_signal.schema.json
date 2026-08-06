@@ -23,8 +23,9 @@
                "count_percentage_mismatch",
                "grim_incompatible_mean",
                "ethics_requirement_unmet",
-               "sequence_identifier_inconsistent"],
-      "description": "十二值。其中四种统计取证类由 skills/biomed-paper-review/scripts/statistical_forensics.py 产出、ethics_requirement_unmet 由 skills/biomed-paper-review/scripts/ethics_compliance_check.py 产出，均为一期离线能力。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
+               "sequence_identifier_inconsistent",
+               "figure_integrity_candidate"],
+      "description": "十三值。其中四种统计取证类由 skills/biomed-paper-review/scripts/statistical_forensics.py 产出、ethics_requirement_unmet 由 skills/biomed-paper-review/scripts/ethics_compliance_check.py 产出，均为一期离线能力。旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
     },
 
     "target": {
@@ -53,7 +54,25 @@
     },
 
     "produced_by": {
-      "enum": ["stage_2", "stage_3b"]
+      "enum": ["stage_2", "stage_3", "stage_3b"],
+      "description": "stage_3 仅用于图像完整性审计"
+    },
+
+    "image_audit": {
+      "type": "object",
+      "description": "仅 figure_integrity_candidate 使用。由 scripts/figure_integrity_audit.py 产出。severity_hint 恒为 null —— 契约禁止把图像重复自动定性为学术不端。",
+      "required": ["check", "candidate", "severity_hint", "manual_review_required", "rule_version"],
+      "additionalProperties": true,
+      "properties": {
+        "check": {
+          "enum": ["duplicated_region_candidate", "splice_discontinuity_candidate",
+                   "uniform_patch_candidate"]
+        },
+        "candidate": {"const": true, "description": "恒为 true：图像审计只出候选"},
+        "severity_hint": {"type": "null", "description": "恒为 null：禁止自动定性"},
+        "manual_review_required": {"const": true},
+        "rule_version": {"type": "string"}
+      }
     },
 
     "sequence_audit": {
@@ -156,6 +175,14 @@
       "description": "claim 链接类 signal 必须携带 claim 元数据",
       "if": {"properties": {"type": {"const": "claim_without_resolved_evidence_link"}}, "required": ["type"]},
       "then": {"properties": {"target": {"$ref": "#/$defs/claim_target"}}}
+    },
+    {
+      "description": "图像完整性 signal 必须带 image_audit，且只能由 Stage 3 产出",
+      "if": {"properties": {"type": {"const": "figure_integrity_candidate"}},
+             "required": ["type"]},
+      "then": {"required": ["image_audit"],
+               "properties": {"produced_by": {"const": "stage_3"},
+                              "routed_to": {"const": ["M5"]}}}
     },
     {
       "description": "序列/标识符审计类 signal 必须带 sequence_audit 判据记录",

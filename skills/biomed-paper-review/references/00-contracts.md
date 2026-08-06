@@ -629,7 +629,7 @@ finding id 升序排列。
 }
 ```
 
-**`type` 枚举（十二值）**
+**`type` 枚举（十三值）**
 
 | type | 触发条件 | 路由到 | 下游判定什么 |
 | --- | --- | --- | --- |
@@ -660,11 +660,20 @@ finding id 升序排列。
 **规则**
 
 1. signal **没有 `severity`**，**不直接**影响 `manuscript_risk_score`。
-2. `produced_by` 取 `stage_2` / `stage_3b`。
+2. `produced_by` 取 `stage_2` / `stage_3` / `stage_3b`。
+   `stage_3` **仅**用于图像完整性审计 —— 它是像素级机器观察，
+   自然产生于图像解析阶段；Figure Parser 仍**不产出 finding**。
 3. `claim_without_resolved_evidence_link` 的 `target` 必须携带目标元数据：
    `{"claim_id": "CLM-03", "unresolved_refs": ["Fig 5D"]}`，
    **不另设** `unresolved_evidence_links[]` 数组（§10）。
 4. 旧 `parse_failure` type **已废除** —— 解析失败是 `system_limitation`，不是 signal（§10）。
+
+> **图像完整性审计的定性禁令。** `figure_integrity_candidate` 的
+> `image_audit.severity_hint` **恒为 `null`**，`candidate` 恒为 `true`，
+> `manual_review_required` 恒为 `true`。图像重复有大量正当解释（同一对照组复用、
+> 模板化示意图、放大插图），把它自动化为学术不端指控是本项目名誉风险最高的动作。
+> M5 据此立 finding 时，**必须**先人工核对原图；且沉默不代表图像无问题
+> —— 该方法只覆盖网格对齐的重复，不覆盖旋转与缩放。
 
 ### 6.3 system_limitation · 系统能力限制
 
@@ -967,13 +976,14 @@ review_confidence = extraction_coverage × Q × C
 | `stage3_system_limitations[]` | Stage 3 (Figure Parser) |
 | `stage3b_system_limitations[]` | Stage 3b |
 | `m1_extraction_signals[]` | Stage 2 (M1) |
+| `stage3_extraction_signals[]` | Stage 3（图像完整性审计） |
 | `merge_extraction_signals[]` | Stage 3b |
 | `m2_findings[]` … `m7_findings[]` | 对应审核模块 |
 
 | 聚合产物 | **唯一聚合器** | 组成 |
 | --- | --- | --- |
 | `all_system_limitations[]` | **Stage 5**（非 `full_review` 模式为输出装配步骤） | 四个 stage-local 数组按 id 升序拼接 |
-| `all_extraction_signals[]` | 同上 | `m1_` + `merge_` 两个数组拼接 |
+| `all_extraction_signals[]` | 同上 | `m1_` + `stage3_` + `merge_` 三个数组拼接 |
 | `all_findings[]` | **Stage 5** | `m2_`…`m7_` 六个数组拼接 |
 | `issue_clusters[]` | **Stage 5** | 对 `all_findings[]` 执行 §9.3 |
 
@@ -1043,7 +1053,7 @@ review_confidence = extraction_coverage × Q × C
 
 ```
 [ ] 全部 enum 取值合法（source_type 五值 / extraction_method 六值 / status 七值 /
-    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十二值 /
+    applicability 三值 / requiredness 三值 / severity 四值 / signal type 十三值 /
     system_limitation category 八值 / key_data status 六值 / numeric type 五值）
 [ ] 全部 §x.y 内部引用可解析到本仓库真实存在的小节
 [ ] 全部 evidence_ref / evidence_refs[] 在 evidence_registry 中解析到恰好一个条目

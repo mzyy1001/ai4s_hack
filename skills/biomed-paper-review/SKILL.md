@@ -495,6 +495,7 @@ critical 及直接阻断核心解释的 major）；P1=给出修改要求前核�
 | `scripts/statistical_forensics.py` | 统计取证：p 反算 / CI 自洽 / 计数-百分比 / GRIM | Stage 2，产 signal 交 M4 |
 | `scripts/ethics_compliance_check.py` | 伦理规范库筛查 | Stage 2，产 signal 交 M6 |
 | `scripts/sequence_identifier_audit.py` | 序列与标识符确定性审计：HGVS 语法、变异位点越界、参考残基不符、登录号格式、基因符号物种惯例、引物 QC | Stage 2，产 signal 交 M2 / M3 |
+| `scripts/figure_integrity_audit.py` | 论文内图像完整性：候选重复区域、拼接不连续、异常均匀区块。**只出候选，禁止自动定性** | Stage 3，产 signal 交 M5 |
 | `resources/ethics_rules.json` | 三法域伦理规范库（25 部规范 / 22 条要求） | M6 |
 | `schemas/*.json` | 全部输出的机器可校验模式 | 输出前自检 |
 | `templates/review_report.md` | 报告渲染模板 | Stage 5 |

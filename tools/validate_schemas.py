@@ -57,7 +57,9 @@ SIGNAL_TYPE = {"source_value_conflict", "claim_without_resolved_evidence_link",
                # 一期伦理规范库筛查（tools/ethics_compliance_check.py）
                "ethics_requirement_unmet",
                # 一期序列与标识符确定性审计
-               "sequence_identifier_inconsistent"}
+               "sequence_identifier_inconsistent",
+               # 一期论文内图像完整性审计
+               "figure_integrity_candidate"}
 SYSLIM_CATEGORY = {"parse_failed", "figure_unreadable", "table_unparseable",
                    "supplement_inaccessible", "section_missing_from_input",
                    "ocr_low_quality", "encoding_error", "input_truncated"}
@@ -169,7 +171,7 @@ def check_schemas(rep):
     rep.check("severity" in json.dumps(sig.get("not", {})),
               "extraction_signal 禁止 severity")
     sig_enum = set(sig.get("properties", {}).get("type", {}).get("enum", []))
-    rep.check(sig_enum == SIGNAL_TYPE, "signal type 十二值且无 parse_failure",
+    rep.check(sig_enum == SIGNAL_TYPE, "signal type 十三值且无 parse_failure",
               f"schema={sorted(sig_enum)}")
 
     try:

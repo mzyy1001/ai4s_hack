@@ -128,6 +128,7 @@ CHECKS=(
   "python3 skills/biomed-paper-review/scripts/statistical_forensics.py --selftest"
   "python3 skills/biomed-paper-review/scripts/ethics_compliance_check.py --selftest"
   "python3 skills/biomed-paper-review/scripts/sequence_identifier_audit.py --selftest"
+  "python3 skills/biomed-paper-review/scripts/figure_integrity_audit.py --selftest"
 )
 FAILED_CHECK=""
 for chk in "${CHECKS[@]}"; do
