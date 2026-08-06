@@ -5,6 +5,10 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 
 # 生物医药论文审稿辅助 Skill
 
+**执行入口（顺序不可调换）**：先判定 §1 的执行模式，随即执行 §2.0 Stage 0；
+Stage 0 完成前不得读取 `references/` 或套用 `schemas/`。候选清单建立后，再按需读取
+命中的单层 reference、执行确定性脚本并进入 Stage 1–5。
+
 ## 0. 定位与边界
 
 **做什么**：自动化并辅助审稿的**基础性工作** —— 结构化证据抽取、图表解读、
@@ -168,23 +172,19 @@ Stage 1
 
 ### 2.0 Stage 0 · 专家通读（**先做这一步，再碰契约**）
 
-**这是本 Skill 最容易被做反的地方，也是 uplift 的关键。**
-
 在读任何 reference、套任何 schema 之前，**先以资深审稿人的身份把论文通读一遍**，
-把你会在审稿意见里提的问题**全部列出来**（自由文本即可，不要求格式）。
-
-**为什么必须先做**：实测表明，先读契约再读论文会让结构化取代发现 ——
-同一模型在挂载本 Skill 后反而比裸模型少报了三分之一的实质问题，
-漏掉的都是需要跨表核对、需要联系临床常识才能看出来的那类。
-契约是用来**组织和取证**你的发现的，**不是用来限定你能发现什么的**。
+把你会在审稿意见里提的问题**全部列入内部候选账本**（自由文本即可，不要求格式）。
+实测表明，先读契约再读论文会让结构化取代发现；契约只用于组织和取证，
+不得限定发现范围。
 
 **Stage 0 的输出是一份「候选问题清单」**，后续阶段只做三件事：
 ① 为每条候选找到可审计证据；② 归入对应模块并定 severity；
 ③ 剔除找不到证据的条目。
 
-**硬性规则：Stage 0 列出的问题，若在后续阶段被丢弃，必须在
-`system_limitations[]` 或人工复核建议中说明原因。**
-不得因为「不好套进 schema」而静默丢弃 —— 那正是 uplift 变负的机制。
+**硬性规则：每条候选必须在内部账本归档为 `promoted_to_finding`、
+`rejected_with_reason` 或 `blocked_by_system`。** 只有真实能力限制才进入
+`system_limitations[]`；证据否定、重复或不构成稿件问题的候选只在内部账本记录理由，
+不得进入三类记录或最终报告。不得因为「不好套进 schema」而静默丢弃。
 
 通读时至少覆盖这些裸模型也该看出来的问题类型：
 表格分母与计数是否自洽、同一结局在不同位置的数值/P 值是否一致、
@@ -537,21 +537,27 @@ critical 及直接阻断核心解释的 major）；P1=给出修改要求前核�
 实测发现模型倾向于把它们当源码阅读而从不执行 —— 那样它们贡献为零。
 
 先由运行时解析本 `SKILL.md` 的父目录并保存为 `BIOMED_REVIEW_SKILL_DIR`；**不得**假定仓库根目录、
-不得写死安装路径，也不得靠切换工作目录改变输入文件的相对路径语义。五个脚本均支持稳定 CLI；
+不得写死安装路径，也不得靠切换工作目录改变输入文件的相对路径语义。在仓库检出目录内人工复跑时，
+下列 preflight 会从 Git 根目录解析 Skill；安装后的运行时则必须预先注入实际 Skill 目录。五个脚本均支持稳定 CLI；
 业务模式的 stdout 只写 JSON（`--selftest` / `--help` 除外），输入错误在 stderr 写
 `error.code=invalid_input` 并以退出码 2 结束，不输出 traceback。
 以下命令可从任意工作目录执行：
 
 ```bash
-# 执行器须把已加载 SKILL.md 的父目录赋给该变量
-test -f "${BIOMED_REVIEW_SKILL_DIR}/SKILL.md"
+# 已安装运行时须预先提供 BIOMED_REVIEW_SKILL_DIR；仓库内可直接复制执行
+if [ -z "${BIOMED_REVIEW_SKILL_DIR:-}" ]; then
+  BIOMED_REVIEW_REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 2
+  BIOMED_REVIEW_SKILL_DIR="${BIOMED_REVIEW_REPO_ROOT}/skills/biomed-paper-review"
+fi
+export BIOMED_REVIEW_SKILL_DIR
+test -f "${BIOMED_REVIEW_SKILL_DIR}/SKILL.md" || exit 2
 
 # 单位归一化：verdict=comparable，factor_a_to_b=1.0
 python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/normalize_biomed_units.py" \
   --compare 'mg/mL' 'g/L'
 
-# 统计取证：30 超过 n=28，stdout 的 signals[] 产生 count_percentage_mismatch
-printf '%s' '[{"check":"count_percentage","count":30,"n":28,"reported_percent":107.1,"reported_percent_text":"107.1"}]' |
+# 统计取证：12+18≠28，stdout 的 signals[] 产生 table_total_mismatch
+printf '%s' '[{"check":"table_total","counts":[12,18],"declared_total":28,"categories_exhaustive":true,"target":"Table 1"}]' |
   python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/statistical_forensics.py" --input -
 
 # 伦理筛查：structured_result_v2.json 为 Stage 3b 产物；规则库按脚本位置自动定位

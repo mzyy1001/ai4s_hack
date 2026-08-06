@@ -63,19 +63,20 @@ def run_opencode(cwd, prompt, model, timeout):
         return "[opencode 不可用]"
 
 
-# 粗指标：编号条目、出处引用、是否执行了脚本
+# 粗指标：编号条目、出处引用、是否在输出文本中提及脚本。
+# 文本提及不构成执行证明；可靠执行证据必须来自后续 execution trace。
 RE_NUMBERED = re.compile(r"^\s*(?:\d+[.、)]|[-*]\s+\*\*)", re.M)
 RE_LOCATOR = re.compile(r"paper\.xml:\d+|`sec\d+`|Table\s*\d|图\s*\d")
-RE_RAN_SCRIPT = re.compile(r"python3 -c|--selftest|statistical_forensics|"
-                           r"ethics_compliance_check|sequence_identifier_audit|"
-                           r"normalize_biomed_units|figure_integrity_audit")
+RE_SCRIPT_MENTION = re.compile(r"python3 -c|--selftest|statistical_forensics|"
+                               r"ethics_compliance_check|sequence_identifier_audit|"
+                               r"normalize_biomed_units|figure_integrity_audit")
 
 
 def metrics(text):
     return {
         "编号条目数": len(RE_NUMBERED.findall(text)),
         "出处引用数": len(RE_LOCATOR.findall(text)),
-        "执行过确定性脚本": bool(RE_RAN_SCRIPT.search(text)),
+        "输出提及脚本（非执行证明）": bool(RE_SCRIPT_MENTION.search(text)),
         "输出字符数": len(text),
     }
 
@@ -128,7 +129,7 @@ def main():
     print("\n判读提示：")
     print("  · 编号条目数下降**不必然**是退步 —— 合并同类项也会让条数变少。")
     print("  · 但若挂 skill 后的发现是裸模型的**真子集**，就是实打实的负 uplift。")
-    print("  · 「执行过确定性脚本」为 False 时，本 skill 的主要增量来源没有生效。")
+    print("  · 输出提及脚本不等于脚本已执行；没有 execution trace 时不得声称工具已生效。")
     print(f"\n并排比对：\n  diff -y {results['裸模型基线'][1]} {results['挂 skill'][1]} | less")
     return 0
 
