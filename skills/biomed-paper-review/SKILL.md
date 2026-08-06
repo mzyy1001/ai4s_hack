@@ -207,7 +207,7 @@ M2–M7 全部消费 M1（经 Stage 3b 合并后）的产物，因此 **M1 与 M
 
 | 角色 | 阶段 | 产物 | 产出 finding |
 | --- | --- | --- | --- |
-| **Figure Parser** | Stage 3 | `figure_records[]`、`table_records[]`、`stage3_system_limitations[]` | **否** |
+| **Figure Parser** | Stage 3 | `figure_records[]`、`table_records[]`、`stage3_extraction_signals[]`、`stage3_system_limitations[]` | **否** |
 | **M5 Figure-Use Reviewer** | Stage 4 | `m5_findings[]`（图型选择、标注、一致性、位置、报告规范） | 是 |
 
 **不得**说「Stage 3 产出 M5 findings」—— Stage 3 只解读，不评判。
@@ -219,7 +219,8 @@ Stage 1  文档归一化与切分   └─> normalized_document, asset_inventory
                                 stage1_system_limitations[], evidence_registry（开始登记）
 Stage 2  M1 结构化抽取      └─> structured_result_v1, m1_extraction_signals[],
                                 stage2_system_limitations[]
-Stage 3  图表解析(Parser)   └─> figure_records[], table_records[], stage3_system_limitations[]
+Stage 3  图表解析(Parser)   └─> figure_records[], table_records[], stage3_extraction_signals[],
+                                stage3_system_limitations[]
 Stage 3b 合并与冲突消解     └─> structured_result_v2, merge_extraction_signals[],
                                 stage3b_system_limitations[]
 X1 可选外部验证层           └─> external evidence, external_validation_signals[],
@@ -242,6 +243,7 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 | `structured_result_v1` | Stage 2 (M1) | Stage 3（上下文）, Stage 3b |
 | `m1_extraction_signals[]` | Stage 2 (M1) | Stage 5 聚合 |
 | `figure_records[]` / `table_records[]` | Stage 3 (Figure Parser) | Stage 3b, M4, M5, M7 |
+| `stage3_extraction_signals[]` | Stage 3（图像完整性审计） | Stage 5 聚合 |
 | `structured_result_v2` | Stage 3b | **M2–M7 全部** |
 | `merge_extraction_signals[]` | Stage 3b | Stage 5 聚合 |
 | `stage{1,2,3,3b}_system_limitations[]` | 对应阶段 | Stage 5 聚合 |
@@ -299,8 +301,9 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
    **v2 中不得残留 `unresolved`。**
 2. **观测分组** —— 对 `figure_record.observations[]`，先比较 `metric_family + metric_name`，再逐项比较 `target_grouping_key` 与 `key_data.grouping_key` 五键。完全相同则并入，否则新建组，**不得猜配或判冲突**。入组时移除临时路由字段，保持 `observation_id`、`value`、`provenance`；同一 id 的重复副本不一致时终止入组，产出
    `category: "parse_failed"` 的 Stage 3b `system_limitation`，不得择一覆盖。
-3. **兼容性判定** —— 单位归一化 → 变体兼容 → 区间重叠 → 四舍五入容差 → 单边界。
-   **四舍五入差异不得判为冲突**；无法建立可比性判 `ambiguous`，不判 `conflicting`。
+3. **兼容性判定** —— 单位换算工作副本 → 分类/数值本体 → 同型 uncertainty 端点。
+   先比点估计，禁止以 CI 重叠代替同一结果跨位置一致性；
+   **四舍五入差异不得判为冲突**，无法建立可比性判 `ambiguous`，不判 `conflicting`。
 4. **canonical 选择** —— `explicit_reported` 优先于 `visually_derived`；其内部按
    「主要结果 → 带不确定度 → 精度 → 非叙述性摘要 → 要素齐全 → 字典序」有序判据。
    **给不出可辩护选择时 `canonical_observation = null`，组判 `ambiguous`。**

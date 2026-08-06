@@ -294,7 +294,7 @@
           {
             "observation_id": "OBS-014",
             "value": {"type": "point", "number": 12.4},
-            "unit": "μM", "unit_normalized": "umol/L",
+            "unit": "μM", "unit_normalized": "uM",
             "uncertainty": {"type": "95CI", "low": 9.8, "high": 15.7},
             "n": 3, "replicate_type": "biological",
             "provenance": {
@@ -307,7 +307,7 @@
           {
             "observation_id": "OBS-015",
             "value": {"type": "point", "number": 15.1},
-            "unit": "μM", "unit_normalized": "umol/L",
+            "unit": "μM", "unit_normalized": "uM",
             "uncertainty": {"type": "none"},
             "n": 3, "replicate_type": "biological",
             "provenance": {
@@ -320,7 +320,7 @@
           {
             "observation_id": "OBS-016",
             "value": {"type": "point", "number": 15.1},
-            "unit": "μM", "unit_normalized": "umol/L",
+            "unit": "μM", "unit_normalized": "uM",
             "uncertainty": {"type": "none"},
             "n": null, "replicate_type": null,
             "provenance": {
@@ -404,7 +404,7 @@
       "id": "SIG-002",
       "type": "source_value_conflict",
       "target": "key_data.KD-007",
-      "detail": "IC50 图注 12.4 μM (95% CI 9.8-15.7)，正文与摘要 15.1 μM 无区间。单位归一为 umol/L 后，取精度较低方最后一位有效数字 0.1，容差 0.05；差值 2.7 > 0.05，判定不兼容。正文与摘要两值互相兼容（差值 0）。",
+      "detail": "IC50 图注 12.4 μM (95% CI 9.8-15.7)，正文与摘要 15.1 μM 无区间。归一化器将 μM 解析为 uM；取精度较低方最后一位有效数字 0.1，容差 0.05，差值 2.7 > 0.05，判定不兼容。正文与摘要两值互相兼容（差值 0）。",
       "observation_refs": ["OBS-014", "OBS-015"],
       "evidence_refs": ["EV-001", "EV-002"],
       "routed_to": ["M2", "M4"],

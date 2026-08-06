@@ -23,7 +23,7 @@
     from normalize_biomed_units import normalize, compare_units
 
     normalize("µM")
-    # {'status': 'ok', 'ucum_code': 'umol/L', 'dimension': 'substance_concentration',
+    # {'status': 'ok', 'ucum_code': 'uM', 'dimension': 'substance_concentration',
     #  'factor_to_base': 1e-06, 'base_unit': 'mol/L', 'rule_id': 'conc.molar', ...}
 
     compare_units("mg/mL", "g/L")   # -> ('comparable', 1.0)
@@ -338,6 +338,13 @@ SELFTEST = [
 
 def _selftest():
     ok = True
+    for raw, want_code in (("μM", "uM"), ("μmol·L−1", "umol/L")):
+        got = normalize(raw)
+        good = got["status"] == "ok" and got["ucum_code"] == want_code
+        ok &= good
+        print(f"  {'PASS' if good else 'FAIL'}  {raw!r} -> ucum_code={got['ucum_code']!r} "
+              f"(期望 {want_code!r})")
+
     for a, b, want_v, want_f in SELFTEST:
         v, f = compare_units(a, b)
         good = v == want_v and (want_f is None or (f is not None and abs(f - want_f) < 1e-9))

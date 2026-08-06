@@ -196,13 +196,16 @@ point | interval | lower_bound | upper_bound | categorical
 ```json
 {
   "unit": "μM",
-  "unit_normalized": "umol/L",
+  "unit_normalized": "uM",
   "uncertainty": {"type": "95CI", "low": 9.8, "high": 15.7}
 }
 ```
 
-- `unit` 保留稿件原写法；`unit_normalized` 为归一化形式，**兼容性比较一律用归一化值**。
-  无量纲指标 `unit: null`，`unit_normalized: null`。
+- `unit` 保留稿件原写法；`unit_normalized` 保存归一化器返回的 `ucum_code`，只是单位
+  拼写的审计轨迹，**不表示 `value` 已换算**。兼容性比较必须调用归一化器取
+  `factor_a_to_b`，按 §5.4 对数值的工作副本做换算；禁止因两个 `unit_normalized`
+  字符串相同就直接比较未换算的原数值。无量纲指标 `unit: null`、
+  `unit_normalized: null`。
 - **归一化由 Skill 根目录相对路径 `scripts/normalize_biomed_units.py` 执行**
   （一期能力，只用标准库）。
   它是 fail-closed 的：只做**同量纲**确定性换算；未登记别名返回 `unknown_unit`，
@@ -449,7 +452,7 @@ Stage 3b 不得把该项改为 `not_reported` 或 `parse_failed`：前者缺完�
       "observation_id": "OBS-014",
       "value": {"type": "point", "number": 12.4},
       "unit": "μM",
-      "unit_normalized": "umol/L",
+      "unit_normalized": "uM",
       "uncertainty": {"type": "95CI", "low": 9.8, "high": 15.7},
       "n": 3,
       "replicate_type": "biological",
@@ -466,7 +469,7 @@ Stage 3b 不得把该项改为 `not_reported` 或 `parse_failed`：前者缺完�
       "observation_id": "OBS-015",
       "value": {"type": "point", "number": 15.1},
       "unit": "μM",
-      "unit_normalized": "umol/L",
+      "unit_normalized": "uM",
       "uncertainty": {"type": "none"},
       "n": 3,
       "replicate_type": "biological",
@@ -529,24 +532,34 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 **第二步 · 可比性。** 同组内对全部无序 observation 对逐对判定，顺序固定；
 每一对必须得到 `compatible` / `conflicting` / `ambiguous` 中的恰好一个结果：
 
-1. **单位门控**。双方 `unit_normalized` 相同（含无量纲时均为 `null`）才继续；
-   一方为 `null` 另一方非 `null`、值不同、或没有已登记的确定性换算规则 → `ambiguous`。
-   禁止仅凭名称猜测单位；质量浓度与摩尔浓度之间无分子量时不得换算。
+1. **单位门控与工作值换算**。双方 `unit` 均为 `null`，或原单位字符串完全相同时，
+   换算因子为 1。其余情形必须运行 `scripts/normalize_biomed_units.py --compare`。
+   调用时把 `observation_id` 字典序较大者的单位作为 `unit_a`、较小者作为 `unit_b`。
+   返回 `comparable` 时，恒将较大 id 的观测换算到较小 id 的单位：
+   用 `factor_a_to_b` 同比例乘其 `value` 的 `number/low/high`、`uncertainty`
+   的 `value/low/high` 与原文精度单位 `u`，只形成本次比较的工作副本，不改写
+   `observations[]`。`unknown_unit` / `incomparable_dimension` /
+   `conversion_requires_molecular_weight` 一律→ `ambiguous`。质量浓度↔摩尔浓度只有
+   analyte 与稿件明示的正分子量都存在时才可传入脚本。
 2. **分类值**。双方均为 `categorical` 且 `label` 完全相同 → `compatible`；
    标签不同 → `ambiguous`。`categorical` 与任一数值型组合 → `ambiguous`。
-3. **同型不确定区间**。双方的 `uncertainty.type` 相同且属于
-   `95CI` / `IQR` / `range`：闭区间有重叠 → `compatible`，无重叠 → `conflicting`。
-   不同类型的不确定区间不得互比，继续按数值本体判定。
-4. **点值**。双方均为 `point`：取精度较低一方在稿件原表示中的最后一位有效数字单位
-   `u`，`tol = 0.5 × u`。`|a − b| ≤ tol` → `compatible`；否则 `conflicting`。
-   若证据原文不足以恢复有效数字，无法计算 `u` → `ambiguous`。
-   例：`12.4` vs `12.43` → `u = 0.1`，`tol = 0.05`，差 `0.03` → **兼容**。
-   例：`12.4` vs `15.1` → `tol = 0.05`，差 `2.7` → **冲突**。
-5. **区间与边界**。把 `interval`、`lower_bound`、`upper_bound` 分别解释为闭约束
-   `[low, high]`、`[low, +∞)`、`(-∞, high]`；点值解释为
-   `[number − tol, number + tol]`。两个约束交集非空 → `compatible`，否则 `conflicting`。
-   点值的 `tol` 无法恢复时 → `ambiguous`。
-6. **兜底**。以上均未覆盖 → `ambiguous`。不得把未实现的比较分支默认为冲突。
+3. **先比数值本体**。双方均为 `point`：取原表示精度较低一方的最后一位
+   有效数字单位 `u`，`tol = 0.5 × u`。`|a − b| ≤ tol` → 数值本体兼容；
+   否则→ `conflicting`。若两数值 JSON 完全相等则直接视为本体兼容；否则原文
+   不足以恢复 `u` 时→ `ambiguous`。例：`12.4` vs `12.43` 的 `tol = 0.05`，
+   差 `0.03` → 兼容；`12.4` vs `15.1` → 冲突。
+4. **区间与边界型数值本体**。把 `interval`、`lower_bound`、`upper_bound`
+   分别解释为闭约束 `[low, high]`、`[low, +∞)`、`(-∞, high]`；点值解释为
+   `[number − tol, number + tol]`。两约束交集非空→数值本体兼容，否则→
+   `conflicting`；点值 `tol` 无法恢复时→ `ambiguous`。
+5. **再核对 uncertainty**。只有数值本体已兼容才执行。任一方为 `none`，
+   或双方 type 不同，不用 uncertainty 覆盖本体结果。同为 `SD` / `SEM` 时比较
+   `value`；同为 `95CI` / `IQR` / `range` 时分别比较对应 `low` 与 `high`。
+   对应值 JSON 相等则通过；否则用各自原表示的舍入区间判定：舍入区间有交集
+   才通过，无交集→ `conflicting`，无法恢复精度→ `ambiguous`。
+   **禁止用两个 95% CI 有重叠代替点估计与区间端点的一致性核对**；
+   CI 重叠只说明两个不确定范围相交，不能证明稿件两处报告的是同一数值。
+6. **兜底**。任一必需分支未覆盖或无法执行→ `ambiguous`。不得默认为冲突。
 
 **第三步 · 组状态与归档。** `compatible_observations[]` 收录至少参加一对
 `compatible` 关系的 id；`conflicting_observations[]` 收录至少参加一对
@@ -572,8 +585,9 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 
 只有 `reported` 与 `compatible_multiple_sources` 可选择 canonical：前者直接选择唯一 observation；
 后者先应用绝对来源规则，再按下列判据做**稳定的逐层筛选**。每一层只保留该判据最优的
-候选；剩一项即停止，多项并列才进入下一层。某判据所需信息无法从 observation 与其
-`evidence_ref` 恢复时跳过该判据，不得猜测。
+候选；剩一项即停止，多项并列才进入下一层。**只有当本层判据能从每个剩余
+候选的 observation 与 `evidence_ref` 恢复时才应用该层**；任一候选的本层信息缺失，
+必须对全体跳过该层，不得把“未知”当成“较差”。
 
 | # | 判据 | 说明 |
 | --- | --- | --- |
@@ -585,8 +599,10 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 | 6 | 以上全部持平 | 取 `observation_id` 字典序最小者，保证可复现 |
 
 单一 observation 的理由写 `single_observation`。多来源选中后**必须**在
-`canonical_rationale` 写明首个排除其他候选的判据编号与理由，
-如 `"criterion_2: fig:2C 带 95% CI，results-p8 为裸点值"`。
+`canonical_rationale` 写明首个排除其他候选的层：绝对来源规则命中时写
+`"source_class: explicit_reported over visually_derived"`；表中判据命中时写判据编号与理由，
+如 `"criterion_2: fig:2C 带 95% CI，results-p8 为裸点值"`；全部并列时写
+`"criterion_6: observation_id lexical minimum"`。
 
 `ambiguous` / `conflicting` / `pending_visual_resolution` / `parse_failed` 的
 `canonical_observation` 一律为 `null`；不得在这些状态下运行上述排序。
@@ -781,7 +797,9 @@ parse_failed | figure_unreadable | table_unparseable | supplement_inaccessible
 **硬性规则**
 
 1. **没有 `severity` 字段。** 它不是稿件问题。
-2. Stage 1–3b 的限制按 §8 降低 `extraction_coverage` 与 confidence；X1 限制只降低后续
+2. Stage 1–3b 限制本身不直接扣分；只有它使 scope 内字段成为 `parse_failed`、资产不可读、
+   补充材料不可得，或使 observation 依赖 pixel/OCR 时，才通过 §8 已声明的变量降低
+   `extraction_coverage` 与 confidence。X1 限制只降低后续
    `external_validation_coverage`（未落地前只展示），**不得改变现有三项评分**，更不得提高
    `manuscript_risk_score`。
 3. **不得**在无独立稿件证据的情况下转成稿件缺陷（§6.1 规则 4）。
@@ -1080,16 +1098,18 @@ review_confidence = extraction_coverage × Q × C
 
 ### 9.3 去重与聚簇（Stage 5，顺序固定）
 
-1. **同模块内合并** —— 同一模块内 `category` 相同、且**主锚点**相同的 findings 合并为一条。
+1. **同模块内建子簇** —— 同一模块内 `category` 相同、且**主锚点**相同的 findings 归入同一子簇。
    **主锚点定义**：`evidence_refs[0]` 解析出的证据，比较其 locator 的
    `figure`+`panel`（有图时）或 `paragraph_id`（无图时）或 `table`；上述定位均不存在，
    或证据为 `absence` 时，退回比较 `evidence_refs[0]` 本身。
    保留 `severity` 最高者为代表；同 severity 时取 finding id 字典序最小者，
-   其余进 `related_findings[]`。
+   其余 id 进代表的 `related_findings[]`。**本步不删除、合并或改写 `all_findings[]`**；
+   否则 §9.2 的“六个本地数组按序拼接”与评分复算将失去原始输入。
 2. **跨模块聚簇** —— 不同模块命中同一主锚点且语义重合时构成一个 `issue_cluster`。
    保留 `severity` 最高的一条为簇代表；同 severity 时取 finding id 字典序最小者。
    **不要把同一个问题报告六遍。**
-3. **簇内证据合并** —— 簇代表的 `evidence_refs[]` 并入各成员的 refs，按 id 去重后保留。
+3. **簇内证据并集** —— `issue_cluster.evidence_refs[]` 取全部成员 `evidence_refs[]`
+   的并集，按 id 去重后保留；不回写或改写任一 finding 的 `evidence_refs[]`。
 
 ```json
 {
@@ -1159,7 +1179,7 @@ review_confidence = extraction_coverage × Q × C
 [ ] 引用 external evidence 的 finding 以 present evidence 为首锚点，且同时含 present + external
 [ ] X1 失败只产 external_* system_limitation，不产 mismatch signal 或 finding
 [ ] 全部数值为 §2.1 的 numeric 对象，无裸数字、无字符串区间
-[ ] 全部 pixel_estimated 数值满足 §2.4 四项强制约束
+[ ] 全部 pixel_estimated 数值满足 §2.4 五项强制约束
 [ ] 全部 provenance 带 derivation，且 source_type × extraction_method 组合合法
 [ ] 覆盖率与置信度的分母全部取自 execution_scope
 [ ] 未跑审核模块的模式不输出 review_confidence 与 manuscript_risk_score

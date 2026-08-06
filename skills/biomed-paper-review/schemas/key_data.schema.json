@@ -210,7 +210,7 @@
         "observation_id": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"},
         "value": {"$ref": "common.schema.json#/$defs/numeric_value"},
         "unit": {"type": ["string", "null"], "description": "稿件原写法"},
-        "unit_normalized": {"type": ["string", "null"], "description": "归一化形式；兼容性比较一律用它"},
+        "unit_normalized": {"type": ["string", "null"], "description": "归一化器返回的 ucum_code，只作审计轨迹；value 仍是原单位数值，比较前必须应用 factor_a_to_b"},
         "uncertainty": {"$ref": "common.schema.json#/$defs/uncertainty"},
         "n": {"type": ["integer", "null"], "minimum": 1},
         "replicate_type": {"oneOf": [{"$ref": "common.schema.json#/$defs/replicate_type"}, {"type": "null"}]},
@@ -222,7 +222,7 @@
 
       "allOf": [
         {
-          "description": "00-contracts.md §2.4：pixel_estimated 的四项强制约束",
+          "description": "00-contracts.md §2.4：pixel_estimated 的五项强制约束（其中 M4 禁用与 finding confidence 上限由跨对象校验执行）",
           "if": {
             "properties": {"provenance": {"properties": {"source_type": {"const": "pixel_estimated"}},
                                           "required": ["source_type"]}},

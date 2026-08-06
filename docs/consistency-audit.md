@@ -52,7 +52,7 @@ M2 据**独立稿件证据**（EV-003）立 minor finding，M4 据 absence 证�
 ### ④ IC50 冲突
 
 `KD-007` 组内三个观测全部保留：图注 12.4 (95% CI 9.8–15.7)、正文 15.1、摘要 15.1。
-单位归一为 `umol/L`；正文与摘要差值 0 → `compatible_observations`；
+归一化器将 `μM` 解析为 `uM`；正文与摘要差值 0 → `compatible_observations`；
 图注与正文按四舍五入容差（精度较低方末位 0.1 → tol 0.05）判定差值 2.7 ≫ 0.05
 → `conflicting_observations`。组 `status = conflicting`、
 `canonical_observation = null`、`reporting_completeness = not_assessed`。
@@ -78,7 +78,7 @@ M2 与 M7 各自据**独立稿件证据**立 finding，`derived_from_signals` �
 | 11 | 评分公式可由已声明字段算出 | ✅ | `00 §8.3` 逐变量给出来源：`pixel_*` ← `provenance.source_type`；`ocr_*` ← `provenance.derivation.ocr_used`（**为此新增 `derivation` 且设为必填**）；`low_conf_finding_rate` ← `finding.review_confidence`；`C` ← `key_data.status`。`common.schema.json` 的 `provenance` 把 `derivation` 列入 `required` |
 | 12 | 非审核模式不声称审核置信度 | ✅ | `SKILL.md §1.5` 速查表逐模式指定置信度字段；`00 §8.3` 定义 `output_confidence` 与 `review_confidence` 互斥；`review_report.schema.json` 顶层 `not: {required: [两者]}` + `if executed_modules 非空 then 必填 review_confidence 且禁 output_confidence, else 反之`；模拟②实测 |
 | 13 | partial 分数显式标记 | ✅ | `00 §8.1` partial 语义块；`review_report.schema.json` 的 `partial ⇒ comparable_to_full_review=false` 与 `len(executed_modules) ≤ 5 ⇒ partial=true`；`executed_modules` 为空时禁止输出本项；模拟②③实测 |
-| 14 | 像素估读不表示为字符串 | ✅ | `00 §2.1` 五种 numeric 变体 + 明令禁止 `"40–50"`；`§2.4` pixel 四项强制约束；`common.schema.json` 的 `numeric_value` 用 `oneOf` 五分支且 `additionalProperties:false`；`key_data.schema.json` 强制 pixel ⇒ `value.type ∈ {interval, lower_bound, upper_bound}`；validator 两项独立检查 |
+| 14 | 像素估读不表示为字符串 | ✅ | `00 §2.1` 五种 numeric 变体 + 明令禁止 `"40–50"`；`§2.4` pixel 五项强制约束；`common.schema.json` 的 `numeric_value` 用 `oneOf` 五分支且 `additionalProperties:false`；`key_data.schema.json` 强制 pixel ⇒ `value.type ∈ {interval, lower_bound, upper_bound}`；validator 两项独立检查 |
 | 15 | 解析失败不能降低稿件质量 | ✅ | `00 §6.3` 规则 2「不降低 manuscript_risk_score」；`§6.4` 边界矩阵逐情形给出正确/错误做法；`§8.1`「不因 PDF 不可读或解析失败而升高」；`review_report.schema.json` 删除旧 `extraction_gap_penalty`；模拟③实测（五个字段 parse_failed，风险分仍为 0） |
 
 ---
@@ -113,4 +113,6 @@ M2 与 M7 各自据**独立稿件证据**立 finding，`derived_from_signals` �
 2. **M2–M7 的 `category` slug 表尚未登记齐全。** `finding.category` 目前只在 schema 中
    声明为「该模块 reference 已登记的 slug」，无法机器校验 —— 待各模块 reference
    填完后，把 slug 全集写入一个 `categories.json` 供 validator 交叉核对。
-3. **`00 §5.4` 第 1 步依赖的单位归一化表**尚未编写（`01 §13` TODO 已登记）。
+3. **单位归一化器已实现，但 Stage 3b 尚未接线。**
+   `scripts/normalize_biomed_units.py` 已提供 fail-closed 单位解析与换算；
+   `00 §5.4` 已规定调用方向和数值工作副本规则，实际合并器仍见 Round 16 P1。
