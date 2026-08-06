@@ -37,10 +37,8 @@ description: 生物医药论文结构化抽取与审稿辅助。输入一篇论�
 | 判断违背基础常识的结论 | 标记「结论超出证据支持范围」交人工 | M7 | 领域常识规则库；先积累一期误判样本 |
 | 复现统计计算 | 只校验方法选择与报告完整性 | M4 | 需原始数据；可先做不依赖原始数据的一致性检验 |
 
-二期应**扩展**而非重构主框架：新增 `database` / `query` / `retrieval_date` / `record_id` /
-`version` / `retraction_or_correction_status` / `relation_to_claim` 等 provenance 元数据；
-外部数据源接入方案见 `docs/proposals/round-1-contracts-consistency.md`；提案未采纳前，
-不得在一期输出中声称已核验外部数据库。
+二期应**扩展**而非重构主框架：新增 `database` / `query` / `retrieval_date` / `record_id` / `version` /
+`retraction_or_correction_status` / `relation_to_claim` 等元数据。接入方案见 `docs/proposals/round-1-contracts-consistency.md`；提案未采纳前不得声称已核验外部数据库。
 
 ---
 
@@ -460,9 +458,8 @@ review_confidence = extraction_coverage × Q × C
   C = max(0, 1 − 0.10 × min(未消解 conflicting 组数, 5))
 ```
 
-scope 内 observation 由 `execution_scope.observations[]` 唯一圈定；全部变量均可从
-`provenance.source_type`、`provenance.derivation.ocr_used`、`finding.evidence_refs[]`、
-`finding.review_confidence`、`key_data.status` 直接算出（`00-contracts.md §8.3`）。
+scope 内 observation 由 `execution_scope.observations[]` 唯一圈定；变量均可从 `provenance.source_type`、
+`provenance.derivation.ocr_used`、`finding.evidence_refs[]`、`finding.review_confidence`、`key_data.status` 直接算出（`00-contracts.md §8.3`）。
 `review_confidence < 0.5` 时，报告首屏必须提示「本次审核证据基础较弱，结论仅供参考」。
 
 ---

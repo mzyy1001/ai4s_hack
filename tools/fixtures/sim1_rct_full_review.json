@@ -70,20 +70,19 @@
       "id": "EV-005", "type": "absence", "scope": "document",
       "searched_locations": [
         {"section": "methods", "scope": "section"},
-        {"section": "statistics", "scope": "section"},
         {"section": "results", "scope": "section"}
       ],
       "search_terms": ["multiplicity", "Bonferroni", "Holm", "false discovery rate",
                        "多重比较", "校正"],
       "search_result": "no_match",
-      "created_by": "M4"
+      "created_by": "stage_2"
     },
     "EV-006": {
       "id": "EV-006", "type": "present",
       "locator": {"section": "results", "paragraph_id": "results-p07",
                   "pdf_file_page": 6, "scope": "paragraph"},
       "quote": "Secondary outcomes were compared across four timepoints using repeated independent t-tests.",
-      "created_by": "M4"
+      "created_by": "stage_2"
     },
     "EV-007": {
       "id": "EV-007", "type": "present",

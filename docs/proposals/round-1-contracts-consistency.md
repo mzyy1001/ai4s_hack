@@ -15,12 +15,13 @@
 | `references/00-contracts.md` | §7.1、§8、§9 | 新增 `execution_scope.observations[]`；规定三位小数舍入、finding↔observation 关联、冲突计数、cluster 的单一计分类别与稳定代表选择；为 absence 证据定义锚点回退 | 原 confidence 分母、风险分类上限和聚簇代表无法唯一复算；absence 没有 locator，旧主锚点算法会中断 |
 | `references/00-contracts.md`、`SKILL.md`、`references/07-conclusions-discussion.md` | 迁移表与内部引用 | `01 §8/§8.4` 改为 `§11/§11.4`，M7 的外部文献引用改为 `§11.1`，风险分聚簇引用改为 `§9.3` | 上一轮审计声称引用均可解析，但这些引用已随章节重排失效 |
 | `schemas/common.schema.json` | `uncertainty`、`derivation` | 禁止负 SD/SEM、禁止 `none` 携带数值、强制区间/离散度字段形状，并机器约束 OCR 标志 | 旧 schema 接受 `{"type":"none","low":3}`、`SD=-1`、`ocr_text + ocr_used=false` |
+| `schemas/evidence.schema.json` | `evidence_refs` | 引用数组增加 `uniqueItems` | 重复 ref 会放大展示、破坏集合运算并掩盖聚合器错误 |
 | `schemas/key_data.schema.json` | 组状态与 observation | `reported`/多来源/冲突/pending/parse_failed 分别约束 observation 数量、canonical、关系数组与系统限制；关键 observation 字段改为显式必填 | 旧 schema 一方面要求所有组至少一个 observation，导致 `parse_failed` 无法表示；另一方面允许 `reported` 无 canonical 或含多个来源 |
 | `schemas/execution_scope.schema.json` | 全文件 | 增加 observation 分母、数组去重、Stage 1→5 完整依赖和审核模块↔Stage 4/5 绑定 | 旧 schema 允许重复模块凑满 6 个，也允许执行审核模块却不声明 Stage 4/5 |
 | `schemas/review_report.schema.json` | 模式条件、confidence、issue cluster | 审核模式强制输出 v2/findings/clusters/复核计划；低置信度警告机器化；cluster 强制 anchor 并支持 absence 回退 | 旧 schema 允许有风险分却没有 findings/clusters，且 `<0.5` 警告只写在 description 中 |
 | `templates/review_report.md` | 全文件 | 从旧 `confidence_score`、`methods.*`、`min_group_n`、内联 evidence 迁移为固定八节与现契约字段 | 旧模板无法渲染任何符合当前 schema 的完整报告，是演示时会直接暴露的断裂 |
 | `tools/validate_schemas.py` | schema lint、实例 lint、评分校验 | 新增模板迁移检查、absence 类型校验、key_data 引用校验、mode/stage 校验，并实际复算 risk/coverage/confidence 与复核计划覆盖 | 原“全部通过”只验证字段存在，没有证明公式结果正确 |
-| `tools/fixtures/*.json` | 四个模拟的 `execution_scope`；sim4 证据与 finding | 补齐 observation scope；删除“15.1 超过 15.7 上界”的错误陈述；为两个 `not_reported` 字段补合法 absence 证据 | 原模拟含明显算术错误，并用 present 证据支撑缺失状态，违反证据契约 |
+| `tools/fixtures/*.json` | 四个模拟的 `execution_scope`；sim1/sim4 证据与 finding | 补齐 observation scope；删除“15.1 超过 15.7 上界”的错误陈述；为两个 `not_reported` 字段补合法 absence 证据；把被 v2 消费的 M4/M7 未来证据改为 Stage 2 证据 | 原模拟含算术错误、用 present 支撑缺失状态，并让 Stage 3b 消费 Stage 4 才创建的证据 |
 
 ## B 类提案
 

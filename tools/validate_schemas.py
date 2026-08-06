@@ -349,6 +349,21 @@ def check_instance(rep, name, inst):
         rep.check(not matrix_bad, "evaluation_matrix 条目为纯索引（不复制字段属性）",
                   "; ".join(matrix_bad[:5]))
 
+        temporal_bad = []
+        for path, node in walk(sr):
+            if not isinstance(node, dict):
+                continue
+            refs = list(node.get("evidence_refs", []) or [])
+            pr = node.get("provenance")
+            if isinstance(pr, dict) and pr.get("evidence_ref"):
+                refs.append(pr["evidence_ref"])
+            for ref in refs:
+                creator = (registry.get(ref) or {}).get("created_by")
+                if creator not in {"stage_1", "stage_2", "stage_3", "stage_3b"}:
+                    temporal_bad.append(f"{path}: {ref} 由未来审核模块 {creator} 创建")
+        rep.check(not temporal_bad, "structured_result 不消费 Stage 4 才创建的证据",
+                  "; ".join(temporal_bad[:5]))
+
         kd_pending = [k.get("id") for k in sr.get("key_data", [])
                       if k.get("status") == "pending_visual_resolution"]
         if version == "v2":
@@ -431,6 +446,10 @@ def check_instance(rep, name, inst):
                 f_bad.append(f"{f.get('id')}: >=major 无 action")
         if f.get("review_confidence") not in CONFIDENCE:
             f_bad.append(f"{f.get('id')}: review_confidence={f.get('review_confidence')}")
+        for ref in f.get("evidence_refs", []):
+            creator = (registry.get(ref) or {}).get("created_by")
+            if creator not in {"stage_1", "stage_2", "stage_3", "stage_3b", f.get("module")}:
+                f_bad.append(f"{f.get('id')}: 消费了并行模块 {creator} 创建的 {ref}")
     rep.check(not f_bad, "finding 契约成立（无 M1、证据非空、major 有动作）",
               "; ".join(f_bad[:5]))
 
@@ -529,6 +548,9 @@ def check_instance(rep, name, inst):
         if risk.get("partial"):
             rep.check(risk.get("comparable_to_full_review") is False,
                       "partial 分数标记为不可与完整审核比较")
+        else:
+            rep.check(risk.get("comparable_to_full_review") is True,
+                      "完整分数标记为可与 full_review 比较")
 
         score_bad = []
         if risk.get("executed_modules") != mods or risk.get("skipped_modules") != scope.get("skipped_modules", []):

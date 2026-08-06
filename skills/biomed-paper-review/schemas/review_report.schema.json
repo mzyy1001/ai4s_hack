@@ -107,7 +107,8 @@
         {
           "description": "未跑满六个审核模块时必须标 partial 且不可比",
           "if": {"properties": {"partial": {"const": true}}, "required": ["partial"]},
-          "then": {"properties": {"comparable_to_full_review": {"const": false}}}
+          "then": {"properties": {"comparable_to_full_review": {"const": false}}},
+          "else": {"properties": {"comparable_to_full_review": {"const": true}}}
         },
         {
           "if": {"properties": {"executed_modules": {"maxItems": 5}}, "required": ["executed_modules"]},
@@ -282,8 +283,8 @@
             "figure": {"type": ["string", "null"]},
             "panel": {"type": ["string", "null"]},
             "table": {"type": ["string", "null"]},
-            "paragraph_id": {"type": ["string", "null"]}
-            ,"evidence_ref": {
+            "paragraph_id": {"type": ["string", "null"]},
+            "evidence_ref": {
               "type": ["string", "null"],
               "pattern": "^EV-[0-9]{3,}$",
               "description": "absence 或无细粒度 locator 时的确定性回退锚点"

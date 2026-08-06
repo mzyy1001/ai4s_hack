@@ -94,6 +94,7 @@
 
     "evidence_refs": {
       "type": "array",
+      "uniqueItems": true,
       "items": {"$ref": "#/$defs/evidence_ref"},
       "description": "证据引用数组。canonical 存储形式；渲染层负责展开为引文与页码。"
     }
