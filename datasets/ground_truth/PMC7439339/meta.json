@@ -1,0 +1,15 @@
+{
+  "pmcid": "PMC7439339",
+  "doi": "10.1002/jcla.23304",
+  "title": "A long non-coding RNA OLBC15 promotes triple-negative breast cancer progression via enhancing ZNF326 degradation.",
+  "journal": null,
+  "year": "2020",
+  "kind": "retracted_statistical",
+  "ground_truth": {
+    "notice_pmcid": "PMC12888758",
+    "source": "期刊撤稿声明",
+    "reason_text": "RETRACTION : Deng C., Zhang B., Zhang Y., Xu X., Xiong D., Chen X., and Wu J., “A Long Non‐Coding RNA OLBC15 Promotes Triple‐Negative Breast Cancer Progression Via Enhancing ZNF326 Degradation,” Journal of Clinical Laboratory Analysis 34, no. 8 (2020): e23304, 10.1002/jcla.23304. The above article, published online on 24 April 2020, in Wiley Online Library ( http://onlinelibrary.wiley.com/ ), has been retracted by agreement between the authors; the journal Editor‐in‐Chief, Rong Fu; and Wiley Periodicals, LLC. The corresponding author Jiaojiao Wu contacted the journal to request that the article be retracted for the following reasons: 1. An inability to reproduce key experimental results; 2. Technical errors in the experimental protocols that may have compromised the reliability and reproducibility of the data (inconsistencies in RNA pulldown assay conditions, potential cross‐contamination in cell line experiments, and insufficient validation of antibody specificity for ZNF326 detection); and 3. Discrepancies in the original data, calling into question the western blot images in Figures 4B, 5A, and 5B; the quantification data for migration assays; and IHC scoring consistency in clinical samples. Following an investigation, images in Figures 4 and 5 were found to be duplicated from earlier publications: Figure 4D being from Figure 3A in Koo et al. 2017 ( https://doi.org/10.1158/1535‐7163.MCT‐17‐0077 ), Figure 5B being from Figure 5B in Shen et al. 2019 ( https://doi.org/10.1002",
+    "expected_finding": "本文后被撤稿，期刊给出的理由为：RETRACTION : Deng C., Zhang B., Zhang Y., Xu X., Xiong D., Chen X., and Wu J., “A Long Non‐Coding RNA OLBC15 Promotes Triple‐Negative Breast Cancer Progression Via Enhancing ZNF326 Degradation,” Journal of Clinical Laboratory Analysis 34, no. 8 (2020): e23304, 10.1002/jcla.23304. The above article, "
+  },
+  "_note": "标准答案由权威来源给出，不是我们编的，也不是植入的。错误长在论文自己的血肉里，且骗过了真实的同行评审。判定时只问一件事：审稿意见有没有指出这个问题。"
+}

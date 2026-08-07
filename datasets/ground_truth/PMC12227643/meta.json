@@ -1,0 +1,17 @@
+{
+  "pmcid": "PMC12227643",
+  "doi": "10.1038/s41598-025-09275-6",
+  "title": "The PRINCIPLE randomised controlled open label platform trial of hydroxychloroquine for treating COVID19 in community based patients at high risk.",
+  "journal": null,
+  "year": "2025",
+  "kind": "cited_retracted",
+  "ground_truth": {
+    "retracted_doi": "10.1016/s0140-6736(20)31180-6",
+    "retracted_title": "RETRACTED: Hydroxychloroquine or chloroquine with or without a macrolide for treatment of COVID-19: a multinational registry analysis.",
+    "retracted_year": 2020,
+    "citing_year": 2025,
+    "source": "Europe PMC pubType",
+    "expected_finding": "本文（2025 年）引用了 10.1016/s0140-6736(20)31180-6（RETRACTED: Hydroxychloroquine or chloroquine with or without），该文献已于 2020 年撤稿（Lancet 上的 Surgisphere 羟氯喹研究，因数据来源无法核实于 2020 年撤稿），引用发生在撤稿**之后**。若该文献构成本文立论依据，相关推理需重新评估。"
+  },
+  "_note": "标准答案由权威来源给出，不是我们编的，也不是植入的。错误长在论文自己的血肉里，且骗过了真实的同行评审。判定时只问一件事：审稿意见有没有指出这个问题。"
+}

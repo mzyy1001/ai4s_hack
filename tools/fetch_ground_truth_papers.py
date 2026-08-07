@@ -250,6 +250,13 @@ def cases_cited_retracted(n):
             xml = fulltext(pmcid)
             if not xml or len(xml) < 5000:
                 continue
+            # **引用已撤稿文献本身不一定是错误。** 一篇讨论科研不端的文章
+            # 引用那篇被撤稿的论文完全正当；明确写出「该文已撤稿」的也不是问题。
+            # 实测踩到：PMC12232383《Misconduct in science and medicine》整篇
+            # 就是在讲这次撤稿，却被当成了错误案例 —— 那是在惩罚做对了的论文。
+            # 因此：正文只要提到 retract 一律排除，宁可少收也不能出错题。
+            if re.search(r"retract", body_text(xml), re.I):
+                continue
             out.append({
                 "pmcid": pmcid, "xml": xml, "paper": res2[0],
                 "kind": "cited_retracted",

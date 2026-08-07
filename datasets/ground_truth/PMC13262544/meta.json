@@ -1,0 +1,18 @@
+{
+  "pmcid": "PMC13262544",
+  "doi": "10.7717/peerj.21397",
+  "title": "Fermented bread, a promising additive to pig feed to improve intestinal health-an &lt;i&gt;in vitro&lt;/i&gt; study.",
+  "journal": null,
+  "year": "2026",
+  "kind": "cell_line",
+  "ground_truth": {
+    "cell_line": "IPEC",
+    "cellosaurus_accession": "CVCL_6C42",
+    "problem": "Misidentified/contaminated. Originally thought to be of pig origin but found to be a bovine cell line (PubMed=22193509).",
+    "claimed_origin": "species=pig",
+    "source": "Cellosaurus",
+    "corpus_size_hint": 1328,
+    "expected_finding": "论文使用 IPEC 作为 pig 的模型，但 Cellosaurus（CVCL_6C42）标注该细胞系：Misidentified/contaminated. Originally thought to be of pig origin but found to be a bovine cell line (PubMed=22193509). 研究对象前提不成立，基于它的结论均需重新评估。"
+  },
+  "_note": "标准答案由权威来源给出，不是我们编的，也不是植入的。错误长在论文自己的血肉里，且骗过了真实的同行评审。判定时只问一件事：审稿意见有没有指出这个问题。"
+}
