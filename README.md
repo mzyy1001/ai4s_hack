@@ -230,7 +230,7 @@ skills/biomed-paper-review/
 | --- | --- |
 | `skills/` 下有且仅有一个 skill 目录 | ✅ `biomed-paper-review` |
 | `SKILL.md` frontmatter `name` 合法 | ✅ `biomed-paper-review`，19 字符，小写连字符（≤64） |
-| `SKILL.md` frontmatter `description` 合法 | ✅ 473 字符（≤1024），第三人称，写清「做什么 + 何时使用」，含触发关键词 |
+| `SKILL.md` frontmatter `description` 合法 | ✅ 499 字符（≤1024），第三人称，写清「做什么 + 何时使用」，覆盖六个审核维度与全部四种模式，含触发关键词 |
 | 提交包大小 | ✅ **936 KB**，最大单文件 136 KB |
 | 依赖可装 | ✅ 无 `requirements.txt` → 使用预装科学栈（见 §三） |
 | 安全红线：无诱导评分 / 无注入语句 | ✅ |
