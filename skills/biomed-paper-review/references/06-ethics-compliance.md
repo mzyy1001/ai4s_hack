@@ -234,6 +234,29 @@ methods 三节均未见 IACUC、伦理委员会、批件号 → **major 报告�
 
 ---
 
+## 6.1 接住 X1 外部核验的 signal（**待 Peter 复核 severity**）
+
+`scripts/external_figure_validation.py`（Stage 3c）把两类 `check_type` 路由给 M6：
+
+| X1 `check_type` | 数据库 | 比较结果 | 建议 M6 category |
+| --- | --- | --- | --- |
+| `prospective_registration` | ClinicalTrials.gov | `mismatch` | `retrospective_trial_registration` |
+| `trial_registration_exists` | ClinicalTrials.gov | `needs_manual_review` | `trial_registration_unverifiable` |
+
+**`prospective_registration` 是全套里最能体现外部核验价值的一条。**
+ICMJE 要求首例入组前完成注册，而注册日期与研究开始日期**都只存在于注册库**，
+论文正文几乎从不写 —— 纯读正文绝无可能发现回顾性注册。默认 `major`；
+论文同时声称「本试验按 ICMJE 要求前瞻性注册」时取 `critical`（声明与事实相悖）。
+
+**日期精度陷阱**：注册库的 `startDate` 常常只有 YYYY-MM 精度，而注册日期是
+YYYY-MM-DD。X1 已按较粗精度比较并要求严格大于 —— start=2011-02、reg=2011-02-24
+不会报警，因为研究完全可能是 24 号之后才开始的。**宁可漏报也不凭猜测扣帽子。**
+
+`trial_registration_exists` 恒为候选：可能是排版错误、注册在其他平台
+（ChiCTR / ISRCTN，本期未接），或注册记录尚未公开。须人工确认后再定性。
+
+---
+
 ## 7. TODO（一期）
 
 - [x] 建立可引用的三法域规范库（`resources/ethics_rules.json`）

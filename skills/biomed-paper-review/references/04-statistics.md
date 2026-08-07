@@ -534,6 +534,29 @@ over_precision                    -> （并入 p_value_reporting 的 minor 档�
 
 ---
 
+## 10.1 接住 X1 外部核验的 signal（**待蒋蕴确认 severity**）
+
+`scripts/external_figure_validation.py`（Stage 3c）把一类 `check_type` 路由给 M4：
+
+| X1 `check_type` | 数据库 | 比较结果 | 建议 M4 category |
+| --- | --- | --- | --- |
+| `outcome_switching` | ClinicalTrials.gov | `needs_manual_review` | `registered_outcome_switched` |
+
+**这一条纯读正文查不出来** —— 登记的主要结局只存在于注册库。它与 §8
+的选择性报告是同一类偏倚的两个侧面：**终点事后更换归 M2，
+只报显著结果归 M4 的 `selective_significant_reporting`，
+而「报告结局与注册结局不符」由本条承接。**
+
+**恒为候选，不得直接立 finding。** 关键词粗筛会被措辞差异误伤
+（注册写 "percentage of participants with local reactions"，
+论文写 "reactogenicity"，指的是同一件事）。必须人工比对注册记录原文。
+确认切换且主要结论建立在切换后的结局上时取 `critical`，否则 `major`。
+
+X1 产 `system_limitation`（注册库未登记主要结局、接口不可达）时，
+既不得当作「没问题」也不得当作「有问题」，按 `00-contracts.md` 登记限制。
+
+---
+
 ## 11. TODO（一期）
 
 - [x] 填充 §4 检验选择对照表（本模块最高优先级）

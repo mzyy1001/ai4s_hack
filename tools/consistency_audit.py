@@ -175,17 +175,31 @@ def check_x1_routing(rep):
     if not routed:
         return
 
+    # **逐 check_type 核对，不能只看模块有没有提过「外部核验」。**
+    # 上一版就是只查模块是否提及外部核验，结果 M2/M4/M6 明明一条 check_type
+    # 都没登记却通过了 —— 运行时模型拿到 signal 依然无处安放。
     blind = []
     for mod, checks in sorted(routed.items()):
         fn = REF_OF.get(mod)
         if not fn:
             continue
         txt = read(os.path.join(REFS, fn))
-        # 该模块的 reference 至少要提到 X1 / 外部核验这件事
-        if not re.search(r"X1|external_validation_candidate|外部核验|外部数据", txt):
-            blind.append(f"{mod}（{fn}）收 {len(checks)} 类外部 signal "
-                         f"却未提及外部核验：{sorted(checks)[:3]}")
-    rep.check(not blind, "所有接收 X1 signal 的模块都知道该怎么处理",
+        listed = {c for c in checks if f"`{c}`" in txt}
+        # 允许用通配或斜杠合并的写法登记一组同族 check
+        for group in ("gene_symbol_", "variant_", "compound_", "trial_"):
+            if f"`{group}*`" in txt:
+                listed |= {c for c in checks if c.startswith(group)}
+        for c in checks:
+            if c in listed:
+                continue
+            if re.search(rf"`{re.escape(c)}`\s*/", txt) or \
+               re.search(rf"/\s*`{re.escape(c)}`", txt):
+                listed.add(c)
+        missing = sorted(checks - listed)
+        if missing:
+            blind.append(f"{mod}（{fn}）收 {len(checks)} 类外部 signal，"
+                         f"其中 {len(missing)} 类未登记消费判据：{missing[:4]}")
+    rep.check(not blind, "每个路由到模块的 check_type 都登记了消费判据",
               "\n".join(blind))
 
 

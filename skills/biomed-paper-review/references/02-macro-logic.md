@@ -773,6 +773,37 @@ Ethics statement / Funding / Conflict of interest / Data availability / Referenc
 | `statistical_method_mismatch` | 统计方法与报告结果不匹配 | major | §2.4.5 |
 | `reference_numbering_error` | 参考文献编号错误 | minor | §2.4.6 |
 
+## 3.1 接住 X1 外部核验的 signal（**待卓妍确认 severity**）
+
+`scripts/external_figure_validation.py`（Stage 3c）已交付，把下列 `check_type`
+路由给 M2。它们是 `external_validation_candidate`，**没有 severity** ——
+X1 只做「稿件事实 vs 外部权威事实」的可复算比较，是否成立由 M2 回查稿件后决定。
+
+| X1 `check_type` | 数据库 | 比较结果 | 建议 M2 category |
+| --- | --- | --- | --- |
+| `cited_work_retracted` | Europe PMC | `mismatch` | `cites_retracted_work` |
+| `reference_doi_resolves` | Crossref | `mismatch` | `reference_not_resolvable` |
+| `gene_symbol_excel_corruption` | HGNC | `mismatch` | `gene_symbol_data_corruption` |
+| `gene_symbol_outdated` | HGNC | `mismatch` | `gene_symbol_outdated` |
+| `gene_symbol_unrecognized` | HGNC | `needs_manual_review` | `gene_symbol_unrecognized` |
+| `variant_position_range` / `variant_reference_residue` | UniProt | `mismatch` | `variant_inconsistent_with_reference` |
+
+**判据要点**
+
+- `cited_work_retracted`：**引用已撤稿文献本身不一定是错误。** 论文讨论撤稿事件本身、
+  或已写明该文献已撤稿，都是做对了，**不得立 finding**。只有当该文献被当作
+  立论依据、且论文未提及其撤稿状态时才立；支撑主要结论时取 `critical`。
+- `reference_doi_resolves`：格式完美但无法解析的 DOI 是幻觉引文与纸厂引文的典型特征。
+  须先排除排版错误（多余空格、全角字符）再定性。
+- `gene_symbol_excel_corruption`：符号被 Excel 转成日期（`2-Sep`、`1-Mar`）。
+  这是**数据处理污染**的信号，须提示作者回原始数据核对该列究竟是哪个基因。
+- `gene_symbol_outdated`：旧符号本身不算错误，但与现行文献比对时易张冠李戴，取 `minor`。
+
+`statistical_forensics.py` 另把 `count_percentage_mismatch` 与 `table_total_mismatch`
+同时路由给 M2（数值本身归 M4，**表格与正文数据不一致**归 M2 的完整性范畴）。
+
+---
+
 ## 4. TODO（一期）
 
 ### 4.1 已完成
