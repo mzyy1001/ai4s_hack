@@ -48,6 +48,7 @@ import argparse
 import hashlib
 import io
 import json
+import os
 import re
 import sys
 import time
@@ -113,6 +114,41 @@ class Ledger:
         return None
 
 
+# ---------------------------------------------------------------- 录制/回放
+# X1 的自检全部打真实接口。网络不通、白名单未放行、或上游改字段时，自检就跑不了
+# —— 而**跑不了不等于代码坏了**，这与契约里 parse_failed != not_reported 同源。
+# 录制一份真实响应存盘，离线时回放，自检就能在无网环境确定性地跑完。
+#
+# 明确边界：fixture 回放**验证的是我们的解析与判定逻辑**，
+# 不验证上游接口有没有变。上游变了只有重新录制才会发现，
+# 所以离线全绿**不能**声称「外部核验可用」。
+FIXTURE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            "..", "resources", "x1_fixtures.json")
+_FIXTURES = None
+_RECORDING = None
+# 严格离线：fixture 未命中时**必须报错**，绝不悄悄走网络 ——
+# 否则「离线自检」会在不知不觉中变成在线自检，测的东西根本不是它声称的
+_OFFLINE = False
+
+
+def _load_fixtures():
+    global _FIXTURES
+    if _FIXTURES is None:
+        try:
+            with io.open(os.path.abspath(FIXTURE_PATH), encoding="utf-8") as fh:
+                blob = json.load(fh)
+            _FIXTURES = blob.get("responses", blob) if isinstance(blob, dict) else {}
+        except (OSError, ValueError):
+            _FIXTURES = {}
+    return _FIXTURES
+
+
+def _fixture_key(url):
+    """按 URL 索引。查询串里没有凭据，可以安全落盘。"""
+    return url
+
+
+
 # ---------------------------------------------------------------- 传输层
 def fetch(url, timeout=40, retries=2, headers=None):
     """返回 (text, http_status, error)。
@@ -120,14 +156,31 @@ def fetch(url, timeout=40, retries=2, headers=None):
     **任何失败都返回 error，绝不静默当成「查无此项」** —— 这正是本项目
     反复踩过的坑：把「我们没查到」当成「论文有问题」。
     """
+    # 回放优先：命中 fixture 就不发网络请求
+    fx = _load_fixtures()
+    if fx and not _RECORDING:
+        rec = fx.get(_fixture_key(url))
+        if rec is not None:
+            return (rec.get("body"), rec.get("http"), rec.get("error"))
+    if _OFFLINE and not _RECORDING:
+        return None, None, {"kind": "fixture_missing", "url": url[:120]}
+
     last = None
     for i in range(retries + 1):
         try:
             req = urllib.request.Request(url, headers={**UA, **(headers or {})})
             with urllib.request.urlopen(req, timeout=timeout) as r:
-                return r.read().decode("utf-8", "replace"), r.status, None
+                body = r.read().decode("utf-8", "replace")
+                if _RECORDING is not None:
+                    _RECORDING[_fixture_key(url)] = {
+                        "body": body, "http": r.status, "error": None}
+                return body, r.status, None
         except urllib.error.HTTPError as e:
             if e.code == 404:
+                if _RECORDING is not None:
+                    _RECORDING[_fixture_key(url)] = {
+                        "body": None, "http": 404,
+                        "error": {"kind": "not_found", "http": 404}}
                 return None, 404, {"kind": "not_found", "http": 404}
             last = {"kind": "http_error", "http": e.code}
             if e.code not in (429, 500, 502, 503, 504):
@@ -201,7 +254,10 @@ def make_signal(sid, target, detail, routed_to, connector, query_kind, check_typ
 
 # ---------------------------------------------------------------- UniProt
 def _uniprot(acc, led, target, modules):
-    url = f"{UNIPROT}/{urllib.parse.quote(acc)}.json"
+    # 只取用得上的字段：整条记录 869 KB，裁剪后 1.1 KB（750 倍差距）。
+    # 沙箱带宽与录制 fixture 的体积都受益于此。
+    url = (f"{UNIPROT}/{urllib.parse.quote(acc)}.json"
+           f"?fields=accession,protein_name,sequence,organism_name")
     raw, http, err = fetch(url)
     if err and err.get("kind") == "not_found":
         led.add_evidence(make_external_evidence(
@@ -221,6 +277,8 @@ def _uniprot(acc, led, target, modules):
     }
     ev = led.add_evidence(make_external_evidence(
         "UniProt", url, "accession_lookup", acc, p["accession"], raw, http, "resolved",
+        # fields 裁剪后 entryAudit 不再返回；契约允许 database_version 为 null，
+        # **不得猜测版本号** —— 猜出来的版本号会让复查时对不上
         db_version=str((d.get("entryAudit") or {}).get("entryVersion") or "") or None,
         assertions=[
             {"predicate": "sequence_length", "subject": p["accession"],
@@ -308,7 +366,9 @@ def check_cell_line(item, led, sid):
     target = item.get("target", "methods.cell_line")
     if not name:
         return None
-    url = f"{CELLO}/search/cell-line?q={urllib.parse.quote(name)}&format=json&rows=1"
+    # 同样只取需要的字段：完整记录 166 KB，裁剪后 2.4 KB
+    url = (f"{CELLO}/search/cell-line?q={urllib.parse.quote(name)}"
+           f"&format=json&rows=1&fields=id,ac,cc,ox,sy")
     raw, http, err = fetch(url)
     if err:
         return led.add_limit(f"无法查询 Cellosaurus 中的 {name}", target, ["M3"], err)
@@ -1123,9 +1183,53 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--record-fixtures", action="store_true",
+                    help="打真实接口跑一遍自检，把响应录进 resources/x1_fixtures.json，"
+                         "供无网环境回放")
+    ap.add_argument("--offline", action="store_true",
+                    help="只用已录制的 fixture，禁止任何网络请求。"
+                         "**离线全绿只说明解析与判定逻辑没坏，不代表上游接口仍可用**")
     ap.add_argument("--input", help="待核验条目的 JSON 数组；给 - 表示从 stdin 读")
     ap.add_argument("--uniprot")
     a = ap.parse_args()
+
+    global _RECORDING, _FIXTURES, _OFFLINE
+    if a.record_fixtures:
+        _RECORDING = {}
+        _FIXTURES = {}                     # 录制时不许回放，必须打真实接口
+        rc = _selftest()
+        if rc != 0:
+            print("\n自检未通过，**不写入 fixture** —— "
+                  "录一份坏响应比没有 fixture 更糟", file=sys.stderr)
+            return rc
+        p = os.path.abspath(FIXTURE_PATH)
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with io.open(p, "w", encoding="utf-8") as fh:
+            json.dump({"_note": ("X1 自检用的真实接口响应录制。回放**只验证解析与"
+                                 "判定逻辑**，不验证上游接口是否仍然可用 —— "
+                                 "上游改字段只有重新录制才会发现。"
+                                 "因此离线自检全绿不得声称「外部核验可用」。"),
+                       "_recorded_at": _now(),
+                       "_parser_version": PARSER_VERSION,
+                       "responses": _RECORDING},
+                      fh, ensure_ascii=False, indent=1)
+        total = sum(len(v.get("body") or "") for v in _RECORDING.values())
+        print(f"\n已录制 {len(_RECORDING)} 条响应，共 {total/1024:.1f} KB -> "
+              f"{os.path.relpath(p)}")
+        return 0
+
+    if a.offline:
+        resp = _load_fixtures()          # 已在内部解开 responses 层
+        if not resp:
+            print("未找到已录制的 fixture，先跑 --record-fixtures", file=sys.stderr)
+            return 2
+        _FIXTURES = resp
+        _OFFLINE = True
+        print(f"离线回放模式：{len(resp)} 条已录制响应（未命中即报错，不走网络）\n")
+        rc = _selftest()
+        print("\n注意：离线全绿只说明解析与判定逻辑没坏；"
+              "上游接口是否仍可用需联网重新录制才能确认。")
+        return rc
 
     if a.selftest:
         return _selftest()
