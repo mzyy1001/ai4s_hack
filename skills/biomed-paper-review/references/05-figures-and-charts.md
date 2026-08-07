@@ -41,6 +41,13 @@
 
 ```text
 original_figure_file > extracted_pdf_figure > rendered_pdf_page > text_only_caption
+```
+
+**若模型不支持视觉输入**（实测 opencode + qwen3.8-max 即如此：主会话与子会话
+均无图像通道），不得假装看过图。按 `00-contracts.md` 登记
+`system_limitation`（`figure_unreadable`），M5 退化为图注 / 正文 / 源 XML 的
+交叉核验 + `figure_integrity_audit.py` 的确定性像素审计，并在报告中写明
+本次未覆盖像素级判据。
 
 ### A.2 图表类型知识库
 
