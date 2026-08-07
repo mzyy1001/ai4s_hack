@@ -1,8 +1,0 @@
-
-=== PMC13262544 Fermented bread, a promising additive to pig feed to improve ===
-标准答案：论文使用 IPEC 作为 pig 的模型，但 Cellosaurus（CVCL_6C42）标注该细胞系：Misidentified/contaminated. Originally thought to be of pig origin b
-  [baseline] 审阅中 …
-  [baseline] MISS（意见 5089 字符）
-  [withskill] 审阅中 …
-  [withskill] **审阅调用失败：输出含错误标记 'Error:'** —— 本次作废
-  不得把这种情况记作「没查出来」：那是我们没问到。

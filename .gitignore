@@ -3,22 +3,15 @@ __pycache__/
 *.pyc
 .venv/
 venv/
-*.tar.gz
-.claude/settings.local.json
-
-# 测试用 PDF：仅本地保留，用于验证页码级原图定位
-# 提交包不含（单文件超 10MB 且非必需）；python3 tools/fetch_papers.py 可重建
-datasets/papers/*/paper.pdf
 
 # 密钥与本地环境：绝不入库
 .env
 .env.local
 *.key
 secrets/
-loop/state/
-loop/logs/
 
-# 测试语料：不属于提交包，用脚本按需重建
-# python3 tools/fetch_papers.py           （10 篇分维度语料）
-# python3 tools/fetch_ground_truth_papers.py（12 篇外部核验 ground truth）
+# 开发工作区（语料 / 工具 / 文档 / 实验记录）都在 dev 分支
 datasets/
+docs/
+tools/
+loop/
