@@ -85,21 +85,32 @@ def body_text(xml):
 
 
 def to_plain_text(xml):
-    """把 JATS XML 转成可读正文。
+    """把 JATS XML 转成**保留段落结构**的可读正文。
 
-    **为什么必须转**：原始 XML 有大量标记噪声，实测 397 KB 的 XML 会让审阅
-    调用挂死（进程零 CPU、零网络连接，十一分钟无产出）。转成纯文本后同一篇
-    只有 74 KB。而且审稿人本来就是读论文，不是读 JATS 标记 ——
-    喂纯文本既更省又更贴近真实任务。两臂拿到的是同一份文本，比较仍然公平。
+    两个必须做对的地方，都是踩出来的：
+
+    1. **必须转**：原始 XML 有大量标记噪声，397 KB 的 XML 让审阅调用挂死
+       （零 CPU、零连接、十一分钟无产出）；转文本后同篇只有 74 KB。
+       审稿人本来就读论文不读 JATS 标记。
+    2. **必须保留换行**：第一版把标签一律换成空格，结果整篇变成一行
+       七万多字符 —— Read 工具会截断长行，模型自己都发现了
+       「文件是单行长文本，Read 工具会截断」，等于根本没读到论文。
+       所以段落、标题、列表项边界必须显式插入换行。
     """
     m = re.search(r"<body[^>]*>(.*?)</body>", xml or "", re.S)
     body = m.group(1) if m else (xml or "")
     # 表格与图先压成单行，避免撑开大量空白
     body = re.sub(r"<(table-wrap|fig)\b.*?</\1>",
-                  lambda x: " ".join(re.sub(r"<[^>]+>", " ", x.group(0)).split()),
+                  lambda x: "\n" + " ".join(
+                      re.sub(r"<[^>]+>", " ", x.group(0)).split()) + "\n",
                   body, flags=re.S)
+    # 段落/标题/列表项结束处补换行，标题前后各空一行
+    body = re.sub(r"</(p|title|label|list-item|caption|abstract)>", "\n", body)
+    body = re.sub(r"<(sec|title)\b[^>]*>", "\n\n", body)
     t = re.sub(r"<[^>]+>", " ", body)
-    return re.sub(r"[ \t]+", " ", re.sub(r"\n{3,}", "\n\n", t)).strip()
+    t = re.sub(r"[ \t]+", " ", t)
+    t = re.sub(r" *\n *", "\n", t)
+    return re.sub(r"\n{3,}", "\n\n", t).strip()
 
 
 def search(query, page_size=25):

@@ -572,6 +572,13 @@ critical 及直接阻断核心解释的 major）；P1=给出修改要求前核�
 下列 preflight 会从 Git 根目录解析 Skill；安装后的运行时则必须预先注入实际 Skill 目录。五个脚本均支持稳定 CLI；
 业务模式的 stdout 只写 JSON（`--selftest` / `--help` 除外），输入错误在 stderr 写
 `error.code=invalid_input` 并以退出码 2 结束，不输出 traceback。
+**中间文件一律写在当前工作目录，禁止写 `/tmp` 或任何工作目录之外的路径。**
+实测教训：模型自行把脚本输入写到 `/tmp/xxx.json`，被运行时以
+`permission requested: external_directory (/tmp/*); auto-rejecting` 直接拒绝，
+于是整条取证链断掉、脚本一次都没跑成 —— 而脚本正是相对裸模型的主要增益来源。
+评测沙箱同样可能限制工作目录之外的写入，**不要赌它允许**。
+需要临时文件时用相对路径（如 `./_x1_input.json`），或直接用管道传 stdin。
+
 以下命令可从任意工作目录执行：
 
 ```bash

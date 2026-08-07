@@ -1,117 +1,246 @@
-1. INTRODUCTION The breast cancer (BC) has been reported to be a primary cause of malignancy and mortality in women, and the incidence rate worldwide has been on the rise. 
- 1 
- The breast cancer possesses a heterogeneous nature and is classified into several subtypes. 
- 2 
- Anti‐estrogen or combined anti‐HER2 therapeutic strategies are major treatments for luminal A, luminal B, and HER2‐positive (HER2+) breast cancer subtypes. 
- 3 
- However, the highly aggressive and metastatic triple‐negative breast cancer (TNBC, negative in estrogen receptor, progesterone receptor, and human epidermal growth factor receptor 2) is associated with high relapse even after chemotherapy or radiotherapy. 
- 4 
- , 
- 5 
- Therefore, unraveling novel and effective targets for TNBC intervention are of great significance. Growing evidence has suggested that the non‐coding RNAs with no or minimal coding abilities contribute largely to tumor development. 
- 6 
- A major constituent of non‐coding transcriptome is long non‐coding RNAs (lncRNAs). 
- 6 
- The long non‐coding RNAs are RNA transcripts with more than 200 nucleotides in length and involved in numerous biological processes. 
- 7 
- The lncRNAs can serve as an oncogene or tumor suppressor with an emerging effect on metastasis. 
- 8 
- For instance, Tang et al identified that lncRNA PVT1 can stabilize KLF5 via BAP1 and increase its stability to promote TNBC progression. 
- 9 
- Alipoor et al recently found that lncRNA MIAT increases miR‐302/miR‐150 expression, whereas miR‐29c expression was decreased. 
- 10 
- Furthermore, MIAT also abolishes the expression of p16 Ink4A and Cox2 to inhibit senescence commitment. 
- 10 
- A TNBC‐specific lncRNA LINC00511 is markedly upregulated through gene amplification and significantly correlates with TNBC progression. 
- 11 
- Sas‐Chen et al showed that lncRNA LIMT is a highly conserved tumor suppressor and its expression is suppressed by epidermal growth factor (EGF) signaling pathway. 
- 12 
- Other reported lncRNAs (eg, RMST and BORG) are substantially associated with breast cancer development via diverse molecular mechanisms. 
- 13 
- , 
- 14 
- However, the function of lncRNAs especially in TNBC is still obscure. In the current work, by lncRNA profiling, we have identified a novel lncRNA ENSG00000259457 as an oncogenic lncRNA in TNBC. It was termed as o ncogenic l ncRNA in b reast c ancer on chromosome 15 (OLBC15). We observed that OLBC15 is significantly upregulated in TNBC. OLBC15 acted as an oncogenic factor to promote breast cancer progression, and this effect was verified both in vivo and in vitro. Furthermore, by RNA immunoprecipitation we noted that zinc‐finger protein‐326 (ZNF326) might be an OLBC15 binding protein. The interaction of OLBC15 and ZNF326 decreased the stability of ZNF326 via enhanced ubiquitination and proteasomal degradation. OLBC15 also showed negative correlation with ZNF326 protein expression in clinical samples. These data collectively implied an oncogenic role of OLBC15 and may provide a novel anti‐TNBC target for therapeutic intervention. 2. MATERIALS AND METHODS 2.1. Cell lines, lentiviral vectors, and reagents The transformed MCF‐10A and breast cancer MDA‐MB‐231, BT‐549, HCC1806, Hs578t, and MDA‐MB‐468 cells were cultured in Dulbecco's modified Eagle's medium (DMEM, Sigma) containing 7% FBS and 150 μg/mL streptomycin. The cell lines were all obtained from Cell Resource Center of Shanghai Institute of Biological Sciences (CAS). Puromycin was used for 2 days. OLBC15 was first cloned and was then inserted into a pWPXL vector (Biovector) to generate pWPXL‐OLBC15 vector (OE‐OLBC15). Lentiviral selection was then conducted using puromycin (No.A1113802, Thermo Fisher Scientific), and generated supernatants were treated with a syringe filter. An empty pWPXL vector serves as the control (ie, OE‐control). The short hairpin RNA (shRNA) for OLBC15 (ShOLBC15) together with a non‐targeting scrambled control (ShCtrl) was obtained from Biovector. Transfection was conducted using Lipofectamine 3000. Primers were listed in Table  S1 . 2.2. Human samples The breast cancer tissues were collected from patients following a protocol described previously 
- 15 
- from January 2017 to November 2018. The samples were stored at −80℃ immediately after resection before use. Experiments associated with human specimens were approved by Human Research Ethics Committee (HREC) at Chongqing Three Gorges Central Hospital in accordance with the 1975 Declaration of Helsinki. 2.3. Migration assay ~5 × 10 5 cells were located on the top chamber of a 24‐well plate (BD Biosciences). The DMEM with 7% serum was loaded at the bottom. After an incubation for 24 hours, cells moving into the bottom chambers were fixed with 4% paraformaldehyde (No.16005, Sigma) and subject to staining by 0.4% crystal violet (No.C0775, Sigma). 2.4. Viability assay We used Cell Counting Kit‐8 (CCK‐8, Dojindo, Japan) to measure the viability of breast cancer cells following the manufacturer's protocols. BT549 and MDA‐MB‐231 cells were resuspended and moved into a 12‐well plate (~2 × 10 5 cells/well). 30 µL CCK‐8 solutions were then added into the system. Optical density at 450 nm (OD 450 nm) was measured by a Spectramax M5 microplate monitor (Molecular Devices). 2.5. Statistical analysis Statistical analyses were performed with SPSS (v16, SPSS, Inc). Data were represented as mean ± SD. The nonparametric Mann‐Whitney test was used to identify the statistical significance between two groups, and ANOVA was used for comparing multiple groups followed by the LSD post hoc test. P  &lt; .05 was considered statistically significant. 3. RESULTS 3.1. Identifying OLBC15 in breast cancer via lncRNA profiling To screen for breast cancer (BC)‐related lncRNAs, we used lncRNA profiling assays in paired BC tissues and normal adjacent tissues (NATs) (Figure  1A ). Overall, 73 significantly upregulated lncRNAs were detected (Figure  1A ). These lncRNAs were candidate ones with oncogenic potential. Notably, two novel lncRNAs, RP11‐597D13.9 and OLBC15, were identified by lncRNA profiling (Table  S2 ). Since lncRNA OLBC15 showed higher fold expression, we chose it for further analysis. OLBC15 was markedly upregulated in BC tissues compared with normal tissues (Figure  1B ). OLBC15 is located on chromosome 15 with one annotated transcript ( www.ensembl.org ). The whole sequence for OLBC15 was shown (Figure  S1 A). Full‐length OLBC15 showed neglectable coding potential as evaluated by Coding Potential Assessment Tool (CPAT, coding probability ~ .032, Figure  S1 B). Moreover, OLBC15 was substantially enriched in triple‐negative breast cancer (TNBC) tissues compared with the other subtypes (Figure  1C ). OLBC15 transcripts were highly increased in BC cell lines compared with MCF10A cells (Figure  1D ). Patient characteristics demonstrated that OLBC15 expression significantly correlated with TNM stage, tumor size, and metastasis but was not significantly associated with age and histology (Table  S3 ). Subcellular fractionation assay clarified that OLBC15 was primarily located in nucleus (Figure  1E ). These data suggested that OLBC15 was upregulated in BC with nuclear distribution. Figure 1 Identifying OLBC15 in breast cancer (BC). A, Heatmap representation of lncRNA profiling in normal adjacent tissues (NATs) and breast cancer tissues. Significantly upregulated and downregulated lncRNAs in BC tissues were 73 and 126, respectively. B, Relative OLBC15 expression in NAT and BC tissues. C, The relative OLBC15 levels in different breast cancer subtypes. The case numbers for luminal A (LA), luminal B (LB), HER2 + (HER2), and triple‐negative breast cancer (TNBC) were 40, 25, 26, and 51, respectively. D, Relative OLBC15 expression in transformed MCF10A and cancerous TNBC cell lines. E, Subcellular distribution of OLBC15. **: P &lt; .01 3.2. OLBC15 facilitates breast cancer progression in vitro We next checked whether OLBC15 had an effect in vitro. We first stably overexpressed or silenced OLBC15 expression in MDA‐MB‐231 and BT‐549 cells (Figure  2A , B ). The knockdown and overexpression efficiency were verified (Figure  2A , B ). As expected, OLBC15 overexpression significantly promoted the viability of BT‐549 and MDA‐MB‐231 cells (Figure  2C , D ). Consistently, OLBC15 depletion (shOLBC15) strongly inhibited the viability of breast cancer cells (Figure  2C , D ). Migration assay further suggested that OLBC15 overexpression advanced migration in BT‐549 and MDA‐MB‐231 cells (Figure  2E , F ; P  &lt; .01). OLBC15 silence instead attenuated migratory capacity in breast cancer cells (Figure  2E , F ). These results implied that OLBC15 might play an oncogenic role in vitro. Figure 2 OLBC15 promotes TNBC in vitro. A, Overexpression efficiency by lentiviral OLBC15 transfection. B, Knockdown efficiency using shRNA targeting OLBC15. ShOLBC15 displayed higher efficiency and was selected as ShOLBC15. C‐D, Effect of OLBC15 on viability of BT‐549 (C) and MDA‐MB‐231 (D) cells transfected with shRNA scrambled control (ShCtrl), ShOLBC15, lentiviral control (OE‐control), or the lentiviral vector carrying OLBC15 (OE‐OLBC15). E, Effect of OLBC15 on migratory capacity of MDA‐MB‐231 (top) and BT‐549 (bottom) cells. F, Quantification of results in (E). **: P &lt; .01 3.3. OLBC15 promotes xenograft tumor growth and metastasis We then performed in vivo experiments to further investigate the function of OLBC15. Stably transfected MDA‐MB‐231 cells were used. OLBC15 knockdown inhibited tumor growth, whereas overexpressing OLBC15 promoted the tumor volume expansion (Figure  3A ). A higher number of metastatic nodules were detected in OLBC15‐overexpressing group compared with the control (Figure  3B , C ; P  &lt; .01). As expected, OLBC15 silence profoundly inhibited the occurrence of metastatic nodules (Figure  3B , C ; P  &lt; .01). The xenograft tumor growth was evidently attenuated by OLBC15 depletion, whereas OLBC15 overexpression markedly accelerated the growth of xenograft tumors (Figure  3E , F ; P  &lt; .01). These results further suggested that OLBC15 could exert an oncogenic effect in vivo. Figure 3 OLBC15 advances TNBC in vivo. A, In vivo tumor volume growth of xenograft tumors with OLBC15 depletion or overexpression. B, Representative lung metastatic nodules with OLBC15 silence or overexpression. The description representing each numbered case was shown at the bottom. C, Quantification of metastatic nodules in (B). D, Xenograft tumors for MDA‐MB‐231 transplantation model with OLBC15 silence or overexpression. Numbered case description was shown at the bottom. E, Quantification data for (D). **: P &lt; .01 3.4. OLBC15 interacts with ZNF326 protein We further used RNA pulldown assays to unravel the potential mechanism of OLBC15‐induced oncogenic effect. One specific band was detected (Figure  4A ; indicated by arrow). The enriched proteins in OLBC15 pulldowns were then analyzed using mass spectrometry, and the results showed five putative hits (Table  S4 ). Immunoblot confirmed that ZNF326 may be binding factor (Figure  4B ). OLBC15 was significantly enriched in fractions with antibody against ZNF326 as determined by measuring co‐precipitated RNA (Figure  4C ). Fluorescence in situ hybridization (FISH) also revealed colocalization for OLBC15 and ZNF326 (Figure  4D ). Full‐length and various ZNF326 truncated mutants were constructed (Figure  4E ), and we found that depleting the C‐terminal region of ZNF326 markedly abolished its interaction with OLBC15 (Figure  4F ). Various OLBC15 truncated forms were also created according to the predicted secondary structure (Figure  4G ,H). The results showed that the N‐terminal domain of OLBC15 was responsible for ZNF326 binding (Figure  4I ). These results showed that OLBC15 may interact with ZNF326 protein. Figure 4 ZNF326 interacts with OLBC15. A, RNA pulldown for lncRNA OLBC15. The indicates band was trimmed and subject to mass spectrometry (MS) analyses. B, Proteins obtained from RNA pulldowns were analyzed by antibody for ZNF326. C, RNA immunoprecipitation (RIP) results for OLBC15. The lncRNA LINC00501 was used as a negative control. D, Fluorescence in situ hybridization (FISH) to show the colocalization of OLBC15 and ZNF326. E, Full‐length and depletion constructs of ZNF326 were used to locate the binding region for OLBC15. F, RNA immunoprecipitation (RIP) followed by qRT‐PCR in DMA‐MB‐231 cells transfected with ectopic expression for full‐length (FL) Flag‐tagged ZNF326 or various mutant constructs. G, The secondary structure of OLBC15 predicted by an online tool termed RNAfold ( http://rna.tbi.univie.ac.at//cgi‐bin/RNAWebSuite/RNAfold.cgi ). The black box depicts the binding region for ZNF326. H, Construction of full‐length (FL) or various OLBC15 truncates. I, RIP followed by qRT‐PCR to show the putative interacting domain for OLBC15 with ZNF326. Fold enrichment data were rescaled by comparing each input with Flag‐Vec 3.5. OLBC15 facilitates ZNF326 degradation To confirm the underlying mechanism of OLBC15‐ZNF326 binding, we knocked down OLBC15 expression in MDA‐MB‐231 cells and we found that ZNF326 abundance was increased (Figure  5A ). Co‐treatment with MG132, a proteasomal inhibitor, however, could elevate ZNF326 levels irrespective of whether OLBC15 was silenced (Figure  5B ). OLBC15 knockdown substantially inhibited ZNF326 ubiquitination (Figure  5C ). However, OLBC15 overexpression or depletion did not affect ZNF326 mRNA levels (Figure  5D ). Migration assays revealed that knocking down OLBC15 could significantly inhibit breast cancer cell migration (Figure  5E , F ). However, this effect could be counteracted by combinatorial ZNF326 silence (Figure  5E , F ). The efficiency of ZNF326 silence was also verified (Figure  5G ). Previous study has shown that ZNF326 can bind the promoter region of Krüppel‐like factor 17 ( KLF17 ) gene and induce KLF17 expression. 
- 16 
- OLBC15 knockdown indeed dramatically upregulated KLF17 expression, whereas KLF17 expression was inhibited after ZNF326 was silenced (Figure  S2 A). Notably, KLF17 level was partially rescued with simultaneous ZNF326/OLBC15 silence (Figure  S2 A). The occupancies of ZNF326 to KLF17 promoter were also increased when OLBC15 was depleted (Figure  S2 B). These data suggested that OLBC15 could promote ZNF326 degradation via ubiquitination pathway. Figure 5 OLBC15 destabilizes ZNF326 by increasing ubiquitination. A, ZNF326 expression in MDA‐MB‐231 cells transfected with ShCtrl or two shOLBC15 constructs. B, ZNF326 expression in MDA‐MB‐231 cells with or without OLBC15 silence treated with DMSO (MG132‐) or MG132 (MG132+). C, Ubiquitin ligation of ZNF326 in MDA‐MB‐231 cells with or without OLBC15 depletion expressing full‐length Flag‐tagged ZNF326. D, Relative expression of ZNF326 transcripts with either OLBC15 knockdown or overexpression. E, Migration assays for MDA‐MB‐231 cells with OLBC15 knockdown and/or ZNF326 shRNA. F, Quantification data for cellular migration in (E). G, Efficiency of ZNF326 silence on ZNF326 expression. ShZNF326‐2 showed higher efficiency and was selected as ShZNF326. **: P &lt; .01 3.6. Correlation between OLBC15 and ZNF326 in clinical samples We further investigated the clinical relevance of OLBC15 and ZNF326 in human samples. Immunohistochemistry (IHC) analyses showed various degrees of ZNF326 expression with different intensity scores which represented ZNF326 expression status (Figure  6A ). Consistently, we found that OLBC15 level was not significantly associated with ZNF326 transcripts (Figure  6B ). However, a significantly negative correlation was evident between ZNF326 protein expression and OLBC15 (Figure  6C ). These results suggested that OLBC15 could inhibit ZNF326 expression in clinical specimens. Figure 6 Correlation between OLBC15 and ZNF326 in clinical samples. A, Immunohistochemical (IHC) staining to identify ZNF326 in human specimens. Representative low (0), weak (1+), intermediate (2+), and strong staining (3+) cases using H‐score method were shown. Scale bar: 100 μm. B, Pearson correlation coefficient ( R ) between OLBC15 and ZNF326 mRNA abundance. The P value was shown. C, Correlation between OLBC15 levels and ZNF326 IHC scores (ie, protein abundance) in clinical samples 4. DISCUSSION In the current study, we have identified a novel oncogenic lncRNA OLBC15. We found that OLBC15 depletion may exert profound inhibition to breast cancer progression implying that OLBC15 may act as a putative target for intervention. OLBC15 expression was dramatically increased in breast cancer tissues especially TNBC. Furthermore, we also observed an oncogenic effect of OLBC15 via both in vitro and in vivo experiments. Mechanistic study showed that OLBC15 could interact with ZNF326, which is a novel tumor suppressor in TNBC. 
- 16 
- OLBC15 facilitates ZNF326 degradation via ubiquitination pathway. These data collectively suggested that OLBC15 fulfills its oncogenic function via destabilizing the tumor suppressor ZNF326. Notably, the ubiquitin ligase responsible for ZNF326 is still elusive and whether OLBC15 enhances the interaction between ZNF326 and its ubiquitin ligase remains to be determined. Moreover, the possibility of OLBC15 as a competitive endogenous RNA (ceRNA) during breast cancer progression remains to be evaluated. 
- 17 
- 
- We found that OLBC15 interacts with ZNF326 to destabilize ZNF326 protein. The ZNF326 protein is initially identified in NIH3T3 cell line and modulates migration and growth. 
- 18 
- Meanwhile, ZNF326 is also a transcriptional factor which activates neuronal differentiation. 
- 19 
- ZNF326 can bind deleted in breast cancer 1 (DBC1) leading to the formation of DBIRD (DBC1/ZIRD) complex and result in its association with RNAPII. 
- 20 
- Therefore, ZNF326 can actively participate in the process of alternative splicing in A/T‐rich regions of DNA. 
- 16 
- Depleting ZNF326 can increase the expression of multiple genes involved in epithelial‐mesenchymal transition (EMT) in HEK293 cells and TNBC cell lines. 
- 16 
- , 
- 20 
- ZNF326 silence also leads to enhanced migratory and invasive capacity together with increased mammosphere formation in TNBC cells. 
- 16 
- Consistently, ZNF326 knockdown also promotes orthologous transplant tumor formation, whereas overexpressing ZNF326 decreased xenograft tumor formation. 
- 16 
- We have verified that OLBC15 silence can stabilize ZNF326 and as a result markedly augment the expression of KLF17 , which is a well‐characterized tumor suppressor gene and negatively regulates EMT and metastasis in breast cancer. 
- 21 
- Furthermore, increased expression of PRMT5/WDR77 complex in breast cancer cells results in ZNF326 methylation and is essential for Pol II elongation across A/T‐rich regions. 
- 22 
- ZNF326 also represses breast cancer progression via diverse mechanisms. 
- 16 
- These data support a tumor‐suppressive role of ZNF326 in TNBC. We should note that ZNF326 might play different roles in other types of cancer. For example, recent reports have demonstrated that cells with ZNF326 overexpression favor malignant phenotypes in glioma via increasing LDAC7 levels and activating Wnt signaling. 
- 18 
- Wu et al have also identified that the C2H2 structure of ZNF326 can bind to the ERCC1 promoter and elevate ERCC1 expression in non–small‐cell lung cancer (NSCLC). 
- 23 
- Therefore, ZNF326 can be a tumor suppressor and lncRNA OLBC15 promotes TNBC oncogenesis via destabilizing ZNF326 at least in TNBC. These data argue that OLBC15 may possibly be a tumor‐specific lncRNA in TNBC and the exact role of OLBC15 in other types of cancers remains to be investigated in future studies. Notably, patients with TNBC suffer greatly from poor outcomes and effective target therapy is still lacking in TNBC. 
- 5 
- , 
- 24 
- The programmed cell death protein 1 (PD‐1)/PD ligand 1 (PD‐L1) as well as androgen receptors (AR) might be possible targets for therapeutic intervention to repress breast cancer progression although the efficiency and the frequent off‐target effects have posed serious concerns. 
- 5 
- Current data have supported OLBC15 as a potential oncogenic lncRNA especially in TNBC. Therefore, the efficacy of OLBC15 targeting deserves further investigation. RNA interference might be a possible strategy; however, the lowered stability and cellular uptake especially in nucleus remain an obstacle to OLBC15 depletion. 
- 25 
- The antisense oligonucleotides (ASOs) may provide a promising way to annihilate OLBC15 in breast cancer cells, and ASOs specifically targeting EZH2 and AR are highly effective in recent work. 
- 26 
- A clinical trial has demonstrated that an ASO termed IONIS‐APO(a) Rx can be of favorable efficiency. 
- 27 
- Therefore, we argue that using ASOs targeting OLBC15 may present an alternative strategy to abolish OLBC15 expression and inhibit TNBC development. There is also a possibility to target multiple TNBC‐associated oncogenic lncRNAs via ASOs, and relevant investigations should be performed in future. Our current data have supported a novel transcript related to TNBC progression. OLBC15 directly interacts with ZNF326 tumor suppressor and interferes its post‐translational modification. OLBC15 has potentially clinical relevance and may aid in targeted design of anti‐cancer therapeutics especially in TNBC. Supporting information 
- Supplementary Material 
- Click here for additional data file. ACKNOWLEDGMENT This work is supported by Chongqing Regional Medical Key Discipline Construction Project (zdxk201919). 
+1.
+
+INTRODUCTION
+The breast cancer (BC) has been reported to be a primary cause of malignancy and mortality in women, and the incidence rate worldwide has been on the rise.
+1
+The breast cancer possesses a heterogeneous nature and is classified into several subtypes.
+2
+Anti‐estrogen or combined anti‐HER2 therapeutic strategies are major treatments for luminal A, luminal B, and HER2‐positive (HER2+) breast cancer subtypes.
+3
+However, the highly aggressive and metastatic triple‐negative breast cancer (TNBC, negative in estrogen receptor, progesterone receptor, and human epidermal growth factor receptor 2) is associated with high relapse even after chemotherapy or radiotherapy.
+4
+,
+5
+Therefore, unraveling novel and effective targets for TNBC intervention are of great significance.
+Growing evidence has suggested that the non‐coding RNAs with no or minimal coding abilities contribute largely to tumor development.
+6
+A major constituent of non‐coding transcriptome is long non‐coding RNAs (lncRNAs).
+6
+The long non‐coding RNAs are RNA transcripts with more than 200 nucleotides in length and involved in numerous biological processes.
+7
+The lncRNAs can serve as an oncogene or tumor suppressor with an emerging effect on metastasis.
+8
+For instance, Tang et al identified that lncRNA PVT1 can stabilize KLF5 via BAP1 and increase its stability to promote TNBC progression.
+9
+Alipoor et al recently found that lncRNA MIAT increases miR‐302/miR‐150 expression, whereas miR‐29c expression was decreased.
+10
+Furthermore, MIAT also abolishes the expression of p16 Ink4A and Cox2 to inhibit senescence commitment.
+10
+A TNBC‐specific lncRNA LINC00511 is markedly upregulated through gene amplification and significantly correlates with TNBC progression.
+11
+Sas‐Chen et al showed that lncRNA LIMT is a highly conserved tumor suppressor and its expression is suppressed by epidermal growth factor (EGF) signaling pathway.
+12
+Other reported lncRNAs (eg, RMST and BORG) are substantially associated with breast cancer development via diverse molecular mechanisms.
+13
+,
+14
+However, the function of lncRNAs especially in TNBC is still obscure.
+In the current work, by lncRNA profiling, we have identified a novel lncRNA ENSG00000259457 as an oncogenic lncRNA in TNBC. It was termed as o ncogenic l ncRNA in b reast c ancer on chromosome 15 (OLBC15). We observed that OLBC15 is significantly upregulated in TNBC. OLBC15 acted as an oncogenic factor to promote breast cancer progression, and this effect was verified both in vivo and in vitro. Furthermore, by RNA immunoprecipitation we noted that zinc‐finger protein‐326 (ZNF326) might be an OLBC15 binding protein. The interaction of OLBC15 and ZNF326 decreased the stability of ZNF326 via enhanced ubiquitination and proteasomal degradation. OLBC15 also showed negative correlation with ZNF326 protein expression in clinical samples. These data collectively implied an oncogenic role of OLBC15 and may provide a novel anti‐TNBC target for therapeutic intervention.
+
+2.
+
+MATERIALS AND METHODS
+
+2.1.
+
+Cell lines, lentiviral vectors, and reagents
+The transformed MCF‐10A and breast cancer MDA‐MB‐231, BT‐549, HCC1806, Hs578t, and MDA‐MB‐468 cells were cultured in Dulbecco's modified Eagle's medium (DMEM, Sigma) containing 7% FBS and 150 μg/mL streptomycin. The cell lines were all obtained from Cell Resource Center of Shanghai Institute of Biological Sciences (CAS). Puromycin was used for 2 days. OLBC15 was first cloned and was then inserted into a pWPXL vector (Biovector) to generate pWPXL‐OLBC15 vector (OE‐OLBC15). Lentiviral selection was then conducted using puromycin (No.A1113802, Thermo Fisher Scientific), and generated supernatants were treated with a syringe filter. An empty pWPXL vector serves as the control (ie, OE‐control). The short hairpin RNA (shRNA) for OLBC15 (ShOLBC15) together with a non‐targeting scrambled control (ShCtrl) was obtained from Biovector. Transfection was conducted using Lipofectamine 3000. Primers were listed in Table  S1 .
+
+2.2.
+
+Human samples
+The breast cancer tissues were collected from patients following a protocol described previously
+15
+from January 2017 to November 2018. The samples were stored at −80℃ immediately after resection before use. Experiments associated with human specimens were approved by Human Research Ethics Committee (HREC) at Chongqing Three Gorges Central Hospital in accordance with the 1975 Declaration of Helsinki.
+
+2.3.
+
+Migration assay
+~5 × 10 5 cells were located on the top chamber of a 24‐well plate (BD Biosciences). The DMEM with 7% serum was loaded at the bottom. After an incubation for 24 hours, cells moving into the bottom chambers were fixed with 4% paraformaldehyde (No.16005, Sigma) and subject to staining by 0.4% crystal violet (No.C0775, Sigma).
+
+2.4.
+
+Viability assay
+We used Cell Counting Kit‐8 (CCK‐8, Dojindo, Japan) to measure the viability of breast cancer cells following the manufacturer's protocols. BT549 and MDA‐MB‐231 cells were resuspended and moved into a 12‐well plate (~2 × 10 5 cells/well). 30 µL CCK‐8 solutions were then added into the system. Optical density at 450 nm (OD 450 nm) was measured by a Spectramax M5 microplate monitor (Molecular Devices).
+
+2.5.
+
+Statistical analysis
+Statistical analyses were performed with SPSS (v16, SPSS, Inc). Data were represented as mean ± SD. The nonparametric Mann‐Whitney test was used to identify the statistical significance between two groups, and ANOVA was used for comparing multiple groups followed by the LSD post hoc test. P  &lt; .05 was considered statistically significant.
+
+3.
+
+RESULTS
+
+3.1.
+
+Identifying OLBC15 in breast cancer via lncRNA profiling
+To screen for breast cancer (BC)‐related lncRNAs, we used lncRNA profiling assays in paired BC tissues and normal adjacent tissues (NATs) (Figure  1A ). Overall, 73 significantly upregulated lncRNAs were detected (Figure  1A ). These lncRNAs were candidate ones with oncogenic potential. Notably, two novel lncRNAs, RP11‐597D13.9 and OLBC15, were identified by lncRNA profiling (Table  S2 ). Since lncRNA OLBC15 showed higher fold expression, we chose it for further analysis. OLBC15 was markedly upregulated in BC tissues compared with normal tissues (Figure  1B ). OLBC15 is located on chromosome 15 with one annotated transcript ( www.ensembl.org ). The whole sequence for OLBC15 was shown (Figure  S1 A). Full‐length OLBC15 showed neglectable coding potential as evaluated by Coding Potential Assessment Tool (CPAT, coding probability ~ .032, Figure  S1 B). Moreover, OLBC15 was substantially enriched in triple‐negative breast cancer (TNBC) tissues compared with the other subtypes (Figure  1C ). OLBC15 transcripts were highly increased in BC cell lines compared with MCF10A cells (Figure  1D ). Patient characteristics demonstrated that OLBC15 expression significantly correlated with TNM stage, tumor size, and metastasis but was not significantly associated with age and histology (Table  S3 ). Subcellular fractionation assay clarified that OLBC15 was primarily located in nucleus (Figure  1E ). These data suggested that OLBC15 was upregulated in BC with nuclear distribution.
+
+Figure 1 Identifying OLBC15 in breast cancer (BC). A, Heatmap representation of lncRNA profiling in normal adjacent tissues (NATs) and breast cancer tissues. Significantly upregulated and downregulated lncRNAs in BC tissues were 73 and 126, respectively. B, Relative OLBC15 expression in NAT and BC tissues. C, The relative OLBC15 levels in different breast cancer subtypes. The case numbers for luminal A (LA), luminal B (LB), HER2 + (HER2), and triple‐negative breast cancer (TNBC) were 40, 25, 26, and 51, respectively. D, Relative OLBC15 expression in transformed MCF10A and cancerous TNBC cell lines. E, Subcellular distribution of OLBC15. **: P &lt; .01
+
+3.2.
+
+OLBC15 facilitates breast cancer progression in vitro
+We next checked whether OLBC15 had an effect in vitro. We first stably overexpressed or silenced OLBC15 expression in MDA‐MB‐231 and BT‐549 cells (Figure  2A , B ). The knockdown and overexpression efficiency were verified (Figure  2A , B ). As expected, OLBC15 overexpression significantly promoted the viability of BT‐549 and MDA‐MB‐231 cells (Figure  2C , D ). Consistently, OLBC15 depletion (shOLBC15) strongly inhibited the viability of breast cancer cells (Figure  2C , D ). Migration assay further suggested that OLBC15 overexpression advanced migration in BT‐549 and MDA‐MB‐231 cells (Figure  2E , F ; P  &lt; .01). OLBC15 silence instead attenuated migratory capacity in breast cancer cells (Figure  2E , F ). These results implied that OLBC15 might play an oncogenic role in vitro.
+
+Figure 2 OLBC15 promotes TNBC in vitro. A, Overexpression efficiency by lentiviral OLBC15 transfection. B, Knockdown efficiency using shRNA targeting OLBC15. ShOLBC15 displayed higher efficiency and was selected as ShOLBC15. C‐D, Effect of OLBC15 on viability of BT‐549 (C) and MDA‐MB‐231 (D) cells transfected with shRNA scrambled control (ShCtrl), ShOLBC15, lentiviral control (OE‐control), or the lentiviral vector carrying OLBC15 (OE‐OLBC15). E, Effect of OLBC15 on migratory capacity of MDA‐MB‐231 (top) and BT‐549 (bottom) cells. F, Quantification of results in (E). **: P &lt; .01
+
+3.3.
+
+OLBC15 promotes xenograft tumor growth and metastasis
+We then performed in vivo experiments to further investigate the function of OLBC15. Stably transfected MDA‐MB‐231 cells were used. OLBC15 knockdown inhibited tumor growth, whereas overexpressing OLBC15 promoted the tumor volume expansion (Figure  3A ). A higher number of metastatic nodules were detected in OLBC15‐overexpressing group compared with the control (Figure  3B , C ; P  &lt; .01). As expected, OLBC15 silence profoundly inhibited the occurrence of metastatic nodules (Figure  3B , C ; P  &lt; .01). The xenograft tumor growth was evidently attenuated by OLBC15 depletion, whereas OLBC15 overexpression markedly accelerated the growth of xenograft tumors (Figure  3E , F ; P  &lt; .01). These results further suggested that OLBC15 could exert an oncogenic effect in vivo.
+
+Figure 3 OLBC15 advances TNBC in vivo. A, In vivo tumor volume growth of xenograft tumors with OLBC15 depletion or overexpression. B, Representative lung metastatic nodules with OLBC15 silence or overexpression. The description representing each numbered case was shown at the bottom. C, Quantification of metastatic nodules in (B). D, Xenograft tumors for MDA‐MB‐231 transplantation model with OLBC15 silence or overexpression. Numbered case description was shown at the bottom. E, Quantification data for (D). **: P &lt; .01
+
+3.4.
+
+OLBC15 interacts with ZNF326 protein
+We further used RNA pulldown assays to unravel the potential mechanism of OLBC15‐induced oncogenic effect. One specific band was detected (Figure  4A ; indicated by arrow). The enriched proteins in OLBC15 pulldowns were then analyzed using mass spectrometry, and the results showed five putative hits (Table  S4 ). Immunoblot confirmed that ZNF326 may be binding factor (Figure  4B ). OLBC15 was significantly enriched in fractions with antibody against ZNF326 as determined by measuring co‐precipitated RNA (Figure  4C ). Fluorescence in situ hybridization (FISH) also revealed colocalization for OLBC15 and ZNF326 (Figure  4D ). Full‐length and various ZNF326 truncated mutants were constructed (Figure  4E ), and we found that depleting the C‐terminal region of ZNF326 markedly abolished its interaction with OLBC15 (Figure  4F ). Various OLBC15 truncated forms were also created according to the predicted secondary structure (Figure  4G ,H). The results showed that the N‐terminal domain of OLBC15 was responsible for ZNF326 binding (Figure  4I ). These results showed that OLBC15 may interact with ZNF326 protein.
+
+Figure 4 ZNF326 interacts with OLBC15. A, RNA pulldown for lncRNA OLBC15. The indicates band was trimmed and subject to mass spectrometry (MS) analyses. B, Proteins obtained from RNA pulldowns were analyzed by antibody for ZNF326. C, RNA immunoprecipitation (RIP) results for OLBC15. The lncRNA LINC00501 was used as a negative control. D, Fluorescence in situ hybridization (FISH) to show the colocalization of OLBC15 and ZNF326. E, Full‐length and depletion constructs of ZNF326 were used to locate the binding region for OLBC15. F, RNA immunoprecipitation (RIP) followed by qRT‐PCR in DMA‐MB‐231 cells transfected with ectopic expression for full‐length (FL) Flag‐tagged ZNF326 or various mutant constructs. G, The secondary structure of OLBC15 predicted by an online tool termed RNAfold ( http://rna.tbi.univie.ac.at//cgi‐bin/RNAWebSuite/RNAfold.cgi ). The black box depicts the binding region for ZNF326. H, Construction of full‐length (FL) or various OLBC15 truncates. I, RIP followed by qRT‐PCR to show the putative interacting domain for OLBC15 with ZNF326. Fold enrichment data were rescaled by comparing each input with Flag‐Vec
+
+3.5.
+
+OLBC15 facilitates ZNF326 degradation
+To confirm the underlying mechanism of OLBC15‐ZNF326 binding, we knocked down OLBC15 expression in MDA‐MB‐231 cells and we found that ZNF326 abundance was increased (Figure  5A ). Co‐treatment with MG132, a proteasomal inhibitor, however, could elevate ZNF326 levels irrespective of whether OLBC15 was silenced (Figure  5B ). OLBC15 knockdown substantially inhibited ZNF326 ubiquitination (Figure  5C ). However, OLBC15 overexpression or depletion did not affect ZNF326 mRNA levels (Figure  5D ). Migration assays revealed that knocking down OLBC15 could significantly inhibit breast cancer cell migration (Figure  5E , F ). However, this effect could be counteracted by combinatorial ZNF326 silence (Figure  5E , F ). The efficiency of ZNF326 silence was also verified (Figure  5G ). Previous study has shown that ZNF326 can bind the promoter region of Krüppel‐like factor 17 ( KLF17 ) gene and induce KLF17 expression.
+16
+OLBC15 knockdown indeed dramatically upregulated KLF17 expression, whereas KLF17 expression was inhibited after ZNF326 was silenced (Figure  S2 A). Notably, KLF17 level was partially rescued with simultaneous ZNF326/OLBC15 silence (Figure  S2 A). The occupancies of ZNF326 to KLF17 promoter were also increased when OLBC15 was depleted (Figure  S2 B). These data suggested that OLBC15 could promote ZNF326 degradation via ubiquitination pathway.
+
+Figure 5 OLBC15 destabilizes ZNF326 by increasing ubiquitination. A, ZNF326 expression in MDA‐MB‐231 cells transfected with ShCtrl or two shOLBC15 constructs. B, ZNF326 expression in MDA‐MB‐231 cells with or without OLBC15 silence treated with DMSO (MG132‐) or MG132 (MG132+). C, Ubiquitin ligation of ZNF326 in MDA‐MB‐231 cells with or without OLBC15 depletion expressing full‐length Flag‐tagged ZNF326. D, Relative expression of ZNF326 transcripts with either OLBC15 knockdown or overexpression. E, Migration assays for MDA‐MB‐231 cells with OLBC15 knockdown and/or ZNF326 shRNA. F, Quantification data for cellular migration in (E). G, Efficiency of ZNF326 silence on ZNF326 expression. ShZNF326‐2 showed higher efficiency and was selected as ShZNF326. **: P &lt; .01
+
+3.6.
+
+Correlation between OLBC15 and ZNF326 in clinical samples
+We further investigated the clinical relevance of OLBC15 and ZNF326 in human samples. Immunohistochemistry (IHC) analyses showed various degrees of ZNF326 expression with different intensity scores which represented ZNF326 expression status (Figure  6A ). Consistently, we found that OLBC15 level was not significantly associated with ZNF326 transcripts (Figure  6B ). However, a significantly negative correlation was evident between ZNF326 protein expression and OLBC15 (Figure  6C ). These results suggested that OLBC15 could inhibit ZNF326 expression in clinical specimens.
+
+Figure 6 Correlation between OLBC15 and ZNF326 in clinical samples. A, Immunohistochemical (IHC) staining to identify ZNF326 in human specimens. Representative low (0), weak (1+), intermediate (2+), and strong staining (3+) cases using H‐score method were shown. Scale bar: 100 μm. B, Pearson correlation coefficient ( R ) between OLBC15 and ZNF326 mRNA abundance. The P value was shown. C, Correlation between OLBC15 levels and ZNF326 IHC scores (ie, protein abundance) in clinical samples
+
+4.
+
+DISCUSSION
+In the current study, we have identified a novel oncogenic lncRNA OLBC15. We found that OLBC15 depletion may exert profound inhibition to breast cancer progression implying that OLBC15 may act as a putative target for intervention. OLBC15 expression was dramatically increased in breast cancer tissues especially TNBC. Furthermore, we also observed an oncogenic effect of OLBC15 via both in vitro and in vivo experiments. Mechanistic study showed that OLBC15 could interact with ZNF326, which is a novel tumor suppressor in TNBC.
+16
+OLBC15 facilitates ZNF326 degradation via ubiquitination pathway. These data collectively suggested that OLBC15 fulfills its oncogenic function via destabilizing the tumor suppressor ZNF326. Notably, the ubiquitin ligase responsible for ZNF326 is still elusive and whether OLBC15 enhances the interaction between ZNF326 and its ubiquitin ligase remains to be determined. Moreover, the possibility of OLBC15 as a competitive endogenous RNA (ceRNA) during breast cancer progression remains to be evaluated.
+17
+
+We found that OLBC15 interacts with ZNF326 to destabilize ZNF326 protein. The ZNF326 protein is initially identified in NIH3T3 cell line and modulates migration and growth.
+18
+Meanwhile, ZNF326 is also a transcriptional factor which activates neuronal differentiation.
+19
+ZNF326 can bind deleted in breast cancer 1 (DBC1) leading to the formation of DBIRD (DBC1/ZIRD) complex and result in its association with RNAPII.
+20
+Therefore, ZNF326 can actively participate in the process of alternative splicing in A/T‐rich regions of DNA.
+16
+Depleting ZNF326 can increase the expression of multiple genes involved in epithelial‐mesenchymal transition (EMT) in HEK293 cells and TNBC cell lines.
+16
+,
+20
+ZNF326 silence also leads to enhanced migratory and invasive capacity together with increased mammosphere formation in TNBC cells.
+16
+Consistently, ZNF326 knockdown also promotes orthologous transplant tumor formation, whereas overexpressing ZNF326 decreased xenograft tumor formation.
+16
+We have verified that OLBC15 silence can stabilize ZNF326 and as a result markedly augment the expression of KLF17 , which is a well‐characterized tumor suppressor gene and negatively regulates EMT and metastasis in breast cancer.
+21
+Furthermore, increased expression of PRMT5/WDR77 complex in breast cancer cells results in ZNF326 methylation and is essential for Pol II elongation across A/T‐rich regions.
+22
+ZNF326 also represses breast cancer progression via diverse mechanisms.
+16
+These data support a tumor‐suppressive role of ZNF326 in TNBC. We should note that ZNF326 might play different roles in other types of cancer. For example, recent reports have demonstrated that cells with ZNF326 overexpression favor malignant phenotypes in glioma via increasing LDAC7 levels and activating Wnt signaling.
+18
+Wu et al have also identified that the C2H2 structure of ZNF326 can bind to the ERCC1 promoter and elevate ERCC1 expression in non–small‐cell lung cancer (NSCLC).
+23
+Therefore, ZNF326 can be a tumor suppressor and lncRNA OLBC15 promotes TNBC oncogenesis via destabilizing ZNF326 at least in TNBC. These data argue that OLBC15 may possibly be a tumor‐specific lncRNA in TNBC and the exact role of OLBC15 in other types of cancers remains to be investigated in future studies.
+Notably, patients with TNBC suffer greatly from poor outcomes and effective target therapy is still lacking in TNBC.
+5
+,
+24
+The programmed cell death protein 1 (PD‐1)/PD ligand 1 (PD‐L1) as well as androgen receptors (AR) might be possible targets for therapeutic intervention to repress breast cancer progression although the efficiency and the frequent off‐target effects have posed serious concerns.
+5
+Current data have supported OLBC15 as a potential oncogenic lncRNA especially in TNBC. Therefore, the efficacy of OLBC15 targeting deserves further investigation. RNA interference might be a possible strategy; however, the lowered stability and cellular uptake especially in nucleus remain an obstacle to OLBC15 depletion.
+25
+The antisense oligonucleotides (ASOs) may provide a promising way to annihilate OLBC15 in breast cancer cells, and ASOs specifically targeting EZH2 and AR are highly effective in recent work.
+26
+A clinical trial has demonstrated that an ASO termed IONIS‐APO(a) Rx can be of favorable efficiency.
+27
+Therefore, we argue that using ASOs targeting OLBC15 may present an alternative strategy to abolish OLBC15 expression and inhibit TNBC development. There is also a possibility to target multiple TNBC‐associated oncogenic lncRNAs via ASOs, and relevant investigations should be performed in future.
+Our current data have supported a novel transcript related to TNBC progression. OLBC15 directly interacts with ZNF326 tumor suppressor and interferes its post‐translational modification. OLBC15 has potentially clinical relevance and may aid in targeted design of anti‐cancer therapeutics especially in TNBC.
+
+Supporting information
+
+Supplementary Material
+
+Click here for additional data file.
+
+ACKNOWLEDGMENT
+This work is supported by Chongqing Regional Medical Key Discipline Construction Project (zdxk201919).
 
 Deng C, Zhang B, Zhang Y, et al. A long non‐coding RNA OLBC15 promotes triple‐negative breast cancer progression via enhancing ZNF326 degradation. J Clin Lab Anal. 2020;34:e23304
 10.1002/jcla.23304
 
- REFERENCES 1. 
-Bray F, Ferlay J, Soerjomataram I, Siegel RL, Torre LA, Jemal A. Global cancer statistics 2018: GLOBOCAN estimates of incidence and mortality worldwide for 36 cancers in 185 countries. CA Cancer J Clin. 2018;68(6):394‐424. 2. 
+REFERENCES
+
+1.
+
+Bray F, Ferlay J, Soerjomataram I, Siegel RL, Torre LA, Jemal A. Global cancer statistics 2018: GLOBOCAN estimates of incidence and mortality worldwide for 36 cancers in 185 countries. CA Cancer J Clin. 2018;68(6):394‐424. 2.
+
 Cancer Genome Atlas N
-. Comprehensive molecular portraits of human breast tumours. Nature. 2012;490(7418):61‐70. 3. 
-Zardavas D, Piccart M. Neoadjuvant therapy for breast cancer. Annu Rev Med. 2015;66:31‐48. 4. 
-Carey LA, Dees EC, Sawyer L, et al. The triple negative paradox: primary tumor chemosensitivity of breast cancer subtypes. Clin Cancer Res. 2007;13(8):2329‐2334. 5. 
-Denkert C, Liedtke C, Tutt A, von Minckwitz G. Molecular alterations in triple‐negative breast cancer‐the road to new treatment strategies. Lancet. 2017;389(10087):2430‐2442. 6. 
-Zhao Y, Li H, Fang S, et al. NONCODE 2016: an informative and valuable data source of long non‐coding RNAs. Nucleic Acids Res. 2016;44(D1):D203‐D208. 7. 
-Atianand MK, Caffrey DR, Fitzgerald KA. Immunobiology of Long Noncoding RNAs. Annu Rev Immunol. 2017;35:177‐198. 8. 
-Serviss JT, Johnsson P, Grander D. An emerging role for long non‐coding RNAs in cancer metastasis. Front Genet. 2014;5:234. 9. 
-Tang J, Li Y, Sang Y, et al. LncRNA PVT1 regulates triple‐negative breast cancer through KLF5/beta‐catenin signaling. Oncogene. 2018;37(34):4723‐4734. 10. 
-Alipoor FJ, Asadi MH, Torkzadeh‐Mahani M. MIAT lncRNA is overexpressed in breast cancer and its inhibition triggers senescence and G1 arrest in MCF7 cell line. J Cell Biochem. 2018;119(8):6470‐6481. 11. 
-Xu S, Kong D, Chen Q, Ping Y, Pang D. Oncogenic long noncoding RNA landscape in breast cancer. Mol Cancer. 2017;16(1):129. 12. 
-Sas‐Chen A, Aure MR, Leibovich L, et al. LIMT is a novel metastasis inhibiting lncRNA suppressed by EGF and downregulated in aggressive breast cancer. EMBO Mol Med. 2016;8(9):1052‐1064. 13. 
-Wang L, Liu D, Wu X, et al. Long non‐coding RNA (LncRNA) RMST in triple‐negative breast cancer (TNBC): Expression analysis and biological roles research. J Cell Physiol. 2018;233(10):6603‐6612. 14. 
-Gooding AJ, Zhang B, Jahanbani FK, et al. The lncRNA BORG Drives Breast Cancer Metastasis and Disease Recurrence. Sci Rep. 2017;7(1):12698. 15. 
-Akkiprik M, Peker I, Ozmen T, et al. Identification of Differentially Expressed IGFBP5‐Related Genes in Breast Cancer Tumor Tissues Using cDNA Microarray Experiments. Genes (Basel). 2015;6(4):1201‐1214. 16. 
-Rangel R, Guzman‐Rojas L, Kodama T, et al. Identification of new tumor suppressor genes in triple‐negative breast cancer. Cancer Res. 2017;77(15):4089‐4101. 17. 
-Conte F, Fiscon G, Chiara M, Colombo T, Farina L, Paci P. Role of the long non‐coding RNA PVT1 in the dysregulation of the ceRNA‐ceRNA network in human breast cancer. PLoS One. 2017;12(2):e0171661. 18. 
-Yu X, Wang M, Wu J, Han Q, Zhang X. ZNF326 promotes malignant phenotype of glioma by up‐regulating HDAC7 expression and activating Wnt pathway. J Exp Clin Cancer Res. 2019;38(1):40. 19. 
-Lee JY, Nakane Y, Koshikawa N, Nakayama K, Hayashi M, Takenaga K. Characterization of a zinc finger protein ZAN75: nuclear localization signal, transcriptional activator activity, and expression during neuronal differentiation of P19 cells. DNA Cell Biol. 2000;19(4):227‐234. 20. 
-Close P, East P, Dirac‐Svejstrup AB, et al. DBIRD complex integrates alternative mRNA splicing with RNA polymerase II transcript elongation. Nature. 2012;484(7394):386‐389. 21. 
-Gumireddy K, Li A, Gimotty PA, et al. KLF17 is a negative regulator of epithelial‐mesenchymal transition and metastasis in breast cancer. Nat Cell Biol. 2009;11(11):1297‐1304. 22. 
-Rengasamy M, Zhang F, Vashisht A, et al. The PRMT5/WDR77 complex regulates alternative splicing through ZNF326 in breast cancer. Nucleic Acids Res. 2017;45(19):11106‐11120. 23. 
-Wu J, Zhang X, Han Q, et al. ZNF326 promotes proliferation of non‐small cell lung cancer cells by regulating ERCC1 expression. Lab Invest. 2019;99(2):169‐179. 24. 
-Xu H, Eirew P, Mullaly SC, Aparicio S. The omics of triple‐negative breast cancers. Clin Chem. 2014;60(1):122‐133. 25. 
-Adams BD, Parsons C, Walker L, Zhang WC, Slack FJ. Targeting noncoding RNAs in disease. J Clin Invest. 2017;127(3):761‐771. 26. 
-Xiao L, Tien JC, Vo J, et al. Epigenetic Reprogramming with Antisense Oligonucleotides Enhances the Effectiveness of Androgen Receptor Inhibition in Castration‐Resistant Prostate Cancer. Cancer Res. 2018;78(20):5731‐5740. 27. 
-Viney NJ, van Capelleveen JC, Geary RS, et al. Antisense oligonucleotides targeting apolipoprotein(a) in people with raised lipoprotein(a): two randomised, double‐blind, placebo‐controlled, dose‐ranging trials. Lancet. 2016;388(10057):2239‐2253. Associated Data Supplementary Materials 
- Supplementary Material 
- Click here for additional data file.
+. Comprehensive molecular portraits of human breast tumours. Nature. 2012;490(7418):61‐70. 3.
+
+Zardavas D, Piccart M. Neoadjuvant therapy for breast cancer. Annu Rev Med. 2015;66:31‐48. 4.
+
+Carey LA, Dees EC, Sawyer L, et al. The triple negative paradox: primary tumor chemosensitivity of breast cancer subtypes. Clin Cancer Res. 2007;13(8):2329‐2334. 5.
+
+Denkert C, Liedtke C, Tutt A, von Minckwitz G. Molecular alterations in triple‐negative breast cancer‐the road to new treatment strategies. Lancet. 2017;389(10087):2430‐2442. 6.
+
+Zhao Y, Li H, Fang S, et al. NONCODE 2016: an informative and valuable data source of long non‐coding RNAs. Nucleic Acids Res. 2016;44(D1):D203‐D208. 7.
+
+Atianand MK, Caffrey DR, Fitzgerald KA. Immunobiology of Long Noncoding RNAs. Annu Rev Immunol. 2017;35:177‐198. 8.
+
+Serviss JT, Johnsson P, Grander D. An emerging role for long non‐coding RNAs in cancer metastasis. Front Genet. 2014;5:234. 9.
+
+Tang J, Li Y, Sang Y, et al. LncRNA PVT1 regulates triple‐negative breast cancer through KLF5/beta‐catenin signaling. Oncogene. 2018;37(34):4723‐4734. 10.
+
+Alipoor FJ, Asadi MH, Torkzadeh‐Mahani M. MIAT lncRNA is overexpressed in breast cancer and its inhibition triggers senescence and G1 arrest in MCF7 cell line. J Cell Biochem. 2018;119(8):6470‐6481. 11.
+
+Xu S, Kong D, Chen Q, Ping Y, Pang D. Oncogenic long noncoding RNA landscape in breast cancer. Mol Cancer. 2017;16(1):129. 12.
+
+Sas‐Chen A, Aure MR, Leibovich L, et al. LIMT is a novel metastasis inhibiting lncRNA suppressed by EGF and downregulated in aggressive breast cancer. EMBO Mol Med. 2016;8(9):1052‐1064. 13.
+
+Wang L, Liu D, Wu X, et al. Long non‐coding RNA (LncRNA) RMST in triple‐negative breast cancer (TNBC): Expression analysis and biological roles research. J Cell Physiol. 2018;233(10):6603‐6612. 14.
+
+Gooding AJ, Zhang B, Jahanbani FK, et al. The lncRNA BORG Drives Breast Cancer Metastasis and Disease Recurrence. Sci Rep. 2017;7(1):12698. 15.
+
+Akkiprik M, Peker I, Ozmen T, et al. Identification of Differentially Expressed IGFBP5‐Related Genes in Breast Cancer Tumor Tissues Using cDNA Microarray Experiments. Genes (Basel). 2015;6(4):1201‐1214. 16.
+
+Rangel R, Guzman‐Rojas L, Kodama T, et al. Identification of new tumor suppressor genes in triple‐negative breast cancer. Cancer Res. 2017;77(15):4089‐4101. 17.
+
+Conte F, Fiscon G, Chiara M, Colombo T, Farina L, Paci P. Role of the long non‐coding RNA PVT1 in the dysregulation of the ceRNA‐ceRNA network in human breast cancer. PLoS One. 2017;12(2):e0171661. 18.
+
+Yu X, Wang M, Wu J, Han Q, Zhang X. ZNF326 promotes malignant phenotype of glioma by up‐regulating HDAC7 expression and activating Wnt pathway. J Exp Clin Cancer Res. 2019;38(1):40. 19.
+
+Lee JY, Nakane Y, Koshikawa N, Nakayama K, Hayashi M, Takenaga K. Characterization of a zinc finger protein ZAN75: nuclear localization signal, transcriptional activator activity, and expression during neuronal differentiation of P19 cells. DNA Cell Biol. 2000;19(4):227‐234. 20.
+
+Close P, East P, Dirac‐Svejstrup AB, et al. DBIRD complex integrates alternative mRNA splicing with RNA polymerase II transcript elongation. Nature. 2012;484(7394):386‐389. 21.
+
+Gumireddy K, Li A, Gimotty PA, et al. KLF17 is a negative regulator of epithelial‐mesenchymal transition and metastasis in breast cancer. Nat Cell Biol. 2009;11(11):1297‐1304. 22.
+
+Rengasamy M, Zhang F, Vashisht A, et al. The PRMT5/WDR77 complex regulates alternative splicing through ZNF326 in breast cancer. Nucleic Acids Res. 2017;45(19):11106‐11120. 23.
+
+Wu J, Zhang X, Han Q, et al. ZNF326 promotes proliferation of non‐small cell lung cancer cells by regulating ERCC1 expression. Lab Invest. 2019;99(2):169‐179. 24.
+
+Xu H, Eirew P, Mullaly SC, Aparicio S. The omics of triple‐negative breast cancers. Clin Chem. 2014;60(1):122‐133. 25.
+
+Adams BD, Parsons C, Walker L, Zhang WC, Slack FJ. Targeting noncoding RNAs in disease. J Clin Invest. 2017;127(3):761‐771. 26.
+
+Xiao L, Tien JC, Vo J, et al. Epigenetic Reprogramming with Antisense Oligonucleotides Enhances the Effectiveness of Androgen Receptor Inhibition in Castration‐Resistant Prostate Cancer. Cancer Res. 2018;78(20):5731‐5740. 27.
+
+Viney NJ, van Capelleveen JC, Geary RS, et al. Antisense oligonucleotides targeting apolipoprotein(a) in people with raised lipoprotein(a): two randomised, double‐blind, placebo‐controlled, dose‐ranging trials. Lancet. 2016;388(10057):2239‐2253.
+
+Associated Data
+
+Supplementary Materials
+
+Supplementary Material
+
+Click here for additional data file.
