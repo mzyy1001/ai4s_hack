@@ -11,6 +11,33 @@
 
 ---
 
+
+## 0. 分层架构的对象层级（2026-08-07 新增）
+
+本 Skill 按 `SKILL.md` §0 的五层执行。**四类对象随层级收敛，不得混为一谈**：
+
+| 层 | 对象 | schema | 证据要求 |
+| --- | --- | --- | --- |
+| Layer 1 发现 | `candidate_issue` | `discovery.schema.json` | **不要求** `evidence_refs` |
+| Layer 2 专家 | `provisional_finding` | 同上（宽松） | 已绑证据，未去重定级 |
+| Layer 3 工具 | `extraction_signal` + `tool_task` | `extraction_signal.schema.json` / `discovery.schema.json` | signal 须有 evidence |
+| Layer 5 最终 | `finding` | `finding.schema.json` | **完整证据契约** |
+
+**发现阶段刻意宽松**：要求 Layer 1 先满足完整证据契约，会让结构化取代发现 ——
+实测出现过挂 Skill 反而比裸模型少提问题且是真子集。
+契约的职责是**组织与校验已发现的问题**，不是在发现之前占满注意力。
+
+配套的两份运行时文件：
+
+- `00-runtime-contract.md` —— 从本文件摘出的最小集合，供专家通道使用。
+  **它不是第二事实来源**，冲突时以本文件与 schema 为准。
+- `00-routing.md` —— 候选类型 → 专家 → 证据包 → 规则库 → 工具的映射。
+
+每个候选必须在 `candidate_resolution_log[]` 结清（见 `discovery.schema.json`），
+每次运行必须输出 `runtime_utilization` 遥测。
+
+---
+
 ## 1. 证据登记表（evidence_registry）
 
 ### 1.1 为什么需要登记表

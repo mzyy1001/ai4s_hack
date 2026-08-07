@@ -408,6 +408,23 @@
     "disclaimer": {
       "type": "string",
       "const": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号（screening / triage signal），不构成录用、退稿或发表决定。"
+    },
+    "runtime_utilization": {
+      "$ref": "discovery.schema.json#/$defs/runtime_utilization"
+    },
+    "candidate_resolution_log": {
+      "type": "array",
+      "items": {
+        "$ref": "discovery.schema.json#/$defs/resolution"
+      },
+      "description": "候选生命周期台账。每个 Layer 1 候选必须结清，防止发现与渲染之间静默丢失。"
+    },
+    "cross_section_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Layer 4 全局校正产出的跨节 finding id。单个专家看不到这一类。"
     }
   },
   "allOf": [

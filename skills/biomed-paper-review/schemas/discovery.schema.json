@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "discovery.schema.json",
+  "title": "DiscoveryObjects",
+  "description": "Layer 1 全局发现与 Layer 2 专家的中间产物。**刻意比 finding 宽松** —— 发现阶段优先高召回，不得因为一时给不出 evidence_refs 就把问题丢掉。只有 Layer 4 之后的最终 finding 才必须满足完整证据契约。",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "paper_map": { "$ref": "#/$defs/paper_map" },
+    "experiment_map": { "type": "array", "items": { "$ref": "#/$defs/experiment" } },
+    "claim_map": { "type": "array", "items": { "$ref": "#/$defs/claim" } },
+    "candidate_issues": { "type": "array", "items": { "$ref": "#/$defs/candidate_issue" } },
+    "review_routing_plan": { "type": "array", "items": { "$ref": "#/$defs/routing_entry" } },
+    "candidate_resolution_log": { "type": "array", "items": { "$ref": "#/$defs/resolution" } },
+    "tool_tasks": { "type": "array", "items": { "$ref": "#/$defs/tool_task" } },
+    "runtime_utilization": { "$ref": "#/$defs/runtime_utilization" }
+  },
+  "$defs": {
+    "paper_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sections"],
+      "properties": {
+        "sections": { "type": "array", "items": { "type": "string" } },
+        "tables": { "type": "array", "items": { "type": "string" } },
+        "figures": { "type": "array", "items": { "type": "string" } },
+        "supplements": { "type": "array", "items": { "type": "string" } },
+        "declarations": { "type": "array", "items": { "type": "string" } },
+        "reference_count": { "type": ["integer", "null"], "minimum": 0 },
+        "registration_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "experiment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["experiment_id", "study_design"],
+      "description": "不得强行把每篇论文压成一个实验。一篇论文常同时含体外、动物与人体成分。",
+      "properties": {
+        "experiment_id": { "type": "string", "pattern": "^EXP-[0-9]{2,}$" },
+        "study_design": { "type": "string", "minLength": 1 },
+        "methods_locations": { "type": "array", "items": { "type": "string" } },
+        "results_locations": { "type": "array", "items": { "type": "string" } },
+        "figures": { "type": "array", "items": { "type": "string" } },
+        "tables": { "type": "array", "items": { "type": "string" } },
+        "claims": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "statement", "source_location"],
+      "properties": {
+        "claim_id": { "type": "string", "pattern": "^CL-[0-9]{2,}$" },
+        "statement": { "type": "string", "minLength": 1 },
+        "claim_scope": {
+          "type": "string",
+          "description": "主张覆盖的范围：人群、时间窗、终点。判断是否越界的依据"
+        },
+        "source_location": { "type": "string", "minLength": 1 },
+        "expected_evidence": { "type": "array", "items": { "type": "string" } },
+        "linked_results": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "candidate_issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "type", "description", "suggested_modules"],
+      "description": "发现阶段的候选。**不要求 evidence_refs** —— 要求它会让发现阶段变成取证阶段，实测那样会把发现数量压下去。",
+      "properties": {
+        "candidate_id": { "type": "string", "pattern": "^CAND-[0-9]{3,}$" },
+        "type": { "type": "string", "pattern": "^possible_[a-z_]+$" },
+        "description": { "type": "string", "minLength": 1 },
+        "locations": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "suggested_modules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["M2", "M3", "M4", "M5", "M6", "M7", "RECONCILE"] },
+          "description": "RECONCILE 表示跨节问题，单个专家看不到，直接进 Layer 4"
+        },
+        "origin": {
+          "enum": ["global_discovery", "specialist", "deterministic_tool",
+                   "external_validation", "reconciliation"]
+        }
+      }
+    },
+    "routing_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module", "packet", "rulebook", "candidate_ids"],
+      "properties": {
+        "module": { "enum": ["M2", "M3", "M4", "M5", "M6", "M7"] },
+        "packet": { "type": "string", "minLength": 1 },
+        "rulebook": { "type": "string", "minLength": 1 },
+        "candidate_ids": { "type": "array", "items": { "type": "string" } },
+        "tools": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tool_task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_task_id", "tool", "target", "requested_checks", "status"],
+      "description": "工具调用必须显式登记。**不得让一次该跑的工具悄无声息地消失** —— 跳过和没触发是两回事，前者要有理由。",
+      "properties": {
+        "tool_task_id": { "type": "string", "pattern": "^TOOL-[0-9]{2,}$" },
+        "tool": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "requested_checks": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "triggered_by": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "候选 id；主动扫描触发时为空数组，并置 proactive=true"
+        },
+        "proactive": {
+          "type": "boolean",
+          "description": "true 表示由结构化对象自动触发，不依赖任何候选。真正的增益常来自这一类。"
+        },
+        "status": { "enum": ["executed", "not_applicable", "failed", "skipped"] },
+        "skip_reason": { "type": "string" },
+        "signal_ids": { "type": "array", "items": { "type": "string" } }
+      },
+      "allOf": [
+        {
+          "description": "skipped 与 failed 必须给理由，否则无法区分「不该跑」与「漏跑了」",
+          "if": {
+            "properties": { "status": { "enum": ["skipped", "failed"] } },
+            "required": ["status"]
+          },
+          "then": { "required": ["skip_reason"] }
+        }
+      ]
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "origin", "status"],
+      "description": "候选生命周期台账。**每个候选必须有归宿** —— 此前的实现会在发现与渲染之间静默丢掉有效问题，这张表就是为了让丢失可见。",
+      "properties": {
+        "candidate_id": { "type": "string", "pattern": "^CAND-[0-9]{3,}$" },
+        "origin": {
+          "enum": ["global_discovery", "specialist", "deterministic_tool",
+                   "external_validation", "reconciliation"]
+        },
+        "status": {
+          "enum": ["pending", "promoted_to_finding", "merged", "rejected",
+                   "unresolved", "blocked_by_system_limitation"]
+        },
+        "final_finding_id": { "type": ["string", "null"] },
+        "merged_into": { "type": ["string", "null"] },
+        "specialists_consulted": { "type": "array", "items": { "type": "string" } },
+        "tools_used": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string" },
+        "rejection_reason": { "type": "string" },
+        "routing_fallback": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "description": "rejected 必须给出理由 —— 没有理由的驳回等于静默丢弃",
+          "if": {
+            "properties": { "status": { "const": "rejected" } },
+            "required": ["status"]
+          },
+          "then": { "required": ["rejection_reason"] }
+        },
+        {
+          "description": "promoted 必须指向最终 finding",
+          "if": {
+            "properties": { "status": { "const": "promoted_to_finding" } },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["final_finding_id"],
+            "properties": { "final_finding_id": { "type": "string", "minLength": 1 } }
+          }
+        },
+        {
+          "description": "merged 必须指向合并去向",
+          "if": {
+            "properties": { "status": { "const": "merged" } },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["merged_into"],
+            "properties": { "merged_into": { "type": "string", "minLength": 1 } }
+          }
+        }
+      ]
+    },
+    "runtime_utilization": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "运行时利用率遥测。回答的不是「Skill 赢没赢」，而是「Skill 的哪些部分真的被用上了」—— 没有这个就无法判断五千行规则库是否值得保留。",
+      "required": ["references_required", "references_read",
+                   "scripts_required", "scripts_executed"],
+      "properties": {
+        "references_required": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "本次路由**要求**读的 reference。目标不是读满八个，而是这一列一个不漏"
+        },
+        "references_read": { "type": "array", "items": { "type": "string" } },
+        "scripts_required": { "type": "array", "items": { "type": "string" } },
+        "scripts_executed": { "type": "array", "items": { "type": "string" } },
+        "scripts_failed": { "type": "array", "items": { "type": "string" } },
+        "candidate_count_discovery": { "type": "integer", "minimum": 0 },
+        "candidate_count_promoted": { "type": "integer", "minimum": 0 },
+        "candidate_count_rejected": { "type": "integer", "minimum": 0 },
+        "candidate_count_unresolved": { "type": "integer", "minimum": 0 },
+        "tool_generated_signals": { "type": "integer", "minimum": 0 },
+        "rule_generated_findings": { "type": "integer", "minimum": 0 },
+        "cross_section_findings": { "type": "integer", "minimum": 0 },
+        "finding_origin_breakdown": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 },
+          "description": "按 discovery / specialist_rule / deterministic_tool / external_validation / multiple_sources 计数"
+        }
+      }
+    }
+  }
+}
