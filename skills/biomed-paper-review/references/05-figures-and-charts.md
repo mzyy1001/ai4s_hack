@@ -2,9 +2,11 @@
 
 **负责人：MY（敏怡）** · 状态：**一期规则库已填充（v1）**
 
-本模块承担两件事：
-**(A) 阶段 ③ 的图谱解析** —— 从每张图中抽取实验条件与关键数值，并定位原图；
-**(B) 阶段 ④ M5 的规范校验** —— 图表类型是否匹配研究目的，呈现是否规范。
+本文件服务两个互斥执行角色：
+**(A) Stage 3 Figure Parser** —— 从每张图中抽取实验条件与关键数值并定位原图，
+只产 `figure_records[]`、stage-local signal 与 system limitation；
+**(B) Stage 4 M5 Reviewer** —— 消费已封闭的 `figure_records[]`，判断图表类型、呈现与位置是否规范，
+只产 `m5_findings[]`。Parser 不得产 finding，Reviewer 不得改写 `figure_records[]`。
 
 **角色设定**：一名经验丰富的生物医学论文审稿人 + 科学可视化质控专家，具备长期制作与审查
 统计图、实验流程图、显微图和多 panel 结果图的经验。先判断每张图试图回答的**科学问题**，
@@ -24,10 +26,10 @@
    扫描图注 + 正文相关段落，明确这张图要回答什么问题、关键变量与数据性质是什么。
    > 例：`Figure 3A` 图注为"不同浓度奥希替尼对 EGFR 突变肺癌细胞增殖的影响"，
    > 即研究目标为剂量-效应关系，自变量为浓度、因变量为细胞存活率。
-2. **判断图表类型是否匹配研究目标** —— 按 §A.2 知识库。
-3. **判断正文 / supplement 位置是否合理** —— 按 §B.2。
-4. **校验数据与呈现规范** —— 按 §B.3。
-5. **输出** `figure_record` + `finding[]`。
+2. **记录图表类型** —— 按 §A.2 的 `chart_type` 枚举分类，不在本阶段判断是否匹配。
+3. **抽取条件与可见结果** —— 记录坐标、图例、样本量、误差类型与 provenance。
+4. **登记解析限制** —— 不可读、无法映射或需要视觉估读时产 stage-local signal / limitation。
+5. **输出** `figure_records[]`；禁止输出 `finding[]`。
 
 多 panel 图**优先按 panel 输出**，再给整体 figure 解释。
 
@@ -94,11 +96,15 @@ PDF 输入时 `locator.pdf_file_page` 必填；缺页码的定位视为无效定
 保持审稿式、克制、可追溯，不夸大生物学意义。
 
 > **注意**：本模块**不输出完整报告**。结构化结果表、图表解释、问题清单、人工复核建议
-> 四节由阶段 ⑤ 按 `templates/review_report.md` 统一渲染。M5 只产出 `figure_record[]` 与 `finding[]`。
+> 四节由 Stage 5 按 `templates/review_report.md` 统一渲染。Stage 3 Figure Parser 只产
+> `figure_records[]` 与 stage-local signal / limitation；Stage 4 M5 Reviewer 只产 `m5_findings[]`。
 
 ---
 
 ## B. 图表使用规范校验
+
+本节仅由 Stage 4 M5 Reviewer 执行。Reviewer 必须回查 `figure_record` 所指向的稿件证据后
+才能立 finding；Parser 的 signal 或 `manual_review_needed` 不能自动转换为 severity。
 
 ### B.1 术语与图文一致性
 
@@ -138,9 +144,9 @@ supplement 图应承载**验证性、扩展性、重复性、参数补充、方�
 给出复核建议时，应列出近 3 年同领域高影响力论文在解释同类科学问题时常用的图表类型
 （如剂量响应问题常用剂量响应曲线；空间定位问题常用带 scale bar 和通道标注的显微图）。
 
-**一期为降级模式**：一期不接文献库 MCP，因此**没有实际检索时必须显式写出
+**当前 connector 未实现，按降级模式运行**：没有实际检索时必须显式写出
 `literature benchmark not performed` 或 `no recent benchmark found`，
-严禁把通用常识伪装成"高被引论文惯例"。** 完整能力见 §E.5。
+严禁把通用常识伪装成"高被引论文惯例"。** 一期可选联网增强见 §F.4。
 
 对照格式：
 
@@ -192,8 +198,9 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 
 ## D. 强制人工复核触发条件
 
-命中任一条时，`figure_record.manual_review_needed = true`，并在 `finding.manual_review.action`
-写明复核重点：
+Stage 3 命中任一解析条件时，只设置 `figure_record.manual_review_needed = true` 并产相应
+signal / limitation。Stage 4 M5 Reviewer 另有稿件证据并决定立 finding 后，才在
+`finding.manual_review.action` 写明复核重点：
 
 - 图像分辨率低、压缩严重、文字或坐标轴不可读
 - 坐标轴数值、图例、单位、统计符号或 scale bar 不清楚
@@ -222,19 +229,19 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 
 ---
 
-## F. 二期扩展：图像取证与数值反推（本期不实现，规则先写下）
+## F. 已实现候选筛查与后续增强
 
 ### F.1 论文内图像取证
 
-**不需要外部数据库，二期可优先做**：
+当前 `scripts/figure_integrity_audit.py` 已实现网格对齐重复、列向背景不连续与异常均匀区块的
+候选筛查；它们只产无 severity signal 并强制人工复核。以下稳健能力仍未实现：
 
-- 同一论文内跨图/跨面板的重复区域检测（同一张显微视野被当作两个实验组）
-- 面板内重复：旋转、镜像、平移后的自相似区域
+- 跨图/跨面板在任意裁剪、偏移或轻度压缩后的重复区域检测
+- 面板内旋转、镜像、缩放后的自相似区域
 - WB 条带拼接痕迹：背景不连续、条带边缘锐利、局部噪声分布突变
 - 过度处理：直方图截断、局部对比度异常
 
-> 与 M4 的统计一致性检验一样属于「不依赖外部数据、判定相对确定」的高性价比方向，
-> 建议作为二期起点。但**必须全部标记为 `suspected` 并强制人工复核** ——
+> 图像候选**必须全部标记为 `suspected` 并强制人工复核** ——
 > 图像取证的假阳性代价极高（等同于指控学术不端），Skill 只标记可疑区域，绝不下结论。
 
 ### F.2 跨论文图像比对
@@ -245,17 +252,17 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 
 ### F.3 数值反推精度提升
 
-一期从图中读数依赖 `axis_readable` 与 `pixel_estimated`，二期可引入曲线/柱高的像素级测量 + 坐标轴标定。
+当前从图中读数依赖 `axis_readable` 与 `pixel_estimated`；后续可引入曲线/柱高的像素级测量 + 坐标轴标定。
 **即便如此，§A.3 的硬性规则不变**：反推数值仍标 `pixel_estimated`，仍给区间，
 仍不得用于 M4 的统计复算。精度提升不改变证据等级。
 
 ### F.4 领域惯例对照（完整版）
 
-一期为降级模式（§B.4）。二期接入文献库 MCP 后，按疾病领域 + 实验模型 + 研究终点 + 年份 + 期刊层级
+当前为降级模式（§B.4）。一期 connector 接入文献库后，按疾病领域 + 实验模型 + 研究终点 + 年份 + 期刊层级
 实时检索同类论文的图表类型分布，`benchmark_basis` 填真实 DOI/PMID。
 输出仍应为**事实描述**（"该场景近 3 年 N 篇同类研究中 M 篇使用 X 图"），不直接判「图表选错」。
 
-### F.5 二期新增 category
+### F.5 候选经人工核对后的 category
 
 | slug | 说明 | severity |
 | --- | --- | --- |
@@ -264,4 +271,6 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 | `duplicate_image_across_papers` | 与已发表图像重复（疑似） | critical |
 | `chart_type_against_field_convention` | 图表类型显著偏离领域惯例 | minor |
 
-前三条**全部**强制 `manual_review.who = editor`，且 `review_confidence` 上限为 `medium`。
+图像脚本命中时只产 signal，不得套用本表 severity。只有 M5 Reviewer 核对原图、排除合法复用与
+处理伪影并另立 finding 后才可使用前三条 category；前三条**全部**强制
+`manual_review.who = editor`，且 `review_confidence` 上限为 `medium`。

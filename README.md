@@ -3,11 +3,22 @@
 黑客松项目 · 方向：**AI 辅助生物医药论文审稿工具**
 目标：自动化并辅助人工审稿的**基础环节**，提升审稿人的取证与复核效率。
 
-**最终交付物：一个自包含、可复用的 Skill 包** → [`skills/biomed-paper-review/`](skills/biomed-paper-review/)
+**最终交付物：一个目录自包含的 Skill 包** → [`skills/biomed-paper-review/`](skills/biomed-paper-review/)
+
+## 十分钟速览
+
+- **差异化**：五个包内确定性工具把单位、统计关系、伦理规则、序列/标识符和图像候选转为
+  可复算的 `extraction_signal`；M2–M7 只能在回查稿件证据后产 `finding`。
+- **当前可运行**：五个独立 CLI、自检、10 份 schema、四个契约模拟实例；离线工具失败和
+  外部源不可得均降级为 `system_limitation`，不归责稿件。
+- **当前未打通**：尚无论文输入→最终 Markdown/JSON 的统一执行器；X1 只有契约、没有
+  connector；尚无 GLM / Kimi 上三次中位数的正 uplift artifact。
+- **当前不能声称**：不能把“脚本存在”写成“已产生 uplift”，不能把契约模拟实例写成
+  端到端运行结果，不能声称已完成外部数据库核验。
 
 ---
 
-## 输入 / 输出
+## 目标输入 / 输出
 
 **输入**：一篇生物医药论文（JATS XML / PDF / 纯文本）
 
@@ -59,7 +70,7 @@ datasets/                       测试语料：10 篇 PLOS 开放获取论文（
 
 tools/fetch_papers.py           语料抓取脚本（可重跑）
 tools/validate_schemas.py       契约校验器：schema + 工具产物 + 四个模拟实例
-tools/fixtures/*.json           四个端到端模拟实例
+tools/fixtures/*.json           四个契约模拟实例（非论文端到端运行结果）
 docs/architecture.md            架构说明：七个模块如何合成一个 Skill
 docs/schema-migration.md        schema 逐字段迁移方案
 docs/consistency-audit.md       一致性审计结果与 15 项核对表
@@ -95,7 +106,8 @@ python3 tools/fetch_papers.py
 
 采用 `SKILL.md` frontmatter + 渐进披露资源目录的通用 Agent Skill 格式。**skill 目录自包含**：
 references、schemas、resources、templates 与五个运行时脚本都在
-`skills/biomed-paper-review/` 之内，拷贝该目录即可获得全部能力，无外部依赖。
+`skills/biomed-paper-review/` 之内。拷贝该目录可运行五个独立工具并读取全部运行时规则；
+当前没有统一执行器，不能据此声称已获得论文输入到最终报告的端到端能力。
 （`tools/validate_schemas.py` 是开发期契约校验器，不参与运行时，故留在仓库根。）
 
 ## 提交合规自查（对照 04-提交规范 / 05-自动评审规则）
@@ -107,12 +119,12 @@ references、schemas、resources、templates 与五个运行时脚本都在
 | SKILL.md 正文建议 <500 行 | ⚠️ 当前正文超过 500 行；X1 连接器细节不得继续堆入主文档，应落到一层 reference |
 | 文件引用只一层深（渐进披露） | ✅ SKILL.md 直接索引全部运行时 reference，不存在只能经另一 reference 才能发现的文件 |
 | 单文件 ≤10MB | ✅ skill 本体内满足；⚠️ 若误打包 `datasets/`，其中一份 PDF 为 18,677,256 bytes，会超限 |
-| 提交包体积 | ✅ `skills/biomed-paper-review/` 小于 0.5 MiB；完整工作区约 200 MiB，不得整仓提交 |
+| 提交包体积 | ✅ `skills/biomed-paper-review/` 约 0.65 MiB；完整工作区超过 200 MiB，不得整仓提交 |
 | `requirements.txt` | ✅ 无需额外安装 —— 已实现工具使用标准库或评测环境预装科学栈 |
 | 结构化输入/输出 schema | ✅ `schemas/` 10 份 JSON Schema |
 | 无诱导评分 / 注入语句 | ✅ |
 | 沙箱可运行（2 核 / 4GB / 无 GPU / 单任务 12 小时） | ✅ 已实现工具均可 CPU 运行，无需 requirements.txt |
-| 沙箱网络：**白名单制，开放公开科学数据源**（可申请追加） | ✅ 一期离线即可跑通；外部数据源作为**可选增强层**，不可得时降级为 `system_limitation` |
+| 沙箱网络：**白名单制，开放公开科学数据源**（可申请追加） | ⚠️ 离线独立工具可运行；X1 connector 未交付，外部数据源不可得时的 `system_limitation` 契约已定义 |
 
 ## 分期范围
 
@@ -129,13 +141,13 @@ M4 的 p 值反算、CI 自洽、计数/百分比与 GRIM 已实现为一期离�
 
 - ✅ 主框架：执行模式依赖图、五阶段流水线、三类记录契约、证据登记表、三项评分
 - ✅ 10 份 JSON Schema + 报告模板；`tools/validate_schemas.py` 覆盖 schema、工具产物与四个模拟实例
-- ✅ 四个端到端模拟实例（RCT 完整审核 / 单图解读 / 定向伦理核查 / IC50 冲突）
+- ✅ 四个契约模拟实例（RCT 完整审核形状 / 单图解读 / 定向伦理核查 / IC50 冲突）；不是论文端到端执行产物
 - ✅ M1 结构化抽取规则（字段清单、七张设计路由表、pending 生命周期）
 - ✅ M4 统计学（三步判定法 + 九张检验选择对照表）
 - ✅ M6 伦理合规（三法域规范库 + 离线筛查器，待 Peter 复核）
 - ✅ M7 结论与讨论（证据层级 × 主张层级对照表）
 - ✅ 五个运行时确定性工具，均使用标准库或评测环境预装科学栈，均带自检
 - 🚧 现有四个 fixtures 是契约模拟实例；尚无可复跑的论文输入→最终报告统一执行器与 uplift 结果 artifact
-- 🚧 M2（卓妍）、M3（Peter）一期规则库仍为骨架；M5 已填充 v1，但 Parser / Reviewer 职责冲突待负责人收敛
+- 🚧 M2（卓妍）仍为骨架；M3 已由框架层填充、待 Peter 复核；M5 已收敛 Parser / Reviewer 产出者边界，规则正反例与真实图像回归仍未完成
 - 🚧 外部验证层 X1：核心契约已实现；connector、录制响应 fixture 与独立覆盖率仍待实现
 - 🚧 uplift 基线实测：官方统一模型为 GLM / Kimi 系列，尚未在该系列上自测
