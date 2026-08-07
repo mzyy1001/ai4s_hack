@@ -43,11 +43,12 @@
 original_figure_file > extracted_pdf_figure > rendered_pdf_page > text_only_caption
 ```
 
-**若模型不支持视觉输入**（实测 opencode + qwen3.8-max 即如此：主会话与子会话
-均无图像通道），不得假装看过图。按 `00-contracts.md` 登记
-`system_limitation`（`figure_unreadable`），M5 退化为图注 / 正文 / 源 XML 的
+**若这一轮确实拿不到可读图像**（图像未随稿提供、格式不可读、
+或当前运行时未提供图像通道），不得假装看过图：按 `00-contracts.md` 登记
+`system_limitation`（`figure_unreadable`），退化为图注 / 正文 / 源 XML 的
 交叉核验 + `figure_integrity_audit.py` 的确定性像素审计，并在报告中写明
-本次未覆盖像素级判据。
+本次未覆盖像素级判据。**先按原图优先路径尝试，取不到再降级** ——
+不要一上来就假定读不了图。
 
 ### A.2 图表类型知识库
 
