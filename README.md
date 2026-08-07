@@ -7,7 +7,8 @@
 1. **抽成可复用的结构化事实表** —— 研究设计、受试对象、干预分组、测量与终点、
    关键数值、主张清单与各类声明，每个字段都带适用性、必要性、状态与原文证据引用。
 2. **审稿**：以资深同行评审身份通读全文，再由六本领域规则库分头复核，
-   并以**确定性计算**与**12 个外部权威数据库**交叉核验。
+   并以**确定性计算**与**12 个外部权威数据库**交叉核验；
+   图谱模块在有视觉通道时**从原图**抽数值并定位回图号/面板/页码。
 
 输出结构化结果表、可回溯到原文位置的分级发现、抽取覆盖率与复核置信度，
 以及分优先级的人工复核建议。抽取与审稿可分开用（`structured_extraction` 模式）。
@@ -83,6 +84,24 @@ RCSB PDB、HGNC、SciCrunch/RRID、NCBI E-utilities、PRIDE。
 
 外部源不可达时一律产 `system_limitation`，**绝不**变成 finding ——
 「查不到」不等于「论文错」。
+
+### 图表读取：有视觉通道就读原图，没有就诚实降级
+
+M5 的图谱解析（Stage 3 Figure Parser）**从图像本身**抽实验条件与关键数值，并定位回原图：
+
+- **图像来源优先级**：`original_figure_file > extracted_pdf_figure >
+  rendered_pdf_page > text_only_caption`；
+- **数值证据分级**：`explicit_main_text > explicit_table > explicit_figure_caption >
+  axis_readable > pixel_estimated`，且 `provenance.source_type` 如实标注；
+- **像素估读的硬性约束**：一律 `extraction_confidence: low`、**必须写成区间**
+  （禁止点值）、置 `manual_review_needed`；对数轴须先确认轴类型再读数；
+  误差棒不得直接当 SD/SEM；星号阈值必须回查图注定义；
+- **原图定位**：每条 `figure_record` 给出图号、面板、PDF 页码与首次引用位置。
+
+**没有视觉通道时不假装看过图**：登记 `system_limitation(figure_unreadable)`，
+退化为图注 / 正文 / 源 XML 交叉核验 + `figure_integrity_audit.py` 的
+确定性像素审计（重复 / 拼接 / 异常均匀区块），并在报告中写明本次未覆盖像素级判据。
+—— 这条降级路径本身带专门自检，实测在无图像通道的运行中正确触发。
 
 ### 结构化抽取：不只是审稿的前置，本身就是可复用产物
 
@@ -242,8 +261,9 @@ skills/biomed-paper-review/
 - 实测均在 `qwen3.8-max` 上完成；跨模型行为未逐一验证。
 - 完整审核耗时约 80–110 分钟（并行后）；时间受限时可用
   `targeted_check` / `figure_analysis` 等分级模式，分钟级返回。
-- 当前运行时无图像输入通道时，M5 退化为图注 / 源 XML 交叉核验 +
-  确定性像素审计，并登记 `system_limitation`，**不假装看过图**。
+- **图像读取取决于运行环境**：M5 具备完整读图能力（见 §一「图表读取」），但我们实测的
+  `opencode + qwen3.8-max` 主/子会话均无图像通道，故该轮以降级路径运行。
+  若评测环境提供视觉输入，M5 会走原图优先路径。
 
 ---
 
