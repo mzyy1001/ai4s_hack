@@ -346,6 +346,24 @@ prompt 里放：**论文全文**、`paper_map`、`experiment_map`、`claim_map`�
 L0 的全部 G 条目、各专家 `provisional_findings` 与 `global_verdicts`、
 工具信号、`system_limitations`。**规则库全文不要放**（那会挤掉正文）。
 
+### 5.0 大产出层必须落盘，只回传指针（实测教训）
+
+L4 同时握有全文、几十条 G 条目与六个专家产物，**返回体积会超限**：
+实测出现过 `truncated: true`（返回 42,049 字符后被截断）。那一次编排者自行
+从落盘文件恢复没丢数据，但不能指望每次都恰好如此。
+
+**因此凡产出可能超过约 3 万字符的子会话（L4 必然，L0 与各专家经常），
+一律要求它：**
+
+```
+把完整 JSON 写入 <工作目录>/<阶段名>.json，
+回复里**只**给：文件路径 + 计数摘要（各类条目数）+ 最重要的 3–5 条摘要。
+不要把完整 JSON 内联回传。
+```
+
+主会话随后用 read 工具读该文件。**回传被截断 = 该层失败**，
+必须重跑或从落盘文件恢复，**不得**把截断后的残缺产物当成完整结果继续往下走。
+
 指令要点：
 
 > 你有整篇论文，也有各专家的产物。你的任务有三件：
@@ -424,6 +442,18 @@ Skill 相对裸模型只能做加法，或者**带论证地**做减法，不得�
 - 若增益部分很小，结论是**裁剪规则库**，不是继续加规则。
 
 ### 7.1 必须输出运行时遥测
+
+**字段名逐字照抄下表，不得自造同义词。** 实测教训：曾输出
+`candidate_count_discovery` 这类旧名而漏掉 `additive_guarantee_held` ——
+结果是**加法保证实际成立，却没有被机器可读地断言**，等于没证。
+渲染前先自检：下列每个键都在吗？缺一个就补，不要改名。
+
+必填键：`child_sessions` `task_calls` `continuations` `modules_run`
+`modules_skipped` `references_required` `references_read` `routing_recall`
+`tool_execution_recall` `global_findings_count` `global_findings_confirmed`
+`global_findings_refuted` `global_findings_unresolved`
+`additive_guarantee_held` `findings_added_beyond_global`
+`finding_origin_breakdown`
 
 ```json
 {"runtime_utilization":{
