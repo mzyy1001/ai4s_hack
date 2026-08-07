@@ -99,7 +99,22 @@ skills/biomed-paper-review/
 ```
 
 **自包含**：包内不引用任何包外路径，全部内部引用可解析。
-**无需 requirements.txt**：所有脚本仅用标准库或评测环境预装科学栈。
+
+**依赖：不需要 `requirements.txt`，也刻意不提供。**
+
+| 脚本 | 依赖 |
+| --- | --- |
+| 其余 6 个 | **纯标准库** |
+| `figure_integrity_audit.py` | 可选 `numpy` + `Pillow`（仅像素级审计需要） |
+
+`numpy` / `Pillow` 缺失时**不报错**：登记
+`system_limitation(figure_unreadable)` 后正常退出（exit 0），其余审核不受影响。
+该降级路径带专门自检（`依赖缺失 -> system_limitation 而非崩溃`），
+可用 `PYTHONPATH` 屏蔽依赖复现。
+
+**为什么不给 `requirements.txt`**：给了就等于请求评测环境执行一次 pip 安装 ——
+在白名单网络下安装失败会把「一个可选检查降级」升级成「整次运行失败」。
+现在的形态是：装了更好，没装也照跑。
 
 ## 自检
 
