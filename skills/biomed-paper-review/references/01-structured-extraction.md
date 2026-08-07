@@ -105,9 +105,12 @@ M2–M7 全部消费 M1（经 Stage 3b 合并后）的产物，因此这里的�
 一个 `applicable + optional` 的字段照样要检索、照样可能是 `not_reported`，
 只是不进主分母。
 
-设计判定为 `applicability_uncertain` 时（§4.4），相关字段的 `applicability`
-一律继承 `applicability_uncertain`，`status` 判 `ambiguous`，
-**不得**判 `not_applicable` —— 设计未定就无法判断适用性。
+`primary_design.status = "ambiguous"` 或 `primary_design.alternatives[]` 非空时，
+逐个候选设计执行 §5.3：若所有候选对某字段得到相同的 applicability / requiredness，
+保留该共同结果；只要候选结果不同，该字段就写
+`applicability: "applicability_uncertain"`、`status: "ambiguous"`，并引用
+`ambiguous_study_design` signal。**不得**因设计未定而判 `not_applicable`。
+`family: "other"` 的 design-specific 字段仍按 §4.4 全部走此不确定分支。
 
 ### 3.3 absence 取证要求
 
@@ -380,6 +383,28 @@ other
 `applicable study types` 给出适用的设计；`review consumer` 给出主要下游模块。
 未在本表出现的通用字段，默认 `applicable + optional`（**不是** `not_applicable`）。
 
+**条件执行语义**
+
+1. 表内用 `/` 并列的字段必须拆成独立字段逐一物化、逐一计入覆盖率，不能把整行存成一个字段。
+2. `search_scope` 的规范下限是 §5.1 / §5.2；路由表中的同名列只能增加位置，不能缩小范围。
+   absence 检索使用两处位置的并集。
+3. 含“仅……适用”或“有……时适用”的条件按 `true / false / unknown` 三值执行：
+   `true` 使用该行结果；`false` 写 `not_applicable + optional` 并给出具体 `na_reason`；
+   `unknown` 写 `applicability_uncertain + ambiguous`，requiredness 保留该行等级，并出
+   `partial_extraction` 或 `ambiguous_study_design` signal。不得把 `unknown` 当 `false`。
+4. 若该行的“适用设计”只列部分 design type、且没有明示其余类型不适用，未列类型回落到下一优先级；
+   例如 `controls` 对 `case_control` 的专门必填规则不使 cohort 的可选对照变成不适用。
+
+**条件谓词的封闭判据**
+
+| 谓词 | `true` | `false` | `unknown` |
+| --- | --- | --- | --- |
+| 有统计分析 | 出现检验统计量 / p 值 / CI、回归或生存模型、相关分析、meta-analysis 合并、曲线拟合参数之一 | 全文只报告原始计数或描述性汇总，且未作组间/时点间推断 | 统计段、表注或补充方法不可得 |
+| 存在失访或缺失值 | 受试者流失、缺失单元、分母随时点减少、complete-case / imputation / missingness 描述之一 | 预期测量均有完整流程或计数证据，且各时点分母不减少 | 不能恢复受试者流、分析分母或表格 |
+| 延迟型参照标准 | 参照状态由随访期内事件或晚于 index test 的结局确定 | 参照标准在同一诊断时段取得 | 时间关系未报告 |
+| 使用受监管一级材料 | 新取人体样本、患者来源细胞 / organoid，或为本研究处死动物取得材料 | 已建系商业细胞系、公共去标识数据，或既有非受监管材料 | 材料来源或新取/既有属性未报告 |
+| 病例接受干预 | 病例接受治疗、手术或为该病例实施的诊断性操作，且稿件评价其过程或结局 | 纯自然史、表型或既往病历描述，没有本研究评价的操作 | 病例时间线或操作目的无法恢复 |
+
 #### 5.3.1 全设计通用（默认规则，优先级 4）
 
 | 字段 | applicability rule | requiredness | 适用设计 | search scope | review consumer |
@@ -421,6 +446,7 @@ other
 | 字段 | applicability rule | requiredness | 适用设计 | search scope | review consumer |
 | --- | --- | --- | --- | --- | --- |
 | `exposure` | 恒适用 | `required` | cohort, case_control, cross_sectional | methods | M3, M4 |
+| `controls` | `case_control` 的对照来源与选择规则恒适用 | `required` | case_control | methods | M3, M4 |
 | `confounders` | 恒适用 | `required` | cohort, case_control, cross_sectional | methods, statistics | M4 |
 | `follow_up` | **仅纵向设计适用**；`cross_sectional` 与 `case_control` **不适用** | `required` | cohort | methods, results | M4 |
 | `inclusion_criteria` / `exclusion_criteria` | 恒适用 | `required` | 全族 | methods | M3, M6 |
@@ -453,8 +479,9 @@ other
 | 字段 | applicability | requiredness | na_reason 模板 |
 | --- | --- | --- | --- |
 | `subjects` | `applicable` | `required` | —— |
+| `primary_endpoint` | `applicable`；指病例报告重点观察的临床结局，不要求预设统计终点 | `recommended` | —— |
 | `inclusion_criteria` / `exclusion_criteria` | `case_series`: `applicable`；`case_report`: `not_applicable` | `case_series`: `required`；`case_report`: `optional` | 单一病例无入组与排除标准；病例系列必须抽取病例选择规则 |
-| `interventions` | `applicable` | `required` | —— |
+| `interventions` | 病例接受干预时 `applicable`，否则 `not_applicable` | 命中时 `required`，否则 `optional` | 纯自然史/表型描述没有本研究评价的干预 |
 | `informed_consent` | `applicable` | **`required`** | —— |
 | `ethics_statement` | `applicable` | `recommended` | —— |
 | `limitations` | `applicable` | `recommended` | —— |
@@ -651,6 +678,10 @@ experiment_id | group | comparison | timepoint | endpoint
 
 ### 7.1 何时判 `unresolved`
 
+本节的 `unresolved` 专指 `extracted_field.status`；数值观测组使用
+`key_data.status: "pending_visual_resolution"`。两者都带同形的 `resolution_state`，
+但枚举不可互换。
+
 **同时满足**才可判：
 
 1. 该字段 `applicability = applicable`；
@@ -661,7 +692,7 @@ experiment_id | group | comparison | timepoint | endpoint
 
 ```json
 {
-  "field_path": "key_results.ic50_compound_a",
+  "field_path": "objective.primary_endpoint",
   "applicability": "applicable",
   "requiredness": "required",
   "status": "unresolved",
@@ -946,8 +977,8 @@ M1 输出计算 `extraction_coverage` 所需的**原始计数**，
 
 - [ ] 补齐 §4.1 层级枚举的边界样例：`ex_vivo` 与 `organoid` 的区分、
       `preclinical_mixed` 的适用条件、`prediction_model` 与 `benchmark_study` 的分界
-- [ ] 补齐单位归一化表（μM/µM/uM、mg/kg vs mg·kg⁻¹、log vs ln），
-      供 `00-contracts.md §5.4` 第 1 步使用
+- [x] 单位归一化器已实现于 `scripts/normalize_biomed_units.py`；Stage 3b 必须按
+      `00-contracts.md §5.4` 调用，不再维护第二份手写单位表
 - [ ] 补齐各字段 `search_scope` 的检索词表（中英双语），供 absence 取证使用
 - [ ] 与 M5 确认 §7 `expected_sources` 的字段级对接清单：
       哪些 `metric_family` 应期待哪些图型承载

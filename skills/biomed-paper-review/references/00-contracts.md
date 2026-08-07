@@ -380,7 +380,7 @@ M1 在 Stage 2 遇到「文本没有、但图里可能有」的字段时，**不
 
 ```json
 {
-  "field_path": "key_results.ic50_compound_a",
+  "field_path": "objective.primary_endpoint",
   "applicability": "applicable",
   "requiredness": "required",
   "status": "unresolved",
