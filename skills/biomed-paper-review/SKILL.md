@@ -173,6 +173,7 @@ task(subagent_type="general", description="Discovery",
 | 细胞系名 / NCT 注册号 / 参考文献 DOI / 人类基因符号 | `external_figure_validation` |
 | 图像文件 | `figure_integrity_audit` |
 | 剂量单位对 | `normalize_biomed_units` |
+| 动物实验（物种/麻醉/安乐死/3R） | `animal_model_compliance`（规则见 `references/06b-animal-model-ethics-enhancement.md`，产物交 M6） |
 
 每次调用都要落到唯一终态：`executed` / `not_applicable` / `failed` / `skipped`，
 后两者必须给理由。**不得让该跑的工具悄无声息地消失。**
@@ -196,6 +197,7 @@ printf '%s' '[{"check":"cell_line","cell_line":"MDA-MB-435","evidence_refs":["EV
   python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/external_figure_validation.py" --input -
 
 python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/ethics_compliance_check.py" --input structured_result_v2.json
+python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/animal_model_compliance.py" --input structured_result_v2.json  # 仅动物实验论文
 python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/figure_integrity_audit.py" --input figures
 python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/normalize_biomed_units.py" --compare 'mg/mL' 'g/L'
 printf '%s' '[{"check":"accession","accession":"NCT123","database":"clinicaltrials"}]' |
