@@ -188,8 +188,12 @@ def main():
     ap.add_argument("--judge-model", default=None, help="默认与 --model 相同")
     ap.add_argument("--base", default=bp.DEFAULT_BASE)
     ap.add_argument("--only", nargs="*", default=None, help="只植入 id 以此开头的错误")
-    ap.add_argument("--timeout", type=int, default=900,
-                    help="单臂审阅超时秒数。正常几分钟即可完成；设太大时卡住会白等很久")
+    ap.add_argument("--timeout", type=int, default=5400,
+                    help="单臂审阅超时秒数（默认 90 分钟）。"
+                         "**这只是防死锁的天花板，不是用来限制正常工作的** —— "
+                         "评测沙箱给 12 小时，挂 skill 那一臂本就要读 reference、"
+                         "跑脚本，比裸模型慢很多是正常的。设太小会把「合法的慢」"
+                         "误杀成失败，反倒制造出假的负 uplift。")
     ap.add_argument("--outdir", default=None)
     ap.add_argument("--keep-paper", action="store_true", help="保存植入后的论文供人工核对")
     a = ap.parse_args()

@@ -1070,7 +1070,114 @@ def _collect_tool_signals():
     except Exception as exc:
         skipped.append(f"figure_integrity_audit: {exc}")
 
+    # --- 外部数据核验 X1（需联网；离线时跳过而非失败）---
+    # 这一层的产出同时含 external evidence，由 check_external_evidence 单独校验。
+    try:
+        import external_figure_validation as x1
+        R = ["EV-001"]
+        out = x1.validate([
+            {"check": "cell_line", "cell_line": "MDA-MB-435", "evidence_refs": R},
+            {"check": "variant", "uniprot": "P04637", "position": 999,
+             "evidence_refs": R},
+            {"check": "blot_band", "uniprot": "P04637", "reported_kda": 120,
+             "evidence_refs": R},
+            {"check": "trial_registration", "nct": "NCT99999999", "evidence_refs": R},
+            {"check": "cited_retracted", "doi": "10.1016/S0140-6736(20)31180-6",
+             "evidence_refs": R},
+        ])
+        if not out["signals"]:
+            skipped.append("external_figure_validation: 外部源不可达（离线？），本层未校验")
+        else:
+            sigs += out["signals"]
+            _EXTERNAL_SIGNALS.extend(out["signals"])
+            _EXTERNAL_EVIDENCE.update(out["evidence_registry"])
+    except Exception as exc:
+        skipped.append(f"external_figure_validation: {exc}")
+
     return sigs, skipped
+
+
+# X1 产出的 external evidence，由 _collect_tool_signals 填充
+_EXTERNAL_EVIDENCE = {}
+
+
+def check_external_evidence(rep, schemas):
+    """校验 X1 产出的 external evidence 是否合契约。
+
+    signal 层查不到这个 —— evidence 走的是另一份 schema，
+    而外部证据是 X1 唯一能被复查的凭据，写错就等于不可复查。
+    """
+    rep.section("X1 外部证据的契约符合性")
+    if not _EXTERNAL_EVIDENCE:
+        print("  (跳过) 未收集到 external evidence（外部源不可达）")
+        return
+
+    ev_schema = schemas.get("evidence.schema.json", {})
+    ext = ev_schema.get("$defs", {}).get("external_evidence", {})
+    required = set(ext.get("required", []))
+    allowed = set(ext.get("properties", {}))
+
+    entries = list(_EXTERNAL_EVIDENCE.values())
+    bad_req = [f"{e.get('id')}: 缺 {sorted(required - set(e))}"
+               for e in entries if not required.issubset(set(e))]
+    rep.check(not bad_req, "external evidence 必填字段齐全", "; ".join(bad_req[:3]))
+
+    bad_extra = [f"{e.get('id')}: 多 {sorted(set(e) - allowed)}"
+                 for e in entries if set(e) - allowed]
+    rep.check(not bad_extra, "external evidence 无越界字段", "; ".join(bad_extra[:3]))
+
+    bad_id = [str(e.get("id")) for e in entries
+              if not re.match(r"^EV-[0-9]{3,}$", str(e.get("id", "")))]
+    rep.check(not bad_id, "external evidence id 合契约 pattern", "; ".join(bad_id[:3]))
+
+    bad_key = [k for k, e in _EXTERNAL_EVIDENCE.items() if e.get("id") != k]
+    rep.check(not bad_key, "登记表键与条目 id 相等", "; ".join(bad_key[:3]))
+
+    bad_sha = [e["id"] for e in entries
+               if not re.match(r"^[a-f0-9]{64}$", str(e.get("response_sha256", "")))]
+    rep.check(not bad_sha, "external evidence 带合法响应 sha256", "; ".join(bad_sha[:3]))
+
+    # 契约的条件约束：resolved 必须有 record_id 且 assertions 非空；
+    # not_found / not_addressed 必须 record_id 为 null 且 assertions 为空
+    bad_res = [e["id"] for e in entries if e.get("retrieval_status") == "resolved"
+               and (not e.get("record_id") or not e.get("assertions"))]
+    rep.check(not bad_res, "resolved 条目有 record_id 且 assertions 非空",
+              "; ".join(bad_res[:3]))
+    bad_unres = [e["id"] for e in entries
+                 if e.get("retrieval_status") in ("not_found", "not_addressed")
+                 and (e.get("record_id") is not None or e.get("assertions"))]
+    rep.check(not bad_unres, "未解析条目 record_id 为 null 且 assertions 为空",
+              "; ".join(bad_unres[:3]))
+
+    bad_ep = [e["id"] for e in entries
+              if not str(e.get("endpoint", "")).startswith("https://")
+              or re.search(r"(api[_-]?key|authorization|cookie|access_token|secret)=",
+                           str(e.get("endpoint", "")), re.I)]
+    rep.check(not bad_ep, "endpoint 为 https 且不含凭证", "; ".join(bad_ep[:3]))
+
+    bad_asrt = []
+    asrt_req = {"predicate", "subject", "external_value", "unit", "source_path"}
+    for e in entries:
+        for a in e.get("assertions", []):
+            if not asrt_req.issubset(set(a)):
+                bad_asrt.append(f"{e['id']}: 缺 {sorted(asrt_req - set(a))}")
+    rep.check(not bad_asrt, "assertion 必填字段齐全", "; ".join(bad_asrt[:3]))
+
+    # signal 里引用的外部证据必须都能解析到登记表
+    dangling = []
+    for s in _EXTERNAL_SIGNALS:
+        for ref in s.get("external_check", {}).get("external_evidence_refs", []):
+            if ref not in _EXTERNAL_EVIDENCE:
+                dangling.append(f"{s['id']} -> {ref}")
+    rep.check(not dangling, "signal 的 external_evidence_refs 全部可解析",
+              "; ".join(dangling[:3]))
+
+    resolved = [e for e in entries if e.get("retrieval_status") == "resolved"]
+    print(f"  （共 {len(entries)} 条外部证据，{len(resolved)} 条已解析，"
+          f"覆盖 {len({e['database'] for e in entries})} 个数据库）")
+
+
+_EXTERNAL_SIGNALS = []
 
 
 # type -> 该类型必须携带的判据块（schema 的条件约束）
@@ -1083,6 +1190,7 @@ SIGNAL_EVIDENCE_BLOCK = {
     "sequence_identifier_inconsistent": "sequence_audit",
     "figure_integrity_candidate": "image_audit",
     "ethics_requirement_unmet": "ethics",
+    "external_validation_candidate": "external_check",
 }
 
 
@@ -1167,6 +1275,7 @@ def main():
     schemas = check_schemas(rep)
     if "--no-tools" not in args:
         check_tool_signals(rep, schemas)
+        check_external_evidence(rep, schemas)
 
     if "--schema" not in args:
         if os.path.isdir(FIXTURE_DIR):

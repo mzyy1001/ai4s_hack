@@ -544,8 +544,12 @@ critical 及直接阻断核心解释的 major）；P1=给出修改要求前核�
 
 ## 6.5 确定性脚本：**要运行，不要只读**
 
-`scripts/` 下的五个脚本是**可执行工具**，不是参考资料。
+`scripts/` 下的六个脚本是**可执行工具**，不是参考资料。
 实测发现模型倾向于把它们当源码阅读而从不执行 —— 那样它们贡献为零。
+
+其中 `external_figure_validation.py` 尤其不能跳过：**它是唯一能查到「论文与真实世界
+不符」的工具**，其余检查只能查论文内部是否自洽 —— 而内部自洽是裸模型本来就会做的事。
+实测的负 uplift 正是因为当时全部检查都停在重读正文这一层。
 
 先由运行时解析本 `SKILL.md` 的父目录并保存为 `BIOMED_REVIEW_SKILL_DIR`；**不得**假定仓库根目录、
 不得写死安装路径，也不得靠切换工作目录改变输入文件的相对路径语义。在仓库检出目录内人工复跑时，
@@ -582,7 +586,17 @@ printf '%s' '[{"check":"accession","accession":"NCT123","database":"clinicaltria
 # 图像完整性：递归扫描目录，完整 signal/limitation 均写入 JSON
 python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/figure_integrity_audit.py" \
   --input figures > figure_integrity.json
+
+# 外部核验：按需联网查权威库。只查正文真的出现过的标识符，不预置任何数据集。
+# evidence_refs 必填 —— 外部事实必须与稿件事实成对，否则比较无法复算。
+# 下例查 Cellosaurus：MDA-MB-435 被标注为 M14 黑色素瘤衍生系，并非乳腺癌细胞系
+printf '%s' '[{"check":"cell_line","cell_line":"MDA-MB-435","evidence_refs":["EV-001"]}]' |
+  python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/external_figure_validation.py" --input -
 ```
+
+X1 的产物含三部分：`signals[]`、`evidence_registry`（external 型证据，须并入报告的
+证据登记表）、`system_limitations[]`。**外部源不可达时产 `system_limitation`，
+流程照常跑完** —— 少的是覆盖，不是结论。
 
 CLI 产物仍是工具原始结果：输入已带 `observation_refs[]` / `evidence_refs[]` 时脚本原样保留；
 未带时，调用阶段必须为每条 signal 补齐稿件 `evidence_refs[]` 后再汇总；
@@ -622,6 +636,7 @@ CLI 产物仍是工具原始结果：输入已带 `observation_refs[]` / `eviden
 | `scripts/ethics_compliance_check.py` | 伦理规范库筛查 | Stage 2，产 signal 交 M6 |
 | `scripts/sequence_identifier_audit.py` | 序列与标识符审计：HGVS 支持子集、版本化完整参考序列上的位点/残基核对、登录号格式、基因符号物种惯例、引物 QC；参考上下文不全时只产 `partial_extraction` | Stage 2，产 signal 交 M2 / M3 |
 | `scripts/figure_integrity_audit.py` | 论文内图像完整性：候选重复区域、拼接不连续、异常均匀区块。**只出候选，禁止自动定性** | Stage 3，产 signal 交 M5 |
+| `scripts/external_figure_validation.py` | **外部数据核验**：细胞系污染（Cellosaurus）、回顾性注册与结局切换（ClinicalTrials.gov）、引用已撤稿文献（Europe PMC）、蛋白分子量与变异位点（UniProt）、登录号存在性（GEO/SRA/PRIDE）、活性数量级（ChEMBL）。按需联网，不预置数据集；源不可达时产 `system_limitation` 而非 finding | Stage 3c，产 signal 交 M2/M3/M4/M5/M6/M7 |
 | `resources/ethics_rules.json` | 三法域伦理规范库（28 部规范 / 22 条要求） | M6 |
 | `schemas/*.json` | 全部输出的机器可校验模式 | 输出前自检 |
 | `templates/review_report.md` | 报告渲染模板 | Stage 5 |
