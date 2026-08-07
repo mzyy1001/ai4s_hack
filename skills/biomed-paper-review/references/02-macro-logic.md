@@ -1,969 +1,484 @@
 # M2 · 宏观逻辑与格式完整性
 
-**负责人：ZY（卓妍）** 
+核心问题：抛开生物学专业性，这篇论文作为一篇论文，研究问题、设计、样本、方法承诺、分析、结果和结论是否形成可审计的闭环，各部分是否完整且前后一致？
 
-对应会议纪要"第一层：无依赖内部逻辑校验"。**一期不调用任何外部数据**，仅凭论文自身内容判断。
-核心问题：抛开生物学专业性，这篇论文作为一篇论文，逻辑链是否闭环、各部分是否完整？
-
-**重要边界**：M2 检查“是否报告、是否前后一致、是否存在形式逻辑断裂”；不把“未报告”自动当成“未实施”，也不替代 M3（实验惯例）、M4（统计方法）、M6（伦理规范）或 M7（证据强度与结论层级）的判断。
-
-需要外部数据的检查（引用真实性、文献重复度）归本模块，二期实现，见 §5。
+判断稿件内部的形式逻辑和报告闭合，不判断生物学机制是否正确，也不把“未报告”自动解释为“未实施”。
 
 ---
 
-## 1. 输入
+## 1. 职责边界
 
-- `structured_result_v2`（M1 Stage 3b 产出；不得消费仍含 `unresolved` 的 v1），重点看 `article_design.primary_design`、`design_components[]`、`objective`、`conclusion.claims[]`、`evaluation_matrix`、`key_data[]` 与 `gaps[]`
-- 全文分节结果与图表清单（阶段 ①）
+### 1.1 M2 负责
 
-### 1.1 适用性与证据门控
+- 适用章节和声明是否存在，核心信息是否可定位；
+- Objective、Methods、Results、表图、Discussion 和 Conclusion 是否互相承接；
+- 人群、样本、实验材料、分组、时间线和分析分母能否闭合；
+- Methods 明确承诺的关键测量或分析是否在 Results 中得到交代；
+- 研究设计、抽样方式、分析描述和主张类型是否形成同一套可执行契约；
+- 摘要、正文、表格、图注和补充材料中的同一数值、单位、方向、组名是否一致；
+- ML/预测模型中可由稿件内部流程确认的数据泄漏或切分报告缺口；
+- X1 已生成的参考文献和标识符外部核验候选是否能由稿件上下文成立。
 
-1. 章节要求按 `article_design.primary_design` 及每个 `design_components[]` 路由；混合研究不得压成单一 `study_type`。
-2. “缺失”只有在适用范围内完成全文（含声明、补充材料可访问部分）检索后才能成立，必须使用 `absence` 证据记录检索范围、检索词和结果；不可读或不可访问的来源只能进入 `system_limitation`。
-3. 明确报告了方法但没有证明其科学上最优，不由 M2 报警；明确写出存在但未按规定执行，才交 M3/M4/M6。
-4. 证据不明确、设计分类含糊或来源冲突时，finding 的 `review_confidence` 最高为 `medium`，不得仅凭 `evaluation_matrix` 或 signal 立 finding。
+### 1.2 转交而不越界
 
-## 2. 校验清单
+| 问题 | 主模块 | M2 的处理 |
+| --- | --- | --- |
+| 实验条件、试剂、重复数、动物或组学方法是否符合领域惯例 | M3 | 只在 Methods 与 Results 自相矛盾时保留 M2 finding；方法不足转 M3 |
+| 检验选择、模型估计、多重比较、样本量是否统计合理 | M4 | M2 只判断“Methods 说 A、Results 报 B”或关键分析说明缺失 |
+| 图像质量、重复、裁剪和图表表达 | M5 | M2 只判断图表是否存在、被引用、与正文数值或方向是否一致 |
+| 伦理审批、同意、注册或动物授权是否合规 | M6 | M2 只做适用性与声明存在性路由，不代替伦理判定 |
+| 因果强度、证据等级、外推和临床建议是否过度 | M7 | M2 仅处理“结论对象在研究中根本未测”的形式跳跃，其余生成 M7 候选 |
 
-### 2.1 章节完整性
+同一问题只能选一个最能表达根因的 primary category。不得输出“category A / category B”。如同时涉及其他模块或次级现象，写入 related_categories 或 suggested_modules，由 Layer 4 合并。
 
-逐项核对是否存在且非空：Abstract / Introduction / Methods / Results / Discussion / Conclusion /
-Ethics statement / Funding / Conflict of interest / Data availability / References。
+---
 
-#### 2.1.1 不同刊型的必备章节表
+## 2. 输入与证据门控
 
-下表只是常见格式的默认路由，不是完整的文章类型枚举。协议/注册报告、诊断与预后模型、数据资源、方法学论文、scoping/umbrella/network meta-analysis、定性研究和 AI benchmark 应按 `article_design` 及期刊作者指南另行路由；合并章节（例如 Discussion/Conclusion）视为已满足结构要求。
+### 2.1 输入
 
-| 章节 | 研究论文 | 短报告 | 病例报告 | Meta分析 | 综述 | 缺失 severity |
+- structured_result_v2，重点使用 article_design.primary_design、design_components、objective、claims、key_data、gaps 和 evidence_refs；
+- 跨节包、参考文献包、声明包及轻量全局上下文；
+- 正文分节、表图清单和可访问补充材料；
+- 确定性工具或 X1 候选；候选和 signal 不能直接当 finding。
+
+若 structured_result 仍含 unresolved，先交回 M1 解析，不自行猜测关键字段。
+
+### 2.2 稿件来源过滤
+
+只有作者稿件内容可以证明“论文报告了什么”：
+
+- 接受：JATS article 的 front、body、back，正文直接链接且可访问的 supplement，以及 PDF 中属于论文的正文、表图、声明和参考文献；
+- 默认排除：sub-article、response、decision letter、peer-review、reviewer report、editor report、author response、acceptance letter、production query、correction request，以及其嵌套内容；
+- 只有研究对象本身是审稿材料，或用户明确要求分析审稿过程时，才把这些来源纳入证据；
+- 编辑或审稿人要求作者增加某内容，只能证明“有人提出过要求”，不能证明正文已经包含或缺少该内容；
+- 作者回复声称“已修改”时，仍必须回到最终正文定位修改结果。
+
+解析 JATS 时先按 XML 元素边界过滤，不得仅把整个 XML 转为纯文本后全文搜索。若解析器无法区分正文与审稿附件，登记 system_limitation，不对受影响的缺失或矛盾作高置信度判断。
+
+### 2.3 缺失与不可访问
+
+“未报告”必须有 absence 证据：
+
+1. 说明适用的研究组件；
+2. 列出检索范围，包括正文、表格、图注、声明及可访问补充材料；
+3. 列出概念及同义检索词；
+4. 记录零命中或只命中无关来源；
+5. 排除合并章节、替代标题和交叉引用。
+
+来源不可读、补充材料不可访问、注册页面不可达或解析失败时，只能登记 system_limitation。不得把系统能力限制算作论文缺陷。
+
+### 2.4 置信度
+
+- confirmed：稿件中的正向证据或可审计的 absence 证据足以支持；
+- likely：多处线索一致，但仍缺一项关键定位；
+- uncertain：设计分类、来源归属或文本含义存在歧义。
+
+likely 或 uncertain 的 review_confidence 最高为 medium。单个 extraction signal、目录名、文件夹名或数据集 slot 名不能决定研究设计。
+
+---
+
+## 3. 先按研究组件路由
+
+先识别 design_components，再逐组件审查，最后检查组件间如何汇合到总目标和总论断。混合研究不得压成单一 study_type，也不得共用一个不加说明的分母。
+
+| 组件 | M2 最小闭环 |
+| --- | --- |
+| RCT/干预研究 | 招募 → 随机化/分配 → 干预 → 随访 → 分析人群 → 预设终点 → 结果 |
+| 队列/横断面/病例对照 | 源人群 → 纳排/抽样/匹配 → 暴露与结局 → 分母 → 分析 → 关联主张 |
+| 诊断研究 | 入组 → 指标检测 → 参考标准 → 可判定样本 → 诊断指标 |
+| 系统综述/aggregate meta | 问题框架 → 检索 → 筛选 → 纳入研究 → 合成 → 结论 |
+| IPD meta-analysis | 队列识别 → IPD 获得/协调 → 个体纳排 → 各队列与总分母 → 一阶段或二阶段分析 → 合成 |
+| Scoping/rapid review | 范围问题 → 检索来源 → 筛选/图表化 → 证据地图；不强制套用效应量 meta 要求 |
+| 公共数据库二次分析 | 数据库/版本/时间窗 → 变量定义 → 纳排 → 最终队列 → 分析 → 数据库人群内结论 |
+| 动物/实验室/组学/in-silico | 材料或数据来源 → 组别/处理 → 明确测量 → 分析产物 → 对应结果 |
+| ML/预测模型 | 样本与标签 → 切分单元 → 折内预处理/选择 → 训练与调参 → 独立评估 → 性能主张 |
+| 混合研究 | 每个组件各自闭合，并明确组件间接口；一个组件的结果不得冒充另一个组件的验证 |
+
+路由护栏：
+
+- IPD meta-analysis 不是普通 aggregate meta，不得仅因未见传统 forest plot、汇总效应或统一 PRISMA 要素而报警；
+- rapid/scoping review 与 pilot study 并存时，分别建立检索筛选账和参与者流程账；
+- 公共、去标识数据库研究不因未见逐例知情同意自动报警，转 M6 按数据库政策和豁免语境判断；
+- 纯 in-silico 研究不适用人体同意或动物审批；
+- 动物、实验和计算组件的方法参数是否充分由 M3/M4 判断，M2 不运行 Western blot、流式、IHC、RNA-seq、毒理或剂量点数的硬阈值清单；
+- 无 ML/预测组件时，在 coverage 中只记一次 not_applicable，不逐条枚举所有泄漏类型。
+
+---
+
+## 4. 强制的四张对账表
+
+不得从缩写、章节小标题或格式清单开始。第一遍先建以下四张轻量 ledger；预算不足时优先保留 ledger 和 critical/major finding。
+
+### 4.1 人群、材料与分母账
+
+按组件记录：
+
+| 阶段 | 对象/来源 | 纳入或选择规则 | n | 排除/缺失 | 下游用途 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Abstract（结构化格式） | 按期刊要求；信息要素必须存在 | 按期刊要求 | 按期刊要求 | 按期刊要求 | 推荐 | minor；核心结果缺失可 major |
-| Introduction | 必须 | 必须 | 必须 | 必须 | 必须 | major |
-| Methods | 必须 | 必须 | 可选 | 必须 | 必须 | critical |
-| Results | 必须 | 必须 | 必须 | 必须 | N/A | critical |
-| Discussion | 必须 | 可合并 | 必须 | 必须 | N/A | major |
-| Conclusion（可并入 Discussion） | 推荐；仅在期刊格式要求时必须 | 推荐；可并入 Discussion | 推荐；可并入 Discussion | 推荐；可并入 Discussion | 推荐；可并入 Discussion | minor/major |
-| Ethics statement | 必须* | 必须* | 必须* | 推荐 | N/A | major* |
-| Informed consent | 必须** | 必须** | 必须 | N/A | N/A | major** |
-| Funding | 必须 | 必须 | 必须 | 必须 | 必须 | minor |
-| Conflict of interest | 必须 | 必须 | 必须 | 必须 | 必须 | major |
-| Data availability | 必须 | 推荐 | 推荐 | 必须 | N/A | minor |
-| References | 必须 | 必须 | 必须 | 必须 | 必须 | major |
-| Trial registration / protocol registration*** | 临床试验：必须；系统综述：报告 PROSPERO/OSF 等方案注册（若有） | 临床试验：必须 | N/A | 方案注册：推荐/按期刊要求；不是“trial registration” | N/A | major；注册时序或核心终点冲突可升级 |
+| 源集合 |  |  |  |  |  |  |
+| 筛查/质控 |  |  |  |  |  |  |
+| 分组/匹配/验证 |  |  |  |  |  |  |
+| 最终分析 |  |  |  |  |  |  |
 
-\* 仅当涉及人体受试者或动物实验时必须  
-\*\* 仅当涉及人体受试者时必须  
-\*\*\* 临床试验注册与系统综述方案注册是不同概念；不能因未注册试验而自动否定 Meta 分析。
+人体研究追踪筛查、诊断验证、随机化、失访和分析集；实验研究追踪样本/动物/切片/细胞或数据集及其层级；综述追踪记录、全文、研究、队列和个体，不能混用这些分母。
 
-#### 2.1.2 结构化摘要要素检查
+### 4.2 Methods→Results 承诺账
 
-若期刊或研究类型要求结构化摘要，摘要应至少包含：
-- **Background/Objective** - 研究背景与目标
-- **Methods** - 研究设计、样本量、主要方法
-- **Results** - 关键数值结果（带统计量）
-- **Conclusion** - 主要结论
+提取 Methods 中已完成式承诺，如 was measured、was assessed、was performed、was determined、we evaluated、variables entered into the model。为每项记录：
 
-缺失任一要素触发 `minor` finding（category: `incomplete_abstract`）；若为非结构化摘要，则检查同一信息是否以连续文本出现，不因缺少小标题报警。
+- 对象、时间点和分析层级；
+- 与主要目标、分组、主要结论或安全性的关系；
+- Results、表图或补充材料的对应位置；
+- 若未报告，是否明确解释取消、缺失或质控失败。
 
-#### 2.1.3 方法学报告清单
+宽泛的“可收集变量”列表不等于承诺全部报告；只有明确完成且关系到目标、分组、解释或主张的项目才进入核心账。
 
-根据研究类型，检查是否符合相应报告规范。**每类研究必须报告的核心要素**如下：
+### 4.3 分析→主张账
 
-##### 2.1.3.1 临床研究与流行病学
+把主张映射到实际结果和分析层级：
 
-| 研究类型 | 报告规范 | 核心必备要素 | 缺失 severity |
-| --- | --- | --- | --- |
-| **随机对照试验 (RCT)** | CONSORT | 流程图、样本量计算、随机化方法、分配隐藏、盲法、试验注册号 | critical |
-| **观察性研究** | STROBE | 研究设计类型、样本来源、纳排标准、暴露/结局定义、混杂因素调整 | major |
-| **诊断准确性研究** | STARD | 流程图、参考标准、盲法评估、诊断阈值、敏感性/特异性 | major |
-| **Meta分析/系统综述** | PRISMA | 流程图（文献筛选）、检索策略、纳排标准、质量评价、异质性分析 | critical |
-| **队列研究** | STROBE-cohort | 随访时间、失访率、基线可比性、时间依赖性偏倚处理 | major |
-| **病例对照研究** | STROBE-case-control | 病例与对照选择、匹配方式、回忆偏倚控制、OR值与CI | major |
-| **横断面研究** | STROBE-cross-sectional | 抽样方法、应答率、患病率估计、因果推断限制说明 | minor |
-| **非劣效/等效试验** | CONSORT-noninferiority | 非劣效界值预设、单侧/双侧检验、ITT与PP分析 | critical |
+| 主张类型 | 必须定位的稿件内部接口 |
+| --- | --- |
+| frequency/prevalence/incidence | 源人群、观察窗、分子和分母是否来自同一抽样框 |
+| associated factor | 对应比较或模型、效应方向与人群 |
+| independent predictor | 调整模型存在，变量与调整层级可识别 |
+| diagnostic performance | 指标检测、参考标准和同一可判定样本 |
+| causes/reduces/improves | 是否有对应干预/时间顺序；证据强度交 M7 |
+| safe/effective | 对应疗效和安全性终点是否实际测量并报告 |
 
-##### 2.1.3.2 遗传学与基因组学
+### 4.4 跨来源数值账
 
-| 研究类型 | 报告规范 | 核心必备要素 | 缺失 severity |
-| --- | --- | --- | --- |
-| **遗传关联研究 (GWAS)** | STREGA | SNP选择标准、基因分型方法、Hardy-Weinberg平衡检验、多重检验校正、人群分层控制 | critical |
-| **全基因组/外显子测序** | —— | 测序平台、覆盖深度、比对参考基因组版本、变异calling算法、过滤标准 | major |
-| **qPCR** | MIQE | 引物序列与验证、反应效率、参考基因选择、Cq值报告、技术重复数 | major |
-| **基因表达谱 (RNA-seq)** | —— | 建库方法、测序深度、归一化方法、差异表达阈值（FDR < 0.05, \|log2FC\| > 1）、批次效应处理 | major |
-| **CRISPR基因编辑** | —— | sgRNA序列、脱靶分析、编辑效率验证、供体序列（HDR）、基因型鉴定方法 | major |
-| **单细胞测序** | —— | 细胞数、捕获方法、质控标准（线粒体%、基因数）、批次整合方法、细胞类型注释依据 | major |
-| **表观遗传学 (ChIP-seq, ATAC-seq)** | —— | 抗体验证（ChIP）、文库复杂度、peak calling算法、重复样本相关性、motif富集分析 | major |
+对主要样本量、分母、终点、效应量、P 值、CI、单位、时间点和方向，合并 Abstract、Results、表格、图注及补充材料候选值。先检查：
 
-##### 2.1.3.3 分子生物学与生物化学
+- 是否属于不同分析人群、时间点或单位；
+- 是否只是合理舍入；
+- 百分比是否使用不同但已说明的分母；
+- 表中总体值是否能由互斥分组值合理推出；
+- 点估计是否落在其置信区间内。
 
-| 研究类型 | 核心必备要素 | 缺失 severity |
+无法解释的候选冲突才进入 finding。
+
+---
+
+## 5. 主链规则
+
+### 5.1 目标未闭合
+
+Category：objective_drift
+
+当 Abstract/Introduction 明确提出的主要目标或假设，在 Results、表图和可访问补充材料中没有对应测量或分析时成立。
+
+不成立：
+
+- 结果存在但证据强弱存疑，转 M7；
+- 次要背景问题没有单独结果；
+- 合理修改目标且稿件已说明原因。
+
+Severity：
+
+- major：一个主要目标完全未回答；
+- critical：唯一主要目标完全没有结果，导致论文核心不可解释；
+- minor：明确列出的次要探索目标未交代。
+
+### 5.2 Methods 承诺未交代
+
+Category：methods_results_gap
+
+Methods 明确声称已完成的关键测量、终点、敏感性分析、模型、分组验证或安全性评估，在任何 Results 来源中均无结果，也未说明原因。
+
+正例：Methods 写明已按 GOLD 判定严重度并完成肺功能检测，Results 完全不报告分级、肺功能或缺失原因，而这些信息关系到研究人群和主要风险主张。
+
+反例：Methods 说明收集既往用药，Results 明确报告完整度不足并在 supplement 给出可用分布。
+
+Severity：
+
+- critical：主要终点或唯一核心验证完全缺失，结论无从解释；
+- major：关键分组、主要安全性、核心协变量或预先说明分析缺失；
+- minor：不改变主要推断的次要探索承诺缺失。
+
+### 5.3 结果成为孤岛
+
+Category：orphan_results
+
+Material orphan result 是 Results 中足以改变论文主题或支撑主要结论的数据块，却在研究目标/Methods 中没有来源、动机或分析计划。仅仅 Discussion 未逐项复述结果不构成 major finding。
+
+- major：突然出现的新人群、实验组件、主要终点或分析，且被用于核心结论；
+- minor：次要结果未被解释，影响可读性但不改变主链。
+
+### 5.4 设计→抽样→分析→主张断裂
+
+Category：design_analysis_disconnect
+
+在稿件自身描述中，研究设计、样本形成、验证路径、分析或主张无法同时成立。例如：
+
+- 一方面称 census/连续纳入全部患者，另一方面从更大源人群按固定比例选择病例或对照，却没有给出源人群；
+- 用病例-对照式或匹配式分析样本直接计算人群 frequency/prevalence；
+- 诊断结果只在高度怀疑者中验证，却把其分母表述为全部人群；
+- matched/paired/clustered/repeated 设计没有说明分析如何承接该结构；
+- 一个混合研究组件的样本或结果被当作另一个组件的验证；
+- IPD meta 把队列数、个体数和分析可用个体混为同一分母。
+
+如果设计链完整，只是统计方法可能不合适，转 M4。若主要问题是调整模型关键字段未报告，可选 analysis_reporting_gap 作为 primary category，不再同时立 design_analysis_disconnect。
+
+### 5.5 参与者流、样本流或分母不闭合
+
+Category：participant_flow_inconsistency
+
+筛查、纳入、分组、匹配、验证、排除、失访与最终分析人数不能通过稿件说明互相换算，或同一终点在正文和表图使用无法解释的分母。
+
+- major：影响主要终点、频率、安全性或主要分析人群；
+- minor：次要表格的一处编辑性分母差异；
+- critical：无法确定任何核心结果来自哪一分析集。
+
+分析集定义清楚但采用何种统计策略是否正确，转 M4。
+
+### 5.6 终点、时间点与分析人群发生未解释变化
+
+Primary categories 按根因三选一：
+
+- endpoint_switching：主要/次要终点或时间点发生未解释变化；
+- analysis_population_mismatch：ITT、PP、安全性集或其他分析人群前后不一致；
+- selective_reporting：预设的一组分析只报告有利部分，且有正向证据表明其余分析存在。
+
+注册或方案可得时与稿件对账；不可访问时登记 system_limitation。不能仅因某常见结局未出现而推断选择性报告。
+
+核心终点被替换、隐匿或选择性报告可为 critical；次要终点或分析集说明不足通常为 major。
+
+### 5.7 内部数值、单位、方向和时间线冲突
+
+Primary category：internal_inconsistency
+
+同一 grouping key 下的观测在 Abstract、正文、表格、图注或 supplement 中无法同时成立。grouping key 至少包含研究组件、分析人群/材料、组别、时间点、终点和单位。
+
+以下更具体 category 只在其能准确表达根因时替代 internal_inconsistency：
+
+- abstract_main_text_inconsistency；
+- timeline_inconsistency；
+- statistical_method_mismatch，仅限 Methods 声称的检验与 Results 实际报告的统计量形式矛盾。
+
+同一根因造成的多处冲突聚成一条 finding，列出全部证据，不按每个表格单元重复计数。数值是否统计合理交 M4；正文与表格说法不一致归 M2。
+
+### 5.8 窄义循环论证
+
+Category：circular_reasoning
+
+仅在待证明结论直接决定关键样本选择、标签、分组或评价规则，随后同一规则又被用来证明该结论时成立。例如先按“对药物敏感”选择对象，再用这些对象证明药物有效。
+
+以下不自动成立：
+
+- 常规疾病模型选择；
+- Discussion 对结果作机制解释；
+- 事后亚组已明确标为 exploratory。
+
+### 5.9 形式层面的结论跳跃与 M7 转交
+
+Category：conclusion_overreach 仅用于研究中根本没有对应对象或层级的形式跳跃，例如：
+
+- 只有体外数据，却直接声称已改善患者临床结局；
+- 只有动物数据，却声称已在人群中证实疗效；
+- 只测一个指标，却声称完整验证了多个未测通路；
+- 没有任何安全性测量，却宣称安全。
+
+只要存在相关实验或分析，但因设计、样本量、混杂、替代终点或证据层级而可能不足，M2 不立此 finding，而是生成 possible_unsupported_claim 或 possible_causal_overreach 候选给 M7，附 claim 原文、locator、设计和实际结果。
+
+### 5.10 ML/预测模型接口
+
+仅当 design_components 含 ML、预测、分类、风险评分或 benchmark 时运行。检查六个接口：
+
+1. 样本/患者/切片/站点/时间等独立切分单元；
+2. 同一实体或衍生样本是否跨训练、验证和测试集合；
+3. 归一化、插补、特征选择和降维是否只在训练数据/训练折拟合；
+4. 调参与模型选择是否与最终测试集隔离；
+5. 特征是否包含预测时点之后的信息或标签派生信息；
+6. 外部验证是否真正独立于开发数据和开发决策。
+
+判定层级：
+
+- 有明确重叠、全数据拟合、测试集调参或未来/标签信息证据：按具体 data_leakage_* category 立 finding，major 或 critical 取决于是否污染主要性能；
+- 只是不报告切分单元、预处理顺序或独立性：data_split_not_reported，通常 major，不能写成“已发生泄漏”；
+- 代码、supplement 或数据不可访问：system_limitation；
+- 无 ML 组件：coverage 中一行 not_applicable。
+
+---
+
+## 6. 结构与编辑完整性
+
+主链检查完成后再运行本节。章节以信息功能而非标题字面判断；合并的 Results and Discussion 或 Discussion 中的 Conclusion 视为存在。
+
+### 6.1 核心结构
+
+| 稿件组件 | 通常需要的信息 | 判定护栏 |
 | --- | --- | --- |
-| **Western blot** | 一抗/二抗信息、蛋白定量方法、内参选择、条带定量方法、完整膜图像（未裁剪）、生物学重复数≥3 | major |
-| **流式细胞术** | 门控策略图、抗体克隆号、荧光补偿、阳性对照、细胞数≥10,000 events、FMO对照（多色） | major |
-| **免疫组化/免疫荧光** | 抗体稀释度与孵育条件、抗原修复方法、阴性对照、定量方法（盲法评分/软件分析）、代表性视野数 | major |
-| **显微成像** | 显微镜型号、物镜NA、激光波长/功率、曝光时间、Z-stack间隔、图像处理软件与参数、比例尺 | minor |
-| **质谱蛋白组学** | 质谱仪型号、肽段鉴定FDR、定量方法（label-free/TMT）、蛋白数据库版本、生物信息学分析流程 | major |
-| **酶活性测定** | 底物浓度、反应时间、线性范围验证、Km/Vmax值、抑制剂IC50与95% CI | major |
-| **细胞增殖/毒性实验 (MTT/CCK-8)** | 细胞接种密度、孵育时间、剂量范围、生物学重复≥3、技术重复≥3、IC50计算方法 | minor |
+| Abstract | 目标、设计/材料、主要结果、结论 | 非结构化摘要不因缺小标题报警 |
+| Introduction | 问题、缺口、目标 | 背景长短不等于完整性 |
+| Methods | 设计、对象、流程、测量、分析 | 具体领域参数转 M3/M4 |
+| Results | 对应主要目标的结果 | 综述类按其文章类型解释 |
+| Discussion/Conclusion | 解释、局限、对目标的回答 | 可合并，不强制独立 Conclusion |
+| Funding/COI | 声明或明确无 | 依期刊和稿件类型判断 |
+| Data availability | 声明或访问路径 | 未给期刊/资助政策时只记待确认，不自动 finding |
+| References | 正文引用与条目可对应 | 引用真实性依赖 X1 |
 
-##### 2.1.3.4 动物实验与体内研究
+missing_section 只在该组件确实适用、全文 absence 检索完成且信息功能也不存在时使用。Methods 或 Results 的实质性缺失可为 critical；影响解释的 Introduction/Discussion 缺失通常 major；期刊依赖或编辑性声明通常 minor 或待确认。
 
-| 研究类型 | 报告规范 | 核心必备要素 | 缺失 severity |
-| --- | --- | --- | --- |
-| **动物实验（所有类型）** | ARRIVE 2.0 | 伦理批准号、动物品系/来源、性别、年龄/体重、样本量计算、随机化与盲法、人道终点 | critical |
-| **肿瘤模型** | —— | 细胞系/PDX来源、接种细胞数、肿瘤测量方法与频率、终点肿瘤体积、动物排除标准 | major |
-| **行为学实验** | —— | 驯化时间、测试时间段、实验者盲法、视频记录与分析软件、场地清洁消毒 | major |
-| **药代动力学 (PK)** | —— | 给药途径/剂量、采样时间点、生物样本处理、定量方法（LC-MS）、PK参数计算软件 | major |
+人体/动物伦理、同意和注册的适用性由 M6 最终判定。公共去标识数据库、公开组学数据、纯 in-silico、综述和 meta-analysis 不得套用原始人体研究的同意要求。
 
-##### 2.1.3.5 毒理学
+### 6.2 摘要
 
-| 研究类型 | 核心必备要素 | 缺失 severity |
+incomplete_abstract 用于摘要缺少目标、基本设计/材料、主要结果或结论信息。缺少结构化小标题本身不是 finding。摘要遗漏主要数值可按影响取 minor/major；摘要与正文冲突使用 abstract_main_text_inconsistency。
+
+### 6.3 图表、术语和引用
+
+- missing_figure_reference：正文引用的图表不存在；主要结果依赖该图表时 major，否则 minor；
+- orphan_figure：图表未被正文或集体补充材料引用，通常 minor；
+- terminology_inconsistency：组别、终点、材料或实体名称变化造成实际映射歧义；纯风格差异不报警；
+- abbreviation_undefined：首次出现的非通行缩写未定义，minor；
+- reference_numbering_error：仅对已确认的数字顺序制运行；作者-年份制不检查连续编号。
+
+上述编辑项合并输出，不得挤占 critical/major 逻辑问题。
+
+### 6.4 报告规范
+
+CONSORT、STROBE、STARD、PRISMA、PRISMA-IPD、PRISMA-ScR、ARRIVE、TRIPOD 等只用于识别“当前组件可能缺少哪个接口”，不是统一严重度表。
+
+missing_reporting_guideline_element 必须同时满足：
+
+1. 已确认规范和版本适用于该具体研究组件；
+2. 缺失条目是必需而非建议项；
+3. 已完成 absence 检索；
+4. finding 说明该缺失如何影响流程、分母、主要终点解释或可复核性。
+
+严重度按实际影响决定。不得把任何 CONSORT/PRISMA/ARRIVE 条目缺失一律标为 critical；也不得用规范清单替代 M3、M4 或 M6 的专业判断。
+
+---
+
+## 7. 外部核验候选
+
+M2 只消费 X1 已生成的 external_validation_candidate，不自行声称联网核验成功。
+
+| X1 check_type | M2 primary category | 成立条件 |
 | --- | --- | --- |
-| **急性毒性** | OECD指南编号、LD50/LC50与95% CI、剂量爬坡方案、观察期、死亡时间、临床症状记录、病理解剖 | major |
-| **亚慢性/慢性毒性** | 给药期、恢复期、体重/摄食量监测频率、血液学/生化指标、器官重量、组织病理学、NOAEL/LOAEL | major |
-| **遗传毒性** | Ames试验（菌株、剂量、S9）、微核试验（给药-取样间隔、细胞数）、彗星试验（尾矩、阳性对照） | major |
-| **生殖发育毒性** | 交配方案、孕期给药窗口、活胎数/死胎数、骨骼/内脏畸形检查、F1代发育指标 | major |
-| **剂量-响应曲线** | 至少5个剂量、跨2-3个数量级、曲线拟合模型（4参数logistic）、EC50/IC50与Hill系数 | major |
+| `cited_work_retracted` | cites_retracted_work | 被撤稿文献被当作有效依据，稿件未说明撤稿状态 |
+| `reference_doi_resolves` | reference_not_resolvable | 权威源明确无法解析，且已排除排版错误 |
+| `gene_symbol_excel_corruption` | gene_symbol_data_corruption | 日期化符号出现在实际数据或结果中 |
+| `gene_symbol_outdated` | gene_symbol_outdated | 旧符号造成实体映射风险；通常 minor |
+| `gene_symbol_unrecognized` | gene_symbol_unrecognized | 权威源无法识别且人工语境复核仍存疑 |
+| `variant_position_range` | variant_inconsistent_with_reference | 稿件物种、转录本/蛋白版本一致后，位置仍超出范围 |
+| `variant_reference_residue` | variant_inconsistent_with_reference | 稿件物种、转录本/蛋白版本一致后，参考残基仍冲突 |
 
-##### 2.1.3.6 生物工程与生物材料
+引用撤稿论文讨论撤稿事件本身不是错误。外部服务超时或无权限只登记 system_limitation。
 
-| 研究类型 | 核心必备要素 | 缺失 severity |
+确定性工具的 count_percentage_mismatch 和 table_total_mismatch 可作为候选；M2 回查稿件后，以 internal_inconsistency 或 participant_flow_inconsistency 定性。
+
+---
+
+## 8. Severity 与去重
+
+Severity 由对论文主链的实际影响决定，不由规则名称或报告指南名称决定：
+
+- critical：唯一核心目标/主要结果不可解释，核心分析集无法识别，或有明确的数据完整性污染使主要性能无效；
+- major：主要目标、分母、流程、关键承诺、主要数值或分析→主张接口明显断裂，需要实质性补充或重分析；
+- minor：编辑性、局部说明或次要结果缺口，不改变当前核心推断。
+
+去噪规则：
+
+1. 同一根因只立一条 finding；
+2. 每条 finding 只用一个 primary category；
+3. “未发现”和 not_applicable 放入紧凑 coverage 表，不写成长段；
+4. absence、inaccessible 和 confirmed leakage 必须明确区分；
+5. finding 数量不是目标，优先保留最先阻断主要结论的断点。
+
+---
+
+## 9. 输出要求
+
+### 9.1 审查顺序
+
+1. 过滤非稿件来源；
+2. 识别所有 design_components；
+3. 建四张 ledger；
+4. 做 critical/major 主链检查；
+5. 路由 M3/M4/M5/M6/M7 候选；
+6. 最后做 minor 结构和编辑检查；
+7. 对候选去重并绑定 evidence_refs。
+
+### 9.2 最终回答必须直接回答
+
+- 结构是否完整；若不完整，缺口是否真的适用；
+- 核心逻辑链是否闭环；
+- 最先阻断主要结论的断点是什么；
+- 哪些结论仍需 M7 或其他模块复核；
+- 哪些判断受不可访问来源限制。
+
+推荐摘要句式：
+
+“结构基本完整/存在 X 项适用缺口；核心逻辑链闭合/部分闭合/未闭合。首要断点位于 A→B：稿件声称……，但……，因此主要主张……目前无法由稿件内部自洽支持。”
+
+### 9.3 每条 finding 最小内容
+
+- 单一 primary category 和 severity；
+- 具体问题，不写泛化清单；
+- 至少一个 present 证据；缺失问题另有 absence 证据；
+- 受影响的目标、结果或结论；
+- 可执行修订建议；
+- review_confidence；
+- finding origin；
+- 若跨模块，写 suggested_modules，不重复立项。
+
+---
+
+## 10. Category 速查
+
+### 主链
+
+| category slug | 默认 severity | 用途 |
 | --- | --- | --- |
-| **组织工程支架** | 材料组成/分子量、制备方法、孔隙率/孔径、表面形貌（SEM）、机械性能、降解速率、细胞相容性 | major |
-| **纳米材料/纳米药物** | 粒径分布（DLS/TEM）、Zeta电位、包封率/载药量、体外释放曲线、稳定性、内毒素检测 | major |
-| **3D生物打印** | 生物墨水组成、打印参数（速度/压力/温度）、打印精度验证、结构完整性、细胞活力（打印后） | major |
-| **医疗器械性能** | ISO标准编号、生物相容性（ISO 10993）、灭菌方法验证、疲劳测试、临床前动物验证 | critical |
-| **微流控芯片** | 通道尺寸、流速范围、芯片材质、表面处理、细胞/液体操控验证 | minor |
+| `objective_drift` | major；唯一目标未回答可 critical | 明确目标无对应结果 |
+| `methods_results_gap` | major；按承诺重要性可 critical/minor | Methods 的关键完成式承诺无下游交代 |
+| `orphan_results` | major/minor | 重要结果无上游动机/方法来源 |
+| `design_analysis_disconnect` | major | 设计、抽样、验证、分析和主张无法衔接 |
+| `analysis_reporting_gap` | major/minor | 核心模型/分析缺少使其不可解释的接口说明 |
+| `participant_flow_inconsistency` | major；核心分析集不可识别可 critical | 人群、样本、队列或分析分母不闭合 |
+| `endpoint_switching` | major/critical | 终点或时间点未解释变化 |
+| `analysis_population_mismatch` | major | 分析人群定义或使用前后不一致 |
+| `selective_reporting` | major/critical | 有证据表明只报告预设分析中的有利部分 |
+| `internal_inconsistency` | major/minor | 同一观测跨来源冲突 |
+| `circular_reasoning` | major | 待证结论参与样本/标签/评价定义 |
+| `conclusion_overreach` | major | 结论对象或层级在研究中根本未测 |
 
-##### 2.1.3.7 生物信息学与计算生物学
+### 结构与编辑
 
-| 研究类型 | 核心必备要素 | 缺失 severity |
+| category slug | 默认 severity | 用途 |
 | --- | --- | --- |
-| **机器学习预测模型** | 特征选择方法、模型类型、超参数、训练-验证-测试集切分、性能指标（AUC/准确率/F1）、外部验证 | critical |
-| **蛋白结构预测/对接** | 预测软件/力场、模板选择、对接评分函数、结合能、关键残基、MD模拟验证 | major |
-| **通路富集分析** | 数据库版本（KEGG/GO/Reactome）、富集算法、背景基因集、多重检验校正、FDR阈值 | minor |
-| **网络分析** | 网络构建方法、节点/边定义、拓扑参数、模块识别算法、关键节点验证 | minor |
-
-##### 2.1.3.8 触发规则
-
-**触发条件**：
-- 研究类型明确属于上述任一类别，但适用部分未报告对应规范的核心要素；
-- 报告规范要求流程图（CONSORT/PRISMA/STARD），但全文无流程图或流程图数字无法与正文闭合；
-- 关键方法学参数缺失（如 Western blot 无内参、GWAS 无多重检验校正、动物实验无伦理批准）。
-
-报告规范应记录名称、版本/年份、适用研究组件和缺失条目。缺失“建议性”条目默认 `minor`；缺失会改变可重复性、主要终点解释或伦理授权的条目才可为 `major/critical`。下列数值（例如技术重复数、流式 events、剂量点数、RNA-seq fold-change）均是复核提示，不是跨实验的硬性淘汰阈值。
-
-**Severity 判定**：
-- `critical`：缺失或明确违反会使主要结论不可解释、造成严重数据完整性风险或涉及未授权的人体/动物研究（如 RCT 未随机化、明确全数据特征筛选、动物实验无伦理批准）；
-- `major`：影响主要结果的可重复性、可解释性或外部适用性；
-- `minor`：编辑性或补充性报告缺口，不改变当前核心推断。
-
-**AI/计算研究补充**：根据研究用途同时考虑 TRIPOD+AI/PROBAST-AI（预测模型）、CONSORT-AI/SPIRIT-AI（临床 AI 干预）、CLAIM 或 STARD-AI（医学影像/诊断）等要求。至少核对模型/软件版本、数据来源与时间窗、患者/切片/站点级切分、预处理是否在每个训练折内拟合、嵌套交叉验证或独立验证、随机种子、性能指标及 95% CI、校准、阈值预设、类别不平衡、亚组性能和临床效用。
-
-**Category**: `missing_reporting_guideline_element`
-
-**正例**（应报警）：
-> 一篇GWAS论文报告了30个显著SNP（p < 5×10⁻⁸），但Methods未提及多重检验校正方法，未报告基因分型call rate，未进行Hardy-Weinberg平衡检验。
-
-**反例**（不应报警）：
-> 一篇GWAS论文Methods明确写明："SNP call rate > 95%，Hardy-Weinberg平衡 p > 0.001，使用Bonferroni校正后显著性阈值 p < 5×10⁻⁸。"
-
-### 2.2 逻辑链闭环
-
-沿 `研究问题 → 假设 → 实验设计 → 结果 → 结论` 逐段追踪，检查四类断裂：
-
-#### 2.2.1 Objective Drift
-
-**定义**：Introduction 提出的研究问题在 Results 中没有对应实验数据回答。
-
-**检查步骤**：
-1. 从 Introduction 最后一段或 Abstract 的 Objective 提取核心研究问题（通常以"we aimed to..."、"the objective was..."、"we hypothesized that..."引出）
-2. 在 Results 中逐节检查是否有实验/分析直接回答该问题
-3. 若某个声称的主要目标在结果中无对应数据，触发 finding
-
-**触发条件**：
-- Abstract 或 Introduction 明确列出 2+ 研究目标，但 Results 只涵盖其中部分
-- Introduction 提出具体假设（如"我们假设药物 X 可降低炎症因子 Y"），但 Results 未测量因子 Y
-- 研究声称"探讨机制"，但只给了表型数据，无分子机制实验
-
-**Severity**: `major`  
-**Category**: `objective_drift`
-
-**正例**（应报警）：
-> Introduction: "We aimed to (1) evaluate the efficacy of compound X in tumor growth inhibition and (2) investigate its mechanism via the MAPK pathway."
-> Results 只报告了肿瘤生长曲线，未做任何 MAPK 通路检测（Western blot、磷酸化分析等）。
-
-**反例**（不应报警）：
-> Introduction 同上，Results 包含：§3.1 肿瘤生长抑制实验，§3.2 MAPK 通路蛋白表达分析。
-
----
-
-#### 2.2.2 Orphan Results
-
-**定义**：Results 中的实验在 Introduction 中无动机铺垫，或在 Discussion 中无解读。
-
-**检查步骤**：
-1. 列出 Results 中所有实验/数据块（通常按小节或图表组织）
-2. 回溯 Introduction：该实验的目的是否被提及？是否从假设/背景自然引出？
-3. 前瞻 Discussion：该实验的结果是否被解读？是否与文献对比或给出生物学意义？
-4. 若某实验"突然出现"且后续无讨论，触发 finding
-
-**触发条件**：
-- Results 包含的某个实验在 Introduction 中从未提及相关背景
-- Results 的某组数据在 Discussion 中完全未被讨论（仅在 Results 中描述一遍）
-- 补充材料中的关键实验未在正文 Discussion 中整合
-
-**Severity**: `major`（前向孤儿）/ `minor`（后向孤儿，即 Discussion 未充分解读）  
-**Category**: `orphan_results`
-
-**正例**（应报警）：
-> Introduction 聚焦于药物对肝癌的作用，Results 突然出现"§3.5 Drug X reduces anxiety-like behavior in mice"（焦虑行为实验），但 Introduction 从未提及行为学或神经保护，Discussion 也未解释为何做此实验。
-
-**反例**（不应报警）：
-> Introduction 提到"除抗肿瘤作用外，初步证据表明 X 可能影响神经系统"，Results §3.5 给出行为学数据，Discussion §4.3 讨论"意外发现的神经保护作用及可能机制"。
-
----
-
-#### 2.2.3 Conclusion Overreach
-
-**定义**：Conclusion 的主张范围、因果强度或推广对象超出实验设计能支持的范围。
-
-**注**：本条与 M7（结论与讨论模块）有职责交叉。**边界划分**：
-- **M2 负责**：形式逻辑断裂——结论提到的对象/指标在实验中根本未测（如体外实验得出体内结论、动物实验得出人类结论且无任何桥接讨论）
-- **M7 负责**：证据强度判定——实验做了但证据层级不足以支撑结论的因果/疗效主张
-
-**M2 触发条件**（仅限形式逻辑跃迁）：
-- 仅有**体外细胞**实验，结论写"compound X is a potential therapeutic agent for patients"（直接跳到患者，无体内数据）
-- 仅有**动物模型**数据，结论写"X improves clinical outcomes in human disease"（无任何人类数据或临床试验注册）
-- 仅测了**单一指标**（如某一促炎因子），结论写"X comprehensively modulates the immune response"（全面调控，但只测了一个分子）
-- **小样本探索性研究**（n < 30），结论写"X is effective and safe"（确证性结论，应为"preliminary evidence suggests..."）
-
-**Severity**: `major`  
-**Category**: `conclusion_overreach`
-
-**正例**（应报警）：
-> 实验：仅在 HepG2 细胞系中测试化合物 X 的细胞毒性（MTT assay）。
-> 结论："Compound X represents a promising treatment for hepatocellular carcinoma patients and warrants clinical trials."
-> ——缺失：体内药代动力学、动物模型疗效、毒理学。
-
-**反例**（不应报警）：
-> 实验同上。
-> 结论："Compound X shows cytotoxic effects in HepG2 cells in vitro. Further studies in animal models and human tissues are needed to evaluate its therapeutic potential."
-
----
-
-#### 2.2.4 Circular Reasoning
-
-**定义**：用待证明的结论作为方法设计或结果解读的前提。
-
-**常见模式**：
-- **方法中预设结论**："为验证 X 蛋白促进肿瘤生长，我们在 X 高表达的肿瘤细胞中..."（预设 X 促进生长 → 选择 X 高表达细胞 → 观察到生长 → 声称证明了 X 的作用）
-- **用结果解释结果**："化合物 X 降低了炎症因子 Y，这证明 X 具有抗炎作用，因此炎症因子 Y 的降低是合理的。"
-- **选择性亚组分析**：先看数据，再定义"响应者"，然后声称"在响应者中药物有效"
-
-**触发条件**：
-- Methods 中关键分组/筛选标准依赖于待证结论
-- Discussion 用结论本身解释观察到的现象，无独立机制假设
-- 事后分层分析（post-hoc subgroup）未明确标注为探索性
-
-**Severity**: `major`  
-**Category**: `circular_reasoning`
-
-**正例**（应报警）：
-> Methods: "为研究化合物 X 的降糖机制，我们选择了对 X 敏感的糖尿病小鼠模型..."
-> （"对 X 敏感"需要先知道 X 有降糖作用，但这正是研究要证明的结论）
-
-**反例**（不应报警）：
-> Methods: "我们使用 db/db 小鼠模拟 2 型糖尿病，以评估化合物 X 的降糖效果。"
-> （模型选择基于疾病类型，不预设化合物有效性）
-
-#### 2.2.5 预设终点、分析人群与选择性报告
-
-**定义**：注册/方案、Methods、Results、Abstract 或 Conclusion 对主要终点、分析人群、时间点或关键亚组的定义发生未解释变化，或只呈现有利结果。
-
-**触发条件**：
-- 方案/注册记录（若可得）与稿件的 primary endpoint、time point、分析人群或主要亚组不一致，且未说明修订理由；
-- Methods 预设的主要/安全性终点在 Results 中缺失，或 Results 新增的主要终点在 Introduction/Methods 中没有动机；
-- 仅报告显著的模型、亚组、时间点或图表，未交代其余预先说明的分析。
-
-**Severity**：核心终点更换或选择性报告为 `critical`；未解释的次要终点/分析人群变化为 `major`。仅有注册信息不可访问时不得判定不一致，改记 `system_limitation`。
-
-**Category**：`selective_reporting` / `endpoint_switching` / `analysis_population_mismatch`。
-
-#### 2.2.6 受试者流、分母与时间线闭合
-
-将筛选、随机化、分组、随访、排除、失访和最终分析人数按研究组件逐一对账；同时核对表格、图注、正文、Abstract 的分母、单位、时间点和组名。无法由现有证据解释的冲突触发 `participant_flow_inconsistency`（主要终点/安全性分母为 `major`，编辑性差异为 `minor`）。
-
-### 2.3 数据泄露场景库
-
-**本节仅适用于含机器学习/预测模型的论文**（由 `evaluation_matrix.has_ml_model` 判定）。
-
-#### 2.3.1 训练-测试集污染
-
-**场景 1：重复样本跨训练/测试集**
-
-**定义**：同一生物样本、同一患者或同一实验批次的数据同时出现在训练集和测试集。
-
-**检测线索**：
-- Methods 未明确说明如何防止样本泄露（如"患者层面切分"、"独立队列"）
-- 使用随机切分但涉及配对数据（如同一患者的多个时间点、同一组织的多个切片）
-- 补充材料的样本 ID 列表中出现重复
-- 声称"独立验证集"但样本采集时间/地点与训练集重叠
-
-**触发条件**：
-- 明确使用随机切分 + 数据具有内在层级结构（患者→样本→测量）且未按顶层单元切分
-- 明确存在同一患者、同一组织块、同一实验批次或其衍生样本跨训练/验证/测试集；仅“同一医院/同一批次/同一队列且未说明独立性”只能触发报告缺口，不能单独证明泄露
-- 时间序列预测中，训练集和测试集的时间窗口有重叠
-
-**Severity**：已确认样本/衍生样本重叠为 `critical`；仅未报告切分层级为 `major`，类别为 `data_split_not_reported`。
-**Category**：`data_leakage_sample_overlap` / `data_split_not_reported`
-
-**正例**（应报警）：
-> Methods: "我们收集了 500 名患者的血液样本，每名患者采集 3 个时间点。数据随机分为训练集（70%）和测试集（30%）。"
-> ——问题：1500 个样本点随机切分，同一患者的不同时间点数据会分散到训练和测试集，导致模型在训练时已"见过"测试集患者的特征。
-
-**反例**（不应报警）：
-> Methods: "我们在患者层面进行切分，350 名患者用于训练，150 名患者用于测试，确保测试集患者在训练时完全未见。"
-
----
-
-**场景 2：数据增强后的合成样本泄露**
-
-**定义**：对原始图像/数据进行增强（旋转、裁剪、加噪等）生成合成样本，在切分前未去重，导致同一原始样本的不同增强版本分布在训练和测试集。
-
-**检测线索**：
-- Methods 描述了数据增强操作（rotation, flipping, cropping）
-- 数据增强在数据集切分**之前**执行
-- 未明确说明"先切分后增强"或"增强仅应用于训练集"
-
-**触发条件**：
-- 明确写明"数据增强后得到 X 个样本，随机分为训练集和测试集"
-
-**Severity**: `critical`  
-**Category**: `data_leakage_augmentation`
-
-**正例**（应报警）：
-> Methods: "原始数据集包含 200 张病理图像。我们对每张图像进行旋转（0°、90°、180°、270°）和翻转，生成 1600 张图像，然后随机分为训练集（1280 张）和测试集（320 张）。"
-
-**反例**（不应报警）：
-> Methods: "200 张图像在患者层面切分为训练集（160 张）和测试集（40 张）。数据增强（旋转、翻转）仅应用于训练集。"
-
----
-
-#### 2.3.2 特征工程与预处理泄露
-
-**场景 3：全局归一化/标准化在切分前**
-
-**定义**：使用全部数据（训练+测试）计算归一化参数（均值、标准差、最小值、最大值），再应用到训练和测试集。
-
-**检测线索**：
-- Methods 提到 normalization / standardization / min-max scaling
-- 未明确说明"仅用训练集计算参数"或"在训练集上 fit，在测试集上 transform"
-- 写"数据标准化后分为训练集和测试集"（顺序错误）
-
-**触发条件**：
-- 明确写明归一化/标准化在数据切分**之前**
-- 描述为"全局归一化"或"对整个数据集进行 z-score 标准化"
-
-**Severity**: `major`  
-**Category**: `data_leakage_normalization`
-
-**正例**（应报警）：
-> Methods: "我们首先对所有基因表达数据进行 z-score 标准化（均值 0，标准差 1），然后将数据随机分为训练集和测试集。"
-> ——测试集的分布信息已泄露到标准化参数中。
-
-**反例**（不应报警）：
-> Methods: "数据在患者层面切分后，我们使用训练集计算均值和标准差，并将相同参数应用于测试集。"
-
----
-
-**场景 4：特征选择使用全部数据**
-
-**定义**：在全部数据上进行特征选择（如差异基因筛选、相关性排序、递归特征消除），然后用选出的特征在切分后的训练集上建模。
-
-**检测线索**：
-- Methods 提到 feature selection / differential expression analysis / correlation filtering
-- 特征选择步骤在数据切分之前，或未明确说明顺序
-- 写"我们筛选出与结局相关的 X 个特征，然后训练模型"（未说明筛选时是否包含测试集）
-
-**触发条件**：
-- 明确在全数据集上做特征选择，之后才切分或建模
-- 特征选择标准直接使用结局变量（如"选择与生存显著相关的基因"），且测试集参与了这一步
-
-**Severity**: `critical`  
-**Category**: `data_leakage_feature_selection`
-
-**正例**（应报警）：
-> Methods: "我们对 500 名患者的 20,000 个基因进行差异表达分析，筛选出与疾病状态显著相关的 100 个基因（p < 0.05）。随后将这 100 个基因的表达谱用于构建预测模型，并在训练集和测试集上评估。"
-> ——特征选择时已使用全部样本的标签信息。
-
-**反例**（不应报警）：
-> Methods: "数据切分后，我们在训练集上进行差异表达分析，筛选出 100 个基因，并在测试集上使用相同基因集评估模型性能。"
-
----
-
-**场景 5：降维方法（PCA/t-SNE/UMAP）在全数据上拟合**
-
-**定义**：在全部数据上拟合降维模型（如 PCA），得到的主成分或嵌入用于后续建模。
-
-**检测线索**：
-- Methods 提到 PCA / t-SNE / UMAP / autoencoder
-- 未说明降维是"仅在训练集上 fit"
-- 结果中展示的降维图包含训练集和测试集（说明测试集参与了降维拟合）
-
-**触发条件**：
-- 明确在数据切分前或全数据集上进行降维
-- 降维后的表示用于模型训练
-
-**Severity**: `major`  
-**Category**: `data_leakage_dimensionality_reduction`
-
-**正例**（应报警）：
-> Methods: "我们对全部 500 个样本的高维特征进行 PCA，提取前 50 个主成分，解释了 90% 的方差。然后将这些主成分输入随机森林模型，并在 7:3 切分的训练集和测试集上评估。"
-
-**反例**（不应报警）：
-> Methods: "训练集上拟合 PCA 模型并提取 50 个主成分，将相同的 PCA 变换应用于测试集。"
-
----
-
-#### 2.3.3 模型选择与超参数调优泄露
-
-**场景 6：用测试集选择模型或调超参数**
-
-**定义**：在多个候选模型或超参数配置中，通过测试集性能选择最优配置。
-
-**检测线索**：
-- Methods 比较了多个模型（SVM、随机森林、神经网络等），最终"选择了在测试集上表现最好的模型"
-- 超参数调优提到"在测试集上网格搜索"或"根据测试集准确率选择学习率"
-- 未提到验证集或交叉验证，直接用测试集指导模型迭代
-
-**触发条件**：
-- 明确写明测试集用于模型选择或超参数调优
-- 训练过程中多次在测试集上评估并据此调整
-
-**Severity**: `critical`  
-**Category**: `data_leakage_model_selection`
-
-**正例**（应报警）：
-> Methods: "我们训练了 5 种机器学习模型（逻辑回归、SVM、随机森林、XGBoost、神经网络），在测试集上评估每个模型的 AUC，最终选择 XGBoost（AUC = 0.89）作为最终模型。"
-> ——测试集性能已指导模型选择，报告的 AUC 高估真实泛化能力。
-
-**反例**（不应报警）：
-> Methods: "我们在训练集上用 5 折交叉验证比较 5 种模型，XGBoost 在验证集上的平均 AUC 最高（0.87），因此选择该模型。最终在独立测试集上评估一次，得到 AUC = 0.85。"
-
----
-
-**场景 7：迭代模型训练中多次查看测试集**
-
-**定义**：在模型迭代开发过程中，反复在测试集上评估，根据测试集表现调整特征、算法或流程，最终报告的测试集性能已不再独立。
-
-**检测线索**：
-- 补充材料或代码显示测试集被多次加载和评估
-- Methods 描述了多轮模型改进，每轮都"在测试集上评估"
-- 测试集性能异常高，且未提供真正的外部验证
-
-**触发条件**：
-- 代码或文本证据表明测试集参与了多次迭代决策
-- 声称"最终测试集准确率"，但未说明该测试集在整个开发过程中是否被多次使用
-
-**Severity**: `major`  
-**Category**: `data_leakage_test_set_reuse`
-
----
-
-#### 2.3.4 时间序列与纵向数据泄露
-
-**场景 8：时间序列随机切分（未来信息泄露）**
-
-**定义**：对有时间顺序的数据进行随机切分，导致模型在训练时看到"未来"数据。
-
-**检测线索**：
-- 数据具有时间戳或明确的时间序列结构（股价、患者监测、疾病进展）
-- Methods 写"随机分为训练集和测试集"，未提及按时间切分
-- 预测任务是时序预测（如"预测 ICU 患者未来 24 小时的病情恶化"），但切分方式不考虑时间
-
-**触发条件**：
-- 明确存在训练窗口与测试窗口的时间重叠，或训练特征包含预测时点之后的信息；
-- 仅“时间序列数据 + 随机切分”且未说明时间策略时，触发 `data_split_not_reported`，不自动判定未来信息泄露。
-
-**Severity**：确认时间/信息泄露为 `critical`；仅切分策略未报告为 `major`。
-**Category**：`data_leakage_temporal` / `data_split_not_reported`
-
-**正例**（应报警）：
-> Methods: "我们收集了 2020-2023 年的患者电子病历数据，随机选择 70% 用于训练，30% 用于测试。模型预测住院后 48 小时内的再入院风险。"
-> ——2023 年的患者可能在训练集，2020 年的患者在测试集，模型训练时已知未来。
-
-**反例**（不应报警）：
-> Methods: "我们使用 2020-2022 年数据训练模型，2023 年数据作为时序独立的测试集。"
-
----
-
-**场景 9：使用滞后特征但未正确对齐时间窗**
-
-**定义**：构造滞后特征（如"过去 7 天平均值"）时，测试集样本的滞后窗口包含了训练集中不应可见的未来数据。
-
-**检测线索**：
-- 特征工程包含滑动窗口统计（moving average, lagged features）
-- 未明确说明训练集和测试集的时间边界如何处理
-
-**触发条件**：
-- 特征窗口跨越训练-测试分割点
-
-**Severity**: `major`  
-**Category**: `data_leakage_lagged_features`
-
----
-
-#### 2.3.5 目标泄露（Target Leakage）
-
-**场景 10：特征包含结局信息**
-
-**定义**：用于预测的特征实际上是结局的代理变量，或在结局发生后才可获得。
-
-**检测线索**：
-- 特征中包含"治疗后"、"术后"、"出院时"等明确在结局之后的信息
-- 预测死亡风险，但特征包含"ICU 住院天数"（死亡患者的 ICU 天数是已知结局后的信息）
-- 预测疾病诊断，但特征包含"诊断后的实验室指标"
-
-**触发条件**：
-- 特征的时间属性晚于或等于预测目标的时间属性
-- 特征在实际预测场景中不可获得（如用"手术成功与否"预测"术后并发症"）
-
-**Severity**: `critical`  
-**Category**: `target_leakage`
-
-**正例**（应报警）：
-> Methods: "我们构建模型预测患者 30 天死亡率，特征包括入院时生命体征、实验室指标和住院天数。"
-> ——"住院天数"是结局发生后才能完整统计的，死亡患者的住院天数短是结果，不是原因。
-
-**反例**（不应报警）：
-> Methods: "我们使用入院后 24 小时内的数据预测 30 天死亡率，确保所有特征在预测时点之前可获得。"
-
----
-
-#### 2.3.6 交叉验证流水线与层级泄露
-
-除“训练集/测试集”字面切分外，还要检查每个交叉验证折内的完整流水线：插补、批次校正、标准化、特征选择、降维、类别重采样（SMOTE/欠采样）、阈值选择和 early stopping 均只能在训练折拟合；测试折只能执行固定的 transform。多张来自同一患者/切片/视野的 patch、左右眼、连续切片、同一细胞系传代或同一采集站点不得被当作独立样本随机分散。
-
-**触发条件**：明确在全数据或含验证折的数据上拟合上述步骤，或明确同一顶层实体跨折；若仅未报告流水线顺序，立 `data_split_not_reported`（`major`），不直接判定已泄露。
-
-**Severity**：已确认流水线/层级泄露为 `critical`；仅报告不足为 `major`。
-**Category**：`data_leakage_pipeline`。
-
-#### 2.3.7 其他常见泄露模式
-
-**场景 11：测试集包含训练集样本的衍生数据**
-
-- 同一患者的左眼和右眼图像分别在训练集和测试集
-- 同一组织块的连续切片分散在训练和测试集
-- 同一细胞系的不同传代被随机分配
-
-**场景 12：外部数据预处理时使用了本研究的统计信息**
-
-- 声称使用"公开数据集作为外部验证"，但该数据集与训练集合并预处理（如共同归一化）
-- 批次效应校正时将测试集作为批次之一，与训练集联合校正
-
-**场景 13：标签泄露**
-
-- 半监督学习中，未标注数据的伪标签基于测试集分布生成
-- 主动学习迭代中，每轮从测试集中挑选样本加入训练集（测试集不再独立）
-
-**场景 14：评估指标计算错误导致的"虚假泄露"**
-
-- 虽非真正泄露，但结果不可信：在全数据集上计算类别权重后评估测试集（类别分布已知）
-- 使用测试集的类别分布调整分类阈值
-
-场景 11–13 只有在正文、样本 ID、代码或补充材料中存在明确重叠证据时才升级为 `critical`；只有“未说明是否去重/是否保持测试集独立”时，触发 `data_split_not_reported`（`major`）。场景 14 不属于样本泄露，交 M4 作为阈值/指标估计偏倚检查，不在 M2 单独立泄露 finding。
-
-### 2.4 前后一致性
-
-#### 2.4.0 稿件内部数值/单位/方向冲突
-
-对同一 `grouping_key`（实验、组别、时间点、终点、单位）合并 Abstract、正文、表格、图注和补充材料的候选观测。先按单位归一化、分母、舍入和分析人群排除可解释差异；仍无法同时成立时触发 `internal_inconsistency`，并保留所有候选证据。仅有一个来源可读、其他来源不可访问时不得判矛盾。
-
-主要终点、样本流、安全性分母或结论方向冲突为 `major`；次要数值或编辑性冲突为 `minor`。该规则是 `source_value_conflict` signal 的主要消费者，与 M4/M5 的方法或图像判断聚簇，不重复抬高风险。
-
-#### 2.4.1 摘要与正文数值不一致
-
-**定义**：Abstract 中报告的数值（样本量、p 值、效应量、百分比）与 Results 正文或表格中的对应数值不匹配。
-
-**检测策略**：
-- M1/Stage 3b 通过 `source_value_conflict` signal 提供候选观测组；M2 必须回查 Abstract、Results、表格和图注的稿件证据
-- M2 负责判定不一致的性质与 severity；不得把 `abstract_text_mismatch` 作为未经定义的 evaluation-matrix 字段
-
-**触发条件**：
-- 关键数值不一致（样本量、主要终点的 p 值、核心疗效指标）→ `major`
-- 次要数值轻微差异（置信区间边界舍入差异 ≤ 0.1 单位，或百分比因分母不同产生的 ≤ 1% 差异）→ `minor`
-- 描述性统计的措辞差异但数值相同（Abstract 写"显著降低"，Results 写"下降"）→ 不报警
-
-**Severity**: `major`（关键数值）/ `minor`（次要数值）  
-**Category**: `abstract_main_text_inconsistency`
-
-**正例**（应报警）：
-> Abstract: "Treatment reduced tumor volume by 65% (p < 0.001, n = 30 per group)."
-> Results Table 2: 治疗组 n = 25，对照组 n = 28；肿瘤体积降低 58%（p = 0.003）。
-
-**反例**（不应报警）：
-> Abstract: "Treatment reduced tumor volume by 65% (95% CI: 52-78%, p < 0.001)."
-> Results: "Tumor volume was reduced by 65.3% (95% CI: 52.1-77.8%, p = 0.0008)."
-> ——合理的舍入差异。
-
----
-
-#### 2.4.2 图表引用完整性
-
-**场景 1：正文引用不存在的图表**
-
-**定义**：Results 或 Discussion 提到"见图 5"或"表 3"，但该图表不存在或编号不连续。
-
-**触发条件**：
-- 引用的图表编号在全文图表清单中不存在
-- 图表编号跳号（有图 1、2、4，缺图 3）且正文从未引用图 3
-
-**Severity**: `major`（主要发现的图表缺失）/ `minor`（补充图表引用错误）  
-**Category**: `missing_figure_reference`
-
----
-
-**场景 2：孤儿图表（未被正文引用）**
-
-**定义**：某图表在 Results 或 Discussion 中从未被引用，读者无法知道该图的作用。
-
-**触发条件**：
-- 图表存在，但全文检索其编号（"Figure 3"、"Fig. 3"、"图 3"）零命中
-- 补充材料的图表未在正文中交代
-
-**例外**：
-- 纯展示性的图（如 Graphical Abstract、TOC 图）不要求正文引用
-- 补充图表在正文中集体引用（"见补充图 S1-S5"）算已引用
-
-**Severity**: `minor`  
-**Category**: `orphan_figure`
-
----
-
-#### 2.4.3 术语与缩写一致性
-
-**场景 1：缩写首次出现未定义**
-
-**定义**：缩写（如 MAPK、IC50、RCT）在 Abstract 或 Introduction 首次出现时未给出全称。
-
-**触发条件**：
-- 缩写首次出现的形式为裸缩写，如"我们测定了 MAPK 的表达"
-- 应为"mitogen-activated protein kinase (MAPK)"
-
-**例外**：
-- 极常见的单位（kg、mL、°C、DNA、RNA、ATP）不要求定义
-- 期刊约定俗成的缩写（如临床期刊的 HR、OR、CI）可不定义
-
-**Severity**: `minor`  
-**Category**: `abbreviation_undefined`
-
----
-
-**场景 2：同一概念多种写法**
-
-**定义**：同一生物学实体、药物、实验条件在不同章节用不同术语或拼写，导致读者混淆。
-
-**常见错误**：
-- 组名不一致："Vehicle 组" vs "对照组" vs "Placebo 组"（应统一）
-- 剂量表述切换："10 mg/kg" vs "10 mg·kg⁻¹"（选一种坚持用）
-- 基因/蛋白名称大小写混乱：p53 vs P53 vs p-53（应遵循 HUGO 命名）
-- 细胞系名称：HepG2 vs HepG-2 vs Hep G2（应统一为数据库登记名）
-
-**触发条件**：
-- M1 的 `evaluation_matrix` 或 key_data 中检测到同一实体的多种拼写
-- 正文与图注中组名、时间点或剂量的表述不一致
-
-**Severity**: `minor`  
-**Category**: `terminology_inconsistency`
-
----
-
-#### 2.4.4 时间点与实验流程一致性
-
-**定义**：Methods 描述的实验时间线与 Results 报告的时间点不匹配，或流程图与正文矛盾。
-
-**检测线索**：
-- Methods: "小鼠在给药后第 7、14、21 天处死"
-- Results Figure 2: 展示第 3、7、10、14 天的数据（10 天在 Methods 中未提及）
-- CONSORT 流程图显示"200 名患者随机化"，但 Results Table 1 显示基线 n = 195
-
-**触发条件**：
-- 时间点、样本量、分组数在不同章节/图表间不可调和
-- 流程图的数字与正文 n 值不一致且未解释（如排除标准变更）
-
-**Severity**: `major`（影响可重复性）  
-**Category**: `timeline_inconsistency`
-
----
-
-#### 2.4.5 统计方法与报告结果的匹配性
-
-**定义**：Methods 声称使用某统计检验，但 Results 报告的统计量与该检验不匹配。
-
-**常见不匹配**：
-- Methods 说"Student's t-test"，Results 报告"χ² = 5.3, p = 0.02"（χ² 是卡方检验）
-- Methods 说"非参数 Mann-Whitney U 检验"，Results 报告均值±标准差与 t 值（应报中位数与 U 值）
-- Methods 说"单因素方差分析"，Results 只报告两组间 p 值（ANOVA 应给 F 值）
-- Methods 未提及多重比较校正，但 Results 有 Bonferroni 校正后的 p 值
-
-**触发条件**：
-- 统计量类型（t / F / χ² / U / H）与 Methods 声称的检验不对应
-- Methods 未声明的后处理（如多重比较校正、协变量调整）出现在 Results
-
-**Severity**: `major`  
-**Category**: `statistical_method_mismatch`
-
-**注**：此条与 M4（统计学模块）有交集。**职责划分**：
-- M2 检测"Methods 说 A、Results 报告 B"的**形式矛盾**
-- M4 检测"该场景应该用 C 而非 A"的**方法学错误**
-
----
-
-#### 2.4.6 引用编号连续性
-
-**定义**：参考文献编号不连续（如出现 [1, 2, 5, 7]，缺 3、4、6），或正文引用编号超出文献列表范围。
-
-**触发条件**：
-- References 列表有 50 条，但正文出现 [52]
-- 引用编号序列有缺失且无明显理由（如删除了某些引用但未重新编号）
-
-**Severity**: `minor`  
-**Category**: `reference_numbering_error`
-
-仅对已识别为数字顺序制（如 Vancouver）的稿件执行；作者–年份、脚注制或期刊自定义引用不得套用连续编号规则。
-
-## 3. category slug（完整版）
-
-| slug | 说明 | severity | 对应章节 |
-| --- | --- | --- | --- |
-| `missing_section` | 适用且必需的章节缺失 | major / critical | §2.1.1；Methods/Results/授权缺失仅在确实适用且阻断解释时升级 |
-| `incomplete_abstract` | 结构化摘要要素不完整 | minor | §2.1.2 |
-| `missing_reporting_guideline_element` | 缺失报告规范核心要素（如 CONSORT 流程图） | major / critical | §2.1.3 |
-| `objective_drift` | 研究目标在结果中未被回答 | major | §2.2.1 |
-| `orphan_results` | 实验结果无动机或无解读 | major / minor | §2.2.2 |
-| `conclusion_overreach` | 结论跃迁（形式逻辑断裂） | major | §2.2.3 |
-| `circular_reasoning` | 循环论证 | major | §2.2.4 |
-| `selective_reporting` | 选择性报告或预设终点未报告 | critical / major | §2.2.5 |
-| `endpoint_switching` | 主要终点、时间点或分析人群发生未解释变化 | major / critical | §2.2.5 |
-| `analysis_population_mismatch` | ITT/PP/安全性或主要分析人群前后不一致 | major | §2.2.5 |
-| `participant_flow_inconsistency` | 筛选、随机化、失访、排除与分析分母无法闭合 | major / minor | §2.2.6 |
-| `internal_inconsistency` | 同一观测在正文、表格、图注或补充材料间冲突 | major / minor | §2.4.0 |
-| `data_leakage_sample_overlap` | 训练-测试集样本重复 | critical | §2.3.1 |
-| `data_split_not_reported` | 未报告患者/样本/站点/时间层级的独立切分 | major | §2.3.1、§2.3.4、§2.3.6 |
-| `data_leakage_augmentation` | 数据增强后未正确切分 | critical | §2.3.1 |
-| `data_leakage_normalization` | 归一化/标准化在切分前 | major | §2.3.2 |
-| `data_leakage_feature_selection` | 特征选择使用全部数据 | critical | §2.3.2 |
-| `data_leakage_dimensionality_reduction` | 降维在全数据上拟合 | major | §2.3.2 |
-| `data_leakage_model_selection` | 用测试集选择模型或调超参 | critical | §2.3.3 |
-| `data_leakage_test_set_reuse` | 测试集被多次迭代使用 | major | §2.3.3 |
-| `data_leakage_temporal` | 时间边界/预测时点泄露 | critical / major | §2.3.4 |
-| `data_leakage_lagged_features` | 滞后特征窗口未正确对齐 | major | §2.3.4 |
-| `target_leakage` | 特征包含结局信息 | critical | §2.3.5 |
-| `data_leakage_pipeline` | 交叉验证流水线或层级实体跨折泄露 | critical / major | §2.3.6 |
-| `data_leakage_derived_samples` | 衍生数据跨训练-测试集 | critical / major | §2.3.7 场景11 |
-| `data_leakage_joint_preprocessing` | 训练集与测试集联合预处理 | major | §2.3.7 场景12 |
-| `data_leakage_label` | 标签泄露（半监督/主动学习） | critical | §2.3.7 场景13 |
-| `abstract_main_text_inconsistency` | 摘要与正文数值不一致 | major / minor | §2.4.1 |
-| `missing_figure_reference` | 引用不存在的图表 | major / minor | §2.4.2 |
-| `orphan_figure` | 图表未被正文引用 | minor | §2.4.2 |
-| `abbreviation_undefined` | 缩写首次出现未定义 | minor | §2.4.3 |
-| `terminology_inconsistency` | 术语不统一 | minor | §2.4.3 |
-| `timeline_inconsistency` | 时间点/流程不一致 | major | §2.4.4 |
-| `statistical_method_mismatch` | 统计方法与报告结果不匹配 | major | §2.4.5 |
-| `reference_numbering_error` | 参考文献编号错误 | minor | §2.4.6 |
-
-## 3.1 接住 X1 外部核验的 signal（**待卓妍确认 severity**）
-
-`scripts/external_figure_validation.py`（Stage 3c）已交付，把下列 `check_type`
-路由给 M2。它们是 `external_validation_candidate`，**没有 severity** ——
-X1 只做「稿件事实 vs 外部权威事实」的可复算比较，是否成立由 M2 回查稿件后决定。
-
-| X1 `check_type` | 数据库 | 比较结果 | 建议 M2 category |
-| --- | --- | --- | --- |
-| `cited_work_retracted` | Europe PMC | `mismatch` | `cites_retracted_work` |
-| `reference_doi_resolves` | Crossref | `mismatch` | `reference_not_resolvable` |
-| `gene_symbol_excel_corruption` | HGNC | `mismatch` | `gene_symbol_data_corruption` |
-| `gene_symbol_outdated` | HGNC | `mismatch` | `gene_symbol_outdated` |
-| `gene_symbol_unrecognized` | HGNC | `needs_manual_review` | `gene_symbol_unrecognized` |
-| `variant_position_range` / `variant_reference_residue` | UniProt | `mismatch` | `variant_inconsistent_with_reference` |
-
-**判据要点**
-
-- `cited_work_retracted`：**引用已撤稿文献本身不一定是错误。** 论文讨论撤稿事件本身、
-  或已写明该文献已撤稿，都是做对了，**不得立 finding**。只有当该文献被当作
-  立论依据、且论文未提及其撤稿状态时才立；支撑主要结论时取 `critical`。
-- `reference_doi_resolves`：格式完美但无法解析的 DOI 是幻觉引文与纸厂引文的典型特征。
-  须先排除排版错误（多余空格、全角字符）再定性。
-- `gene_symbol_excel_corruption`：符号被 Excel 转成日期（`2-Sep`、`1-Mar`）。
-  这是**数据处理污染**的信号，须提示作者回原始数据核对该列究竟是哪个基因。
-- `gene_symbol_outdated`：旧符号本身不算错误，但与现行文献比对时易张冠李戴，取 `minor`。
-
-`statistical_forensics.py` 另把 `count_percentage_mismatch` 与 `table_total_mismatch`
-同时路由给 M2（数值本身归 M4，**表格与正文数据不一致**归 M2 的完整性范畴）。
-
----
-
-## 4. TODO（一期）
-
-### 4.1 已完成
-- [x] 填充 §2.1 刊型-必备章节对照表（含 5 种刊型 × 13 类章节）
-- [x] 填充 §2.1 结构化摘要要素与方法学报告清单
-- [x] 填充 §2.2 逻辑链闭环四类断裂的详细判定标准
-- [x] 填充 §2.3 数据泄露场景库（14 个场景，覆盖 6 大类）
-- [x] 填充 §2.4 前后一致性检查（6 个子场景）
-- [x] 完成 category slug 表（核心规则与二期规则均登记；当前共 39 个 slug，需由 categories.json/validator 交叉核对）
-
-### 4.2 与 M1 的集成要求（一期必需）
-- [x] `evaluation_matrix.has_ml_model` / `has_split_strategy` 已由 M1 定义；M2 仅用其路由，不将布尔值直接当 finding 证据。
-- [ ] M1/Stage 3b 应提供 `source_value_conflict` 的观测组与 `evidence_refs`；不再新增未经 schema/契约定义的 `evaluation_matrix.abstract_text_mismatch`。
-- [ ] M2 应直接消费 `article_design.primary_design` 与 `design_components[]`，不再用 Methods 长度或 PRISMA 图存在性启发式猜测 `study_type`。
-- [ ] M1 应为每个 prediction/benchmark 组件抽取 split unit、split strategy、validation protocol、preprocessing order、external validation 与 dataset/site/time metadata，供 §2.3 逐场景判定。
-
-- [ ] **M1 应提供**：术语/缩写的多种拼写候选（可选增强）
-  - 辅助 §2.4.3 术语一致性检查
-  - 若 M1 未实现，M2 在 key_data 与图注中自行检测常见变体（p53/P53、HepG2/HepG-2 等）
-
-### 4.3 待测试回归（一期必需）
-- [ ] 用 `datasets/rct_clinical` 测试 §2.1（CONSORT 清单）与 §2.2.1（目标漂移）
-- [ ] 用 `datasets/small_sample_pilot` 测试 §2.2.3（结论跃迁）
-- [ ] 用 `datasets/animal_invivo` 测试 §2.1（伦理声明必备性）与 §2.4.4（时间线一致性）
-- [ ] 模拟 ML 数据泄露论文，测试 §2.3 的 14 个场景触发（需自行构造或从其他数据源补充）
-- [ ] 用 `datasets/meta_analysis` 测试 §2.1（PRISMA 流程图）与 §2.4.2（图表引用完整性）
-- [ ] 为每条 critical/major 规则增加 confirmed / not-reported / inaccessible / false-positive 四类回归样例；至少覆盖患者级、切片级、站点级和时间级 ML 切分。
-- [ ] 增加混合设计（体外+动物+人体）、非结构化摘要、合并 Discussion/Conclusion、作者-年份引用格式和无补充材料权限的回归样例。
-
-### 4.4 与其他模块边界确认（一期必需）
-- [ ] **M2 vs M7 边界**（§2.2.3）：
-  - M2 负责：形式逻辑跃迁（体外→人类、单指标→全面调控，实验根本未做但结论提到）
-  - M7 负责：证据强度不足（实验做了但层级低、因果链弱、外推不当）
-  - 灰色地带判定规则：若 Results 中有任何相关实验，交给 M7；若 Results 完全无对应数据，归 M2
-
-- [ ] **M2 vs M4 边界**（§2.4.5）：
-  - M2 负责：Methods 说 A、Results 报 B 的**形式矛盾**（统计量类型不匹配）
-  - M4 负责：Methods 说 A、但该场景应该用 C 的**方法学错误**（检验选择不当）
-  - 示例：Methods 说"t-test"、Results 报"χ²" → M2 报矛盾；Methods 说"t-test"但数据非正态 → M4 报方法错
-
-### 4.5 二期扩展（本期不实现）
-见 §5（引用与重复度核验），已列出规则骨架，待二期实现时补充连接器与缓存策略。
-
-## 5. 二期扩展：引用与重复度核验（本期不实现，规则先写下）
-
-### 5.1 引用真实性
-
-**依赖**：外部数据源 Crossref / PubMed API（通过 X1 外部验证层调用）
-
-#### 5.1.1 撤稿引用检测（二期优先级最高）
-
-**定义**：论文引用了已被期刊撤回（retracted）的文献，且将其作为有效证据支持自己的结论。
-
-**检测策略**：
-1. M1 提取 References 列表中的全部 DOI 或 PMID
-2. X1 向 Crossref / PubMed / Retraction Watch Database 查询每个标识符的状态
-3. 对标记为 `retracted`、`withdrawn`、`expression of concern` 的文献，检查正文中的引用上下文
-4. 若该撤稿文献被用于支持核心方法学、主要结果或结论，触发 critical finding
-
-**触发条件**：
-- 引用文献的官方状态为 `retracted` 或 `withdrawn`
-- 该引用在正文中被用于方法学依据、结果对比或结论支撑（非仅列在 References 中未被引用）
-- 撤稿日期早于本稿件的投稿日期（排除同期撤稿的边缘情况）
-
-**Severity**: `critical`（核心引用）/ `major`（次要引用）  
-**Category**: `cites_retracted_work`
-
-**正例**（应报警）：
-> 某论文在 Methods 中写："我们采用 Smith et al. (2018) 的方法进行基因表达分析。"
-> X1 查询发现：Smith et al. (2018, DOI: 10.1234/example) 于 2020 年因数据造假被撤稿。
-> 本稿件投稿时间：2022 年。
-
-**反例**（不应报警）：
-> 引用列表包含一篇撤稿文献，但正文从未引用该文献（孤立文献条目，可能是作者疏忽未删除）。
-
----
-
-#### 5.1.2 引用不存在检测
-
-**定义**：正文中引用了某文献，但该 DOI/PMID 在数据库中查询不到。
-
-**检测策略**：
-- X1 查询返回 404 或明确零记录
-- 排除数据库暂时不可用、网络超时等情况（这些记为 `system_limitation`）
-
-**触发条件**：
-- DOI/PMID 格式合法
-- Crossref/PubMed 返回权威 404
-- 该标识符在正文中被明确引用
-
-**Severity**: `major`  
-**Category**: `citation_not_found`
-
----
-
-#### 5.1.3 引用失真检测（二期挑战性高，可选）
-
-**定义**：正文对某文献的引用内容与该文献的实际结论不符。
-
-**检测策略**：
-1. 提取正文中引用该文献时的陈述（如"Zhang et al. 报告化合物 X 显著抑制肿瘤生长"）
-2. X1 获取被引文献的摘要或全文结论
-3. 用语义比对判断是否一致
-
-**挑战**：
-- 需要深度语义理解，假阳性风险高
-- 被引文献可能有多个结论，引用者选择其一未必失真
-- 二期若实现，需要高置信度阈值 + 人工复核建议
-
-**Severity**: `major`（若实现）  
-**Category**: `citation_misrepresented`
-
----
-
-### 5.2 文本重复度
-
-**依赖**：文献全文库或第三方查重服务（iThenticate / Turnitin API）
-
-**风险与边界**：
-- 方法学描述天然高度雷同（如"Western blot 按标准流程操作"），直接按相似度报警会产生大量假阳性
-- 同一作者的合理自我复用（如同一实验室的多篇论文复用相同的动物模型描述）不应报警
-- 二期需实现**段落级分类**：Methods 段落容忍高相似度，Results/Discussion 段落严格检查
-
-#### 5.2.1 实质性文本重复
-
-**定义**：Results 或 Discussion 的连续段落与已发表文献高度重复（≥ 80% 相似度，≥ 150 字），且未标注引用或明确说明复用。
-
-**触发条件**：
-- 重复段落在 Results、Discussion 或 Introduction 的核心论述部分
-- 相似度 ≥ 80% 且连续匹配长度 ≥ 150 字
-- 被匹配文献非本稿作者的既往论文（自我复用单独判定）
-
-**Severity**: `major`  
-**Category**: `text_overlap`
-
----
-
-#### 5.2.2 方法段落合理复用（不报警）
-
-**例外场景**：
-- Methods 中标准操作的逐字复用（如试剂目录号、仪器型号、统计软件版本）
-- 同一作者在多篇论文中复用相同的实验流程描述，且在首次发表时已详细说明
-- 伦理声明、数据可用性声明等格式化段落的复用
-
----
-
-### 5.3 二期新增 category
-
-| slug | 说明 | severity |
+| `missing_section` | major；按实际影响可 critical/minor | 适用且必需的信息功能不存在 |
+| `incomplete_abstract` | minor；主要结果缺失可 major | 摘要缺核心信息要素 |
+| `missing_reporting_guideline_element` | major/minor；仅阻断核心解释时 critical | 适用规范的必需接口缺失 |
+| `abstract_main_text_inconsistency` | major/minor | 摘要与正文同一事实冲突 |
+| `timeline_inconsistency` | major/minor | 时间点或流程时间线冲突 |
+| `statistical_method_mismatch` | major | Methods 声称与 Results 统计量形式矛盾 |
+| `missing_figure_reference` | major/minor | 被引用图表不存在 |
+| `orphan_figure` | minor | 图表未被正文引用 |
+| `terminology_inconsistency` | minor | 命名差异造成实体/组别歧义 |
+| `abbreviation_undefined` | minor | 非通行缩写首次出现未定义 |
+| `reference_numbering_error` | minor | 数字顺序制引用编号错误 |
+
+### ML 与外部核验
+
+| category slug | 默认 severity | 用途 |
 | --- | --- | --- |
-| `cites_retracted_work` | 引用已撤稿文献 | critical |
-| `citation_not_found` | 引用文献不存在 | major |
-| `citation_misrepresented` | 引用内容与原文结论不符 | major |
-| `text_overlap` | 与已发表文献重复（非方法段） | major |
+| `data_split_not_reported` | major | ML 切分单元或流水线独立性未报告，不等于已确认泄漏 |
+| `data_leakage_sample_overlap` | critical | 训练与最终评估间存在明确实体重叠 |
+| `data_leakage_normalization` | major/critical | 预处理明确使用评估数据拟合 |
+| `data_leakage_feature_selection` | critical | 特征选择明确使用评估数据 |
+| `data_leakage_model_selection` | critical | 用最终测试集选择模型或超参数 |
+| `data_leakage_temporal` | major/critical | 使用预测时点之后的信息 |
+| `target_leakage` | critical | 特征明确包含标签或其派生信息 |
+| `data_leakage_pipeline` | major/critical | 交叉验证流水线或实体层级污染 |
+| `cites_retracted_work` | major/critical | 未说明撤稿状态却把撤稿文献作为有效依据 |
+| `reference_not_resolvable` | major | DOI 经权威核验仍不可解析 |
+| `gene_symbol_data_corruption` | major | 日期化符号污染实际数据 |
+| `gene_symbol_outdated` | minor | 旧符号造成映射风险 |
+| `gene_symbol_unrecognized` | major/minor | 权威源与语境复核后实体仍不明 |
+| `variant_inconsistent_with_reference` | major | 版本和物种一致后变异仍与参考序列冲突 |
 
----
-
-### 5.4 二期实现优先级
-
-1. **撤稿引用检测**（最高）—— 判定确定、无歧义、后果严重，且现有大模型普遍查不出来
-2. **引用不存在检测**（高）—— 技术实现简单，价值明确
-3. **方法段落分类 + 结果段落查重**（中）—— 需要段落分类器，避免假阳性
-4. **引用失真检测**（低）—— 语义理解难度大，二期末期或三期考虑
+其他已注册的具体 data_leakage_* category 可在有明确污染证据时使用。不要为无 ML 研究创建泄漏 finding。
