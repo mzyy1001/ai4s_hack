@@ -220,9 +220,15 @@ def check_schemas(rep):
                     "## 七、覆盖率明细", "## 八、人工复核建议"]
         usability_tokens = ["render_evidence_refs", "comparable_to_full_review=false",
                             "未执行模块没有被判定为“无问题”", "P0 > P1 > P2",
-                            "不得与任何其他报告的风险分横向比较或排序", "不是稿件问题"]
+                            "不得与任何其他报告的风险分横向比较或排序", "不是稿件问题",
+                            "collect_review_fields", "format_rate", "render_cluster_findings",
+                            "render_plan_finding_packages", "逐 finding 核对包",
+                            "契约哨兵 rate=1.0"]
+        blocks_balanced = (template.count("{{#if") == template.count("{{/if}}") and
+                           template.count("{{#each") == template.count("{{/each}}") and
+                           template.count("{{#with") == template.count("{{/with}}"))
         rep.check(not stale and all(template.count(h) == 1 for h in headings) and
-                  all(token in template for token in usability_tokens),
+                  all(token in template for token in usability_tokens) and blocks_balanced,
                   "报告模板已迁移到八节新契约且无废弃字段", ", ".join(stale))
     except OSError as exc:
         rep.check(False, "报告模板可读取", str(exc))
