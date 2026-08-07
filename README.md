@@ -41,7 +41,7 @@ skills/biomed-paper-review/     ← 交付物本体
 ├── references/                 一个抽取层 + 六个审核模块的规则库
 │   ├── 00-contracts.md                ★ 共享契约（证据登记表 / 三类记录 / 评分）
 │   ├── 01-structured-extraction.md    M1 结构化抽取（前置层，不产 finding）
-│   ├── 02-macro-logic.md              M2 宏观逻辑与完整性    ZY（卓妍）
+│   ├── 02-macro-logic.md              M2 宏观逻辑与完整性    ✅ 已填充
 │   ├── 03-experimental-methods.md     M3 实验方法合规性      Peter
 │   ├── 04-statistics.md               M4 统计学方法          ✅ 已填充
 │   ├── 05-figures-and-charts.md       M5 图谱解析与图表规范  MY（敏怡）
