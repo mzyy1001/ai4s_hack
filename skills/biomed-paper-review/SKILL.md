@@ -420,12 +420,13 @@ Skill 相对裸模型只能做加法，或者**带论证地**做减法，不得�
 **每条 finding 标注来源**：`global_review` / `specialist_rule` / `deterministic_tool` /
 `external_validation` / `cross_section_reconciliation` / `multiple`。
 
-这张来源分布是**评估本架构是否值得**的唯一依据：
+这张分布是**评估本架构是否值得**的唯一依据：只来自 `global_review` 的
+= 裸模型本来就有的，**不算增益**；其余四类独有的才是**真增益**。
+若增益很小，结论是**裁剪规则库**，不是继续加规则。
 
-- 只来自 `global_review` 的部分 = 裸模型本来就有的，**不算增益**；
-- `specialist_rule` / `deterministic_tool` / `external_validation` /
-  `cross_section_reconciliation` 独有的部分 = **真正的增益**；
-- 若增益部分很小，结论是**裁剪规则库**，不是继续加规则。
+**`evidence_refs[]` 必须逐条特异**（契约 §1.4.1）：实测有过 60 条 finding
+里 57 条挂同一组 24 条引用 —— 形式合规而可审计性归零。渲染前自检：
+**过半 finding 共享相同引用列表 = 霰弹式，必须收窄。**
 
 ### 7.1 必须输出运行时遥测
 
