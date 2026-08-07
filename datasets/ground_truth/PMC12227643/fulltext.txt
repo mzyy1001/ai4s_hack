@@ -60,3 +60,38 @@ Supplementary Material 1
 Supplementary Material 2
 
 Supplementary Material 3
+
+References
+
+References
+1.
+Liu J Hydroxychloroquine, a less toxic derivative of chloroquine, is effective in inhibiting SARS-CoV-2 infection in vitro Cell. Discov 2020 6 16 10.1038/s41421-020-0156-0 32194981 PMC7078228 Liu, J. et al. Hydroxychloroquine, a less toxic derivative of chloroquine, is effective in inhibiting SARS-CoV-2 infection in vitro. Cell. Discov . 6 , 16 (2020). 32194981
+10.1038/s41421-020-0156-0 PMC7078228 2.
+Yao, X. et al. In vitro antiviral activity and projection of optimized dosing design of hydroxychloroquine for the treatment of severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2). Clin. Infect. Dis. (2020). 10.1093/cid/ciaa237 PMC7108130 32150618 3.
+Devaux, C. A., Rolain, J. M., Colson, P. &amp; Raoult, D. New insights on the antiviral effects of chloroquine against coronavirus: what to expect for COVID-19? Int. J. Antimicrob. Agents 8:105938. (2020). 10.1016/j.ijantimicag.2020.105938 PMC7118659 32171740 4.
+Savarino A Boelaert JR Cassone A Majori G Cauda R Effects of chloroquine on viral infections: an old drug against today’s diseases? Lancet Infect. Dis. 2003 3 11 722 727 10.1016/S1473-3099(03)00806-5 14592603 PMC7128816 Savarino, A., Boelaert, J. R., Cassone, A., Majori, G. &amp; Cauda, R. Effects of chloroquine on viral infections: an old drug against today’s diseases? Lancet Infect. Dis. 3 (11), 722–727 (2003). 14592603
+10.1016/S1473-3099(03)00806-5 PMC7128816 5.
+Prodromos C Rumschlag T Hydroxychloroquine is effective, and consistently so when provided early, for COVID-19: a systematic review New. Microbes New. Infect. 2020 38 100776 10.1016/j.nmni.2020.100776 33042552 PMC7534595 Prodromos, C. &amp; Rumschlag, T. Hydroxychloroquine is effective, and consistently so when provided early, for COVID-19: a systematic review. New. Microbes New. Infect. 38 , 100776 (2020). 33042552
+10.1016/j.nmni.2020.100776 PMC7534595 6.
+Lofgren, S. M. M. et al. Safety of Hydroxychloroquine among Outpatient Clinical Trial Participants for COVID-19. medRxiv. (2020). 10.1093/ofid/ofaa500 PMC7654376 33204764 7.
+Arshad S Treatment with hydroxychloroquine, azithromycin, and combination in patients hospitalized with COVID-19 Int. J. Infect. Dis. 2020 97 396 403 10.1016/j.ijid.2020.06.099 32623082 PMC7330574 Arshad, S. et al. Treatment with hydroxychloroquine, azithromycin, and combination in patients hospitalized with COVID-19. Int. J. Infect. Dis. 97 , 396–403 (2020). 32623082
+10.1016/j.ijid.2020.06.099 PMC7330574 8.
+Catteau L Low-dose hydroxychloroquine therapy and mortality in hospitalised patients with COVID-19: a nationwide observational study of 8075 participants Int. J. Antimicrob. Agents 2020 56 4 106144 10.1016/j.ijantimicag.2020.106144 32853673 PMC7444610 Catteau, L. et al. Low-dose hydroxychloroquine therapy and mortality in hospitalised patients with COVID-19: a nationwide observational study of 8075 participants. Int. J. Antimicrob. Agents . 56 (4), 106144 (2020). 32853673
+10.1016/j.ijantimicag.2020.106144 PMC7444610 9.
+RECOVERY Collaborative Group Effect of hydroxychloroquine in hospitalized patients with Covid-19 N. Engl. J. Med. 2020 383 21 2030 2040 10.1056/NEJMoa2022926 33031652 PMC7556338 RECOVERY Collaborative Group. Effect of hydroxychloroquine in hospitalized patients with Covid-19. N. Engl. J. Med. 383 (21), 2030–2040 (2020). 33031652
+10.1056/NEJMoa2022926 PMC7556338 10.
+Self WH Effect of hydroxychloroquine on clinical status at 14 days in hospitalized patients with COVID-19: A randomized clinical trial JAMA 2020 324 21 2165 2176 10.1001/jama.2020.22240 33165621 PMC7653542 Self, W. H. et al. Effect of hydroxychloroquine on clinical status at 14 days in hospitalized patients with COVID-19: A randomized clinical trial. JAMA 324 (21), 2165–2176 (2020). 33165621
+10.1001/jama.2020.22240 PMC7653542 11.
+WHO Solidarity Trial Consortium. Repurposed antiviral drugs for COVID-19—interim WHO SOLIDARITY trial results. N. Engl. J. Med. (2020). 10.1056/NEJMoa2023184 PMC7727327 33264556 12.
+Skipper, C. P. et al. Hydroxychloroquine in nonhospitalized adults with early COVID-19: A randomized trial. Ann. Intern. Med. (2020). 10.7326/M20-4207 PMC7384270 32673060 13.
+Mitja, O. et al. Hydroxychloroquine for early treatment of adults with mild Covid-19: A Randomized-Controlled trial. Clin. Infect. Dis. (2020). 10.1093/cid/ciaa1009 PMC7454406 32674126 14.
+Singh, B., Ryan, H., Kredo, T., Chaplin, M. &amp; Fletcher, T. Chloroquine or hydroxychloroquine for prevention and treatment of COVID-19. Cochrane Database Syst. Reviews 2021(2). 10.1002/14651858.CD013587.pub2 PMC8094389 33624299 15.
+Lucchetta R Hydroxychloroquine for Non-Hospitalized COVID-19 patients: A systematic review and Meta-Analysis of randomized clinical trials Arq. Bras. Cardiol. 2023 120 e20220380 10.36660/abc.20220380 37042856 PMC10263429 Lucchetta, R. et al. Hydroxychloroquine for Non-Hospitalized COVID-19 patients: A systematic review and Meta-Analysis of randomized clinical trials. Arq. Bras. Cardiol. 120 , e20220380 (2023). 37042856
+10.36660/abc.20220380 PMC10263429 16.
+Mitjà O Hydroxychloroquine for treatment of non-hospitalized adults with COVID‐19: A meta‐analysis of individual participant data of randomized trials Clin. Transl. Sci. 2023 16 3 524 535 10.1111/cts.13468 36601684 PMC10014689 Mitjà, O. et al. Hydroxychloroquine for treatment of non-hospitalized adults with COVID‐19: A meta‐analysis of individual participant data of randomized trials. Clin. Transl. Sci. 16 (3), 524–535 (2023). 36601684
+10.1111/cts.13468 PMC10014689 17.
+Woodcock J LaVange LM Master protocols to study multiple therapies, multiple diseases, or both N Engl. J. Med. 2017 377 1 62 70 10.1056/NEJMra1510062 28679092 Woodcock, J. &amp; LaVange, L. M. Master protocols to study multiple therapies, multiple diseases, or both. N Engl. J. Med. 377 (1), 62–70 (2017). 28679092
+10.1056/NEJMra1510062 18.
+Omrani AS Randomized double-blinded placebo-controlled trial of hydroxychloroquine with or without Azithromycin for virologic cure of non-severe Covid-19 EClinicalMedicine 2020 29 100645 10.1016/j.eclinm.2020.100645 33251500 PMC7678437 Omrani, A. S. et al. Randomized double-blinded placebo-controlled trial of hydroxychloroquine with or without Azithromycin for virologic cure of non-severe Covid-19. EClinicalMedicine 29 , 100645 (2020). 33251500
+10.1016/j.eclinm.2020.100645 PMC7678437 19.
+Mehra, M. R., Desai, S. S., Ruschitzka, F. &amp; Patel, A. N. RETRACTED: hydroxychloroquine or chloroquine with or without a macrolide for treatment of COVID-19: a multinational registry analysis. Lancet (2020). 10.1016/S0140-6736(20)31180-6 PMC7255293 32450107

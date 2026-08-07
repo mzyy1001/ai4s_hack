@@ -99,6 +99,17 @@ def to_plain_text(xml):
     """
     m = re.search(r"<body[^>]*>(.*?)</body>", xml or "", re.S)
     body = m.group(1) if m else (xml or "")
+
+    # **参考文献必须一并取出**。JATS 把 ref-list 放在 <back> 而非 <body>，
+    # 只取 body 会让全文里一个 DOI 都没有 —— 实测因此导致
+    # 「引用了已撤稿文献」这类标准答案根本无从作答：两臂都看不到参考文献列表，
+    # 必然双双 MISS，测出来的不是能力差异而是我们没给它材料。
+    back = re.search(r"<back[^>]*>(.*?)</back>", xml or "", re.S)
+    if back:
+        refs = re.search(r"<ref-list\b.*?</ref-list>", back.group(1), re.S)
+        if refs:
+            body += "\n<sec><title>References</title>" + refs.group(0) + "</sec>"
+
     # 表格与图先压成单行，避免撑开大量空白
     body = re.sub(r"<(table-wrap|fig)\b.*?</\1>",
                   lambda x: "\n" + " ".join(
@@ -411,6 +422,15 @@ def cases_retracted_statistical(n):
     terms = ('"statistical error" OR "data inconsistencies" OR "miscalculation" '
              'OR "errors in the analysis" OR "incorrect statistical" '
              'OR "errors in the data"')
+    # 撤稿声明里出现统计/数据字样，**不等于**理由本身是稿件正文可查的。
+    # 实测两篇都栽在这：一篇真实理由是 PubPeer 报的图像重复，
+    # 另一篇是「无法复现关键实验结果」—— 都要么需要原图，要么需要重做实验，
+    # 光读正文绝无可能发现。拿它们当标准答案是在考不存在的题。
+    EXCLUDE = re.compile(
+        r"image duplicat|image manipulat|figure duplicat|western blot|"
+        r"PubPeer|spliced|identical (?:panels|images|bands)|"
+        r"inability to reproduce|unable to reproduce|not reproducib|"
+        r"failure to replicat|authorship|plagiaris|paper mill", re.I)
     notices, _ = search(f'PUB_TYPE:"Retraction of Publication" AND OPEN_ACCESS:y '
                         f'AND HAS_FT:y AND ({terms})', 30)
     out = []
@@ -423,6 +443,9 @@ def cases_retracted_statistical(n):
         nx = get(f"{EPMC}/{npmc}/fullTextXML", timeout=60)
         reason = body_text(nx)[:1500] if nx else ""
         if len(reason) < 80:
+            continue
+        if EXCLUDE.search(reason):
+            # 理由主体是图像/复现/署名类 —— 纯文本审稿查不出来，不收
             continue
         ext = None
         for cc in (nt.get("commentCorrectionList") or {}).get("commentCorrection", []):
