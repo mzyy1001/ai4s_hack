@@ -37,7 +37,7 @@ REVIEW_PROMPT = (
 
 JUDGE_PROMPT = """你是评审的裁判。下面给你一条**标准答案**和一份**审稿意见**。
 
-标准答案（由权威数据库给出的客观事实）：
+标准答案（由权威来源给出的客观事实）：
 {truth}
 
 审稿意见：
@@ -47,10 +47,13 @@ JUDGE_PROMPT = """你是评审的裁判。下面给你一条**标准答案**和�
 
 问题：这份审稿意见有没有指出标准答案里说的那个问题？
 
-判定标准（从严）：
-- 必须实质性地指出该问题，而不是泛泛提到相关名词
-- 只是提到细胞系名字、或说「建议补充细胞系鉴定」这类通用建议，**不算**命中
-- 必须触及「这个细胞系的身份/来源本身有问题」这一层
+判定标准（**从严**）：
+- 必须实质性地指出**这个具体对象**的事实本身有问题
+- 只是提到相关名词（细胞系名、注册号、某篇参考文献）**不算**命中
+- 泛泛的通用建议不算命中，例如「建议补充细胞系 STR 鉴定」
+  「建议核对注册信息」「建议复核统计方法」—— 这类话几乎每份意见都会写
+- 必须触及标准答案指出的那个**具体事实**（身份错了 / 注册晚于开始 /
+  该文献已撤稿 / 该统计结论不成立）
 
 只回答一个词：HIT 或 MISS。"""
 
@@ -172,7 +175,7 @@ def main():
 
         arms = setup_arms(os.path.join(root, pmcid),
                           os.path.join(a.work, pmcid), skill_src)
-        row = {"pmcid": pmcid, "cell_line": p["ground_truth"]["cell_line"]}
+        row = {"pmcid": pmcid, "kind": p.get("kind", "?")}
         for arm, d in arms.items():
             print(f"  [{arm}] 审阅中 …")
             review = run_opencode(d, REVIEW_PROMPT, model=a.model, timeout=a.timeout)
@@ -193,9 +196,23 @@ def main():
     w = sum(1 for r in results if r.get("withskill") == "HIT")
     n = len(results)
     print(f"裸模型命中 {b}/{n}    挂 Skill 命中 {w}/{n}    uplift = {w - b:+d}")
+    # **按错误类型看，不要只看总分** —— 总分只说明有没有用，
+    # 分类型才说明哪里有用，而裸模型本来就会的那几类应该从 Skill 里删掉
+    print(f"\n{'kind':30s} {'pmcid':14s} {'baseline':10s} withskill")
+    for r in sorted(results, key=lambda x: x["kind"]):
+        print(f"  {r['kind']:28s} {r['pmcid']:14s} "
+              f"{str(r.get('baseline')):10s} {r.get('withskill')}")
+
+    print("\n按类型汇总：")
+    kinds = {}
     for r in results:
-        print(f"  {r['pmcid']:14s} {r['cell_line']:14s} "
-              f"baseline={r.get('baseline')} withskill={r.get('withskill')}")
+        k = kinds.setdefault(r["kind"], {"b": 0, "w": 0, "n": 0})
+        k["n"] += 1
+        k["b"] += r.get("baseline") == "HIT"
+        k["w"] += r.get("withskill") == "HIT"
+    for kind, k in sorted(kinds.items()):
+        print(f"  {kind:28s} 裸模型 {k['b']}/{k['n']}  挂 Skill {k['w']}/{k['n']}  "
+              f"uplift {k['w'] - k['b']:+d}")
     if n < 5:
         print(f"\n注意：只有 {n} 篇，样本太小，差值不足以下结论。至少跑 20 篇。")
 
