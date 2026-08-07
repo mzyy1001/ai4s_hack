@@ -21,8 +21,9 @@ import os
 import re
 import subprocess
 
-SCRIPTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                 "skills", "biomed-paper-review", "scripts")
+# 本文件在 tools/orchestration/ 下，回到仓库根需要三层 dirname
+_REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+SCRIPTS_DIR = os.path.join(_REPO, "skills", "biomed-paper-review", "scripts")
 
 # 主动扫描的正则：从稿件里认出可以直接送去核算的结构化对象
 RE_COUNT_PCT = re.compile(r"(\d+)\s*/\s*(\d+)\s*\(\s*([\d.]+)\s*%\s*\)")
