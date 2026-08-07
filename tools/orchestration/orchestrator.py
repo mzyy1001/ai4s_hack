@@ -28,7 +28,10 @@ import os
 import sys
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_SKILL = os.path.dirname(_HERE)
+# 编排器已移出 skill 目录：它依赖私有模型凭据，在评测沙箱里跑不了。
+# 留在仓库里作为**本地研究工具**，用于验证分层是否真的带来增益。
+_SKILL = os.path.join(os.path.dirname(os.path.dirname(_HERE)),
+                      "skills", "biomed-paper-review")
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
@@ -38,7 +41,7 @@ from model_client import ModelClient, ModelUnavailable           # noqa: E402
 from telemetry import Telemetry                                  # noqa: E402
 from tool_dispatcher import ToolDispatcher                       # noqa: E402
 
-PROMPTS = os.path.join(_SKILL, "prompts")
+PROMPTS = os.path.join(_HERE, "prompts")
 REFS = os.path.join(_SKILL, "references")
 
 DISCOVERY_SCHEMA = {

@@ -21,7 +21,8 @@ import os
 import re
 import subprocess
 
-SCRIPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts")
+SCRIPTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                 "skills", "biomed-paper-review", "scripts")
 
 # 主动扫描的正则：从稿件里认出可以直接送去核算的结构化对象
 RE_COUNT_PCT = re.compile(r"(\d+)\s*/\s*(\d+)\s*\(\s*([\d.]+)\s*%\s*\)")
