@@ -1,0 +1,4633 @@
+{
+ "paper": {
+  "title": "A long non-coding RNA OLBC15 promotes triple-negative breast cancer progression via enhancing ZNF326 degradation",
+  "authors": "Deng Chao; Zhang Bojuan; Zhang Yao; Xu Xiaogang; Xiong Deming; Chen Xiaoyan; Wu Jiaojiao",
+  "journal": "Journal of Clinical Laboratory Analysis",
+  "year": 2020,
+  "volume": "34",
+  "issue": "8",
+  "pages": "e23304",
+  "doi": "10.1002/jcla.23304",
+  "pmid": "32329931",
+  "pmcid": "PMC7439339",
+  "retraction_status": "RETRACTED",
+  "retraction_notice": {
+   "citation": "RETRACTION: J Clin Lab Anal. 2026 Feb;40(3):e70169",
+   "doi": "10.1002/jcla.70169",
+   "pmcid": "PMC12888758",
+   "pmid": "41578707",
+   "summary": "作者+主编+出版社协议撤稿：关键结果无法重复；技术错误（pulldown条件不一致、细胞潜在交叉污染、ZNF326抗体验证不足）；原始数据差异（WB Fig4B/5A/5B、迁移定量、IHC评分一致性）；图像重复（Fig4D←Koo 2017、Fig5B←Shen 2019、Fig5E←Li 2018）"
+  },
+  "study_type": "分子生物学 + 细胞系（体外）+ 动物移植瘤/转移模型 + 人组织样本（观察性）"
+ },
+ "execution_scope": {
+  "mode": "full_review",
+  "layers_executed": [
+   "L0_global_review",
+   "L0b_map_route",
+   "L1_specialists(M2-M7)",
+   "L2_deterministic_tools",
+   "L3_continuations",
+   "L4_reconciliation",
+   "L5_render"
+  ],
+  "parallel_execution": "L0∥L0b；M2∥M3∥M4∥M5∥M6；六个L3续接同批发出",
+  "fulltext_access": "每一层均读取完整fulltext.txt（128行）；专家另以fulltext.xml为准确核对参考文献/补充引用/截断段",
+  "additive_guarantee": "48/48 G条目有终态（promoted_to_finding×47、merged×1[G-31→F-31]）；rejected=0，即未从裸模型结果中减去任何条目；所有severity变化（G-01 critical→major；G-05/08/13/21/23/26/32/37/46升档；G-43/48 refine）均带理由记录",
+  "additive_guarantee_held": true
+ },
+ "coverage_breakdown": {
+  "sections": {
+   "Abstract": "full",
+   "Introduction": "full",
+   "Methods": "full（5小节，覆盖范围不足为论文缺陷而非抽取缺口）",
+   "Results": "full",
+   "Discussion": "full（para2经XML补全截断）",
+   "Acknowledgment": "full",
+   "References": "fulltext.txt缺失标题外内容→由fulltext.xml恢复27条题录+DOI",
+   "AssociatedData": "full（仅占位）"
+  },
+  "figures": "Figure 1-6：图注完整收录；图像文件缺失（SYS-001），像素级审查blocked",
+  "tables": "正文引用Table S1/S2/S3/S4均在补充docx（未提供，SYS-002），内容不可核验；Fig 1C分型例数为材料中唯一可用人群计数",
+  "identifiers": "细胞系×8、基因符号×22、DOI×27+1(本文)、ENSG×1、货号×3 全部进入确定性核验或登记unresolved",
+  "supplementary": "JCLA-34-e23304-s001.docx未提供（SYS-002）"
+ },
+ "evidence_registry": [
+  {
+   "id": "EV-001",
+   "type": "present",
+   "locator": "fulltext.txt L29-44 (Methods sec0006-sec0011)",
+   "quote": "仅5小节：Cell lines/lentiviral vectors/reagents; Human samples; Migration assay; Viability assay; Statistical analysis",
+   "note": "Methods覆盖范围远小于Results所用技术"
+  },
+  {
+   "id": "EV-002",
+   "type": "present",
+   "locator": "fulltext.txt L44",
+   "quote": "Statistical analyses were performed with SPSS (v16). Data were represented as mean ± SD. The nonparametric Mann-Whitney test was used ... ANOVA ... LSD post hoc test. P < .05"
+  },
+  {
+   "id": "EV-003",
+   "type": "present",
+   "locator": "fulltext.txt L35",
+   "quote": "Experiments associated with human specimens were approved by Human Research Ethics Committee (HREC) at Chongqing Three Gorges Central Hospital in accordance with the 1975 Declaration of Helsinki."
+  },
+  {
+   "id": "EV-004",
+   "type": "present",
+   "locator": "fulltext.txt L53-90",
+   "quote": "Figure 1-6 captions（统计标注均为 '**: P < .01'；Fig 4F 'DMA-MB-231'；Fig 4A 'The indicates band'；Fig 4I 止于 'Flag-Vec'）"
+  },
+  {
+   "id": "EV-005",
+   "type": "present",
+   "locator": "fulltext.txt L51-90",
+   "quote": "Results sec0013-0018 主张原文（含 'highly expressed especially in triple-negative breast cancer'、'could accelerate metastasis and xenograft tumor growth'、'directly interacts' 等）"
+  },
+  {
+   "id": "EV-006",
+   "type": "present",
+   "locator": "fulltext.txt L8-18",
+   "quote": "Abstract：'well-characterized tumor suppressor ZNF326'；'putative target for therapeutic anti-breast cancer intervention'"
+  },
+  {
+   "id": "EV-007",
+   "type": "present",
+   "locator": "fulltext.xml article-meta custom-meta-group",
+   "quote": "<meta-name>is-retracted</meta-name><meta-value>yes</meta-value>；related-article-type='retraction-forward' → PMC12888758",
+   "note": "JATS前沿元数据"
+  },
+  {
+   "id": "EV-008",
+   "type": "present",
+   "locator": "fulltext.xml jcla23304-bib-0001..0027",
+   "quote": "27条参考文献题录及 ext-link (doi/pmid/pmcid) xlink:href",
+   "note": "DOI/PMID以ext-link格式存在，fulltext.txt转换时丢失"
+  },
+  {
+   "id": "EV-009",
+   "type": "present",
+   "locator": "fulltext.xml xref rid='jcla23304-sup-0001'",
+   "quote": "(Figure S2A)/(Figure S2B)/(Figure S1)/(Table S1)/(Table S3)/(Table S4) 引用→补充材料 JCLA-34-e23304-s001.docx"
+  },
+  {
+   "id": "EV-010",
+   "type": "present",
+   "locator": "fulltext.txt L92-98 + fulltext.xml Discussion para2",
+   "quote": "Discussion（含完整句 'OLBC15 may possibly be a tumor-specific lncRNA in TNBC ... at least in TNBC'，xml核实）"
+  },
+  {
+   "id": "EV-100",
+   "type": "absence",
+   "search_scope": "Methods sec0006-0011 及全文（fulltext.txt+fulltext.xml）",
+   "search_terms": "animal / mouse / mice / xenograft method / IACUC / ethics approval(animal) / ARRIVE / anesthesia / euthanasia",
+   "result": "Methods中0命中；动物实验仅见于Abstract/Results/Fig3，无任何方法或伦理小节"
+  },
+  {
+   "id": "EV-101",
+   "type": "absence",
+   "search_scope": "全文",
+   "search_terms": "informed consent / 知情同意 / consent waiver",
+   "result": "0命中"
+  },
+  {
+   "id": "EV-102",
+   "type": "absence",
+   "search_scope": "全文",
+   "search_terms": "ARRIVE / 3R / replacement / reduction / refinement（动物语境）",
+   "result": "0命中"
+  },
+  {
+   "id": "EV-103",
+   "type": "absence",
+   "search_scope": "fulltext.txt 及 fulltext.xml 全文",
+   "search_terms": "survival / Kaplan-Meier / prognosis / prognostic / ROC",
+   "result": "survival/Kaplan/prognosis/prognostic 0命中；'ROC' 3次命中均为其他英文单词子串"
+  },
+  {
+   "id": "EV-104",
+   "type": "absence",
+   "search_scope": "全文（含XML declarations区）",
+   "search_terms": "conflict of interest / COI / data availability / author contributions",
+   "result": "材料中0命中（存转换丢失可能，见SYS-003）"
+  },
+  {
+   "id": "EV-105",
+   "type": "absence",
+   "search_scope": "Methods sec0007 及全部图注",
+   "search_terms": "antibody catalog / clone / RRID / dilution / manufacturer(antibody)",
+   "result": "0命中：anti-ZNF326/anti-Flag/anti-ubiquitin零信息"
+  },
+  {
+   "id": "EV-106",
+   "type": "absence",
+   "search_scope": "Methods sec0011 及 Fig 1-6 captions 及 Results",
+   "search_terms": "n = / sample size / independent experiments / biological replicates",
+   "result": "0命中：全文无每组n与独立重复声明（Fig 1C分型例数除外）"
+  },
+  {
+   "id": "EV-107",
+   "type": "absence",
+   "search_scope": "Methods sec0007",
+   "search_terms": "STR / authentication / mycoplasma / passage",
+   "result": "0命中"
+  },
+  {
+   "id": "EV-200",
+   "type": "external",
+   "endpoint": "Europe PMC REST /webservices/rest/search",
+   "query": "DOI:\"10.1002/jcla.23304\"",
+   "retrieved_at": "2026-08-08T00:00:00+08:00",
+   "status": "resolved",
+   "response_hash": "23a1bf59de52ac9a7e43594c3269a6fedc4f0185",
+   "assertion": "pubTypeList=['Retracted Publication','research-article','Journal Article']"
+  },
+  {
+   "id": "EV-201",
+   "type": "external",
+   "endpoint": "PubMed efetch eutils.ncbi.nlm.nih.gov",
+   "query": "db=pubmed&id=41578707&rettype=abstract",
+   "retrieved_at": "2026-08-08T00:00:00+08:00",
+   "status": "resolved",
+   "response_hash": "2875b2234b65a6fc8fefc28712fac52b3c023a8b",
+   "assertion": "RETRACTION: J Clin Lab Anal 2026;40(3):e70169；理由：无法重复/技术错误(pulldown条件不一致、细胞潜在交叉污染、ZNF326抗体验证不足)/原始数据差异(WB Fig4B,5A,5B、迁移定量、IHC评分一致性)/图像重复(Fig4D←Koo2017、Fig5B←Shen2019、Fig5E←Li2018)"
+  },
+  {
+   "id": "EV-202",
+   "type": "external",
+   "endpoint": "Crossref api.crossref.org/works + Europe PMC",
+   "query": "27条参考文献DOI逐一解析",
+   "retrieved_at": "2026-08-08T00:00:00+08:00",
+   "status": "resolved",
+   "response_hash": "18e5201daa5b6bd2cfe0efeca40c087e51efafcc",
+   "assertion": "27/27解析成功（3条首查瞬时超时重试成功）；bib-0013(10.1002/jcp.26311)被Europe PMC标注Retracted Publication，其余26条未检撤稿"
+  },
+  {
+   "id": "EV-203",
+   "type": "external",
+   "endpoint": "Cellosaurus api.cellosaurus.org",
+   "query": "MCF-10A, MDA-MB-231, BT-549, HCC1806, Hs578t, MDA-MB-468, NIH3T3, HEK293",
+   "retrieved_at": "2026-08-08T00:00:00+08:00",
+   "status": "resolved",
+   "response_hash": "18e5201daa5b6bd2cfe0efeca40c087e51efafcc",
+   "assertion": "8/8均无Problematic(污染/错鉴)标注"
+  },
+  {
+   "id": "EV-204",
+   "type": "external",
+   "endpoint": "HGNC rest.genenames.org",
+   "query": "22个基因符号（OLBC15/ZNF326/KLF17/...）",
+   "retrieved_at": "2026-08-08T00:00:00+08:00",
+   "status": "resolved",
+   "response_hash": "18e5201daa5b6bd2cfe0efeca40c087e51efafcc",
+   "assertion": "OLBC15/LIMT/BORG/LDAC7/RP11-597D13.9/Cox2非批准符号；DBC1旧符号(现BRINP1)；ZNF326/KLF17/HDAC7等有效"
+  },
+  {
+   "id": "EV-205",
+   "type": "external",
+   "endpoint": "Ensembl REST rest.ensembl.org/lookup/id",
+   "query": "ENSG00000259457",
+   "retrieved_at": "2026-08-08T00:00:00+08:00",
+   "status": "resolved",
+   "response_hash": "ad-hoc: display_name=LINC03137, chr15(GRCh38 69564724-69566912), lncRNA, HGNC:58103"
+  }
+ ],
+ "all_findings": [
+  {
+   "id": "F-01",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M5",
+    "M6",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "论文已被撤稿：不可重复、技术错误、原始数据差异、跨论文图像重复",
+   "detail": "本文已被撤稿（Retraction: J Clin Lab Anal 2026;40(3):e70169, DOI 10.1002/jcla.70169, PMC12888758）：(1)关键实验结果无法重复；(2)技术错误——RNA pulldown条件不一致、细胞实验潜在交叉污染、ZNF326抗体特异性验证不足；(3)原始数据差异——WB Fig 4B/5A/5B、迁移定量、临床IHC评分一致性；(4)图像重复认定——Fig 4D←Koo 2017 MCT(10.1158/1535-7163.MCT-17-0077)、Fig 5B←Shen 2019 JCLA(10.1002/jcla.23122)、Fig 5E←Li 2018 CMAR(10.2147/CMAR.S183355)。受损面板分别支撑互作、降解、rescue主线。撤稿理由不含伦理指控（不构成G-01/G-02升critical依据，但伦理追溯核验责任由作者转移至机构）。自有像素审计因无图像文件blocked（SYS-001）。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Retraction notice PMID 41578707",
+    "fulltext.xml is-retracted=yes",
+    "Fig 4B/4D",
+    "Fig 5A/5B/5E",
+    "Fig 6A"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Retraction notice PMID 41578707",
+    "fulltext.xml is-retracted=yes",
+    "Fig 4B/4D",
+    "Fig 5A/5B/5E",
+    "Fig 6A"
+   ],
+   "g_refs": [
+    "G-47"
+   ],
+   "merged_from": [
+    "M3-034",
+    "M5-015",
+    "M7-015",
+    "M6-010"
+   ],
+   "source": "external_validation",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：论文已被撤稿：不可重复、技术错误、原始数据差异、跨论文图像重复；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-02",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "Methods实质缺失：≥10项已报告技术零方法学描述，体内臂不可重建",
+   "detail": "Methods仅5小节（细胞系/载体/试剂、人样本、迁移、CCK-8、统计）。Abstract承诺、Results报告的lncRNA profiling、qPCR、亚细胞分级、异种移植/肺转移动物模型（物种/品系/性别/周龄、每组n、接种数与途径、转移模型类型、体积公式、计数方法、随机化/设盲全缺）、pulldown、质谱、RIP、FISH、截短突变、WB、MG132、泛素化、ChIP样启动子占据、IHC、相关分析均无方法学描述；主张链最先断于体内环节。",
+   "evidence_locations": [
+    "Methods sec0007-0011",
+    "Abstract",
+    "Results sec0013-0018",
+    "Fig 3"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0007-0011",
+    "Abstract",
+    "Results sec0013-0018",
+    "Fig 3"
+   ],
+   "g_refs": [
+    "G-02",
+    "G-03"
+   ],
+   "merged_from": [
+    "M2-001",
+    "M3-001",
+    "M3-002"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：Methods实质缺失：≥10项已报告技术零方法学描述，体内臂不可重建；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-06",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "lncRNA profiling高维筛选无任何校正/阈值/平台/注册信息",
+   "detail": "profiling无平台、无配对n、无fold阈值、无FDR/BH多重校正、无工具、无GEO号、无data availability；73上调/126下调列表与候选选择标准不可审计；按规则库高维组学无多重校正→critical。候选名单可靠性与选OLBC15正当性不可评估（XML确证非转换问题）。",
+   "evidence_locations": [
+    "Results sec0013",
+    "Fig 1A caption"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0013",
+    "Fig 1A caption"
+   ],
+   "g_refs": [
+    "G-05"
+   ],
+   "merged_from": [
+    "M2-006",
+    "M3-004",
+    "M4-009"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：lncRNA profiling高维筛选无任何校正/阈值/平台/注册信息；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-09",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M4",
+    "M5",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "全文定量报告缺失：n/独立重复/精确P/效应量/CI/误差定义全无",
+   "detail": "所有实验均未报告n与独立重复次数，图注统计信息仅'**: P<.01'，无精确P/检验量/CI/效应量/误差棒定义/多重校正，单星阈值未定义，生物/技术重复未区分；系统性效应量措辞（profound/dramatically/strongly/markedly）与零效应估计并存。确定性取证因无可复算对象not_applicable，恰证报告缺口本身。 【外部证据限定】撤稿通知认定关键结果无法重复并点名Fig 2/5迁移定量原始数据差异（通知陈述，非本审观察）",
+   "evidence_locations": [
+    "Methods sec0011",
+    "Fig 1-6 captions",
+    "Results全节"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0011",
+    "Fig 1-6 captions",
+    "Results全节"
+   ],
+   "g_refs": [
+    "G-08"
+   ],
+   "merged_from": [
+    "M4-002",
+    "M3-032",
+    "M5-008",
+    "M7-014"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：全文定量报告缺失：n/独立重复/精确P/效应量/CI/误差定义全无；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-16",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "Transwell迁移实验方法学缺陷叠加外部数据完整性命中",
+   "detail": "Transwell缺孔径/血清梯度/定量方式/设盲，上下室同7%血清无趋化梯度，无Matrigel侵袭与EMT标志物；L3上调major→critical：撤稿通知陈述迁移定量原始数据差异且Fig 5E（rescue迁移面板）被认定为Li 2018重复图像（外部归因）。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Methods sec0009",
+    "Results sec0014-0017",
+    "Fig 2E-F",
+    "Fig 5E-F"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0009",
+    "Results sec0014-0017",
+    "Fig 2E-F",
+    "Fig 5E-F"
+   ],
+   "g_refs": [
+    "G-13"
+   ],
+   "merged_from": [
+    "M3-005"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：Transwell迁移实验方法学缺陷叠加外部数据完整性命中；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-24",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "OLBC15-ZNF326互作三支柱同时受损，Discussion却称'directly interacts'",
+   "detail": "互作证据三支柱同时受损：Fig 4D FISH被撤稿调查认定为Koo 2017重复图像、Fig 4B pulldown WB原始数据差异、通知点名pulldown条件不一致；叠加本就缺失的直接结合验证（无EMSA/RNase敏感性/交联）——FISH共定位+pulldown/RIP均与复合物介导兼容。Discussion总结句'OLBC15 directly interacts with ZNF326...and interferes its post-translational modification'：'directly'超出证据（稿件内层）、互作证据线全灭（外部层）、泛素连接酶自认未知而称'干扰翻译后修饰'。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Results sec0016",
+    "Fig 4",
+    "Discussion末段"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0016",
+    "Fig 4",
+    "Discussion末段"
+   ],
+   "g_refs": [
+    "G-21"
+   ],
+   "merged_from": [
+    "M3-012",
+    "M7-010"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：OLBC15-ZNF326互作三支柱同时受损，Discussion却称'directly interacts'；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-25",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "'destabilization'无CHX半衰期实验，降解锚点面板受损",
+   "detail": "标题级'destabilization'无CHX追踪半衰期实验，仅稳态水平+MG132不足以证明稳定性改变；L3上调：Fig 5B（MG132面板，降解主张支柱之一）被认定重复自Shen 2019、Fig 5A有原始数据差异。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Results sec0017",
+    "Fig 5A-B"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0017",
+    "Fig 5A-B"
+   ],
+   "g_refs": [
+    "G-23"
+   ],
+   "merged_from": [
+    "M3-014"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：'destabilization'无CHX半衰期实验，降解锚点面板受损；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-28",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "rescue链崩溃：仅覆盖迁移、唯一rescue面板被认定重复",
+   "detail": "rescue仅覆盖迁移，活性与体内均无ZNF326回复臂；KLF17双敲低仅部分回复，提示ZNF326非依赖组分未讨论；L3上调：Fig 5E（唯一rescue面板）被认定重复自Li 2018、迁移定量有原始数据差异——机制链rescue证据全灭。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Results sec0017",
+    "Fig 5E-G"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0017",
+    "Fig 5E-G"
+   ],
+   "g_refs": [
+    "G-26"
+   ],
+   "merged_from": [
+    "M3-017",
+    "M7-002"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：rescue链崩溃：仅覆盖迁移、唯一rescue面板被认定重复；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-30",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "anti-ZNF326抗体横跨四条证据线、有效性被撤稿通知否定",
+   "detail": "anti-ZNF326抗体横跨pulldown/RIP/WB/IHC四条证据线：撤稿通知明确将'ZNF326抗体特异性验证不足'列为技术错误（作者经通知自认），Fig 4B另有原始数据差异——中心测量试剂失效级问题；叠加无敲除对照条带。全文所有抗体（anti-ZNF326/anti-Flag/anti-ubiquitin）零信息：无厂商/货号/克隆号/稀释比/RRID/批号，外部RRID验证无从入手。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Fig 4B",
+    "Fig 5",
+    "Fig 6A",
+    "Methods"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 4B",
+    "Fig 5",
+    "Fig 6A",
+    "Methods"
+   ],
+   "g_refs": [
+    "G-32"
+   ],
+   "merged_from": [
+    "M3-023",
+    "M3-028"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：anti-ZNF326抗体横跨四条证据线、有效性被撤稿通知否定；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-44",
+   "module": "M7",
+   "module_origin": [
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "治疗性'putative target'结论零干预实验支撑、唯一在体支撑失效",
+   "detail": "摘要结论'putative target for therapeutic anti-breast cancer intervention'：全文零靶向干预实验，唯一在体支撑（体内臂）因撤稿判定整体失效；L3升major→critical，措辞hedge不豁免支撑全灭。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Abstract-Conclusions",
+    "Discussion para3"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Abstract-Conclusions",
+    "Discussion para3"
+   ],
+   "g_refs": [
+    "G-46"
+   ],
+   "merged_from": [
+    "M7-001"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：治疗性'putative target'结论零干预实验支撑、唯一在体支撑失效；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-54",
+   "module": "M7",
+   "module_origin": [
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "标题级因果主张'promotes...via enhancing ZNF326 degradation'超出证据",
+   "detail": "标题级因果主张无CHX、仅敲低方向、rescue不全（稿件内层）；L3：降解锚点Fig 5A差异/Fig 5B重复、互作锚点Fig 4B差异/Fig 4D重复、pulldown条件不一致、抗体验证不足——全部直接支撑失效。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "TITLE",
+    "Results sec0016-0017"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "TITLE",
+    "Results sec0016-0017"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M7-009"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：标题级因果主张'promotes...via enhancing ZNF326 degradation'超出证据；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-55",
+   "module": "M7",
+   "module_origin": [
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "critical",
+   "title": "体内促瘤/促转移直陈主张不可审计、推定失效",
+   "detail": "体内促瘤/促转移直陈主张：动物方法全缺不可审计；整篇撤稿+'关键结果无法重复'+细胞交叉污染波及MDA-MB-231接种物→推定失效。保留意见：通知未逐字点名Fig 3，其失效由整篇撤稿+不可重复+污染波及接种物推定。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Results sec0015",
+    "Fig 3",
+    "Abstract-Methods"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0015",
+    "Fig 3",
+    "Abstract-Methods"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M7-012"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：体内促瘤/促转移直陈主张不可审计、推定失效；关键支撑见detail与evidence_refs",
+    "who": "编辑+诚信办公室"
+   }
+  },
+  {
+   "id": "F-03",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "体内臂设计报告缺口：单细胞系、队列结构/n/功效/随机化不明",
+   "detail": "体内仅MDA-MB-231一系；敲低/过表达臂队列结构与随机化未报告（图注'numbered case'提示个体展示但缺n与组界）；移植瘤与肺转移结节两大主要终点每组n未报告、无样本量/功效依据，功效不可核验。",
+   "evidence_locations": [
+    "Results sec0015",
+    "Fig 3 caption"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0015",
+    "Fig 3 caption"
+   ],
+   "g_refs": [
+    "G-39"
+   ],
+   "merged_from": [
+    "M3-025",
+    "M4-011"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：体内臂设计报告缺口：单细胞系、队列结构/n/功效/随机化不明；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-04",
+   "module": "M6",
+   "module_origin": [
+    "M6"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "动物伦理批准/IACUC/ARRIVE/3R声明缺失",
+   "detail": "全文无动物伦理批准/IACUC声明，唯一伦理声明仅覆盖人样本；无ARRIVE声明、无3R表述、无体内必要性论证（SIG-602/701/702三方信号一致：Replacement not_discussed/Reduction not_justified/Refinement not_detailed）。按'未报告=报告缺口'维持major；升级触发器（机构核实从未获批）未触发，撤稿通知未含伦理指控。零描述不触发福利红线，不得推断未实施。 【外部证据限定】SYS-005：IACUC真伪无公开核验接口",
+   "evidence_locations": [
+    "Methods sec0006-0011",
+    "Results sec0015",
+    "Fig 3"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0006-0011",
+    "Results sec0015",
+    "Fig 3"
+   ],
+   "g_refs": [
+    "G-01"
+   ],
+   "merged_from": [
+    "M6-001",
+    "M6-002",
+    "M6-003"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：动物伦理批准/IACUC/ARRIVE/3R声明缺失；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-05",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "qPCR MIQE要素缺失，引物表位于不可得补充材料",
+   "detail": "qRT-PCR的RNA提取/逆转录/内参/定量方法缺失；引物表定位为Table S1（补充docx未提供，SYS-002）；所有表达定量归一化方式不可判。",
+   "evidence_locations": [
+    "Methods sec0007",
+    "Results sec0013",
+    "Fig 1-2"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0007",
+    "Results sec0013",
+    "Fig 1-2"
+   ],
+   "g_refs": [
+    "G-04"
+   ],
+   "merged_from": [
+    "M3-003"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：qPCR MIQE要素缺失，引物表位于不可得补充材料；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-07",
+   "module": "M2",
+   "module_origin": [
+    "M2"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "候选筛选链选择偏倚：73→2 novel→仅以fold选OLBC15",
+   "detail": "73上调→2 novel（Table S2不可核）→仅以'higher fold expression'选OLBC15；RP11-597D13.9零验证；下游全部主张链建立在未量化的单一选择决策上。",
+   "evidence_locations": [
+    "Results sec0013"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0013"
+   ],
+   "g_refs": [
+    "G-06"
+   ],
+   "merged_from": [
+    "M2-007"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：候选筛选链选择偏倚：73→2 novel→仅以fold选OLBC15；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-08",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "统计声明与实际使用不匹配",
+   "detail": "Methods仅声明两组Mann-Whitney与多组ANOVA+LSD（混用且无正态/方差齐性诊断，LSD不控制族错误率）；但Fig 6报Pearson相关未声明；profiling阈值/多重校正未交代；临床关联检验未命名。",
+   "evidence_locations": [
+    "Methods sec0011",
+    "Fig 6 caption",
+    "Results sec0013/0018"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0011",
+    "Fig 6 caption",
+    "Results sec0013/0018"
+   ],
+   "g_refs": [
+    "G-07"
+   ],
+   "merged_from": [
+    "M4-001",
+    "M2-004"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：统计声明与实际使用不匹配；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-10",
+   "module": "M4",
+   "module_origin": [
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "Fig 2C-D/F四水平（敲低+过表达）混入单因素ANOVA+LSD",
+   "detail": "ShCtrl/ShOLBC15/OE-control/OE-OLBC15四水平含两套无关扰动，混入同一ANOVA+LSD：交叉比较无意义、FWER膨胀、误差混淆；应拆为独立两组检验或2×2析因。",
+   "evidence_locations": [
+    "Fig 2C-D/F",
+    "Methods sec0011"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 2C-D/F",
+    "Methods sec0011"
+   ],
+   "g_refs": [
+    "G-09"
+   ],
+   "merged_from": [
+    "M4-003"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：Fig 2C-D/F四水平（敲低+过表达）混入单因素ANOVA+LSD；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-11",
+   "module": "M4",
+   "module_origin": [
+    "M4",
+    "M5"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "Fig 6B-C相关分析：Pearson误用于等级H-score、无n/正态性、呈现不完整",
+   "detail": "Fig 6C对0/1+/2+/3+有序H-score用Pearson（应Spearman）；6B无n与正态性依据；6C未注明相关检验类型；队列n与构成未报。 【外部证据限定】撤稿通知点名临床样本IHC评分一致性（通知陈述，非本审观察）",
+   "evidence_locations": [
+    "Fig 6B-C",
+    "Results sec0018",
+    "Methods sec0011"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 6B-C",
+    "Results sec0018",
+    "Methods sec0011"
+   ],
+   "g_refs": [
+    "G-10"
+   ],
+   "merged_from": [
+    "M4-004",
+    "M5-011"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：Fig 6B-C相关分析：Pearson误用于等级H-score、无n/正态性、呈现不完整；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-12",
+   "module": "M4",
+   "module_origin": [
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "Fig 1C四亚型比较6个成对LSD不控FWER",
+   "detail": "Fig 1C四亚型（LA40/LB25/HER2+26/TNBC51=142，L2算术核验自洽）按ANOVA+LSD做6个成对比较不控族错误率；核心对比为TNBC vs其余三组，应Dunnett或预设contrast。该统计缺陷直接支撑TNBC特异性主张（见F-48）。",
+   "evidence_locations": [
+    "Fig 1C caption",
+    "Methods sec0011"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 1C caption",
+    "Methods sec0011"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M4-010"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：Fig 1C四亚型比较6个成对LSD不控FWER；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-13",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M6"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "人样本知情同意/批件编号/纳排标准缺失，伦理授权表述被[15]语境失配掏空",
+   "detail": "人样本无知情同意表述亦无豁免依据，样本用于profiling/qPCR/IHC/相关分析多重用途、同意范围不可核；HREC批准声明存在（Chongqing Three Gorges Central Hospital已具名）但无批件编号，有效期是否覆盖2017.01-2018.11未知；纳排标准缺失。'following a protocol described previously'→[15]经解析为Akkiprik 2015乳腺癌cDNA微阵列表达研究（非组织收集/伦理protocol），引用语境失配坐实、伦理授权表述失去实质支撑、呈模板化特征。行动：向机构伦理委员会索取存档。 【外部证据限定】SYS-005：批件编号无公开核验接口",
+   "evidence_locations": [
+    "Methods sec0008",
+    "Results sec0013",
+    "ref 15"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0008",
+    "Results sec0013",
+    "ref 15"
+   ],
+   "g_refs": [
+    "G-11"
+   ],
+   "merged_from": [
+    "M6-004",
+    "M6-005",
+    "M6-006",
+    "M3-033"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：人样本知情同意/批件编号/纳排标准缺失，伦理授权表述被[15]语境失配掏空；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-15",
+   "module": "M4",
+   "module_origin": [
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "临床关联分析（TNM/大小/转移）依据表缺失、检验未描述",
+   "detail": "临床关联所依据Table S3（患者特征）位于不可得补充材料（SYS-002），所用检验未描述，检验适配性与多重性不可核验。",
+   "evidence_locations": [
+    "Results sec0013",
+    "Table S3(不可得)"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0013",
+    "Table S3(不可得)"
+   ],
+   "g_refs": [
+    "G-12"
+   ],
+   "merged_from": [
+    "M4-005"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：临床关联分析（TNM/大小/转移）依据表缺失、检验未描述；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-17",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M6"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "细胞系鉴定/支原体声明缺失，撤稿点名潜在交叉污染",
+   "detail": "6细胞系无STR鉴定/支原体/传代声明；Cellosaurus各系无Problematic标注（仅反映公开库状态）；撤稿通知列'细胞实验潜在交叉污染'，污染风险开放。合规边缘项：未见声明≠未做。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Methods sec0007"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0007"
+   ],
+   "g_refs": [
+    "G-14"
+   ],
+   "merged_from": [
+    "M3-006",
+    "M6-009"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：细胞系鉴定/支原体声明缺失，撤稿点名潜在交叉污染；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-20",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "慢病毒体系参数缺失、递送方式不自洽",
+   "detail": "慢病毒参数缺失（包装细胞/质粒、滴度/MOI、puromycin浓度、滤膜孔径）；'Biovector shRNA+Lipofectamine 3000转染'与'puromycin稳筛2天'不自洽（递送方式不明）。",
+   "evidence_locations": [
+    "Methods sec0007"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0007"
+   ],
+   "g_refs": [
+    "G-17"
+   ],
+   "merged_from": [
+    "M3-009"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：慢病毒体系参数缺失、递送方式不自洽；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-21",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M5"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "shRNA构件使用不一致、靶序列全部未披露",
+   "detail": "功能实验仅依赖未披露靶序列的shOLBC15：Fig 2B暗示多候选选一、Fig 5A又用两条构件、Fig 5G有编号'ShZNF326-2'而shOLBC15候选未编号；各数据集所用构建体不可确定；shZNF326同样无序列/货号。构件身份不明直接削弱OLBC15/ZNF326功能归因。",
+   "evidence_locations": [
+    "Fig 2B caption",
+    "Fig 5A",
+    "Fig 5G",
+    "Methods sec0007"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 2B caption",
+    "Fig 5A",
+    "Fig 5G",
+    "Methods sec0007"
+   ],
+   "g_refs": [
+    "G-18"
+   ],
+   "merged_from": [
+    "M3-010",
+    "M5-009"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：shRNA构件使用不一致、靶序列全部未披露；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-22",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M5"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "pulldown→MS→ZNF326候选收敛不可审计",
+   "detail": "Fig 4A单一切胶带vs 5个MS候选蛋白（Table S4不可得）：共迁移可合法解释，但条带形态在缺图缺表下无法裁定；选ZNF326标准未说明，其余4个候选零讨论。 【外部证据限定】撤稿通知认定Fig 4B（同证据链WB）原始数据差异（通知陈述，非本审观察）",
+   "evidence_locations": [
+    "Results sec0016",
+    "Fig 4A caption",
+    "Table S4(不可得)"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0016",
+    "Fig 4A caption",
+    "Table S4(不可得)"
+   ],
+   "g_refs": [
+    "G-19"
+   ],
+   "merged_from": [
+    "M2-008",
+    "M5-001"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：pulldown→MS→ZNF326候选收敛不可审计；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-23",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "RIP对照不全、阴性对照无理由、pulldown条件不一致（通知）",
+   "detail": "RIP（Fig 4C）无IgG对照描述；输入归一化仅Flag-RIP隐含；阴性对照LINC00501无理由、其在MDA-MB-231表达状态未知（无查询端点，skipped，需作者提供）。 【外部证据限定】撤稿通知点名'RNA pulldown条件不一致'（通知陈述，非本审观察）",
+   "evidence_locations": [
+    "Fig 4C caption",
+    "Results sec0016"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 4C caption",
+    "Results sec0016"
+   ],
+   "g_refs": [
+    "G-20"
+   ],
+   "merged_from": [
+    "M3-011"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：RIP对照不全、阴性对照无理由、pulldown条件不一致（通知）；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-27",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "泛素化实验局限：过表达体系、单方向、非变性条件未声明",
+   "detail": "泛素化实验基于过表达Flag-ZNF326（过表达伪影）、仅敲低方向、未声明变性IP条件；抗ZNF326抗体特异性验证不足（通知点名）强化该担忧。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Fig 5C",
+    "Results sec0017"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 5C",
+    "Results sec0017"
+   ],
+   "g_refs": [
+    "G-25"
+   ],
+   "merged_from": [
+    "M3-016"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：泛素化实验局限：过表达体系、单方向、非变性条件未声明；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-29",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "截短体仅按预测二级结构设计、无结合缺陷突变体回复",
+   "detail": "截短体仅按RNAfold预测设计，大片段缺失可能破坏整体折叠；无点突变/结合缺陷突变体回复实验，'结合域→去稳定化'必要性未检验。",
+   "evidence_locations": [
+    "Fig 4E-I",
+    "Results sec0017"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 4E-I",
+    "Results sec0017"
+   ],
+   "g_refs": [
+    "G-22"
+   ],
+   "merged_from": [
+    "M3-013"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：截短体仅按预测二级结构设计、无结合缺陷突变体回复；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-31",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M5",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "KLF17终点数据位于不可得补充材料、ChIP样方法缺失、无蛋白验证",
+   "detail": "KLF17表达=(Figure S2A)、启动子占据=(Figure S2B)，位于补充docx（未提供，SYS-002不可复核）；关键机制证据置于补充材料（figure_should_be_main_text批评成立）；ChIP样方法/抗体/IgG/交联在正Methods缺失；KLF17仅mRNA检测无蛋白验证。记录已整体撤稿，内容真实性无背书。",
+   "evidence_locations": [
+    "Results sec0017",
+    "Fig 5 caption",
+    "Figure S2A/S2B(不可得)"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0017",
+    "Fig 5 caption",
+    "Figure S2A/S2B(不可得)"
+   ],
+   "g_refs": [
+    "G-27",
+    "G-31"
+   ],
+   "merged_from": [
+    "M3-018",
+    "M5-002",
+    "M7-011",
+    "M3-022"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：KLF17终点数据位于不可得补充材料、ChIP样方法缺失、无蛋白验证；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-34",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M5"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "核质分离无方法/标志物对照/定量",
+   "detail": "核质分离无方法小节、无区室标志物对照、无定量/n；核定位是核内机制叙事前提，证据呈现不完整。",
+   "evidence_locations": [
+    "Fig 1E",
+    "Methods(无对应小节)"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 1E",
+    "Methods(无对应小节)"
+   ],
+   "g_refs": [
+    "G-30"
+   ],
+   "merged_from": [
+    "M3-021",
+    "M5-004"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：核质分离无方法/标志物对照/定量；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-35",
+   "module": "M7",
+   "module_origin": [
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "无任何生存/预后/诊断效能分析，'clinical relevance'空心",
+   "detail": "'potentially clinical relevance'无生存/预后/诊断效能支撑（XML封闭absence：survival/Kaplan/prognosis 0命中、无ROC）；唯一相关分析队列未定义、Pearson误用于等级评分、IHC评分被撤稿点名。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Results sec0018",
+    "Discussion"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0018",
+    "Discussion"
+   ],
+   "g_refs": [
+    "G-35"
+   ],
+   "merged_from": [
+    "M7-005"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：无任何生存/预后/诊断效能分析，'clinical relevance'空心；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-36",
+   "module": "M4",
+   "module_origin": [
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "Fig 6相关队列构成未定义、混合亚型构成混杂",
+   "detail": "Fig 6相关未定义分析集与队列构成（混合亚型vs TNBC亚组、n未知）；对宣称TNBC富集的lncRNA在混合亚型做相关存在构成混杂；与Fig 1C队列关系未说明。",
+   "evidence_locations": [
+    "Fig 6 caption",
+    "Results sec0018"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 6 caption",
+    "Results sec0018"
+   ],
+   "g_refs": [
+    "G-36"
+   ],
+   "merged_from": [
+    "M4-006"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：Fig 6相关队列构成未定义、混合亚型构成混杂；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-37",
+   "module": "M4",
+   "module_origin": [
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "IHC评分细节缺失、评分一致性被撤稿点名",
+   "detail": "IHC评分标准/盲法/观察者间一致性（κ/ICC）/分级-H-score换算/病例数均未报告；L3升minor→major：撤稿通知点名'临床样本IHC评分一致性'原始数据差异，报告缺口风险已成现实。 【外部证据限定】通知陈述，非本审观察",
+   "evidence_locations": [
+    "Fig 6A caption",
+    "Results sec0018"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 6A caption",
+    "Results sec0018"
+   ],
+   "g_refs": [
+    "G-37"
+   ],
+   "merged_from": [
+    "M4-007"
+   ],
+   "source": "multiple",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "复核/索取证据：IHC评分细节缺失、评分一致性被撤稿点名；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-38",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "移植瘤无残余表达验证、无ZNF326/机制读出",
+   "detail": "移植瘤未验证残余OLBC15表达、未测ZNF326蛋白、无任何机制读出，体内表型与机制链断链。",
+   "evidence_locations": [
+    "Results sec0015",
+    "Fig 3"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0015",
+    "Fig 3"
+   ],
+   "g_refs": [
+    "G-38"
+   ],
+   "merged_from": [
+    "M3-024"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：移植瘤无残余表达验证、无ZNF326/机制读出；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-41",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "全文表格（Table S1/S3/S4）位于不可得补充材料",
+   "detail": "引物（Table S1）、患者特征（Table S3）、MS候选（Table S4）均在不可得补充docx（SYS-002）；不可核查性与对下游判断的影响不变。",
+   "evidence_locations": [
+    "Methods sec0007",
+    "Results sec0013",
+    "Results sec0016"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0007",
+    "Results sec0013",
+    "Results sec0016"
+   ],
+   "g_refs": [
+    "G-42"
+   ],
+   "merged_from": [
+    "M3-027"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：全文表格（Table S1/S3/S4）位于不可得补充材料；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-47",
+   "module": "M2",
+   "module_origin": [
+    "M2"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "人组织样本分母不闭合、分析人群无法识别",
+   "detail": "profiling配对数、Fig 1B n、Fig 6 IHC队列n均未报告；Table S3（患者特征）位于不可得补充材料；各样本集合重叠关系无说明，临床相关主张的分析人群无法识别。",
+   "evidence_locations": [
+    "Methods sec0008",
+    "Fig 1B/1C caption",
+    "Results sec0013",
+    "Fig 6 caption"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0008",
+    "Fig 1B/1C caption",
+    "Results sec0013",
+    "Fig 6 caption"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M2-003"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：人组织样本分母不闭合、分析人群无法识别；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-48",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "TNBC特异性仅表达富集、无非TNBC功能对比，主张超证据",
+   "detail": "'TNBC特异性'仅依据Fig 1C表达富集（统计方法见F-12：6成对LSD不控FWER）；全部功能实验仅TNBC系，无非TNBC细胞系对比与外部验证；Discussion 'may possibly be a tumor-specific lncRNA in TNBC'（XML核实措辞hedged）仍超证据；研究人群为142例混合分型样本，不构成TNBC特异性功能依据。",
+   "evidence_locations": [
+    "Results sec0013",
+    "Fig 1C/1D",
+    "Methods sec0007",
+    "Discussion"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0013",
+    "Fig 1C/1D",
+    "Methods sec0007",
+    "Discussion"
+   ],
+   "g_refs": [
+    "G-34"
+   ],
+   "merged_from": [
+    "M2-010",
+    "M7-004"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：TNBC特异性仅表达富集、无非TNBC功能对比，主张超证据；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-49",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "ZNF326定性矛盾与过度：'well-characterized' vs 'novel'+自引促癌证据",
+   "detail": "Abstract称ZNF326 'well-characterized tumor suppressor'，Discussion称'a novel tumor suppressor in TNBC'并自引胶质瘤[18]/NSCLC[23]促癌证据、自限'at least in TNBC'；摘要与正文矛盾且过度；本研究从未自行验证ZNF326抑癌功能，定性依赖文献。",
+   "evidence_locations": [
+    "Abstract-Results",
+    "Discussion para1/2"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Abstract-Results",
+    "Discussion para1/2"
+   ],
+   "g_refs": [
+    "G-33"
+   ],
+   "merged_from": [
+    "M2-009",
+    "M7-003"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：ZNF326定性矛盾与过度：'well-characterized' vs 'novel'+自引促癌证据；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-53",
+   "module": "M7",
+   "module_origin": [
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "局限披露不足：仅两条未来方向式'局限'",
+   "detail": "Discussion仅两条'局限'且均为未来方向；未披露profiling无多重校正（F-06）与全文无n/效应量（F-09）对推断边界的影响。",
+   "evidence_locations": [
+    "Discussion"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Discussion"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M7-008"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：局限披露不足：仅两条未来方向式'局限'；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-56",
+   "module": "M7",
+   "module_origin": [
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "横断面临床相关被表述为因果",
+   "detail": "'OLBC15 could inhibit ZNF326 expression in clinical specimens'：横断面相关性观察以因果措辞表述；观察性证据max_hedged仅关联级，措辞不能放行因果主张。",
+   "evidence_locations": [
+    "Results sec0018"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0018"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M7-013"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：横断面临床相关被表述为因果；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-57",
+   "module": "M5",
+   "module_origin": [
+    "M5"
+   ],
+   "category": "reconciled_finding",
+   "severity": "major",
+   "title": "图像呈现规范缺失：scale bar/通道/时间轴/误差线定义",
+   "detail": "Fig 2E迁移染色、Fig 3B/3D大体、Fig 4D FISH图注均无scale bar/放大/通道；Fig 4D为RNA+蛋白共定位需双通道但仅写'FISH'；Fig 3体积曲线无时间轴/误差线定义、大体照片未声明比例尺；对照Fig 6A有'Scale bar: 100 μm'，实践不一致。n/误差相关部分与F-09重叠不重复加重。",
+   "evidence_locations": [
+    "Fig 2E",
+    "Fig 3A/B/D",
+    "Fig 4D",
+    "Fig 6A"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 2E",
+    "Fig 3A/B/D",
+    "Fig 4D",
+    "Fig 6A"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M5-010",
+    "M5-012"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：图像呈现规范缺失：scale bar/通道/时间轴/误差线定义；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "XS-02",
+   "module": "M2",
+   "category": "cross_section_reconciliation",
+   "severity": "major",
+   "title": "Methods人样本小节未声明分型与临床资料收集，Results却报告患者特征关联",
+   "detail": "Methods sec0008仅写组织收集与保存，未声明任何样本量、亚型分型或临床特征（TNM/肿瘤大小/转移/年龄/组织学）收集流程；Results sec0013却直接报告'OLBC15 expression significantly correlated with TNM stage, tumor size, and metastasis'并引用（缺失的）患者特征表，Fig 1C给出142例四亚型构成——临床数据来源在Methods中零声明。与F-47（分母不闭合）、F-13（同意范围）相邻但独立：这是Methods↔Results的直接覆盖矛盾。",
+   "evidence_locations": [
+    "Methods sec0008",
+    "Results sec0013",
+    "Fig 1C caption"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-005",
+    "EV-006",
+    "EV-009",
+    "EV-010"
+   ],
+   "g_refs": [],
+   "merged_from": [],
+   "source": "cross_section_reconciliation",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核/索取证据：Methods人样本小节未声明分型与临床资料收集，Results却报告患者特征关联；关键支撑见detail与evidence_refs",
+    "who": "学科审稿人/统计师/伦理委员"
+   }
+  },
+  {
+   "id": "F-14",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "引文语境失配与跨适应证引用：[18]/[19]/[20]张冠李戴、[27]心血管ASO类比抗肿瘤",
+   "detail": "[18]=Yu 2019胶质瘤HDAC7论文被引作'ZNF326最初在NIH3T3鉴定'；[19]=Lee 2000研究的是ZAN75（非ZNF326）却被引作'ZNF326转录因子激活神经元分化'；[20] DBIRD引文游离；[27] IONIS-APO(a)Rx为心血管适应证ASO，被引作抗肿瘤ASO论据牵强（题录确证）。Discussion大量叙事性ZNF326文献均无对应实验检验。[15]语境失配见F-13，[13]被撤见F-50。",
+   "evidence_locations": [
+    "Discussion para2/3",
+    "refs 18/19/20/27"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Discussion para2/3",
+    "refs 18/19/20/27"
+   ],
+   "g_refs": [
+    "G-45"
+   ],
+   "merged_from": [
+    "M2-005",
+    "M7-007"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-18",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "6细胞系统一DMEM+7%FBS偏离常规培养条件",
+   "detail": "BT-549/HCC1806常规RPMI（BT-549需胰岛素）、MCF-10A需MEGM/DMEM-F12+EGF/胰岛素等；且MCF-10A为Fig 1D正常对照基线——培养条件真实偏离或方法转抄失真。",
+   "evidence_locations": [
+    "Methods sec0007",
+    "Fig 1D"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0007",
+    "Fig 1D"
+   ],
+   "g_refs": [
+    "G-15"
+   ],
+   "merged_from": [
+    "M3-007",
+    "M3-029"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-19",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "MCF-10A'transformed'实体误报",
+   "detail": "MCF-10A为SV40永生化非致瘤系，Methods与Fig 1D图注称'transformed'为实体误报。",
+   "evidence_locations": [
+    "Methods sec0007",
+    "Fig 1D caption"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0007",
+    "Fig 1D caption"
+   ],
+   "g_refs": [
+    "G-16"
+   ],
+   "merged_from": [
+    "M3-008"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-26",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "MG132剂量/时长未给、仅一种蛋白酶体抑制剂",
+   "detail": "MG132浓度/时长未给，仅一种蛋白酶体抑制剂缺第二种验证；DMSO溶媒对照存在。",
+   "evidence_locations": [
+    "Fig 5B",
+    "Results sec0017"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 5B",
+    "Results sec0017"
+   ],
+   "g_refs": [
+    "G-24"
+   ],
+   "merged_from": [
+    "M3-015"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-32",
+   "module": "M3",
+   "module_origin": [
+    "M3",
+    "M5"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "OLBC15序列/CPAT面板=Fig S1不可得、无登录号/RACE/Northern",
+   "detail": "序列/CPAT面板=(Figure S1)（转换伪影+补充文件缺失，SYS-002）；无GenBank登录号、克隆策略未述、无RACE/Northern验证；X1证实ENSG00000259457现行符号LINC03137。",
+   "evidence_locations": [
+    "Results sec0013",
+    "Fig 1 caption",
+    "Figure S1(不可得)"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0013",
+    "Fig 1 caption",
+    "Figure S1(不可得)"
+   ],
+   "g_refs": [
+    "G-28"
+   ],
+   "merged_from": [
+    "M3-019",
+    "M5-003"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-33",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "编码潜能仅CPAT单工具、无阈值声明",
+   "detail": "编码潜能仅CPAT单工具（报告0.032接近常用cutoff 0.036），无阈值声明、无CPC2/PhyloCSF/核糖体图谱交叉验证。",
+   "evidence_locations": [
+    "Results sec0013"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Results sec0013"
+   ],
+   "g_refs": [
+    "G-29"
+   ],
+   "merged_from": [
+    "M3-020"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-39",
+   "module": "M4",
+   "module_origin": [
+    "M4"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "体积曲线重复测量结构未声明分析方法",
+   "detail": "Fig 3A体积曲线为重复测量数据，Methods工具箱（Mann-Whitney/ANOVA+LSD）不含重复测量方法；实际做法不明，暂minor，若证实按独立样本处理升major。",
+   "evidence_locations": [
+    "Fig 3A",
+    "Methods sec0011"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 3A",
+    "Methods sec0011"
+   ],
+   "g_refs": [
+    "G-40"
+   ],
+   "merged_from": [
+    "M4-008"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-40",
+   "module": "M3",
+   "module_origin": [
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "CCK-8密度过高、无时间点/复孔、viability未区分机制",
+   "detail": "CCK-8于12孔板~2×10^5/well密度偏高、无时间点/复孔数、viability未区分增殖/凋亡/代谢活性。",
+   "evidence_locations": [
+    "Methods sec0010",
+    "Fig 2C-D"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0010",
+    "Fig 2C-D"
+   ],
+   "g_refs": [
+    "G-41"
+   ],
+   "merged_from": [
+    "M3-026"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-42",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M3",
+    "M5"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "文字/交叉引用错误：真实笔误与Fig 3E,F错引（空引用判转换伪影）",
+   "detail": "真实缺陷：Fig 4F 'DMA-MB-231'（Cellosaurus确认正名）、Fig 4A 'The indicates band'、Fig 4E 'depletion constructs'（应deletion）、Discussion 'orthologous transplant'、'LDAC7'（应为HDAC7，ref-18题录自证）、Fig 4I图注'...comparing each input with Flag-Vec'截断语义不明、'N-terminal domain'蛋白术语误用于RNA；Results引用'(Figure 3E,F)'但Fig 3仅A-E（XML确认真实错引，非转换伪影；内容可由3E覆盖故不升级；面板D未被引用）；'(Figure )/(Table )'空引用经XML全部可解析为S1/S2/Table S1/S3/S4，系转换伪影，不作稿件缺陷。 【外部证据限定】M5-005已撤销并入本条注记（SYS-003）",
+   "evidence_locations": [
+    "Fig 2/4 captions",
+    "Results sec0015",
+    "Discussion",
+    "Fig 4I"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 2/4 captions",
+    "Results sec0015",
+    "Discussion",
+    "Fig 4I"
+   ],
+   "g_refs": [
+    "G-43"
+   ],
+   "merged_from": [
+    "M2-011",
+    "M5-006",
+    "M5-016",
+    "M5-013",
+    "M5-014",
+    "M3-031",
+    "M2-002"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-43",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "ceRNA假说与核定位证据张力未讨论",
+   "detail": "Discussion提出OLBC15可能作ceRNA（典型胞质机制），与Fig 1E核定位存在机制张力、未讨论；原文以'remains to be evaluated'对冲，hedged未来方向。",
+   "evidence_locations": [
+    "Discussion para1",
+    "Fig 1E"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Discussion para1",
+    "Fig 1E"
+   ],
+   "g_refs": [
+    "G-44"
+   ],
+   "merged_from": [
+    "M2-012",
+    "M7-006"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-50",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M7"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "背景引文[13]（RMST）本身已被撤稿",
+   "detail": "Introduction以[13]（RMST, 10.1002/jcp.26311, J Cell Physiol 2018）支撑'RMST and BORG...associated with breast cancer development'，而[13]已被Europe PMC标注撤稿；仅作背景罗列、不构成OLBC15立论依据，且[14]未撤稿仍部分支撑同句。定级协调：M2-014给major、M7-016给info，L4取minor（影响限于Introduction背景句，非主张链依据）。",
+   "evidence_locations": [
+    "Introduction para2",
+    "ref 13"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Introduction para2",
+    "ref 13"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M2-014",
+    "M7-016"
+   ],
+   "source": "external_validation",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-51",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M3"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "转录本命名与公共数据库脱节、基因符号问题",
+   "detail": "'OLBC15'非HGNC批准符号；ENSG00000259457经Ensembl REST解析为LINC03137（HGNC:58103, chr15, lncRNA）——chr15定位主张与数据库一致，但全文未提LINC03137亦无GenBank登录号，命名无法与公共数据库对接；另LDAC7非有效符号（应HDAC7）、DBC1旧符号（现BRINP1）、Cox2非批准（PTGS2）、LIMT/BORG/RP11-597D13.9非HGNC批准；ZNF326/KLF17/HDAC7等有效。",
+   "evidence_locations": [
+    "Introduction para3",
+    "Results sec0013",
+    "Discussion"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Introduction para3",
+    "Results sec0013",
+    "Discussion"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M2-015",
+    "M3-035"
+   ],
+   "source": "external_validation",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-52",
+   "module": "M6",
+   "module_origin": [
+    "M6"
+   ],
+   "category": "reconciled_finding",
+   "severity": "minor",
+   "title": "《赫尔辛基宣言》引用版本过时、伦理声明模板化",
+   "detail": "引'the 1975 Declaration of Helsinki'过时（研究期2017-2018现行2013 Fortaleza版），规范表述应为'及后续修订'；与[15]语境失配共同提示伦理声明模板化套用。",
+   "evidence_locations": [
+    "Methods sec0008"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Methods sec0008"
+   ],
+   "g_refs": [],
+   "merged_from": [
+    "M6-007"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "XS-01",
+   "module": "M2",
+   "category": "cross_section_reconciliation",
+   "severity": "minor",
+   "title": "机制链全部限定于MDA-MB-231单系，与'TNBC progression'普适主张不匹配",
+   "detail": "跨节核对Fig 4/5全部图注与sec0016-0017：pulldown/RIP/FISH/截短/WB/泛素化/MG132/KLF17-rescue所有机制实验仅在MDA-MB-231单一TNBC系完成（Fig 5图注逐面板均为MDA-MB-231），而标题与Discussion主张面向'TNBC progression'这一疾病层级结论；机制普适性未在第二细胞系验证。与G-39（仅覆盖体内单系）不同，此为机制链单系问题，未被既有finding覆盖。",
+   "evidence_locations": [
+    "Fig 4 caption",
+    "Fig 5 caption",
+    "Results sec0016-0017",
+    "TITLE"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-005",
+    "EV-006",
+    "EV-009",
+    "EV-010"
+   ],
+   "g_refs": [],
+   "merged_from": [],
+   "source": "cross_section_reconciliation",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-45",
+   "module": "M5",
+   "module_origin": [
+    "M5"
+   ],
+   "category": "reconciled_finding",
+   "severity": "info",
+   "title": "图像完整性自审受阻（无图像文件）",
+   "detail": "仅有图注文本无原始图像（JCLA-34-e23304-g001..g006.jpg缺失）：WB条带重复/拼接、FISH/IHC/迁移染色像素级审查无法执行，措辞一律'无法排除/无法确认'；建议索取未裁剪原始印迹。期刊调查的外部图像结论由F-01承接。 【外部证据限定】blocked by SYS-001",
+   "evidence_locations": [
+    "Fig 1-6"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "Fig 1-6"
+   ],
+   "g_refs": [
+    "G-47"
+   ],
+   "merged_from": [
+    "M5-007"
+   ],
+   "source": "specialist_rule",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "F-46",
+   "module": "M2",
+   "module_origin": [
+    "M2",
+    "M6"
+   ],
+   "category": "reconciled_finding",
+   "severity": "info",
+   "title": "COI/数据可用性声明材料中未见（转换丢失vs原文缺失待核）",
+   "detail": "REFERENCES在txt中仅存标题系转换丢失：XML中27条题录+DOI/PMID ext-link俱全（首轮'无DOI'系主会话抽取regex bug，已更正，SYS-007）；真实残留缺口：材料中未见COI/数据可用性/作者贡献声明，'未见≠原文没有'，需原文核对后关闭。",
+   "evidence_locations": [
+    "REFERENCES",
+    "FRONT/notes1",
+    "fulltext.xml ref list"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-003",
+    "EV-004",
+    "EV-005",
+    "EV-006",
+    "EV-007",
+    "EV-008",
+    "EV-009",
+    "EV-010",
+    "EV-100",
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-104",
+    "EV-105",
+    "EV-106",
+    "EV-107",
+    "EV-200",
+    "EV-201",
+    "EV-202",
+    "EV-203",
+    "EV-204",
+    "EV-205"
+   ],
+   "evidence_refs_key": [
+    "REFERENCES",
+    "FRONT/notes1",
+    "fulltext.xml ref list"
+   ],
+   "g_refs": [
+    "G-48"
+   ],
+   "merged_from": [
+    "M2-013",
+    "M6-008"
+   ],
+   "source": "multiple",
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  },
+  {
+   "id": "XS-03",
+   "module": "M2",
+   "category": "cross_section_reconciliation",
+   "severity": "info",
+   "title": "受阻核对登记：Results↔Tables与Methods↔基线表",
+   "detail": "Methods↔基线表、Results↔Tables核对受阻：Table S1（引物）、Table S2（novel lncRNA候选）、Table S3（患者特征）、Table S4（MS候选）均在未提供的补充docx（SYS-002），无法执行内容级比对；已按'不可得≠没写'登记，不作稿件问题推定。L0b算术核验Fig 1C 40/25/26/51=142自洽是目前唯一可执行的人群侧数值核对。",
+   "evidence_locations": [
+    "Table S1-S4(不可得)",
+    "Results sec0013/sec0016"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-005",
+    "EV-006",
+    "EV-009",
+    "EV-010"
+   ],
+   "g_refs": [],
+   "merged_from": [],
+   "source": "cross_section_reconciliation",
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "无需单独人工复核，随主审流程浏览",
+    "who": "n/a"
+   }
+  }
+ ],
+ "issue_clusters": [
+  {
+   "cluster": "C-RET 撤稿与数据完整性",
+   "members": [
+    "F-01"
+   ],
+   "severity": "critical",
+   "note": "唯一的外部证据根因cluster：图像重复、原始数据差异、不可重复、污染、pulldown条件、抗体问题全部聚合于此，按一个critical根因计一次。下游F-16/F-24/F-25/F-28/F-30/F-44/F-54/F-55的critical定级部分依赖本cluster的外部信号（L3上调），已在各条记录'通知陈述，非本审观察'，不将同一外部证据在多个cluster重复计权。"
+  },
+  {
+   "cluster": "C-METH 方法与可重复性报告",
+   "members": [
+    "F-02",
+    "F-03",
+    "F-05",
+    "F-06",
+    "F-09",
+    "F-16",
+    "F-20",
+    "F-21"
+   ],
+   "severity": "critical",
+   "note": "F-02/F-06/F-09/F-16为本cluster的critical成员，均为独立可指认的报告/设计根因（Methods缺失、高维无校正、定量报告缺失、Transwell缺陷），非由同一证据反复升级；F-06的critical来自M4-009规则判定与G-05同址合并（最高值取一次）。"
+  },
+  {
+   "cluster": "C-MECH OLBC15-ZNF326机制链",
+   "members": [
+    "F-22",
+    "F-23",
+    "F-24",
+    "F-25",
+    "F-26",
+    "F-27",
+    "F-28",
+    "F-29",
+    "F-30",
+    "F-31",
+    "F-34"
+   ],
+   "severity": "critical",
+   "note": "F-24/F-25/F-28/F-30四条critical同根因（互作→降解→rescue证据链），按一个critical cluster计一次；各条finding保留独立身份以服务G条目归宿映射，但报告呈现时不得作为4个独立critical累加风险分。F-54（标题级因果主张）为该cluster的主张层投影。"
+  },
+  {
+   "cluster": "C-CLAIM 主张-证据落差",
+   "members": [
+    "F-44",
+    "F-54",
+    "F-55",
+    "F-56",
+    "F-48",
+    "F-49"
+   ],
+   "severity": "critical",
+   "note": "F-44/F-54/F-55为critical，分别对应治疗靶点、标题机制因果、体内主张三个不同主张，均受C-RET/C-METH崩塌传导；按主张cluster计一次，不与上游cluster叠加重复计权。F-48/F-49/F-56为major层主张问题。"
+  },
+  {
+   "cluster": "C-INVT 体内臂",
+   "members": [
+    "F-02(体内部分)",
+    "F-03",
+    "F-04",
+    "F-38",
+    "F-55"
+   ],
+   "severity": "critical",
+   "note": "方法缺失（critical）、设计报告缺口（major）、伦理声明（major）、机制读出（major）、主张失效（critical）分层记录；G-01的critical→major降档与G-02的critical维持均在此cluster内裁决，伦理子项不与可重建性根因重复加权。"
+  },
+  {
+   "cluster": "C-SUPP 补充材料受阻",
+   "members": [
+    "F-31",
+    "F-32",
+    "F-41",
+    "F-05(引物表)",
+    "F-15"
+   ],
+   "severity": "major",
+   "note": "共享SYS-002根因（补充docx未提供），属blocked而非稿件缺陷；F-31另有独立的'关键数据应入正文'呈现批评。不计入critical统计。"
+  }
+ ],
+ "all_extraction_signals": [
+  {
+   "id": "SIG-602",
+   "type": "ethics_requirement_unmet",
+   "target": "ethics.ETH-ANI-002",
+   "detail": "3R原则未报告（NRC Guide 8ed等规则库 2026-08-07）",
+   "produced_by": "ethics_compliance_check"
+  },
+  {
+   "id": "SIG-604",
+   "type": "partial_extraction",
+   "target": "ethics.ETH-ANI-004",
+   "detail": "麻醉/人道终点不可推出，未评估",
+   "produced_by": "ethics_compliance_check"
+  },
+  {
+   "id": "SIG-605",
+   "type": "partial_extraction",
+   "target": "ethics.ETH-ANI-005",
+   "detail": "安乐死方法不可推出，未评估",
+   "produced_by": "ethics_compliance_check"
+  },
+  {
+   "id": "SIG-606",
+   "type": "partial_extraction",
+   "target": "ethics.ETH-ANI-006",
+   "detail": "中国实验动物许可条款不可推出，未评估",
+   "produced_by": "ethics_compliance_check"
+  },
+  {
+   "id": "SIG-607",
+   "type": "partial_extraction",
+   "target": "ethics.ETH-HGR-001",
+   "detail": "人类遗传资源适用性不可自动定性→M6-011人工复核项",
+   "produced_by": "ethics_compliance_check"
+  },
+  {
+   "id": "SIG-701",
+   "type": "ethics_requirement_unmet",
+   "target": "ethics.ETH-ANI-002",
+   "detail": "3R评估：Replacement not_discussed / Reduction not_justified / Refinement not_detailed",
+   "produced_by": "animal_model_compliance"
+  },
+  {
+   "id": "SIG-702",
+   "type": "animal_welfare_violation",
+   "target": "ethics.animal_welfare.no_replacement_justification",
+   "detail": "未论证体内实验必要性（ARRIVE 2.0 item 4a）；severity_hint=minor",
+   "produced_by": "animal_model_compliance"
+  },
+  {
+   "id": "X1-01",
+   "type": "external_validation_candidate",
+   "target": "article_under_review.retraction_status",
+   "detail": "Europe PMC pubType=Retracted Publication（10.1002/jcla.23304）",
+   "produced_by": "external_figure_validation"
+  },
+  {
+   "id": "X1-02",
+   "type": "external_validation_candidate",
+   "target": "references.jcla23304-bib-0013",
+   "detail": "10.1002/jcp.26311（RMST, J Cell Physiol 2018）已被撤稿",
+   "produced_by": "external_figure_validation"
+  },
+  {
+   "id": "X1-03",
+   "type": "external_validation_candidate",
+   "target": "body.gene_symbols",
+   "detail": "OLBC15/LIMT/BORG/LDAC7/RP11-597D13.9/Cox2非HGNC批准；DBC1旧符号(现BRINP1)",
+   "produced_by": "external_figure_validation"
+  }
+ ],
+ "all_system_limitations": [
+  {
+   "id": "SYS-001",
+   "category": "no_image_channel",
+   "impact": "Figure 1-6无图像文件：WB条带重复/拼接、FISH/IHC/迁移染色/大体照片像素级审查不可执行；措辞一律'无法排除/无法确认'；期刊调查外部结论由external_validation通道承接",
+   "affected_modules": [
+    "M5",
+    "M3",
+    "M2",
+    "M7"
+   ],
+   "produced_by": "orchestrator"
+  },
+  {
+   "id": "SYS-002",
+   "category": "supplement_unavailable",
+   "impact": "JCLA-34-e23304-s001.docx未提供：Figure S1/S2、Table S1-S4不可核验；引物序列、5个MS候选蛋白身份、患者特征、KLF17/启动子占据面板受阻",
+   "affected_modules": [
+    "M3",
+    "M4",
+    "M5",
+    "M7",
+    "M2"
+   ],
+   "produced_by": "orchestrator"
+  },
+  {
+   "id": "SYS-003",
+   "category": "conversion_artifacts",
+   "impact": "fulltext.txt：内联引用编号剥离、长行截断、REFERENCES空——以fulltext.xml为准；空引用判转换伪影",
+   "affected_modules": [
+    "M2",
+    "M5",
+    "M7"
+   ],
+   "produced_by": "orchestrator"
+  },
+  {
+   "id": "SYS-004",
+   "category": "external_source_transient_failure",
+   "impact": "3条DOI（bib-0011/0012/0013）首轮Crossref/EPMC查询超时，重试成功关闭；无遗留",
+   "affected_modules": [
+    "M2"
+   ],
+   "produced_by": "stage_3c_external_validation"
+  },
+  {
+   "id": "SYS-005",
+   "category": "external_source_unavailable",
+   "impact": "IACUC/伦理批件号真伪无公开核验接口：动物伦理批准与人样本批件号只能报'无法核验'",
+   "affected_modules": [
+    "M6"
+   ],
+   "produced_by": "M6"
+  },
+  {
+   "id": "SYS-006",
+   "category": "tool_scope_gap",
+   "impact": "试剂厂商货号、细胞系表达谱（LINC00501）、CPAT阈值、Ensembl以外登录号无工具端点→相应请求skipped并维持unresolved表述",
+   "affected_modules": [
+    "M3"
+   ],
+   "produced_by": "orchestrator"
+  },
+  {
+   "id": "SYS-007",
+   "category": "pipeline_correction",
+   "impact": "主会话首轮DOI抽取regex缺陷导致误判'参考文献无DOI'，经M2 XML回查+主会话复验更正；未产生错误finding",
+   "affected_modules": [
+    "M2"
+   ],
+   "produced_by": "orchestrator"
+  }
+ ],
+ "manuscript_risk_score": 9.8,
+ "risk_score_rationale": "本文已被撤稿（外部确证）；critical级finding 12条（撤稿与数据完整性1、方法缺失2、统计报告1、机制链4、抗体1、方法学+数据完整性1、主张层2）；风险分数仅作筛查信号",
+ "review_confidence": "high",
+ "review_confidence_rationale": "全文+XML双源审阅、六模块规则库全覆盖（routing_recall=1.0）、X1外部核验执行且关键结论（撤稿）有出版方通知全文支撑；主要不确定性：无图像文件（像素级结论依赖期刊调查）、补充材料不可得（Table S1-S4/Figure S1-S2不可核）",
+ "extraction_coverage": {
+  "sections": {
+   "Abstract": "full",
+   "Introduction": "full",
+   "Methods": "full（5小节，覆盖范围不足为论文缺陷而非抽取缺口）",
+   "Results": "full",
+   "Discussion": "full（para2经XML补全截断）",
+   "Acknowledgment": "full",
+   "References": "fulltext.txt缺失标题外内容→由fulltext.xml恢复27条题录+DOI",
+   "AssociatedData": "full（仅占位）"
+  },
+  "figures": "Figure 1-6：图注完整收录；图像文件缺失（SYS-001），像素级审查blocked",
+  "tables": "正文引用Table S1/S2/S3/S4均在补充docx（未提供，SYS-002），内容不可核验；Fig 1C分型例数为材料中唯一可用人群计数",
+  "identifiers": "细胞系×8、基因符号×22、DOI×27+1(本文)、ENSG×1、货号×3 全部进入确定性核验或登记unresolved",
+  "supplementary": "JCLA-34-e23304-s001.docx未提供（SYS-002）"
+ },
+ "manual_review_plan": [
+  {
+   "priority": "P0",
+   "action": "记录并维持撤稿状态：本记录已由Retraction(10.1002/jcla.70169)覆盖；若为撤稿后复核，直接对照通知四项理由即可闭合",
+   "who": "编辑/诚信办公室"
+  },
+  {
+   "priority": "P1",
+   "action": "如仍需内容级复核：索取未裁剪原始WB/显微图像并运行figure_integrity_audit；索取JCLA-34-e23304-s001.docx以解除SYS-002对Table S1-S4/Figure S1-S2的阻塞",
+   "who": "图像取证+学科审稿人"
+  },
+  {
+   "priority": "P2",
+   "action": "向重庆三峡中心医院及机构伦理委员会索取：动物实验伦理批件（IACUC）、人样本知情同意与HREC批准档案（覆盖2017.01-2018.11及全部下游用途）——撤稿后核验对象应为机构而非作者",
+   "who": "伦理委员会"
+  },
+  {
+   "priority": "P3",
+   "action": "统计复核：每组n、独立重复、精确P/效应量、profiling的FDR与阈值（当前报告缺口使任何定量不可复核）",
+   "who": "统计师"
+  },
+  {
+   "priority": "P4",
+   "action": "细胞系STR/支原体记录与全部抗体（anti-ZNF326等）验证数据、慢病毒体系参数（撤稿通知已点名污染与抗体验证问题）",
+   "who": "实验方法审稿人"
+  }
+ ],
+ "candidate_resolution_log": [
+  {
+   "candidate": "statistical_forensics（table_total/count_percentage/grim/test_statistic_p/ci_estimate）",
+   "status": "not_applicable",
+   "disposition": "absorbed",
+   "target": "F-09",
+   "note": "无可复算对象本身成为报告缺口的证据，支撑G-08升critical的理由链"
+  },
+  {
+   "candidate": "figure_integrity_audit",
+   "status": "not_applicable",
+   "disposition": "promoted",
+   "target": "F-45 + SYS-001",
+   "note": "外部图像结论经X1通道进入F-01"
+  },
+  {
+   "candidate": "sequence_identifier_audit",
+   "status": "not_applicable",
+   "disposition": "replaced",
+   "target": "F-51",
+   "note": "ENSG不在支持前缀，由Ensembl REST ad hoc核验替代（chr15定位与稿件一致）"
+  },
+  {
+   "candidate": "normalize_biomed_units",
+   "status": "executed_clean",
+   "disposition": "no_finding",
+   "target": "",
+   "note": "剂量单位对维度自洽，未发现单位错误"
+  },
+  {
+   "candidate": "SIG-602 ETH-ANI-002 / SIG-701 / SIG-702（3R与体内必要性）",
+   "status": "executed",
+   "disposition": "promoted",
+   "target": "F-04",
+   "note": ""
+  },
+  {
+   "candidate": "SIG-604/605/606（麻醉/安乐死/许可证）",
+   "status": "partial_extraction",
+   "disposition": "absorbed",
+   "target": "F-04",
+   "note": "动物方法零描述导致不可评估；真伪核验受SYS-005阻"
+  },
+  {
+   "candidate": "SIG-607 ETH-HGR-001（人类遗传资源）",
+   "status": "partial_extraction",
+   "disposition": "manual_review_hold",
+   "target": "",
+   "note": "M6-011纪律：作者均为国内机构、无出境迹象，适用性未触发；manual_only不立finding"
+  },
+  {
+   "candidate": "X1 cell_line×8",
+   "status": "executed",
+   "disposition": "absorbed",
+   "target": "F-17",
+   "note": "均无Problematic标注仅反映公开库状态"
+  },
+  {
+   "candidate": "X1 reference_exists×27",
+   "status": "executed",
+   "disposition": "absorbed",
+   "target": "F-46",
+   "note": "27/27 DOI解析成功，解决G-48参考文献不可核部分；否定'幻觉/纸厂引文'假设"
+  },
+  {
+   "candidate": "X1 cited_retracted×28",
+   "status": "executed",
+   "disposition": "promoted",
+   "target": "F-50",
+   "note": "仅bib-0013命中"
+  },
+  {
+   "candidate": "X1 cited_retracted_article（本文）",
+   "status": "executed",
+   "disposition": "promoted",
+   "target": "F-01",
+   "note": "Europe PMC pubType=Retracted；JATS is-retracted=yes"
+  },
+  {
+   "candidate": "X1 gene_symbol×22",
+   "status": "executed",
+   "disposition": "promoted",
+   "target": "F-51",
+   "note": ""
+  },
+  {
+   "candidate": "X1 rrid / trial_registration",
+   "status": "not_applicable",
+   "disposition": "closed",
+   "target": "",
+   "note": "全文无RRID与临床试验注册号，相应维度无问题"
+  },
+  {
+   "candidate": "ad hoc Ensembl REST ENSG00000259457",
+   "status": "executed",
+   "disposition": "absorbed",
+   "target": "F-51",
+   "note": ""
+  },
+  {
+   "candidate": "ad hoc retraction_notice（PMID 41578707全文取回）",
+   "status": "executed",
+   "disposition": "promoted",
+   "target": "F-01",
+   "note": ""
+  },
+  {
+   "candidate": "requested_tool_check：试剂厂商货号核验（puromycin A1113802/PFA 16005/CV C0775）",
+   "status": "skipped(SYS-006)",
+   "disposition": "unresolved",
+   "target": "M3-030",
+   "note": "无工具端点；PFA 16005疑为Polysciences货号维持低置信unresolved——此前未见终态登记，L4补齐"
+  },
+  {
+   "candidate": "requested_tool_check：LINC00501在MDA-MB-231表达",
+   "status": "skipped(SYS-006)",
+   "disposition": "absorbed",
+   "target": "F-23",
+   "note": "阴性对照有效性'未知，需作者提供'"
+  },
+  {
+   "candidate": "requested_tool_check：CPAT阈值/RNAfold URL",
+   "status": "skipped(SYS-006)",
+   "disposition": "absorbed",
+   "target": "F-33/F-42",
+   "note": "维持专家原表述"
+  },
+  {
+   "candidate": "M5-005（空引用缺陷）",
+   "status": "withdrawn@L3",
+   "disposition": "withdrawn",
+   "target": "F-42注记",
+   "note": "撤销理由成立：空引用经XML全部可解析，系转换伪影（SYS-003），不再作稿件缺陷"
+  },
+  {
+   "candidate": "M3-030（PFA货号疑误）",
+   "status": "unresolved",
+   "disposition": "unresolved",
+   "target": "",
+   "note": "低置信、无核验端点（SYS-006），不升为finding，如实留存"
+  },
+  {
+   "candidate": "M6-010（撤稿背景info）",
+   "status": "merged",
+   "disposition": "merged_into",
+   "target": "F-01",
+   "note": "独有内容'通知不含伦理指控、不构成G-01/G-02升级依据'保留于F-01表述与G-01审计，未随合并丢失"
+  },
+  {
+   "candidate": "L0b identifier_harvest",
+   "status": "consumed",
+   "disposition": "closed",
+   "target": "X1",
+   "note": "27 DOI、8细胞系、22基因符号、1 ENSG ID均被X1消费；无注册号/RRID/登录号可收割"
+  },
+  {
+   "candidate": "L0b routing_plan",
+   "status": "executed",
+   "disposition": "closed",
+   "target": "M2-M7",
+   "note": "六模块全开并全部返回，路由召回完整"
+  }
+ ],
+ "global_audit": [
+  {
+   "g_id": "G-01",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-04",
+   "severity_original": "critical",
+   "severity_final": "major",
+   "severity_change_reason": "M6 refine：'未报告≠未获批'，按规则维持报告缺口级major；升级触发器（机构核实从未获批）未触发；撤稿通知不含伦理指控，外部升级路径未触发",
+   "note": "动物方法缺失的可重建性问题由F-02/F-03承接，不与本条重复加权"
+  },
+  {
+   "g_id": "G-02",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-02",
+   "severity_original": "critical",
+   "severity_final": "critical",
+   "severity_change_reason": "M3维持critical与M6主张major存在冲突，L4裁决维持critical",
+   "note": "裁决理由：撤稿通知'关键实验结果无法重复'+细胞交叉污染波及MDA-MB-231接种物，体内臂（CLM-03）为核心主张且不可重建；M6的major仅对应伦理报告缺口子项，已单列F-04，不重复加权"
+  },
+  {
+   "g_id": "G-03",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-02",
+   "severity_original": "critical",
+   "severity_final": "critical",
+   "severity_change_reason": "",
+   "note": "M3-002并入F-02（用户指定合并组M2-001/M3-001/M3-002）"
+  },
+  {
+   "g_id": "G-04",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-05",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "引物表定位Table S1（SYS-002受阻）"
+  },
+  {
+   "g_id": "G-05",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-06",
+   "severity_original": "major",
+   "severity_final": "critical",
+   "severity_change_reason": "与M4-009（规则库：高维组学无多重校正→critical）同址合并，按'最高值取一次'定为critical",
+   "note": "G-05原major判定（报告缺口）保留于表述，critical定级归属合并后finding，非级联抬升"
+  },
+  {
+   "g_id": "G-06",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-07",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-07",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-08",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M2-004（Pearson未声明等）并入"
+  },
+  {
+   "g_id": "G-08",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-09",
+   "severity_original": "major",
+   "severity_final": "critical",
+   "severity_change_reason": "L3上调（M4）：确定性取证因无可复算对象not_applicable恰证报告缺口；撤稿通知认定关键结果无法重复并点名迁移定量差异",
+   "note": "M3-032/M5-008/M7-014并入；G-40相关的重复测量子项归F-39不重复计"
+  },
+  {
+   "g_id": "G-09",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-10",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-10",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-11",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M5-011并入"
+  },
+  {
+   "g_id": "G-11",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-13",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "医院来源已报告、n=142可由Fig 1C恢复；[15]语境失配并入；批件真伪受SYS-005阻"
+  },
+  {
+   "g_id": "G-12",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-15",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "Table S3不可得（SYS-002），核对受阻部分登记于XS-03"
+  },
+  {
+   "g_id": "G-13",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-16",
+   "severity_original": "major",
+   "severity_final": "critical",
+   "severity_change_reason": "L3上调（M3）：撤稿通知陈述迁移定量原始数据差异，Fig 5E rescue迁移面板被认定重复自Li 2018",
+   "note": ""
+  },
+  {
+   "g_id": "G-14",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-17",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "Cellosaurus无Problematic标注仅反映公开库状态"
+  },
+  {
+   "g_id": "G-15",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-18",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": "M3 refine扩展至全部6系非标培养基，定级不变"
+  },
+  {
+   "g_id": "G-16",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-19",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-17",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-20",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M3 refine：追加包装体系缺失与递送方式不自洽，定级不变"
+  },
+  {
+   "g_id": "G-18",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-21",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M5-009并入；构件↔归因核对确认靶序列缺失削弱功能归因"
+  },
+  {
+   "g_id": "G-19",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-22",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M5 refine：共迁移可合法解释、缺图缺表无法裁定"
+  },
+  {
+   "g_id": "G-20",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-23",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "LINC00501表达查询skipped（SYS-006）"
+  },
+  {
+   "g_id": "G-21",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-24",
+   "severity_original": "major",
+   "severity_final": "critical",
+   "severity_change_reason": "L3上调（M3）：FISH Fig 4D被认定重复自Koo 2017、Fig 4B原始数据差异、pulldown条件不一致被点名，三支柱同时受损",
+   "note": "M7-010（'directly'过度）并入"
+  },
+  {
+   "g_id": "G-22",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-29",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-23",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-25",
+   "severity_original": "major",
+   "severity_final": "critical",
+   "severity_change_reason": "L3上调（M3）：Fig 5B被认定重复自Shen 2019、Fig 5A原始数据差异",
+   "note": ""
+  },
+  {
+   "g_id": "G-24",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-26",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-25",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-27",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-26",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-28",
+   "severity_original": "major",
+   "severity_final": "critical",
+   "severity_change_reason": "L3上调（M3/M7）：Fig 5E唯一rescue面板被认定重复自Li 2018、迁移定量被点名；KLF17部分回复提示ZNF326非依赖组分未讨论",
+   "note": "M7-002并入"
+  },
+  {
+   "g_id": "G-27",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-31",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "面板定位Fig S2A/S2B（SYS-002受阻）；figure_should_be_main_text批评保留；M5-002/M7-011并入"
+  },
+  {
+   "g_id": "G-28",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-32",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": "面板定位Fig S1（SYS-002受阻）；M5-003并入；未因并入F-41集群而抬级"
+  },
+  {
+   "g_id": "G-29",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-33",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-30",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-34",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M5-004并入"
+  },
+  {
+   "g_id": "G-31",
+   "terminal_state": "merged",
+   "target": "F-31",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "merged_into F-31：与G-27同根因（KLF17面板受阻+ChIP样方法缺失），M3-022与M3-018合并"
+  },
+  {
+   "g_id": "G-32",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-30",
+   "severity_original": "major",
+   "severity_final": "critical",
+   "severity_change_reason": "L3上调（M3）：撤稿通知明确点名'ZNF326抗体特异性验证不足'（作者经通知自认）",
+   "note": "M3-028（全部抗体零信息）并入"
+  },
+  {
+   "g_id": "G-33",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-49",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M7-003并入"
+  },
+  {
+   "g_id": "G-34",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-48",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M7-004并入；讨论措辞经XML核实为hedged；统计支撑缺陷单列F-12；人群↔外推核对见XS-02"
+  },
+  {
+   "g_id": "G-35",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-35",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "absence经XML封闭"
+  },
+  {
+   "g_id": "G-36",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-36",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-37",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-37",
+   "severity_original": "minor",
+   "severity_final": "major",
+   "severity_change_reason": "L3上调（M4）：撤稿通知点名临床样本IHC评分一致性原始数据差异，报告缺口风险成现实",
+   "note": ""
+  },
+  {
+   "g_id": "G-38",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-38",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-39",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-03",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "M3 refine表述修正（有编号个体但缺n与组界）；与M4-011合并入F-03"
+  },
+  {
+   "g_id": "G-40",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-39",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": "M4 refine防误报暂minor待澄清；M3-032重复测量部分归入F-09不重复计"
+  },
+  {
+   "g_id": "G-41",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-40",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": ""
+  },
+  {
+   "g_id": "G-42",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-41",
+   "severity_original": "major",
+   "severity_final": "major",
+   "severity_change_reason": "",
+   "note": "表格定位S1/S3/S4（SYS-002受阻）"
+  },
+  {
+   "g_id": "G-43",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-42",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "M2/M5 refine：空引用判转换伪影（SYS-003）剔除；M2-002(major)与M5-016(minor)冲突由L4按'内容可由3E覆盖'取minor",
+   "note": "真实笔误与Fig 3E,F错引保留；M5-005撤销记录在案"
+  },
+  {
+   "g_id": "G-44",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-43",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": "M7-006并入"
+  },
+  {
+   "g_id": "G-45",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-14",
+   "severity_original": "minor",
+   "severity_final": "minor",
+   "severity_change_reason": "",
+   "note": "[27]/[19]题录实证；M2-005部分并入"
+  },
+  {
+   "g_id": "G-46",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-44",
+   "severity_original": "major",
+   "severity_final": "critical",
+   "severity_change_reason": "L3上调（M7）：全文零靶向干预实验，唯一在体支撑因撤稿整体失效，hedge不豁免",
+   "note": ""
+  },
+  {
+   "g_id": "G-47",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-45",
+   "severity_original": "info",
+   "severity_final": "info",
+   "severity_change_reason": "",
+   "note": "自审blocked by SYS-001；外部图像重复结论由F-01承接（M5-015）"
+  },
+  {
+   "g_id": "G-48",
+   "terminal_state": "promoted_to_finding",
+   "target": "F-46",
+   "severity_original": "info",
+   "severity_final": "info",
+   "severity_change_reason": "M2 refine→minor与M6 confirm→info冲突，L4取info：27条DOI经XML可恢复（'无DOI'为管线bug，SYS-007），COI/数据可用性缺失存转换丢失与原文缺失两种解释",
+   "note": "需原文核对后关闭"
+  }
+ ],
+ "pipeline_issues_from_L4": [
+  "跨专家定级冲突1：G-02在M3(critical)与M6(major)间分歧未经L3仲裁，L4已裁决（维持critical，理由见global_audit）",
+  "跨专家定级冲突2：同一事实[13]被撤引文，M2-014给major、M7-016给info，无L3冲突消解记录，L4协调为minor（F-50，理由：仅背景罗列、[14]部分支撑）",
+  "跨专家定级冲突3：Fig 3E,F错引，M2-002给major、M5-016给minor，L4取minor（内容可由Fig 3E覆盖）并并入F-42",
+  "跨专家定级冲突4：G-48终态M2-013给minor、M6-008给info，L4取info（理由见global_audit）",
+  "M3-030（PFA货号疑误）此前无终态登记：既不满足finding证据门槛也无候选处置记录，L4补登记为unresolved（SYS-006）",
+  "M3-032横跨G-08与G-40范围（含重复测量子项），存在与F-09/F-39的潜在重复计数；L4划分：主体归F-09，G-40面向归F-39，已注明不重复加权",
+  "依赖声明：Discussion para2在fulltext.txt中被截断（SYS-003），'may possibly be a tumor-specific lncRNA in TNBC'等措辞核对依赖M7的XML核验结论，L4无法独立复验截断段原文——以XML为准的纪律下接受，如实注明",
+  "无G条目消失：48/48均有专家verdict覆盖且均有明确终态；加法保证成立（无rejected条目，故无减法；全部为promoted/merged）",
+  "无证据悬空finding：每条F条目均可回溯至专家产物与稿件位置或外部记录；F-45/F-31/F-32/F-41/F-15的不可核验部分已明确挂接SYS-001/SYS-002而非伪装为稿件缺陷"
+ ],
+ "runtime_utilization": {
+  "child_sessions": 9,
+  "task_calls": 15,
+  "continuations": 6,
+  "modules_run": [
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7"
+  ],
+  "modules_skipped": {},
+  "modules_skip_reason": "无跳过：研究设计含体外细胞(M3)+动物(M3/M6)+人样本(M6)+统计(M4)+图表(M5)+结论(M7)，M2为默认接收方",
+  "references_required": [
+   "02-macro-logic",
+   "03-experimental-methods",
+   "04-statistics",
+   "05-figures-and-charts",
+   "06-ethics-compliance",
+   "06b-animal-model-ethics-enhancement",
+   "07-conclusions-discussion"
+  ],
+  "references_read": [
+   "02-macro-logic",
+   "03-experimental-methods",
+   "04-statistics",
+   "05-figures-and-charts",
+   "06-ethics-compliance",
+   "06b-animal-model-ethics-enhancement",
+   "07-conclusions-discussion"
+  ],
+  "routing_recall": 1.0,
+  "tool_execution_recall": 1.0,
+  "tool_terminal_states": {
+   "external_figure_validation(X1)": "executed（85+6项；signals 9；含本文撤稿确认与bib-0013撤稿）",
+   "ethics_compliance_check": "executed（SIG-602 unmet；SIG-604/605/606/607 partial_extraction）",
+   "animal_model_compliance": "executed（SIG-701 3R缺失；SIG-702 无必要性论证）",
+   "normalize_biomed_units": "executed（剂量单位对维度自洽，无信号）",
+   "statistical_forensics": "not_applicable（无计数表/无检验量+df+p/无CI/无mean+n+整数量表；理由已登记）",
+   "figure_integrity_audit": "not_applicable（无图像文件→SYS-001；期刊调查外部结论经X1通道承接）",
+   "sequence_identifier_audit": "not_applicable（ENSG前缀不在工具支持范围；由Ensembl REST ad hoc核验替代，EV-205）",
+   "试剂厂商货号核验": "skipped（无工具端点，SYS-006；M3-030存unresolved）",
+   "LINC00501表达查询": "skipped（无表达谱端点，SYS-006）"
+  },
+  "global_findings_count": 48,
+  "global_findings_confirmed": 48,
+  "global_findings_refined": 13,
+  "global_findings_refuted": 0,
+  "global_findings_unresolved": 0,
+  "additive_guarantee_held": true,
+  "additive_guarantee_note": "48/48 G条目有终态（promoted_to_finding×47、merged×1[G-31→F-31]）；rejected=0，即未从裸模型结果中减去任何条目；所有severity变化（G-01 critical→major；G-05/08/13/21/23/26/32/37/46升档；G-43/48 refine）均带理由记录",
+  "findings_added_beyond_global": 13,
+  "finding_origin_breakdown": {
+   "external_validation": 3,
+   "multiple": 31,
+   "specialist_rule": 23,
+   "cross_section_reconciliation": 3
+  },
+  "origin_note": "multiple=多来源合流；global_review独有=0（全部G条目经专家规则/外部证据增强后入册）；deterministic_tool信号以吸收方式进入F-04/F-09/F-17/F-46/F-51，未单独立项",
+  "global_findings_refined_unique": [
+   "G-01",
+   "G-11",
+   "G-15",
+   "G-17",
+   "G-19",
+   "G-39",
+   "G-40",
+   "G-43",
+   "G-46",
+   "G-48"
+  ],
+  "verdict_note": "专家verdict条目共60条（47 confirm/13 refine，含同一条G由多个模块分别判定）；按G条目去重：48条全部保留，10条经refine修正表述或定级，0条refuted/out_of_scope/unresolved"
+ },
+ "disclaimer": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号，不构成录用、退稿或发表决定。"
+}

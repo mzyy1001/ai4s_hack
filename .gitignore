@@ -3,15 +3,18 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+*.tar.gz
+.claude/settings.local.json
 
 # 密钥与本地环境：绝不入库
 .env
 .env.local
 *.key
 secrets/
+loop/state/
+loop/logs/
 
-# 开发工作区（语料 / 工具 / 文档 / 实验记录）都在 dev 分支
+# 测试语料：体积大且可脚本重建
+#   python3 tools/fetch_papers.py
+#   python3 tools/fetch_ground_truth_papers.py
 datasets/
-docs/
-tools/
-loop/

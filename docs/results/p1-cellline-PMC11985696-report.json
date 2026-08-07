@@ -1,0 +1,3122 @@
+{
+ "report_version": "biomed-paper-review/contract-v2",
+ "generated_at": "2026-08-08",
+ "paper": {
+  "title": "Cancer-associated fibroblast heterogeneity in chordoma",
+  "doi": "10.1002/path.6420",
+  "pmid": "40088426",
+  "pmcid": "PMC11985696",
+  "journal": "The Journal of Pathology 2025;266(1):5-8",
+  "article_type": "Invited Commentary (JATS article-type=article-commentary)",
+  "authors": "Jack C Henry; Angus J M Cameron (Barts Cancer Institute, Queen Mary University of London)",
+  "input_format": "jats_xml + lossy plain_text (fulltext.txt) 双版本",
+  "genre_note": "本文是 Zheng BW & Guo W (J Pathol 2025;265:69-83) 的受邀评论，自身无原始实验（Data availability: no datasets were generated or analysed）。任务描述中『人体组织+体外细胞系+单细胞/免疫组化研究』实为被评论论文 [3] 的内容；本评论全文无任何具名细胞系（穷举核验，见 EV-304）。"
+ },
+ "disclaimer": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号，不构成录用、退稿或发表决定。",
+ "execution_scope": {
+  "mode": "full_review",
+  "submode": null,
+  "executed_modules": [
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7"
+  ],
+  "skipped_modules": [],
+  "scope_rationale": "评论文体无原始研究设计；路由触发全部来自内容与文体：系统性因果论证链与归属主张→M2；被评论论文的体外/体内实验转述+用户指定细胞系核验→M3；转述的样本量/计数/统计主张→M4；1 图 1 表→M5；COI/基金/被转述人体与动物研究→M6；结论外推与局限性→M7。M3 实验方法、M4 统计、M6 伦理为受限范围（评论层面无原始方法/统计/伦理批件可审，核验对象为转述的自洽性与归属准确性）。",
+  "executed_stages": [
+   "L0_global_review",
+   "L0b_map_route",
+   "L1_specialists(M2-M7)",
+   "L2_deterministic_tools+X1",
+   "L3_continuations(6)",
+   "L4_reconciliation",
+   "L5_normalization_rendering"
+  ],
+  "fields_in_scope": [
+   "declarations.funding",
+   "declarations.conflict_of_interest",
+   "declarations.data_availability"
+  ],
+  "assets": [
+   "Table 1 (path6420-tbl-0001, readable)",
+   "Figure 1 (path6420-fig-0001, caption-only, no image file)"
+  ],
+  "supplements": []
+ },
+ "manuscript_risk_score": {
+  "value": 100,
+  "partial": false,
+  "executed_modules": [
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7"
+  ],
+  "skipped_modules": [],
+  "comparable_to_full_review": true,
+  "band": "major_revision_suggested",
+  "priority_manual_review": false,
+  "threshold_caveat": "分段阈值未经实证验证，是初始经验值，不得表述为自动化的录用/退稿决定。风险分以聚簇为单位、每 category 上限 30，权重 critical 25/major 10/minor 3/info 0。",
+  "category_contribution": {
+   "macro_logic": 30,
+   "experimental_methods": 19,
+   "statistics": 26,
+   "conclusions_discussion": 19,
+   "figures_and_charts": 15,
+   "ethics_compliance": 0
+  }
+ },
+ "finding_counts": {
+  "critical": 0,
+  "major": 8,
+  "minor": 17,
+  "info": 6,
+  "total": 31
+ },
+ "extraction_coverage": {
+  "value": 0.875,
+  "field_resolution": {
+   "resolved": 3,
+   "total": 3,
+   "rate": 1.0
+  },
+  "asset_readability": {
+   "resolved": 1,
+   "total": 2,
+   "rate": 0.5
+  },
+  "supplement_accessibility": {
+   "resolved": 0,
+   "total": 0,
+   "rate": 1.0
+  },
+  "recommended_field_coverage": {
+   "resolved": 2,
+   "total": 3,
+   "rate": 0.667,
+   "note": "recommendation 字段：research_question(reported)、generalization_scope(reported)、limitations(not_reported，见 EV-003)"
+  }
+ },
+ "review_confidence": {
+  "value": 0.875,
+  "components": {
+   "extraction_coverage": 0.875,
+   "Q": 1.0,
+   "C": 1.0,
+   "pixel_dependency_rate": 0.0,
+   "ocr_dependency_rate": 0.0,
+   "low_conf_finding_rate": 0.0
+  },
+  "note": "未经校准的证据支撑指数，不是 finding 正确概率，也不是稿件质量概率。"
+ },
+ "issue_clusters": [
+  {
+   "cluster_id": "CL-01",
+   "representative_finding": "M2-001",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-001"
+   ],
+   "evidence_refs": [
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-201",
+    "EV-202"
+   ]
+  },
+  {
+   "cluster_id": "CL-02",
+   "representative_finding": "M2-002",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-002"
+   ],
+   "evidence_refs": [
+    "EV-104",
+    "EV-105",
+    "EV-203",
+    "EV-204"
+   ]
+  },
+  {
+   "cluster_id": "CL-03",
+   "representative_finding": "M3-001",
+   "categories": [
+    "experimental_methods"
+   ],
+   "member_findings": [
+    "M3-001"
+   ],
+   "evidence_refs": [
+    "EV-106",
+    "EV-107",
+    "EV-204",
+    "EV-205"
+   ]
+  },
+  {
+   "cluster_id": "CL-04",
+   "representative_finding": "M2-003",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-003"
+   ],
+   "evidence_refs": [
+    "EV-108",
+    "EV-109",
+    "EV-210"
+   ]
+  },
+  {
+   "cluster_id": "CL-05",
+   "representative_finding": "M4-001",
+   "categories": [
+    "statistics"
+   ],
+   "member_findings": [
+    "M4-001"
+   ],
+   "evidence_refs": [
+    "EV-110",
+    "EV-302",
+    "EV-203"
+   ]
+  },
+  {
+   "cluster_id": "CL-06",
+   "representative_finding": "M4-002",
+   "categories": [
+    "statistics"
+   ],
+   "member_findings": [
+    "M4-002"
+   ],
+   "evidence_refs": [
+    "EV-111",
+    "EV-204"
+   ]
+  },
+  {
+   "cluster_id": "CL-07",
+   "representative_finding": "M2-004",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-004"
+   ],
+   "evidence_refs": [
+    "EV-112",
+    "EV-113",
+    "EV-204"
+   ]
+  },
+  {
+   "cluster_id": "CL-08",
+   "representative_finding": "M7-001",
+   "categories": [
+    "conclusions_discussion"
+   ],
+   "member_findings": [
+    "M7-001"
+   ],
+   "evidence_refs": [
+    "EV-114",
+    "EV-115",
+    "EV-116",
+    "EV-003"
+   ]
+  },
+  {
+   "cluster_id": "CL-09",
+   "representative_finding": "M7-002",
+   "categories": [
+    "conclusions_discussion"
+   ],
+   "member_findings": [
+    "M7-002"
+   ],
+   "evidence_refs": [
+    "EV-108",
+    "EV-132"
+   ]
+  },
+  {
+   "cluster_id": "CL-10",
+   "representative_finding": "M3-002",
+   "categories": [
+    "experimental_methods"
+   ],
+   "member_findings": [
+    "M3-002"
+   ],
+   "evidence_refs": [
+    "EV-117",
+    "EV-118",
+    "EV-207"
+   ]
+  },
+  {
+   "cluster_id": "CL-11",
+   "representative_finding": "M2-005",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-005"
+   ],
+   "evidence_refs": [
+    "EV-119",
+    "EV-206"
+   ]
+  },
+  {
+   "cluster_id": "CL-12",
+   "representative_finding": "M5-001",
+   "categories": [
+    "figures_and_charts"
+   ],
+   "member_findings": [
+    "M5-001"
+   ],
+   "evidence_refs": [
+    "EV-121",
+    "EV-303"
+   ]
+  },
+  {
+   "cluster_id": "CL-13",
+   "representative_finding": "M5-002",
+   "categories": [
+    "figures_and_charts"
+   ],
+   "member_findings": [
+    "M5-002"
+   ],
+   "evidence_refs": [
+    "EV-122",
+    "EV-137"
+   ]
+  },
+  {
+   "cluster_id": "CL-14",
+   "representative_finding": "M5-003",
+   "categories": [
+    "figures_and_charts"
+   ],
+   "member_findings": [
+    "M5-003"
+   ],
+   "evidence_refs": [
+    "EV-116"
+   ]
+  },
+  {
+   "cluster_id": "CL-15",
+   "representative_finding": "M5-004",
+   "categories": [
+    "figures_and_charts"
+   ],
+   "member_findings": [
+    "M5-004"
+   ],
+   "evidence_refs": [
+    "EV-123"
+   ]
+  },
+  {
+   "cluster_id": "CL-16",
+   "representative_finding": "M3-003",
+   "categories": [
+    "experimental_methods"
+   ],
+   "member_findings": [
+    "M3-003"
+   ],
+   "evidence_refs": [
+    "EV-124",
+    "EV-208"
+   ]
+  },
+  {
+   "cluster_id": "CL-17",
+   "representative_finding": "M4-003",
+   "categories": [
+    "statistics"
+   ],
+   "member_findings": [
+    "M4-003"
+   ],
+   "evidence_refs": [
+    "EV-125",
+    "EV-301"
+   ]
+  },
+  {
+   "cluster_id": "CL-18",
+   "representative_finding": "M5-005",
+   "categories": [
+    "figures_and_charts"
+   ],
+   "member_findings": [
+    "M5-005"
+   ],
+   "evidence_refs": [
+    "EV-109",
+    "EV-301"
+   ]
+  },
+  {
+   "cluster_id": "CL-19",
+   "representative_finding": "M5-006",
+   "categories": [
+    "figures_and_charts"
+   ],
+   "member_findings": [
+    "M5-006"
+   ],
+   "evidence_refs": [
+    "EV-126",
+    "EV-204"
+   ]
+  },
+  {
+   "cluster_id": "CL-20",
+   "representative_finding": "M5-007",
+   "categories": [
+    "figures_and_charts"
+   ],
+   "member_findings": [
+    "M5-007"
+   ],
+   "evidence_refs": [
+    "EV-127",
+    "EV-120",
+    "EV-204"
+   ]
+  },
+  {
+   "cluster_id": "CL-21",
+   "representative_finding": "M3-004",
+   "categories": [
+    "experimental_methods"
+   ],
+   "member_findings": [
+    "M3-004"
+   ],
+   "evidence_refs": [
+    "EV-107",
+    "EV-204"
+   ]
+  },
+  {
+   "cluster_id": "CL-22",
+   "representative_finding": "M2-006",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-006"
+   ],
+   "evidence_refs": [
+    "EV-129"
+   ]
+  },
+  {
+   "cluster_id": "CL-23",
+   "representative_finding": "M7-003",
+   "categories": [
+    "conclusions_discussion"
+   ],
+   "member_findings": [
+    "M7-003"
+   ],
+   "evidence_refs": [
+    "EV-130"
+   ]
+  },
+  {
+   "cluster_id": "CL-24",
+   "representative_finding": "M2-007",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-007"
+   ],
+   "evidence_refs": [
+    "EV-131"
+   ]
+  },
+  {
+   "cluster_id": "CL-25",
+   "representative_finding": "M2-008",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-008"
+   ],
+   "evidence_refs": [
+    "EV-132",
+    "EV-205"
+   ]
+  },
+  {
+   "cluster_id": "CL-26",
+   "representative_finding": "M7-004",
+   "categories": [
+    "conclusions_discussion"
+   ],
+   "member_findings": [
+    "M7-004"
+   ],
+   "evidence_refs": [
+    "EV-133"
+   ]
+  },
+  {
+   "cluster_id": "CL-27",
+   "representative_finding": "M4-004",
+   "categories": [
+    "statistics"
+   ],
+   "member_findings": [
+    "M4-004"
+   ],
+   "evidence_refs": [
+    "EV-105",
+    "EV-203"
+   ]
+  },
+  {
+   "cluster_id": "CL-28",
+   "representative_finding": "M6-001",
+   "categories": [
+    "ethics_compliance"
+   ],
+   "member_findings": [
+    "M6-001"
+   ],
+   "evidence_refs": [
+    "EV-001",
+    "EV-004",
+    "EV-005",
+    "EV-209"
+   ]
+  },
+  {
+   "cluster_id": "CL-29",
+   "representative_finding": "M2-009",
+   "categories": [
+    "macro_logic"
+   ],
+   "member_findings": [
+    "M2-009"
+   ],
+   "evidence_refs": [
+    "EV-136",
+    "EV-210"
+   ]
+  },
+  {
+   "cluster_id": "CL-30",
+   "representative_finding": "M7-005",
+   "categories": [
+    "conclusions_discussion"
+   ],
+   "member_findings": [
+    "M7-005"
+   ],
+   "evidence_refs": [
+    "EV-138",
+    "EV-204"
+   ]
+  },
+  {
+   "cluster_id": "CL-31",
+   "representative_finding": "M6-002",
+   "categories": [
+    "ethics_compliance"
+   ],
+   "member_findings": [
+    "M6-002"
+   ],
+   "evidence_refs": [
+    "EV-134"
+   ]
+  }
+ ],
+ "all_findings": [
+  {
+   "id": "M2-001",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "major",
+   "title": "“current study/authors”指代漂移与作者归属失实",
+   "detail": "全文以 the current study / the authors / the current authors 指称被评论论文[3]，字面主语却是评论作者，构成系统性指代漂移（L12/L17/L21/L25 多处）。两处具体归属被 PubMed 完整作者列表证伪：(1) L21 'the lead author of the current study helped define... ERS-CAF [2]' —— [2] 第一作者为 Zhang TL，评论第一作者 Henry 不在 [2] 作者列表，且即便按意图读法（指 [3] 的第一作者 Zheng BW），Zheng BW 在 [2] 中仅为第三作者，两种读法均不成立；(2) L21 'the current authors previously reported tumour-stroma ratio [5]' —— [5] 作者列表（Zou MX, Zheng BW, Liu FS 等 15 人）无 Henry/Cameron，自然读法构成误导性归属披露。摘要 L12 'by this and other groups' 先行词不明。ref[2] 另有更正记录（PMID 40719554）内容未抓取（SYS-8）。",
+   "evidence_refs": [
+    "EV-101",
+    "EV-102",
+    "EV-103",
+    "EV-201",
+    "EV-202"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "要求作者改写全部归属句：涉 [3] 处显式写 'Zheng and Guo'；ERS-CAF 句改为 'Zhang et al. [2]'；tumour-stroma ratio 句改为 'Zou et al. [5]'（若确非其成果则改述为他组工作）；摘要 'this and other groups' 指明先行词。若作者坚持另有共同发表关系，须提供证据。",
+    "who": "editor",
+    "priority": "P1"
+   },
+   "rule_ref": "02-macro-logic#attribution-consistency",
+   "related_findings": [
+    "G-24",
+    "G-26",
+    "G-39",
+    "S2-02",
+    "S6-01"
+   ]
+  },
+  {
+   "id": "M2-002",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "major",
+   "title": "“same tumour cohorts”表述过宽、证据基础非独立",
+   "detail": "L21 断言 ERS-CAF 研究[2]与 iCAF 研究[3] 'used the same tumour cohorts as the current study'。外部摘要对比显示两队列构成不同：[2] scRNA-seq 3 primary+3 recurrent+3 NP、QIF 验证 105 additional patients；[3] scRNA-seq 7 primary sacral+4 NP、bulk RNA-seq 发现集 126 例、QIF 验证 additional 116 例。bulk 126 对 126 仅提示部分复用可能，scRNA-seq 与 QIF 数目均不吻合；重叠度未量化。评论未推导该前提的后果：ERS-CAF 与 iCAF 两套预后主张的证据基础非独立，对因果归因与整合共识主张（M7-001）的影响未讨论。部分重叠不能排除，需作者澄清。",
+   "evidence_refs": [
+    "EV-104",
+    "EV-105",
+    "EV-203",
+    "EV-204"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "要求作者说明 [2]/[3] 队列的实际复用范围（哪些数据集、多少患者重叠），将 'the same tumour cohorts' 改为精确表述，并补一句非独立性对因果推断/整合主张的含义；编辑可对照两文 Methods 核验。",
+    "who": "editor",
+    "priority": "P1"
+   },
+   "rule_ref": "02-macro-logic#independence-of-evidence",
+   "related_findings": [
+    "G-02",
+    "G-25",
+    "S2-04",
+    "S2-08",
+    "S6-05",
+    "S4-09"
+   ]
+  },
+  {
+   "id": "M2-003",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "major",
+   "title": "引文括注 [1,2,10,11] 与 Table 1 行 [3,1,10,2] 直接矛盾",
+   "detail": "L29 以 [1,2,10,11] 列举 'at least four separate studies'，但 Table 1 四行实为 [3][1][10][2]：被评论研究 [3] 在表内却缺席正文括注，[11] 在括注却不在表内。外部核验确认 [11]（Niu 2024）确为 scRNA-seq+bulk 的免疫聚焦研究（作者 Niu HQ, Zheng BY, Zou MX, Zheng BW），归入 'alongside immune-cell focussed studies' 从句在文体上可通，但计数（四项）、引文括注、表行三者仍无法同时对平；'至少四项' 的外部完备性（是否另有遗漏研究）未做穷举检索，保持 unresolved。作者意图最可能是将 [3] 误写为 [11]。",
+   "evidence_refs": [
+    "EV-108",
+    "EV-109",
+    "EV-210"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "要求作者决定 '四项研究' 的集合并统一括注与表行（纳入 [3] 还是 [11]，说明取舍）；编辑按最新文献核查完备性。",
+    "who": "editor",
+    "priority": "P1"
+   },
+   "rule_ref": "02-macro-logic#citation-figure-table-agreement",
+   "related_findings": [
+    "G-13",
+    "G-34",
+    "S2-01",
+    "S5-02",
+    "S4-06"
+   ]
+  },
+  {
+   "id": "M2-004",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "major",
+   "title": "pseudotime 被表述为谱系事实，NP 对照局限未讨论",
+   "detail": "L23 将计算推断写成谱系事实：'all CAF subtypes in chordoma differentiate from resident fibroblasts, which progressively evolve into activated myofibroblast CAF populations, from which iCAFs eventually emerge'，未注明轨迹出自 [2] 还是 [3]；对照组织 nucleus pulposus 为脊索来源组织而非真正正常成纤维细胞对照，且仅 3–4 例（Table 1），年龄/部位/退变程度匹配未讨论；'little overlap' 的观察与连续性轨迹结论之间存在张力。L29 'iCAFs are shown to appear late...' 同样把时间性推断写成既成事实（[3] 摘要自述 pseudotime 'suggested'）。该链条是 sec-0002 'drivers vs passengers' 论证的主要支柱。",
+   "evidence_refs": [
+    "EV-112",
+    "EV-113",
+    "EV-105",
+    "EV-204"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "领域审稿人核对轨迹出处与措辞：改为 'pseudotime analysis in [2,3] suggests...'，标明来源；补 NP 对照的 caveat（组织属性、样本量、匹配）；'are shown to appear late' 改 'are inferred to emerge late'。",
+    "who": "domain_reviewer",
+    "priority": "P1"
+   },
+   "rule_ref": "02-macro-logic#evidence-strength-matching",
+   "related_findings": [
+    "G-05",
+    "G-09",
+    "S2-05"
+   ]
+  },
+  {
+   "id": "M2-005",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "minor",
+   "title": "“powerful longitudinal studies [6]” 研究类型失准",
+   "detail": "L23 'This concurs with powerful longitudinal studies in other cancers, including pancreatic cancer [6]'。外部摘要定稿：Dominguez 2020 [6] 设计为动物模型中跨 PDAC 进展阶段的单细胞基质演化图谱，人源部分为横断面证据（22 例 scRNA-seq、70 例 IHC）与 >600 例免疫治疗临床试验数据回顾，并非患者纵向随访研究；'powerful' 为主观加码。建议改写为客观设计描述并删除 'powerful'。",
+   "evidence_refs": [
+    "EV-119",
+    "EV-206"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "编辑按 [6] 摘要改写该句设计特征化。",
+    "who": "editor",
+    "priority": "P2"
+   },
+   "rule_ref": "02-macro-logic#citation-characterization",
+   "related_findings": [
+    "G-08",
+    "S7-09"
+   ]
+  },
+  {
+   "id": "M2-006",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "minor",
+   "title": "CAF 亚型丰度共线性断言无引文",
+   "detail": "L21 'In stroma-rich tumours, the abundance of distinct CAF subtypes is strongly correlated; myofibroblast CAF-rich tumours tend to also be rich in iCAFs and immune cells' 是因果归因困难论证的承重前提，但句内无任何引文支撑；若出自 [3] 的 QIF 观察亦未指明。补引文或改为对冲表述。",
+   "evidence_refs": [
+    "EV-129"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "要求作者补引文（如 [3]）或改 'likely correlated'。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "02-macro-logic#unsupported-assertion",
+   "related_findings": [
+    "G-11"
+   ]
+  },
+  {
+   "id": "M2-007",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "info",
+   "title": "PDAC “consensus” 支撑单薄且含自引",
+   "detail": "L25 'consensus suggesting that loss of myofibroblast CAFs can result in more inflammatory and aggressive tumours [4],[8]' 仅由 [4]（叙述性综述）+[8]（单一临床前研究，作者含本评论第一作者 Henry JC，自引）支撑，'consensus' 与证据体量不匹配。自引与内容相关、与 COI 声明（无利益冲突）不矛盾，按 ICMJE 不构成需披露事项，仅建议编辑留意引用平衡。",
+   "evidence_refs": [
+    "EV-131"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "将 'consensus' 弱化为 'reported by'，或补充更多独立模型证据。",
+    "who": "editor",
+    "priority": "P2"
+   },
+   "rule_ref": "02-macro-logic#support-adequacy",
+   "related_findings": [
+    "G-30",
+    "S2-10"
+   ]
+  },
+  {
+   "id": "M2-008",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "minor",
+   "title": "Dominguez/Krishnamurty 概括与 [6]/[9] 归属边界",
+   "detail": "L25 单句以分号连接两项研究：LRRC15+ 亚群的发现与出现时相归 [6]，KPR 模型体内靶向效果归 [9]，括注位置总体正确（外部核验：KPR 基因型串与 [9] 逐字一致，靶向方式为 Lrrc15-DTR 遗传消融），但 'arise during late pancreatic tumour development' 的概括与靶向效果被并入同一叙事，归属边界对读者模糊。建议拆分两句并显式署名。",
+   "evidence_refs": [
+    "EV-132",
+    "EV-205"
+   ],
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "编辑拆句并分别署名 Dominguez et al. 与 Krishnamurty et al.；'minor subset/late development' 概括的贴切性留待人工对照 [6] 原文。",
+    "who": "editor",
+    "priority": "P2"
+   },
+   "rule_ref": "02-macro-logic#citation-attribution",
+   "related_findings": [
+    "G-23"
+   ]
+  },
+  {
+   "id": "M2-009",
+   "module": "M2",
+   "category": "macro_logic",
+   "severity": "minor",
+   "title": "“All studies concur” 与 Table 1 摘要不匹配",
+   "detail": "L29 'All studies concur on the identification of TBXT-expressing cancer cells exhibiting high epithelial-mesenchymal signatures and TGFβ pathway activation'，但 Table 1 四行中仅 [1] 行（'TGFβ interactions'）与 [10] 行（'TGFβ most prominent pathway'）涉及 TGFβ，无任何行提及 TBXT；'All studies' 的量化域歧义（是否含 [3]/[11]）；各研究是否确实逐篇一致的核验被 SYS-6 阻断。",
+   "evidence_refs": [
+    "EV-136",
+    "EV-210"
+   ],
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "要求作者将 concur 主张限缩至表行实际支撑的内容，或逐项注明各研究出处。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "02-macro-logic#claim-table-consistency",
+   "related_findings": [
+    "S2-07",
+    "S7-02"
+   ]
+  },
+  {
+   "id": "M3-001",
+   "module": "M3",
+   "category": "experimental_methods",
+   "severity": "major",
+   "title": "免疫缺陷异种移植 vs 免疫依赖机制与免疫治疗含义的语境错配",
+   "detail": "评论转述的 iCAF 核心机制主张是免疫依赖的（L17 'predominated by reciprocal paracrine interactions with immune cells'），但 [3] 的体内证据为人肿瘤皮下异种移植（L25），宿主必然免疫缺陷，原理上无法检验免疫介导旁分泌机制；评论却将其与免疫健全 PDAC 模型（[7] 自发胰腺癌、[9] KPR 同源模型+CD8 依赖验证，均经外部原文坐实）并置而未提示宿主免疫状态差异；同句 in vivo/in vitro 混排（'in vivo data are presented where... iCAFs are shown to promote malignant behaviours in vitro'）。该遗漏同时动摇 sec-0002 的因果讨论与 sec-0003 L29 的免疫治疗含义，而评论的 caveat（'caution must be applied... has not always translated to appropriate genetic models'）只覆盖遗传模型转化，未点破宿主免疫失能这一最致命的边界。",
+   "evidence_refs": [
+    "EV-106",
+    "EV-107",
+    "EV-204",
+    "EV-205"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "要求作者增加显式 caveat：异种移植宿主免疫缺陷，不能验证免疫介导机制；分开表述 in vitro 共培养与 in vivo 证据；L29 免疫治疗含义处标注该限制。回 [3] 原文确认宿主机型（nude/NSG 等）。",
+    "who": "domain_reviewer",
+    "priority": "P1"
+   },
+   "rule_ref": "03-experimental-methods#model-context-matching",
+   "related_findings": [
+    "G-01",
+    "S2-03",
+    "S3-03",
+    "S7-03"
+   ]
+  },
+  {
+   "id": "M3-002",
+   "module": "M3",
+   "category": "experimental_methods",
+   "severity": "minor",
+   "title": "LRCC15 应为 LRRC15（基因符号拼写错误）",
+   "detail": "L25 'a minor subset of LRCC15+ CAFs' 为字母换位笔误：HGNC 核验 LRCC15 既非批准符号也非已登记旧符号（SIG-902），LRRC15 为现行批准符号；文档内部证据（refs[6][9] 标题均作 LRRC15+）与外部证据双重确认。该错误位于全文因果论证关键例证（LRRC15+ CAF 靶向）的靶点符号上，损害可检索性与可重复性，应更正。",
+   "evidence_refs": [
+    "EV-117",
+    "EV-118",
+    "EV-207"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "更正为 LRRC15（确定性更正，无需作者确认）。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "03-experimental-methods#reagent-identifier-accuracy",
+   "derived_from_signals": [
+    "SIG-902"
+   ],
+   "related_findings": [
+    "G-21",
+    "S3-06",
+    "S2-09"
+   ]
+  },
+  {
+   "id": "M3-003",
+   "module": "M3",
+   "category": "experimental_methods",
+   "severity": "minor",
+   "title": "CCL4l2/Col1a2 小鼠式写法出现在人队列研究行",
+   "detail": "Table 1 Duan 2022 行（人脊索瘤）iCAF 标志物列出现 'CCL4l2'，同行另有 'Col1a2'：均为小鼠式大小写写法。HGNC 大小写不敏感解析分别到人类批准符号 CCL4L2（CCL4L1/CCL4L2 为节段重复 CNV 多态基因）与 COL1A2，故不能断定为物种误植，但在人类研究行中构成命名规范/物种归属歧义，且与同行其余人类全大写风格混杂。是否反映原文写法需对照 Duan 2022（全文 XML 被出版商禁止下载，SYS-5，unresolved）。",
+   "evidence_refs": [
+    "EV-124",
+    "EV-208"
+   ],
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "统一为人源写法 CCL4L2/COL1A2，或对照 Duan 原文后注明物种来源；人工复核对照 doi:10.1007/s00262-022-03152-1。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "03-experimental-methods#nomenclature-consistency",
+   "related_findings": [
+    "G-16",
+    "S3-04",
+    "S3-05"
+   ]
+  },
+  {
+   "id": "M3-004",
+   "module": "M3",
+   "category": "experimental_methods",
+   "severity": "minor",
+   "title": "功能实验模型与对照局限未提示",
+   "detail": "[3] 功能证据的三项设计局限在评论层面未提示：(1) 皮下异种移植部位非骨性/中轴微环境（chordoma 好发颅底/脊柱/骶骨），'support tumour growth' 不等同重现骨侵袭表型；(2) 'normal fibroblasts are used as a control' 未说明对照成纤维细胞来源（是否 NP 来源、部位匹配）——成纤维细胞具组织部位特异性，部位不匹配即混杂；(3) 无 myCAF/ERS-CAF 平行对照，促瘤效应无法特异归因于 iCAF（而 L21/L23 自认亚型丰度强相关、ERS-CAF 同样预测不良预后）。评论层面亦无 iCAF 制备的可重复性信息（来源/鉴定标准/传代/支原体），具体细节需回 [3] 原文核验（SYS-4）。",
+   "evidence_refs": [
+    "EV-107",
+    "EV-204"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "要求作者补模型局限 caveat（皮下部位、对照来源、平行亚型对照缺失），注明对照成纤维细胞来源见原文 [3]。",
+    "who": "domain_reviewer",
+    "priority": "P2"
+   },
+   "rule_ref": "03-experimental-methods#control-adequacy",
+   "related_findings": [
+    "G-07",
+    "S3-01",
+    "S3-02"
+   ]
+  },
+  {
+   "id": "M4-001",
+   "module": "M4",
+   "category": "statistics",
+   "severity": "major",
+   "title": "“almost exclusively in recurrent chordomas” 三处无限定复用且统计基础薄弱",
+   "detail": "'ERS CAFs are almost exclusively found in recurrent chordomas' 在 L23/L29/L45 三处无限定复用；依据仅为 [2] 的 3 primary vs 3 recurrent。患者层级下最极端分裂（3/3 vs 0/3）Fisher 精确检验双侧 p=0.10，达不到 p<0.05；3/3 的 Clopper-Pearson 95%CI [0.2924, 1.0000]（scipy 独立复核）。分析单位未知：若原文以细胞计数为单位则属典型伪重复（同一患者多细胞当独立 n），若以患者为单位则 n=3+3 不足以支撑 'almost exclusively' 级断言（[2] 全文不可得，unresolved）。[2] 复发样本治疗史未标注，而 L23 正以该分裂推导 'prior therapy 驱动 ERS 表型' 的因果假说，关键混杂信息缺失。",
+   "evidence_refs": [
+    "EV-110",
+    "EV-302",
+    "EV-105",
+    "EV-203"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "统计审稿人回 [2] 原文核验分析单位与检验方法；要求作者将三处表述改为 '在一个 n=3+3 的研究中富集于复发样本（未校正）'，删除或降级另两处重复，并注明复发样本治疗史不可得。",
+    "who": "statistical_reviewer",
+    "priority": "P1"
+   },
+   "rule_ref": "04-statistics#small-sample-generalization",
+   "related_findings": [
+    "G-18",
+    "S4-04",
+    "S4-07",
+    "S7-05",
+    "S3-09"
+   ]
+  },
+  {
+   "id": "M4-002",
+   "module": "M4",
+   "category": "statistics",
+   "severity": "major",
+   "title": "QIF 关联缺统计细节且发现-验证证据层级被转述颠倒",
+   "detail": "L17 将 QIF n=116 关联作主证据呈现（'the authors show that high iCAF density associates...'），但缺截断值确定方式（预设还是数据驱动）、单/多因素结构、多重比较校正、效应量（HR/OR 及 CI）、评分盲法等细节；外部对比证实 [3] 实际结构为 bulk RNA-seq n=126 发现集 → QIF n=116 追加验证集，评论将方向颠倒且从未提及 126；bulk 签名验证的局限（签名组成、推导队列、对免疫细胞/其他 CAF 亚型的特异性——iCAF 标志物 IL1B/HLA-DRA 等与免疫细胞表达重叠，bulk 评分受细胞组成混杂）亦未提示。统计细目因 SYS-4（[3] 全文不可得）不可核验，但评论层面的转述缺陷成立，且评述主题恰为相关 vs 因果。",
+   "evidence_refs": [
+    "EV-111",
+    "EV-204"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "统计审稿人回 [3] 原文核验截断值/多因素/多重比较/效应量与发现-验证结构；要求作者恢复发现-验证方向并补 n=126，补统计细节或标注见原文，对 bulk 签名验证加局限说明。",
+    "who": "statistical_reviewer",
+    "priority": "P1"
+   },
+   "rule_ref": "04-statistics#analysis-reporting-fidelity",
+   "related_findings": [
+    "G-04",
+    "G-10",
+    "S4-02",
+    "S2-11",
+    "S3-11",
+    "S3-08",
+    "S7-06"
+   ]
+  },
+  {
+   "id": "M4-003",
+   "module": "M4",
+   "category": "statistics",
+   "severity": "minor",
+   "title": "Table 1 缺细胞数/QC；“20%” 无分母；rare clusters 未命名",
+   "detail": "Table 1 各行未列捕获细胞数、成纤维细胞数量、质控与整合方法；Duan 行 '20% of cells are fibroblasts' 无分母（总细胞数），[10] 全文被出版商封锁（SYS-5），分母不可核；Zhang 2024 行仅 3+3 样本即列 '2 rare CAF clusters'，簇未命名、稳健性依据不明。表格为评论作者自编（作者贡献 'compiled the table'）。簇数对账经 table_total ×5 工具核验零不一致（含括注/未命名条目计入后自洽），故仅属信息完整性问题。",
+   "evidence_refs": [
+    "EV-125",
+    "EV-301",
+    "EV-302"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "要求作者补各研究细胞数与 QC 摘要；'20%' 给出分母或改定性表述；rare clusters 命名或注明见原文。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "04-statistics#sample-reporting-completeness",
+   "related_findings": [
+    "G-15",
+    "S4-03"
+   ]
+  },
+  {
+   "id": "M4-004",
+   "module": "M4",
+   "category": "statistics",
+   "severity": "minor",
+   "title": "队列性别/年龄信息缺失（2:1 男性偏倚混杂）",
+   "detail": "Table 1 四个发现队列与 116 例 QIF 队列均未转述性别/年龄；脊索瘤已知约 2:1 男性偏倚，性别/年龄可能影响 CAF 组成与免疫浸润，是跨研究比较（M7-001）的潜在混杂。各原文是否报告人口学需回原文核验（SYS-4/SYS-6）。",
+   "evidence_refs": [
+    "EV-105",
+    "EV-203"
+   ],
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "要求作者补充队列人口学描述，或注明原文不可得。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "04-statistics#baseline-demographics",
+   "related_findings": [
+    "G-32",
+    "S4-05"
+   ]
+  },
+  {
+   "id": "M5-001",
+   "module": "M5",
+   "category": "figures_and_charts",
+   "severity": "info",
+   "title": "材料限制与转换伪影汇总（非稿件缺陷）",
+   "detail": "SYS-1：Figure 1 无图像文件（JATS 指向 PATH-266-5-g001.jpg 未提供；figure_integrity_audit images_scanned=0），图内元素不可核验，仅图注可审；SYS-2：fulltext.txt 有损转换（缺 Abstract/引言两段/图注/致谢/基金/引用编号，Table 1 双份输出）；SYS-3：fulltext_reconstructed.txt 重建伪影（'Figure Figure 1'/'Table Table 1' 为脚本对 fig/table 型 xref 加前缀所致，本地 JATS XML 源无重复词；另丢失 Table 1 表头行）；SYS-4：[3] 非 OA 全文不可得；SYS-5：Duan 全文被出版商封锁；SYS-6：refs[1][2][10][11] 全文不在材料；SYS-7：BioRender 许可等级离线不可核；SYS-8：ref[2] 更正 PMID40719554 未抓取。以上均不得解释为稿件问题。",
+   "evidence_refs": [
+    "EV-121",
+    "EV-303"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "复核管线改用 JATS XML 源重跑文本重建；后续审稿补图像与 [3] 原文。",
+    "who": "editor",
+    "priority": "P2"
+   },
+   "rule_ref": "05-figures-and-charts#asset-integrity",
+   "derived_from_signals": [
+    "SIG-601"
+   ],
+   "related_findings": [
+    "G-20",
+    "G-37",
+    "S5-06",
+    "S5-07",
+    "S5-10",
+    "S6-06"
+   ]
+  },
+  {
+   "id": "M5-002",
+   "module": "M5",
+   "category": "figures_and_charts",
+   "severity": "minor",
+   "title": "Table 1 题注 “scRNA-seq studies” 低估 [2][3] 证据模态",
+   "detail": "Table 1 题注 'single cell RNA-sequencing studies on chordoma'，但 [2] 标题明含 'Integrating single-cell and spatial transcriptomics'，[3] 为 multi-omics（scRNA-seq+空间转录组+bulk+QIF+体内外实验，外部摘要证实），且表内 Biological functions 列本身承载空间定位结论（'Localised distant from cancer cells'/'associate closely with cancer cells'）。[1] 为纯 scRNA-seq 不受影响。题注低估证据类型。",
+   "evidence_refs": [
+    "EV-122",
+    "EV-137",
+    "EV-204"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "题注改为 'single-cell and/or spatial transcriptomic (multi-omics) studies' 或加脚注。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "05-figures-and-charts#caption-content-consistency",
+   "related_findings": [
+    "G-12",
+    "S5-01"
+   ]
+  },
+  {
+   "id": "M5-003",
+   "module": "M5",
+   "category": "figures_and_charts",
+   "severity": "minor",
+   "title": "CAF 亚型同名异质/异名同质，缺跨研究映射列",
+   "detail": "iCAF 跨研究同名异质：[3] 行 IL1B/HLA-DRA/MMP9/CCL4 vs [10] 行 IL1RL1/CCL3/CCL4l2/CCL8，几乎无重叠；myCAF（[1] 行）与 mCAF（[10] 行）异名同质；正文（摘要、L29）呼吁跨研究 consensus 与整合，但表格仅逐研究罗列、无跨研究比对/命名映射列，读者易误认各研究 iCAF 为同一实体。",
+   "evidence_refs": [
+    "EV-116"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "增加跨研究映射列或脚注说明命名对应与标志物差异。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "05-figures-and-charts#cross-study-comparability",
+   "related_findings": [
+    "G-14",
+    "S5-03"
+   ]
+  },
+  {
+   "id": "M5-004",
+   "module": "M5",
+   "category": "figures_and_charts",
+   "severity": "minor",
+   "title": "“EMT/TGFβ pathway targeted” 指代悬空",
+   "detail": "Table 1 Zhang 2022 行 'FN1, collagen and TGFβ interactions between CAFs and cancer cells; EMT/TGFβ pathway targeted.' —— targeted 的施事与对象缺失，单元格脱离原文不可自足；结合 [1] 标题 'guides p-EMT-targeted trial' 疑指该研究指导了一项 p-EMT 靶向试验，但表内文字无法传达。",
+   "evidence_refs": [
+    "EV-123"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "改写为完整句，如 'findings informed a p-EMT-targeted clinical trial [1]'。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "05-figures-and-charts#table-self-containment",
+   "related_findings": [
+    "G-17",
+    "S5-04"
+   ]
+  },
+  {
+   "id": "M5-005",
+   "module": "M5",
+   "category": "figures_and_charts",
+   "severity": "info",
+   "title": "Table 1 书写规范不一致/行序/呈现清晰度",
+   "detail": "表内书写规范不一致：Duan 行小鼠式大小写（见 M3-003）、'Hypoxia' 句中无故大写、分隔符混用（'APOD and CYP1B1' vs 逗号）、第 4 行 '4 CAF clusters' 缺前三行统一的冒号、行 4 function 单元格词组中途断段（JATS 两个 <p>）、斜体标记跨行不一致；行序 [3]→[1]→[10]→[2] 既非引用序亦非时间序（疑为被评论研究置首）。簇数与部位分解经 table_total 工具核验自洽，无计数错误。",
+   "evidence_refs": [
+    "EV-109",
+    "EV-301"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "统一书写规范；按引用序或时间序重排行序或在表注说明。",
+    "who": "editor",
+    "priority": "P2"
+   },
+   "rule_ref": "05-figures-and-charts#presentation-consistency",
+   "related_findings": [
+    "S5-09",
+    "S5-11",
+    "S4-08"
+   ]
+  },
+  {
+   "id": "M5-006",
+   "module": "M5",
+   "category": "figures_and_charts",
+   "severity": "minor",
+   "title": "图注 “energy metabolism CAF 贴邻肿瘤细胞” 缺稿件内支撑",
+   "detail": "图注 L45 称 'ERS and energy metabolism CAFs are localised in close association with chordoma tumour cells [2,3]'：ERS CAF 贴邻有表行 L36 与正文 L21/L23 支撑，但 energy metabolism CAF 的空间定位在正文与 Table 1 均无描述（该亚型仅作为簇名见于 L33/L36）；外部核验 [3] 摘要仅证实 iCAF 远离部分，[2]/[3] 摘要均未提 energy metabolism CAF 的空间位置（unresolved）。另 [2,3] 合并单括号混合了来自不同研究的子主张（ERS 贴邻←[2]；iCAF 远离←[3]），归属不可分辨。",
+   "evidence_refs": [
+    "EV-126",
+    "EV-204"
+   ],
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "删除 energy metabolism CAF 贴邻主张或给出原文具体出处；拆分引文归属。人工复核对照 [2]/[3] 原文。",
+    "who": "domain_reviewer",
+    "priority": "P2"
+   },
+   "rule_ref": "05-figures-and-charts#caption-text-consistency",
+   "related_findings": [
+    "G-19",
+    "S5-05"
+   ]
+  },
+  {
+   "id": "M5-007",
+   "module": "M5",
+   "category": "figures_and_charts",
+   "severity": "minor",
+   "title": "空间定位与因果表述的强度漂移",
+   "detail": "iCAF 空间定位三处措辞强度不一：正文 'largely distal'（L17，限缩）→ Table 1 'Localised distant from cancer cells'（L33，绝对）→ 图注 'not found in close proximity'（L45，绝对）；图注 'inflammatory iCAFs' 属同义叠用（iCAF 已含 inflammatory）。另评论摘要 'play a causative role in driving an invasive poor prognosis tumour phenotype'（L12）较 [3] 摘要自我表述 'accelerate the malignant progression of chordomas' 明显更强，强度差经外部确认。",
+   "evidence_refs": [
+    "EV-127",
+    "EV-120",
+    "EV-204",
+    "EV-103"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "图注/表注回归正文级对冲表述（保留 'largely'）；摘要因果措辞与 [3] 原文对齐或加 'as proposed' 限定。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "05-figures-and-charts#strength-drift",
+   "related_findings": [
+    "S5-08",
+    "S7-07"
+   ]
+  },
+  {
+   "id": "M6-001",
+   "module": "M6",
+   "category": "ethics_compliance",
+   "severity": "info",
+   "title": "伦理合规无问题项汇总（受邀评论适用性裁定）",
+   "detail": "受邀评论、无原始实验/受试者/动物/细胞系：ETH-HUM/ETH-ANI/ETH-CELL 规则族均 not_applicable（二次文献反向豁免）。已核验：COI 脚注 'No conflicts of interest were declared.' 存在；基金披露与 JATS award-group 精确一致（CRUK C355/A25137、C7893/A26233；MRC MR/X018997/1，零缺失零多余）；受邀评论脚注存在；两位作者 ORCID 存在；CC-BY 4.0 许可；Figure 1 BioRender 署名含发布链接；数据可用性声明与文体一致。确定性工具：ethics_compliance_check 唯一信号 SIG-601（ETH-HGR-001 适用性不可推出）经 M6 裁定 not_applicable（评论无任何样本采集/数据生成行为；被引中方队列研究的 HGR/伦理责任在被引原文，原文不在材料，登记 SYS 限制）；animal_model_compliance 零信号；cell_line 穷举检索零具名细胞系（not_applicable，检索词清单已登记为 absence 证据）；rrid/accession/trial_registration 未检出；X1 核验 12 条 DOI 全解析、11 条引文无撤稿。例外见 M2-001/M2-002；残留人工项：BioRender 许可等级离线不可核（SYS-7）。Zheng BY 与 Zheng BW 为两位真实作者（refs[2][11]），参考文献著录无误，仅建议编辑留意同号混淆。",
+   "evidence_refs": [
+    "EV-001",
+    "EV-002",
+    "EV-004",
+    "EV-005",
+    "EV-304",
+    "EV-305",
+    "EV-306",
+    "EV-209",
+    "EV-210"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "留档备编辑核查；如需确证 BioRender 许可等级，请作者提供许可凭证。",
+    "who": "editor",
+    "priority": "P2"
+   },
+   "rule_ref": "06-ethics-compliance#declarations-completeness",
+   "related_findings": [
+    "G-36",
+    "G-30",
+    "S6-02",
+    "S6-03",
+    "S6-04",
+    "S6-07",
+    "S3-10"
+   ]
+  },
+  {
+   "id": "M6-002",
+   "module": "M6",
+   "category": "ethics_compliance",
+   "severity": "info",
+   "title": "作者贡献声称与产出缺陷的责任归属",
+   "detail": "作者贡献声明（L42）明确两位作者 'compiled the table, and designed the figure'；本次审核确认的系统性缺陷恰集中于这两件产物（Table 1：M2-003/M5-002…M5-005；图注：M5-006/M5-007）。贡献声明本身无事实矛盾，责任归属明确：相应修改指令可直接定向至署名作者。",
+   "evidence_refs": [
+    "EV-134"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "编辑将 Table 1/图注类修改意见直接发给两位作者；无需改动贡献声明。",
+    "who": "editor",
+    "priority": "P2"
+   },
+   "rule_ref": "06-ethics-compliance#contribution-consistency",
+   "related_findings": [
+    "X-02"
+   ]
+  },
+  {
+   "id": "M7-001",
+   "module": "M7",
+   "category": "conclusions_discussion",
+   "severity": "major",
+   "title": "整合共识处方性主张未处理可比性前提，全文无局限性声明",
+   "detail": "评论的中心处方性主张（L29/L38：整合各研究就脊索瘤细胞异质性达成共识、跨肿瘤比较与数据整合框架）未处理任何跨研究可比性前提，而多项反证在稿件内可见并获外部补强：①'used the same tumour cohorts'（M2-002）致证据非独立且表述本身存疑；②跨研究作者网络交叠（refs[2][3][5][11] 共享 Zheng BW/Zheng BY/Zou MX 等）；③Table 1 中 [3] 与 [10] 的 iCAF 标志物集几乎无重叠而评论未做映射（M5-003）；④解剖部位混杂未讨论（[3] 全骶骨、[1] 全颅底、[10] 混合、[2] 未注明）；⑤四队列极小（7+4/6/6/3+3+3）且半数无对照，共识呼吁未讨论批次/统计局限（M4-001/003）；⑥CAF 可塑性（myCAF↔iCAF 互转，所引综述 [4] 即覆盖该主题）未讨论，直接消解 'drivers vs passengers' 二元框架；⑦L38 'No doubt... would share significant overlap' 以直陈语气断言跨瘤种同源性而无任何证据；全文无局限性声明（absence 检索确认）。",
+   "evidence_refs": [
+    "EV-114",
+    "EV-115",
+    "EV-116",
+    "EV-105",
+    "EV-203",
+    "EV-003"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "要求作者增加可比性前提与局限性段落（队列重叠、解剖部位、样本量与统计功效、标志物不一致、可塑性），并将 'No doubt' 改为条件式；领域审稿人评估整合主张的措辞边界。",
+    "who": "domain_reviewer",
+    "priority": "P1"
+   },
+   "rule_ref": "07-conclusions-discussion#scope-premises",
+   "related_findings": [
+    "S7-01",
+    "S4-01",
+    "G-03",
+    "G-06",
+    "G-33",
+    "S7-04"
+   ]
+  },
+  {
+   "id": "M7-002",
+   "module": "M7",
+   "category": "conclusions_discussion",
+   "severity": "minor",
+   "title": "sec-0003 标题承诺与内容分布错位",
+   "detail": "sec-0003 题为 'Can targeting the stroma in chordoma provide clinical benefit?'，但该节未实质讨论任何间质靶向策略、临床试验证据或患者分层；设问未获直接回答，'To what degree would ERS CAFs suppress antitumour immunity...' 自问未答；且 sec-0002 末尾的 PDAC 警示（α-SMA+ CAF 消融反促侵袭 [7]，'separate correlation from causation... critical when considering therapeutic targeting'）未回接至 sec-0003 的展望，展望偏乐观。实质性间质靶向证据（[7][8]、[6][9]、anti-CTLA4）全部位于 sec-0002。",
+   "evidence_refs": [
+    "EV-108",
+    "EV-132"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "改标题以匹配内容（数据整合与基质靶向展望），或补 chordoma 基质靶向的获益/风险论证并显式回接 PDAC 警示。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "07-conclusions-discussion#claim-content-alignment",
+   "related_findings": [
+    "G-38",
+    "S2-06",
+    "S7-08"
+   ]
+  },
+  {
+   "id": "M7-003",
+   "module": "M7",
+   "category": "conclusions_discussion",
+   "severity": "info",
+   "title": "背景/临床主张缺引文",
+   "detail": "L15 'high levels of TGFβ pathway activation' 无引文（且为 L29 'All studies concur' 共识主张的承重前提；同句 'dominated by subsets of heterogeneous CAFs and diverse immune populations' 亦无引文）；L29 'immunotherapy is emerging as a promising option' 无引文（脊索瘤总体免疫治疗证据有限，'promising' 的措辞收敛幅度及应引文献待外部检索确认，unresolved）。",
+   "evidence_refs": [
+    "EV-130"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "两处补充引文；免疫治疗句建议收敛措辞或引用 [11] 等。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "07-conclusions-discussion#citation-of-background-claims",
+   "related_findings": [
+    "G-31",
+    "G-35"
+   ]
+  },
+  {
+   "id": "M7-004",
+   "module": "M7",
+   "category": "conclusions_discussion",
+   "severity": "minor",
+   "title": "语法/措辞问题集",
+   "detail": "L21 'Evidence for iCAFs populations... have been described'（主谓不一致+复数叠用）；L17 'predominated by reciprocal paracrine interactions'（应 predominantly mediated）；L17 'associates with both clinicopathological features, including local invasion and adverse outcome'（both...including 矛盾，且不良预后属生存结局而非 clinicopathological feature）；L21 'beg the question' 误用（原义为循环论证）；L25 长句 in vivo/in vitro 混排（见 M3-001）。",
+   "evidence_refs": [
+    "EV-133"
+   ],
+   "review_confidence": "high",
+   "manual_review": {
+    "action": "语言润色，逐条修正。",
+    "who": "editor",
+    "priority": "P2"
+   },
+   "rule_ref": "07-conclusions-discussion#scientific-writing-accuracy",
+   "related_findings": [
+    "G-27"
+   ]
+  },
+  {
+   "id": "M7-005",
+   "module": "M7",
+   "category": "conclusions_discussion",
+   "severity": "minor",
+   "title": "“10-year outcome data” 为评论独有细节，外部摘要无对应",
+   "detail": "L17 'with associated 10-year outcome data' 全文仅此一见（逐行核验），且 [3] Europe PMC 摘要未提 10 年随访；因 SYS-4（[3] 全文不可得）无法确证该细节是否载于原文正文，状态 unresolved。若原文无据，该细节为评论引入的不可溯源信息。",
+   "evidence_refs": [
+    "EV-138",
+    "EV-204"
+   ],
+   "review_confidence": "medium",
+   "manual_review": {
+    "action": "请作者注明该细节在 [3] 原文的具体出处（卷/页/补充）；若无据则删除或改为未特指随访期的表述。",
+    "who": "author",
+    "priority": "P2"
+   },
+   "rule_ref": "07-conclusions-discussion#provenance-of-detail",
+   "related_findings": [
+    "X-01"
+   ]
+  }
+ ],
+ "evidence_registry": {
+  "EV-001": {
+   "id": "EV-001",
+   "type": "present",
+   "locator": {
+    "scope": "document",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L1-L9"
+   },
+   "quote": "TYPE: Invited Commentary (JATS article-type=article-commentary)... FOOTNOTE: Invited commentary for Zheng BW, Guo W. ... COI: No conflicts of interest were declared."
+  },
+  "EV-002": {
+   "id": "EV-002",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "declarations",
+    "paragraph_id": "L50-L51"
+   },
+   "quote": "Data sharing is not applicable to this article, as no datasets were generated or analysed during the current study."
+  },
+  "EV-003": {
+   "id": "EV-003",
+   "type": "absence",
+   "searched_locations": [
+    "fulltext_reconstructed.txt 全文"
+   ],
+   "search_terms": [
+    "limitation",
+    "limitations",
+    "caveat",
+    "limitation statement"
+   ],
+   "search_result": "no_match：全文无局限性声明段落（评论摘要末句仅就 causation/correlation 做了一般性警示）"
+  },
+  "EV-004": {
+   "id": "EV-004",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "acknowledgements",
+    "paragraph_id": "L48"
+   },
+   "quote": "AJMC is supported by Cancer Research UK Centre Grants ... (C355/A25137) and the City of London Centre (C7893/A26233). AJMC and JCH are supported by MRC grant MR/X018997/1."
+  },
+  "EV-005": {
+   "id": "EV-005",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fn-group",
+    "paragraph_id": "path6420-note-0002"
+   },
+   "quote": "No conflicts of interest were declared."
+  },
+  "EV-101": {
+   "id": "EV-101",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L21 (sec-0002 p1)"
+   },
+   "quote": "a previous scRNA-seq analysis of chordoma from the lead author of the current study helped define a distinct endoplasmic reticulum stress-related CAF (ERS-CAF) subpopulation ... [2]"
+  },
+  "EV-102": {
+   "id": "EV-102",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L21 (sec-0002 p1)"
+   },
+   "quote": "the current authors previously reported that chordoma outcome could be predicted by the tumour-stroma ratio ... [5]"
+  },
+  "EV-103": {
+   "id": "EV-103",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L12 (Abstract)"
+   },
+   "quote": "Recent reports by this and other groups have separately catalogued cell populations"
+  },
+  "EV-104": {
+   "id": "EV-104",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L21 (sec-0002 p1)"
+   },
+   "quote": "Critically, implication of this ERS CAF subtype in tumour progression ... used the same tumour cohorts as the current study."
+  },
+  "EV-105": {
+   "id": "EV-105",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L33-L36 (Table 1)"
+   },
+   "quote": "Table 1 队列列：L33 [3] '7 primary sacral chordomas / 4 nucleus pulposus'；L36 [2] '3 primary chordomas / 3 recurrent chordomas / 3 nucleus pulposus'；L34 [1] '6 primary skull base chordomas'；L35 [10] '6 primary chordomas: 2 skull base / 3 vertebrae / 1 sacrum'；各行无性别/年龄信息"
+  },
+  "EV-106": {
+   "id": "EV-106",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L17 (引言段2)"
+   },
+   "quote": "The authors propose that iCAFs drive tumour progression through various mechanisms, predominated by reciprocal paracrine interactions with immune cells."
+  },
+  "EV-107": {
+   "id": "EV-107",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L25 (sec-0002 p3)"
+   },
+   "quote": "in vivo data are presented where chordoma isolated iCAFs are shown to promote malignant behaviours in vitro and support tumour growth in a subcutaneous xenograft model; normal fibroblasts are used as a control in these studies."
+  },
+  "EV-108": {
+   "id": "EV-108",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L29 (sec-0003 p1)"
+   },
+   "quote": "To date, at least four separate studies have reported the single-cell transcriptomic landscape of chordoma, alongside immune-cell focussed studies (Table 1) [1,2,10,11]."
+  },
+  "EV-109": {
+   "id": "EV-109",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L33-L36 (Table 1)"
+   },
+   "quote": "Table 1 四行 References 列：Zheng 2025 [3] / Zhang 2022 [1] / Duan 2022 [10] / Zhang 2024 [2]"
+  },
+  "EV-110": {
+   "id": "EV-110",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L23, L29, L45"
+   },
+   "quote": "'ERS CAFs are almost exclusively found in recurrent chordomas'（L23）；'ERS CAFs described by Zhang et al are almost exclusively found in relapsed chordoma'（L29）；'ERS CAFs are almost exclusively found in recurrent chordomas'（L45 图注）"
+  },
+  "EV-111": {
+   "id": "EV-111",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L17 (引言段2)"
+   },
+   "quote": "Using a powerful multiplexed quantitative immunofluorescence (QIF) dataset from 116 patients, with associated 10-year outcome data, the authors show that high iCAF density associates with both clinicopathological features, including local invasion and adverse outcome; this is corroborated in bulk RNA-seq datasets using an iCAF gene-signature scoring system."
+  },
+  "EV-112": {
+   "id": "EV-112",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L23 (sec-0002 p2)"
+   },
+   "quote": "Pseudotime analysis suggests that all CAF subtypes in chordoma differentiate from resident fibroblasts, which progressively evolve into activated myofibroblast CAF populations, from which iCAFs eventually emerge."
+  },
+  "EV-113": {
+   "id": "EV-113",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L29 (sec-0003 p1)"
+   },
+   "quote": "iCAFs are shown to appear late in poor prognosis, primary invasive disease"
+  },
+  "EV-114": {
+   "id": "EV-114",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L29, L38"
+   },
+   "quote": "Combining data from multiple studies will be required to better understand commonalties and heterogeneity between CAF subtypes identified in chordoma.（L29）；A framework for integrating single-cell and spatially resolved data from diverse studies will, however, be necessary（L38）"
+  },
+  "EV-115": {
+   "id": "EV-115",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L38 (sec-0003 p2)"
+   },
+   "quote": "No doubt the clusters identified in chordomas, and other related tumours, would share significant overlap"
+  },
+  "EV-116": {
+   "id": "EV-116",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L33-L36 (Table 1)"
+   },
+   "quote": "L33 [3] iCAF: IL1B, HLA-DRA, MMP9, CCL4；L35 [10] iCAFs: IL1RL1, CCL3, CCL4l2, CCL8 —— 两组标志物几乎无重叠；myCAFs（L34）vs mCAFs（L35）异名同质"
+  },
+  "EV-117": {
+   "id": "EV-117",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L25 (sec-0002 p3)"
+   },
+   "quote": "Dominguez et al identified a minor subset of LRCC15+ CAFs in PDAC"
+  },
+  "EV-118": {
+   "id": "EV-118",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L59, L62 (References)"
+   },
+   "quote": "ref[6] 标题 'Single-cell RNA sequencing reveals stromal evolution into LRRC15+ myofibroblasts...'（L59）；ref[9] 标题 'LRRC15+ myofibroblasts dictate the stromal setpoint to suppress tumour immunity'（L62）"
+  },
+  "EV-119": {
+   "id": "EV-119",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L23 (sec-0002 p2)"
+   },
+   "quote": "This concurs with powerful longitudinal studies in other cancers, including pancreatic cancer [6]."
+  },
+  "EV-120": {
+   "id": "EV-120",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L45 (Figure 1 legend)"
+   },
+   "quote": "Distinct CAF subtypes arising in chordoma. Endoplasmic reticulum stress (ERS) and energy metabolism CAFs are localised in close association with chordoma tumour cells, in contrast to inflammatory iCAFs, which are not found in close proximity [2,3]. ..."
+  },
+  "EV-121": {
+   "id": "EV-121",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "fulltext.xml body/ack（本地核验 2026-08-08）"
+   },
+   "quote": "本地 fulltext.xml JATS 源：正文为 '(Figure <xref rid=path6420-fig-0001>1</xref>)'、'(Table <xref>1</xref>)'，xref 文本仅为 '1'，源无重复词；fulltext_reconstructed.txt 的 'Figure Figure 1'/'Table Table 1' 为重建脚本对 fig/table 型 xref 加前缀所致；重建版另丢失 Table 1 表头行"
+  },
+  "EV-122": {
+   "id": "EV-122",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L32 (Table 1 caption)"
+   },
+   "quote": "Cancer-associated fibroblast subtypes identified in single cell RNA-sequencing studies on chordoma."
+  },
+  "EV-123": {
+   "id": "EV-123",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L34, L54"
+   },
+   "quote": "FN1, collagen and TGFβ interactions between CAFs and cancer cells; EMT/TGFβ pathway targeted.（L34 表行）；ref[1] 标题 '...guides p-EMT-targeted trial in skull base chordoma'（L54）"
+  },
+  "EV-124": {
+   "id": "EV-124",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L34-L35 (Table 1)"
+   },
+   "quote": "L35: 'iCAFs: IL1RL1, CCL3, CCL4l2, CCL8' 与 'All clusters: ACTA2, Col1a2, PDGFRB'（同一行为人脊索瘤研究；其余行均人类全大写符号）"
+  },
+  "EV-125": {
+   "id": "EV-125",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L35-L36 (Table 1)"
+   },
+   "quote": "'20% of cells are fibroblasts.'（L35，无分母）；'2 rare CAF clusters'（L36，未命名）"
+  },
+  "EV-126": {
+   "id": "EV-126",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L45 vs L21/L23/L33/L36"
+   },
+   "quote": "图注称 'ERS and energy metabolism CAFs are localised in close association with chordoma tumour cells [2,3]'；正文 L21/L23 与表行 L36 仅把空间贴邻归于 ERS CAFs，energy metabolism CAF（见 L33/L36 两行）无任何定位描述"
+  },
+  "EV-127": {
+   "id": "EV-127",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L17, L33, L45"
+   },
+   "quote": "these iCAFs are largely distal to malignant cells（L17）vs Table 1 'Localised distant from cancer cells.'（L33）vs 图注 'not found in close proximity'（L45）"
+  },
+  "EV-129": {
+   "id": "EV-129",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L21 (sec-0002 p1)"
+   },
+   "quote": "In stroma-rich tumours, the abundance of distinct CAF subtypes is strongly correlated; myofibroblast CAF-rich tumours tend to also be rich in iCAFs and immune cells.（句内无任何引文）"
+  },
+  "EV-130": {
+   "id": "EV-130",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L15, L29"
+   },
+   "quote": "'high levels of TGFβ pathway activation'（L15，无引文）；'immunotherapy is emerging as a promising option'（L29，无引文）"
+  },
+  "EV-131": {
+   "id": "EV-131",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L25, L61"
+   },
+   "quote": "consensus suggesting that loss of myofibroblast CAFs can result in more inflammatory and aggressive tumours [4],[8]（L25）；ref[8] 'Murray ER, Menezes S, Henry JC, et al.'（L61，含本评论第一作者）"
+  },
+  "EV-132": {
+   "id": "EV-132",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L25 (sec-0002 p3)"
+   },
+   "quote": "Dominguez et al identified a minor subset of LRCC15+ CAFs in PDAC, which arise during late pancreatic tumour development [6]; specific targeting of this subset in vivo in a pancreatic tumour model (KPR...) was effective ... [9]；同段末 'separate correlation from causation, which will be critical when considering therapeutic targeting of the tumour stroma'"
+  },
+  "EV-133": {
+   "id": "EV-133",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L17, L21"
+   },
+   "quote": "'Evidence for iCAFs populations... have been described'（主谓不一致/复数叠用）；'predominated by reciprocal paracrine interactions'；'associates with both clinicopathological features, including...'；'beg the question' 误用"
+  },
+  "EV-134": {
+   "id": "EV-134",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L42 (Author contributions)"
+   },
+   "quote": "AJMC and JCH conceived and wrote the article, compiled the table, and designed the figure."
+  },
+  "EV-136": {
+   "id": "EV-136",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L29, L34-L35"
+   },
+   "quote": "All studies concur on the identification of TBXT-expressing cancer cells exhibiting high epithelial-mesenchymal signatures and TGFβ pathway activation.（L29）；Table 1 仅 L34 'TGFβ interactions' 与 L35 'TGFβ most prominent pathway' 涉 TGFβ，无行提及 TBXT"
+  },
+  "EV-137": {
+   "id": "EV-137",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L55-L56 (References)"
+   },
+   "quote": "ref[2] 标题 'Integrating single-cell and spatial transcriptomics reveals endoplasmic reticulum stress-related CAF subpopulations associated with chordoma progression'（L55）；ref[3] 标题 'Multi-omics analysis unveils the role of inflammatory cancer-associated fibroblasts in chordoma progression'（L56）"
+  },
+  "EV-138": {
+   "id": "EV-138",
+   "type": "present",
+   "locator": {
+    "scope": "section",
+    "section": "fulltext_reconstructed.txt",
+    "paragraph_id": "L17 (引言段2)"
+   },
+   "quote": "with associated 10-year outcome data（全文唯一出现处）"
+  },
+  "EV-201": {
+   "id": "EV-201",
+   "type": "external",
+   "database": "PubMed (via Europe PMC)",
+   "endpoint": "PMID 37772937 author list",
+   "record_id": "ref[2] Zhang 2024 Neuro Oncol",
+   "retrieved_at": "2026-08-08",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "author_list",
+     "external_value": "Zhang TL, Xia C, Zheng BW, Hu HH, Jiang LX, Escobar D, Zheng BY, Chen TD, Li J, Lv GH, Huang W, Yan YG, Zou MX"
+    },
+    {
+     "predicate": "contains",
+     "subject": "Henry JC / Cameron AJM",
+     "external_value": false
+    }
+   ]
+  },
+  "EV-202": {
+   "id": "EV-202",
+   "type": "external",
+   "database": "PubMed (via Europe PMC)",
+   "endpoint": "PMID 31501892 author list",
+   "record_id": "ref[5] Zou 2019 Neurosurgery",
+   "retrieved_at": "2026-08-08",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "author_list",
+     "external_value": "Zou MX, Zheng BW, Liu FS, Wang XB, Hu JR, Huang W, Dai ZH, Zhang QS, Liu FB, Zhong H, Jiang Y, She XL, Li XB, Lv GH, Li J"
+    },
+    {
+     "predicate": "contains",
+     "subject": "Henry JC / Cameron AJM",
+     "external_value": false
+    }
+   ]
+  },
+  "EV-203": {
+   "id": "EV-203",
+   "type": "external",
+   "database": "Europe PMC",
+   "endpoint": "DOI 10.1093/neuonc/noad173 abstract",
+   "record_id": "ref[2]",
+   "retrieved_at": "2026-08-08",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "scrnaseq_set",
+     "external_value": "3 primary + 3 recurrent chordomas + 3 nucleus pulposus"
+    },
+    {
+     "predicate": "qif_validation",
+     "external_value": "105 additional patients"
+    }
+   ]
+  },
+  "EV-204": {
+   "id": "EV-204",
+   "type": "external",
+   "database": "Europe PMC",
+   "endpoint": "DOI 10.1002/path.6369 abstract",
+   "record_id": "ref[3] Zheng & Guo 2025",
+   "retrieved_at": "2026-08-08",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "scrnaseq_set",
+     "external_value": "87,693 cells from 7 tumors + 4 nucleus pulposus"
+    },
+    {
+     "predicate": "bulk_rnaseq",
+     "external_value": "126 patients, iCAF signature vs invasiveness/poor prognosis"
+    },
+    {
+     "predicate": "qif_validation",
+     "external_value": "additional 116 patients"
+    },
+    {
+     "predicate": "spatial",
+     "external_value": "iCAF positioning at a distance from the tumor cells"
+    },
+    {
+     "predicate": "pseudotime",
+     "external_value": "suggested iCAF originated from normal fibroblasts"
+    },
+    {
+     "predicate": "functional",
+     "external_value": "in vivo and in vitro experiments confirmed iCAFs accelerate malignant progression"
+    },
+    {
+     "predicate": "mentions_10year_followup",
+     "external_value": false
+    }
+   ]
+  },
+  "EV-205": {
+   "id": "EV-205",
+   "type": "external",
+   "database": "Europe PMC fullTextXML",
+   "endpoint": "PMC9630141 (Krishnamurty 2022 Nature, OA)",
+   "record_id": "ref[9]",
+   "retrieved_at": "2026-08-08",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "kpr_genotype_verbatim",
+     "external_value": "(KPR; KrasLSL.G12D/wt;p16/p19fl/wt;p53LSL.R270H/wt;Pdx1.Cre)"
+    },
+    {
+     "predicate": "targeting_method",
+     "external_value": "Lrrc15-DTR knock-in + diphtheria toxin genetic ablation"
+    },
+    {
+     "predicate": "host_immune_status",
+     "external_value": "immunocompetent syngeneic mice (subcutaneous + orthotopic)"
+    }
+   ]
+  },
+  "EV-206": {
+   "id": "EV-206",
+   "type": "external",
+   "database": "Europe PMC",
+   "endpoint": "DOI 10.1158/2159-8290.CD-19-0644 abstract",
+   "record_id": "ref[6] Dominguez 2020",
+   "retrieved_at": "2026-08-08",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "study_design",
+     "external_value": "fibroblastic landscape charted during PDAC progression in animal models; human evidence cross-sectional (22-patient scRNA-seq, 70-patient IHC) + immunotherapy trial data (>600 patients)"
+    }
+   ]
+  },
+  "EV-207": {
+   "id": "EV-207",
+   "type": "external",
+   "database": "HGNC (gene_symbol via X1 script)",
+   "endpoint": "rest.genenames.org fetch/symbol",
+   "record_id": "SIG-902",
+   "retrieved_at": "2026-08-07",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "symbol_status",
+     "subject": "LRCC15",
+     "external_value": "not approved, not registered previous symbol (gene_symbol_unrecognized)"
+    },
+    {
+     "predicate": "symbol_status",
+     "subject": "LRRC15",
+     "external_value": "approved"
+    }
+   ]
+  },
+  "EV-208": {
+   "id": "EV-208",
+   "type": "external",
+   "database": "HGNC (case-insensitive resolution)",
+   "endpoint": "rest.genenames.org",
+   "record_id": "Col1a2 / CCL4l2",
+   "retrieved_at": "2026-08-07",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "case_insensitive_resolution",
+     "subject": "Col1a2",
+     "external_value": "COL1A2"
+    },
+    {
+     "predicate": "case_insensitive_resolution",
+     "subject": "CCL4l2",
+     "external_value": "CCL4L2"
+    }
+   ]
+  },
+  "EV-209": {
+   "id": "EV-209",
+   "type": "external",
+   "database": "Crossref + Europe PMC (X1 script)",
+   "endpoint": "api.crossref.org/works/* ; ebi.ac.uk europepmc search",
+   "record_id": "12 DOIs resolve + 11 cited retraction checks",
+   "retrieved_at": "2026-08-07",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "doi_resolves",
+     "subject": "10.1002/path.6420 及 refs[1]-[11] 全部 11 条",
+     "external_value": true
+    },
+    {
+     "predicate": "is_retracted",
+     "subject": "refs[1]-[11]",
+     "external_value": false
+    }
+   ]
+  },
+  "EV-210": {
+   "id": "EV-210",
+   "type": "external",
+   "database": "Europe PMC",
+   "endpoint": "DOI 10.1136/jitc-2024-009313",
+   "record_id": "ref[11] Niu 2024",
+   "retrieved_at": "2026-08-08",
+   "retrieval_status": "resolved",
+   "assertions": [
+    {
+     "predicate": "author_list",
+     "external_value": "Niu HQ, Zheng BY, Zou MX, Zheng BW（Zheng BY 与 Zheng BW 为两位不同作者）"
+    },
+    {
+     "predicate": "design",
+     "external_value": "scRNA-seq + bulk RNA-seq 免疫微环境研究（immune-cell focussed）"
+    }
+   ]
+  },
+  "EV-301": {
+   "id": "EV-301",
+   "type": "present",
+   "locator": {
+    "scope": "table",
+    "table": "Table 1"
+   },
+   "quote": "statistical_forensics table_total ×5 executed（2026-08-08）：Duan 部位分解 2+3+1=6 ✓；四行簇数 4/4/6（含 vascular×2）/4（含 2 rare 计入）✓ —— 零不一致信号",
+   "note": "deterministic tool run"
+  },
+  "EV-302": {
+   "id": "EV-302",
+   "type": "present",
+   "locator": {
+    "scope": "table",
+    "table": "Table 1 row Zhang 2024"
+   },
+   "quote": "scipy 独立复核（2026-08-08）：Fisher exact 3v3 最极端分裂双侧 p=0.1000；Clopper-Pearson 3/3 95%CI [0.2924, 1.0000]；0/3 上界 0.7076",
+   "note": "deterministic recomputation"
+  },
+  "EV-303": {
+   "id": "EV-303",
+   "type": "present",
+   "locator": {
+    "scope": "figure",
+    "figure": "path6420-fig-0001"
+   },
+   "quote": "figure_integrity_audit executed（空目录）：images_scanned=0，零信号 —— 无图像文件可审计（JATS graphic 指向 PATH-266-5-g001.jpg 未提供）",
+   "note": "deterministic tool run"
+  },
+  "EV-304": {
+   "id": "EV-304",
+   "type": "absence",
+   "searched_locations": [
+    "fulltext.txt",
+    "fulltext_reconstructed.txt",
+    "fulltext.xml"
+   ],
+   "search_terms": [
+    "cell line",
+    "cell-line",
+    "ATCC",
+    "DSMZ",
+    "JCRB",
+    "HeLa",
+    "HEK",
+    "293T",
+    "U-CH*",
+    "MUGChor",
+    "JH7194",
+    "JH7192",
+    "NIH3T3",
+    "3T3",
+    "CHO",
+    "PANC",
+    "SW\\d+",
+    "HT-\\d+",
+    "A549",
+    "MCF",
+    "organoid",
+    "line"
+   ],
+   "search_result": "no_match：唯一命中 'Such' 为子串假阳性；M3 专家独立复核一致 —— 全文无具名细胞系，cell_line 外部核验 not_applicable"
+  },
+  "EV-305": {
+   "id": "EV-305",
+   "type": "present",
+   "locator": {
+    "scope": "document",
+    "section": "ethics_compliance_check run"
+   },
+   "quote": "ethics_compliance_check.py executed（structured_result_v2.json）：唯一信号 SIG-601 partial_extraction（ETH-HGR-001 适用性事实不可推出）；M6 裁定 not_applicable（受邀评论无任何样本/数据行为）",
+   "note": "deterministic tool run"
+  },
+  "EV-306": {
+   "id": "EV-306",
+   "type": "present",
+   "locator": {
+    "scope": "document",
+    "section": "animal_model_compliance run"
+   },
+   "quote": "animal_model_compliance.py executed：零信号（本文无动物使用；KPR/异种移植表述均处引文语境）",
+   "note": "deterministic tool run"
+  }
+ },
+ "all_extraction_signals": [
+  {
+   "id": "SIG-601",
+   "type": "partial_extraction",
+   "detail": "ETH-HGR-001（中国人类遗传资源审批/备案/事先报告）适用性事实 uses_chinese_human_genetic_resources 无法从结构化结果推出，未评估",
+   "target": "ethics.ETH-HGR-001",
+   "routed_to": [
+    "M6"
+   ],
+   "produced_by": "ethics_compliance_check.py",
+   "disposition": "M6 裁定 not_applicable：受邀评论无样本采集/数据生成行为，不触发 HGR 义务；被引中方队列研究的责任在被引原文（SYS-6）"
+  },
+  {
+   "id": "SIG-902",
+   "type": "external_validation_candidate",
+   "detail": "基因符号 LRCC15 既非 HGNC 批准符号也非已登记旧符号（gene_symbol_unrecognized），须人工确认",
+   "target": "sec-0002 p3 LRCC15",
+   "routed_to": [
+    "M2",
+    "M3"
+   ],
+   "produced_by": "external_figure_validation.py (HGNC)",
+   "disposition": "并入 M3-002：内部证据（refs[6][9] 标题 LRRC15）+ 外部证据双重确认为拼写错误，确定性更正"
+  }
+ ],
+ "all_system_limitations": [
+  {
+   "id": "SYS-1",
+   "category": "figure_unreadable",
+   "impact": "Figure 1（BioRender 示意图）无图像文件，图内元素不可核验，仅图注可审",
+   "affected_modules": [
+    "M5"
+   ],
+   "affected_targets": [
+    "path6420-fig-0001"
+   ],
+   "recommended_action": "后续审稿提供 PATH-266-5-g001.jpg 或 PDF 后补审图内元素",
+   "evidence_refs": [
+    "EV-303"
+   ]
+  },
+  {
+   "id": "SYS-2",
+   "category": "conversion_artifact",
+   "impact": "用户提供的 fulltext.txt 为有损转换：缺 Abstract、正文前两个引言段、图注、致谢/基金、ORCID/COI 脚注；所有引用编号丢失；Table 1 双份输出。据此版做合规筛查会将 COI/基金/BioRender 署名误判为 not_reported",
+   "affected_modules": [
+    "M2",
+    "M5",
+    "M6"
+   ],
+   "affected_targets": [
+    "fulltext.txt"
+   ],
+   "recommended_action": "以 fulltext_reconstructed.txt / fulltext.xml 为准",
+   "evidence_refs": [
+    "EV-121"
+   ]
+  },
+  {
+   "id": "SYS-3",
+   "category": "conversion_artifact",
+   "impact": "本次重建脚本伪影：'Figure Figure 1'/'Table Table 1' 前缀重复（JATS 源无重复词）、Table 1 表头行丢失。已修正解释，不得当稿件缺陷（G-28 据此 reject）",
+   "affected_modules": [
+    "M5"
+   ],
+   "affected_targets": [
+    "fulltext_reconstructed.txt"
+   ],
+   "recommended_action": "修正重建脚本对 fig/table 型 xref 的处理",
+   "evidence_refs": [
+    "EV-121"
+   ]
+  },
+  {
+   "id": "SYS-4",
+   "category": "external_source_unavailable",
+   "impact": "被评论论文 [3]（doi:10.1002/path.6369）非 OA、无 PMC 全文，仅摘要可得：QIF 统计细目、异种移植宿主机型、10-year outcome 出处、bulk 签名组成均不可核验",
+   "affected_modules": [
+    "M3",
+    "M4",
+    "M7"
+   ],
+   "affected_targets": [
+    "M3-001",
+    "M4-002",
+    "M7-005"
+   ],
+   "recommended_action": "获取 [3] 全文后回查 unresolved_external 清单",
+   "evidence_refs": [
+    "EV-204"
+   ]
+  },
+  {
+   "id": "SYS-5",
+   "category": "external_source_blocked",
+   "impact": "Duan 2022（doi:10.1007/s00262-022-03152-1）全文 XML 被出版商明确禁止下载（efetch 拒绝）：CCL4l2/Col1a2 原始写法、'20%' 分母不可核验",
+   "affected_modules": [
+    "M3",
+    "M4"
+   ],
+   "affected_targets": [
+    "M3-003",
+    "M4-003"
+   ],
+   "recommended_action": "经机构订阅获取原文核对",
+   "evidence_refs": [
+    "EV-124",
+    "EV-125"
+   ]
+  },
+  {
+   "id": "SYS-6",
+   "category": "external_source_unavailable",
+   "impact": "refs [1][2][10][11] 全文不在材料（[2][6][11] 摘要已抓取）：'All studies concur' 逐篇匹配、energy metabolism CAF 空间证据出处、[2] 分析单位等不可核验",
+   "affected_modules": [
+    "M2",
+    "M4",
+    "M5",
+    "M7"
+   ],
+   "affected_targets": [
+    "M2-009",
+    "M4-001",
+    "M5-006"
+   ],
+   "recommended_action": "获取原文后回查",
+   "evidence_refs": [
+    "EV-210"
+   ]
+  },
+  {
+   "id": "SYS-7",
+   "category": "external_source_unavailable",
+   "impact": "BioRender 账户许可等级（premium/OA 发布授权）离线不可核验",
+   "affected_modules": [
+    "M6"
+   ],
+   "affected_targets": [
+    "Figure 1 图注许可"
+   ],
+   "recommended_action": "如需确证，由作者提供许可凭证",
+   "evidence_refs": [
+    "EV-120"
+   ]
+  },
+  {
+   "id": "SYS-8",
+   "category": "external_source_unavailable",
+   "impact": "ref [2] 存在更正（PMID 40719554, Neuro Oncol 2026;28(5):e17），更正内容未抓取；当前 PubMed 作者列表已反映更正后元数据（仍无 Henry/Cameron），不影响 M2-001 判定",
+   "affected_modules": [
+    "M2"
+   ],
+   "affected_targets": [
+    "M2-001"
+   ],
+   "recommended_action": "人工打开更正原文确认是否涉及作者列表",
+   "evidence_refs": [
+    "EV-201"
+   ]
+  }
+ ],
+ "candidate_resolution_log": [
+  {
+   "candidate": "G-01",
+   "resolution": "merged",
+   "merged_into": "M3-001",
+   "note": "异种移植免疫语境簇"
+  },
+  {
+   "candidate": "G-02",
+   "resolution": "merged",
+   "merged_into": "M2-002",
+   "note": "同队列重叠/独立性"
+  },
+  {
+   "candidate": "G-03",
+   "resolution": "merged",
+   "merged_into": "M7-001",
+   "note": "极小队列并入整合前提"
+  },
+  {
+   "candidate": "G-04",
+   "resolution": "merged",
+   "merged_into": "M4-002",
+   "note": "QIF 统计细节"
+  },
+  {
+   "candidate": "G-05",
+   "resolution": "merged",
+   "merged_into": "M2-004",
+   "note": "pseudotime 簇"
+  },
+  {
+   "candidate": "G-06",
+   "resolution": "merged",
+   "merged_into": "M7-001",
+   "note": "部位混杂"
+  },
+  {
+   "candidate": "G-07",
+   "resolution": "merged",
+   "merged_into": "M3-004",
+   "note": "功能模型局限；免疫子项在 M3-001"
+  },
+  {
+   "candidate": "G-08",
+   "resolution": "merged",
+   "merged_into": "M2-005",
+   "note": "longitudinal 失准"
+  },
+  {
+   "candidate": "G-09",
+   "resolution": "merged",
+   "merged_into": "M2-004",
+   "note": "'are shown' 实体化"
+  },
+  {
+   "candidate": "G-10",
+   "resolution": "merged",
+   "merged_into": "M4-002",
+   "note": "bulk 签名局限"
+  },
+  {
+   "candidate": "G-11",
+   "resolution": "merged",
+   "merged_into": "M2-006",
+   "note": "无引文断言"
+  },
+  {
+   "candidate": "G-12",
+   "resolution": "merged",
+   "merged_into": "M5-002",
+   "note": "题注低估模态"
+  },
+  {
+   "candidate": "G-13",
+   "resolution": "merged",
+   "merged_into": "M2-003",
+   "note": "引文集 vs 表行"
+  },
+  {
+   "candidate": "G-14",
+   "resolution": "merged",
+   "merged_into": "M5-003",
+   "note": "同名异质"
+  },
+  {
+   "candidate": "G-15",
+   "resolution": "merged",
+   "merged_into": "M4-003",
+   "note": "QC/分母缺失"
+  },
+  {
+   "candidate": "G-16",
+   "resolution": "merged",
+   "merged_into": "M3-003",
+   "note": "CCL4l2 命名（refine 后）"
+  },
+  {
+   "candidate": "G-17",
+   "resolution": "merged",
+   "merged_into": "M5-004",
+   "note": "targeted 悬空"
+  },
+  {
+   "candidate": "G-18",
+   "resolution": "merged",
+   "merged_into": "M4-001",
+   "note": "3v3 泛化"
+  },
+  {
+   "candidate": "G-19",
+   "resolution": "merged",
+   "merged_into": "M5-006",
+   "note": "energy metabolism 贴邻"
+  },
+  {
+   "candidate": "G-20",
+   "resolution": "blocked_by_system_limitation",
+   "merged_into": "M5-001",
+   "note": "SYS-1 无图像文件"
+  },
+  {
+   "candidate": "G-21",
+   "resolution": "merged",
+   "merged_into": "M3-002",
+   "note": "LRRC15"
+  },
+  {
+   "candidate": "G-22",
+   "resolution": "rejected",
+   "merged_into": null,
+   "rejection_reason": "Krishnamurty et al. Nature 2022（OA，PMC9630141）全文与 L25 KPR 基因型串逐字一致（含 p16/p19 floxed 与 'KPR;' 前缀），疑点不成立（EV-205）"
+  },
+  {
+   "candidate": "G-23",
+   "resolution": "merged",
+   "merged_into": "M2-008",
+   "note": "归属边界"
+  },
+  {
+   "candidate": "G-24",
+   "resolution": "merged",
+   "merged_into": "M2-001",
+   "note": "两种读法均被 PubMed 证伪"
+  },
+  {
+   "candidate": "G-25",
+   "resolution": "merged",
+   "merged_into": "M2-002",
+   "note": "指代+事实双重，升级 major"
+  },
+  {
+   "candidate": "G-26",
+   "resolution": "merged",
+   "merged_into": "M2-001",
+   "note": "[5] 作者列表无 Henry/Cameron，升级 major"
+  },
+  {
+   "candidate": "G-27",
+   "resolution": "merged",
+   "merged_into": "M7-004",
+   "note": "语言问题集"
+  },
+  {
+   "candidate": "G-28",
+   "resolution": "rejected",
+   "merged_into": null,
+   "rejection_reason": "本地 JATS XML 核验：源为 '(Figure <xref>1</xref>)'，xref 文本仅 '1'，无重复词；'Figure Figure 1' 为重建脚本伪影（EV-121，SYS-3）"
+  },
+  {
+   "candidate": "G-29",
+   "resolution": "rejected",
+   "merged_into": null,
+   "rejection_reason": "Europe PMC 核验 ref[11] 作者列表 'Niu HQ, Zheng BY, Zou MX, Zheng BW'：Zheng BY 与 Zheng BW 为两位不同的真实作者（ref[2] 作者列表亦同时含二人），非笔误（EV-210/EV-201）"
+  },
+  {
+   "candidate": "G-30",
+   "resolution": "merged",
+   "merged_into": "M2-007",
+   "note": "自引提示并入 consensus 簇"
+  },
+  {
+   "candidate": "G-31",
+   "resolution": "merged",
+   "merged_into": "M7-003",
+   "note": "TGFβ 缺引文"
+  },
+  {
+   "candidate": "G-32",
+   "resolution": "merged",
+   "merged_into": "M4-004",
+   "note": "人口学缺失"
+  },
+  {
+   "candidate": "G-33",
+   "resolution": "merged",
+   "merged_into": "M7-001",
+   "note": "可塑性缺失"
+  },
+  {
+   "candidate": "G-34",
+   "resolution": "merged",
+   "merged_into": "M2-003",
+   "note": "内部矛盾定稿；外部完备性 unresolved"
+  },
+  {
+   "candidate": "G-35",
+   "resolution": "merged",
+   "merged_into": "M7-003",
+   "note": "免疫治疗缺引文"
+  },
+  {
+   "candidate": "G-36",
+   "resolution": "promoted_to_finding",
+   "final_finding_id": "M6-001",
+   "note": "合规无问题项汇总；例外保留在 M2-001/M2-002"
+  },
+  {
+   "candidate": "G-37",
+   "resolution": "blocked_by_system_limitation",
+   "merged_into": "M5-001",
+   "note": "SYS-2 有损转换"
+  },
+  {
+   "candidate": "G-38",
+   "resolution": "merged",
+   "merged_into": "M7-002",
+   "note": "标题 vs 内容"
+  },
+  {
+   "candidate": "G-39",
+   "resolution": "merged",
+   "merged_into": "M2-001",
+   "note": "摘要先行词"
+  },
+  {
+   "candidate": "S2-11/S3-11",
+   "resolution": "merged",
+   "merged_into": "M4-002",
+   "note": "发现-验证倒置"
+  },
+  {
+   "candidate": "S3-07",
+   "resolution": "rejected",
+   "merged_into": null,
+   "rejection_reason": "随 G-22 一并撤回：KPR 基因型串经 [9] OA 全文逐字核验一致"
+  },
+  {
+   "candidate": "S6-07",
+   "resolution": "merged",
+   "merged_into": "M6-001",
+   "note": "同号辨识提示（非缺陷）"
+  },
+  {
+   "candidate": "X-01",
+   "resolution": "promoted_to_finding",
+   "final_finding_id": "M7-005",
+   "note": "L4 跨节核查新发现"
+  },
+  {
+   "candidate": "X-02",
+   "resolution": "promoted_to_finding",
+   "final_finding_id": "M6-002",
+   "note": "L4 跨节核查新发现"
+  },
+  {
+   "candidate": "cell_line(X1)",
+   "resolution": "promoted_to_finding",
+   "final_finding_id": "M6-001",
+   "note": "穷举核验无具名细胞系，not_applicable 记入合规汇总（EV-304）"
+  },
+  {
+   "candidate": "SIG-601",
+   "resolution": "merged",
+   "merged_into": "M6-001",
+   "note": "ETH-HGR-001 裁定 not_applicable"
+  },
+  {
+   "candidate": "SIG-902",
+   "resolution": "merged",
+   "merged_into": "M3-002",
+   "note": "HGNC unrecognized 落地"
+  }
+ ],
+ "global_audit": [
+  {
+   "g_id": "G-01",
+   "final_state": "merged",
+   "final_finding": "M3-001",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-02",
+   "final_state": "merged",
+   "final_finding": "M2-002",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-03",
+   "final_state": "merged",
+   "final_finding": "M7-001",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-04",
+   "final_state": "merged",
+   "final_finding": "M4-002",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-05",
+   "final_state": "merged",
+   "final_finding": "M2-004",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-06",
+   "final_state": "merged",
+   "final_finding": "M7-001",
+   "severity_final": "major(簇内)"
+  },
+  {
+   "g_id": "G-07",
+   "final_state": "merged",
+   "final_finding": "M3-004",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-08",
+   "final_state": "merged",
+   "final_finding": "M2-005",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-09",
+   "final_state": "merged",
+   "final_finding": "M2-004",
+   "severity_final": "major(簇内)"
+  },
+  {
+   "g_id": "G-10",
+   "final_state": "merged",
+   "final_finding": "M4-002",
+   "severity_final": "major(簇内)"
+  },
+  {
+   "g_id": "G-11",
+   "final_state": "merged",
+   "final_finding": "M2-006",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-12",
+   "final_state": "merged",
+   "final_finding": "M5-002",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-13",
+   "final_state": "merged",
+   "final_finding": "M2-003",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-14",
+   "final_state": "merged",
+   "final_finding": "M5-003",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-15",
+   "final_state": "merged",
+   "final_finding": "M4-003",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-16",
+   "final_state": "merged",
+   "final_finding": "M3-003",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-17",
+   "final_state": "merged",
+   "final_finding": "M5-004",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-18",
+   "final_state": "merged",
+   "final_finding": "M4-001",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-19",
+   "final_state": "merged",
+   "final_finding": "M5-006",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-20",
+   "final_state": "blocked_by_system_limitation",
+   "final_finding": "M5-001(SYS-1)",
+   "severity_final": "info"
+  },
+  {
+   "g_id": "G-21",
+   "final_state": "merged",
+   "final_finding": "M3-002",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-22",
+   "final_state": "rejected",
+   "final_finding": null,
+   "severity_final": "none",
+   "rejection_reason": "KPR 基因型串与原文逐字一致（EV-205）"
+  },
+  {
+   "g_id": "G-23",
+   "final_state": "merged",
+   "final_finding": "M2-008",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-24",
+   "final_state": "merged",
+   "final_finding": "M2-001",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-25",
+   "final_state": "merged",
+   "final_finding": "M2-002",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-26",
+   "final_state": "merged",
+   "final_finding": "M2-001",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-27",
+   "final_state": "merged",
+   "final_finding": "M7-004",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-28",
+   "final_state": "rejected",
+   "final_finding": null,
+   "severity_final": "none",
+   "rejection_reason": "JATS 源无重复词，重建伪影（EV-121）"
+  },
+  {
+   "g_id": "G-29",
+   "final_state": "rejected",
+   "final_finding": null,
+   "severity_final": "none",
+   "rejection_reason": "Zheng BY 为真实独立作者（EV-210）"
+  },
+  {
+   "g_id": "G-30",
+   "final_state": "merged",
+   "final_finding": "M2-007",
+   "severity_final": "info"
+  },
+  {
+   "g_id": "G-31",
+   "final_state": "merged",
+   "final_finding": "M7-003",
+   "severity_final": "info"
+  },
+  {
+   "g_id": "G-32",
+   "final_state": "merged",
+   "final_finding": "M4-004",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-33",
+   "final_state": "merged",
+   "final_finding": "M7-001",
+   "severity_final": "major(簇内)"
+  },
+  {
+   "g_id": "G-34",
+   "final_state": "merged",
+   "final_finding": "M2-003",
+   "severity_final": "major"
+  },
+  {
+   "g_id": "G-35",
+   "final_state": "merged",
+   "final_finding": "M7-003",
+   "severity_final": "info"
+  },
+  {
+   "g_id": "G-36",
+   "final_state": "promoted_to_finding",
+   "final_finding": "M6-001",
+   "severity_final": "info"
+  },
+  {
+   "g_id": "G-37",
+   "final_state": "blocked_by_system_limitation",
+   "final_finding": "M5-001(SYS-2)",
+   "severity_final": "info"
+  },
+  {
+   "g_id": "G-38",
+   "final_state": "merged",
+   "final_finding": "M7-002",
+   "severity_final": "minor"
+  },
+  {
+   "g_id": "G-39",
+   "final_state": "merged",
+   "final_finding": "M2-001",
+   "severity_final": "major"
+  }
+ ],
+ "additive_guarantee": {
+  "additive_guarantee_held": true,
+  "g_items_total": 39,
+  "g_items_promoted_or_merged": 34,
+  "g_items_rejected": 3,
+  "g_items_blocked_by_system_limitation": 2,
+  "g_items_vanished": 0,
+  "rejection_reasons_present": true,
+  "severity_downgrade_log": [
+   {
+    "g": "G-16",
+    "from": "minor(物种误植, high)",
+    "to": "minor(命名规范歧义, medium)",
+    "reason": "HGNC 大小写不敏感解析 CCL4l2→CCL4L2 为人源批准符号，非确定性误植"
+   },
+   {
+    "g": "G-22",
+    "from": "minor(待核)",
+    "to": "none(rejected)",
+    "reason": "原文逐字核验一致，非下调而是证伪"
+   },
+   {
+    "g": "G-28",
+    "from": "info",
+    "to": "none(rejected)",
+    "reason": "重建伪影，非稿件问题"
+   },
+   {
+    "g": "G-29",
+    "from": "info(疑笔误)",
+    "to": "none(rejected)",
+    "reason": "两位真实作者"
+   },
+   {
+    "g": "S7-06→并入 M4-002",
+    "from": "minor(转述越级疑虑)",
+    "to": "info 级子项",
+    "reason": "外部核验原文 'correlated' 与评论 'associates' 同档，越级疑虑撤回"
+   },
+   {
+    "g": "S3-04/S3-05(G-16)",
+    "from": "minor, high",
+    "to": "minor, medium",
+    "reason": "同 G-16"
+   }
+  ],
+  "final_findings_vs_g": "最终 finding 31 条 vs L0 G 条目 39 条：34 条 G 并入/晋升为 31 条聚簇 finding（含 2 条 L4 跨节新发现），3 条被带理由驳回，2 条归入系统限制 —— 无凭空蒸发"
+ },
+ "tool_execution_ledger": [
+  {
+   "tool": "external_figure_validation.py",
+   "check": "gene_symbol",
+   "status": "executed",
+   "n": 25,
+   "signals": 1,
+   "signal_ids": [
+    "SIG-902"
+   ],
+   "note": "LRCC15 unrecognized；其余 24 符号（含 Col1a2/CCL4l2 大小写不敏感）解析成功"
+  },
+  {
+   "tool": "external_figure_validation.py",
+   "check": "reference_exists",
+   "status": "executed",
+   "n": 12,
+   "signals": 0,
+   "note": "含本文 DOI；Crossref 全解析，标题匹配"
+  },
+  {
+   "tool": "external_figure_validation.py",
+   "check": "cited_retracted",
+   "status": "executed",
+   "n": 11,
+   "signals": 0,
+   "note": "Europe PMC：无撤稿"
+  },
+  {
+   "tool": "external_figure_validation.py",
+   "check": "cell_line",
+   "status": "not_applicable",
+   "rationale": "全文穷举检索零具名细胞系（EV-304 检索词清单）；'chordoma isolated iCAFs'/'normal fibroblasts' 为患者来源原代细胞的功能性表述。用户要求逐个核验细胞系：核验结果为空集，诚实登记而非硬造目标"
+  },
+  {
+   "tool": "external_figure_validation.py",
+   "check": "rrid/accession/trial_registration/compound",
+   "status": "not_applicable",
+   "rationale": "L0b 穷举收割零命中（无 RRID、无 GEO/SRA 登录号、无 NCT、无药物剂量）"
+  },
+  {
+   "tool": "statistical_forensics.py",
+   "check": "table_total",
+   "status": "executed",
+   "n": 5,
+   "signals": 0,
+   "note": "部位分解 2+3+1=6；四行簇数含括注/未命名条目后自洽"
+  },
+  {
+   "tool": "statistical_forensics.py",
+   "check": "count_percentage/grim/test_statistic_p/ci_estimate",
+   "status": "not_applicable",
+   "rationale": "'20%' 无分母（SYS-5）；全文无均值、无检验统计量、无 CI 可复算"
+  },
+  {
+   "tool": "scipy (主会话复核)",
+   "check": "fisher_exact + clopper_pearson",
+   "status": "executed",
+   "n": 1,
+   "signals": 0,
+   "note": "p=0.10、CI [0.2924,1.0] 与 M4 演算一致，作为 M4-001 证据"
+  },
+  {
+   "tool": "ethics_compliance_check.py",
+   "check": "screen",
+   "status": "executed",
+   "n": 1,
+   "signals": 1,
+   "signal_ids": [
+    "SIG-601"
+   ],
+   "note": "M6 裁定 not_applicable"
+  },
+  {
+   "tool": "animal_model_compliance.py",
+   "check": "screen",
+   "status": "executed",
+   "n": 1,
+   "signals": 0,
+   "note": "无动物使用"
+  },
+  {
+   "tool": "figure_integrity_audit.py",
+   "check": "pixel audit",
+   "status": "executed(no assets)",
+   "n": 1,
+   "signals": 0,
+   "note": "images_scanned=0（SYS-1）"
+  },
+  {
+   "tool": "normalize_biomed_units.py",
+   "check": "dose-unit pairs",
+   "status": "not_applicable",
+   "rationale": "全文无剂量-单位对"
+  },
+  {
+   "tool": "sequence_identifier_audit.py",
+   "check": "accession/primer/HGVS",
+   "status": "not_applicable",
+   "rationale": "零登录号/引物/HGVS；基因符号已由 X1 HGNC 覆盖"
+  }
+ ],
+ "external_literature_validation": [
+  {
+   "target": "ref[3] doi:10.1002/path.6369",
+   "method": "Europe PMC abstract",
+   "findings": "87,693 细胞(7 肿瘤+4 NP)；bulk 126 发现→QIF additional 116 验证；ST 示 iCAF 远离肿瘤；pseudotime 'suggested'；in vivo/in vitro 'accelerate malignant progression'；摘要未提 10-year"
+  },
+  {
+   "target": "ref[2] doi:10.1093/neuonc/noad173",
+   "method": "Europe PMC abstract + PubMed authors",
+   "findings": "scRNA-seq 3+3+3；QIF additional 105 patients；作者列表无 Henry/Cameron；存在更正 PMID40719554"
+  },
+  {
+   "target": "ref[6] doi:10.1158/2159-8290.CD-19-0644",
+   "method": "Europe PMC abstract",
+   "findings": "动物模型跨阶段图谱+横断面人源证据（22 scRNA-seq、70 IHC）+>600 例试验回顾，非纵向随访"
+  },
+  {
+   "target": "ref[9] doi:10.1038/s41586-022-05272-1",
+   "method": "Europe PMC fullTextXML (PMC9630141, OA)",
+   "findings": "KPR 基因型串逐字一致；Lrrc15-DTR+DT 遗传消融；免疫健全同源宿主"
+  },
+  {
+   "target": "ref[11] doi:10.1136/jitc-2024-009313",
+   "method": "Europe PMC",
+   "findings": "作者 Niu HQ, Zheng BY, Zou MX, Zheng BW；scRNA-seq+bulk 免疫研究"
+  },
+  {
+   "target": "ref[5] doi:10.1093/neuros/nyz333",
+   "method": "PubMed authors",
+   "findings": "15 人作者列表无 Henry/Cameron"
+  },
+  {
+   "target": "12 DOIs",
+   "method": "Crossref works API",
+   "findings": "全部解析，标题匹配"
+  },
+  {
+   "target": "11 cited refs",
+   "method": "Europe PMC retraction flag",
+   "findings": "无撤稿"
+  }
+ ],
+ "runtime_utilization": {
+  "child_sessions": 9,
+  "task_calls": 15,
+  "continuations": 6,
+  "modules_run": [
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7"
+  ],
+  "modules_skipped": {},
+  "skipped_rationale": "无跳过：评论文体自身无原始设计，M3/M4/M6 以受限范围运行（核验对象=转述自洽性与归属），理由已在 execution_scope.scope_rationale 写明",
+  "references_required": [
+   "02-macro-logic",
+   "03-experimental-methods",
+   "04-statistics",
+   "05-figures-and-charts",
+   "06-ethics-compliance",
+   "06b-animal-model-ethics-enhancement",
+   "07-conclusions-discussion"
+  ],
+  "references_read": [
+   "02-macro-logic",
+   "03-experimental-methods",
+   "04-statistics",
+   "05-figures-and-charts",
+   "06-ethics-compliance",
+   "06b-animal-model-ethics-enhancement",
+   "07-conclusions-discussion"
+  ],
+  "routing_recall": 1.0,
+  "tool_execution_recall": 1.0,
+  "global_findings_count": 39,
+  "global_findings_confirmed": 36,
+  "global_findings_refuted": 3,
+  "global_findings_unresolved": 0,
+  "additive_guarantee_held": true,
+  "findings_added_beyond_global": 26,
+  "finding_origin_breakdown": {
+   "global_review": 4,
+   "specialist_rule": 14,
+   "external_validation": 5,
+   "deterministic_tool": 3,
+   "cross_section_reconciliation": 2,
+   "multiple": 3
+  },
+  "parallelization": "L0∥L0b 同批；M2-M6 同批 5 路并行；M7 串行消费；6 个 L3 续接复议同批；L2 工具主会话并发执行",
+  "session_ids": {
+   "L0": "ses_02244caffffeJVi3A9TiJhQTFR",
+   "L0b": "ses_0224477d1ffembmJLLIc5tl03J",
+   "M2": "ses_022390bc9ffey0pIfgRzE6mpgs",
+   "M3": "ses_022387a94ffeHh5zstT3eeF4no",
+   "M4": "ses_022381c3effe4wnYnYE36l6RhG",
+   "M5": "ses_02237b0e9ffez3nQhV1xbOaE1K",
+   "M6": "ses_02237459effeVQw4Yd1z2E6Xki",
+   "M7": "ses_0222ffcf9ffeiGp0e4X84Dv269",
+   "L4": "ses_0221b7ec0ffeecIFSO4pq7aql5"
+  }
+ },
+ "boundary_statement": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号，不构成录用、退稿或发表决定。",
+ "manual_review_plan": [
+  {
+   "priority": "P1",
+   "action": "核对并要求作者改写全部作者归属句（'lead author of the current study'、'the current authors previously reported'、'this and other groups'）；若作者主张另有共同发表关系须举证",
+   "who": "editor",
+   "finding_ids": [
+    "M2-001"
+   ]
+  },
+  {
+   "priority": "P1",
+   "action": "要求作者在 L25/L29 增加宿主免疫语境 caveat（异种移植=免疫缺陷，不能验证免疫介导机制），并分开表述 in vitro/in vivo 证据；回 [3] 原文确认宿主机型",
+   "who": "domain_reviewer",
+   "finding_ids": [
+    "M3-001"
+   ]
+  },
+  {
+   "priority": "P1",
+   "action": "统计审稿人回 [3] 原文核验 QIF 分析的截断值/单多因素/多重比较/效应量与 126 发现→116 验证结构；回 [2] 核验 ERS-CAF 分析单位（患者 vs 细胞）与检验方法",
+   "who": "statistical_reviewer",
+   "finding_ids": [
+    "M4-002",
+    "M4-001",
+    "M7-005"
+   ]
+  },
+  {
+   "priority": "P1",
+   "action": "要求作者澄清 [2]/[3] 队列复用范围（'used the same tumour cohorts'），并补非独立性对因果/整合主张的含义",
+   "who": "editor",
+   "finding_ids": [
+    "M2-002"
+   ]
+  },
+  {
+   "priority": "P1",
+   "action": "统一 '四项研究' 集合：引文括注 [1,2,10,11] 与 Table 1 行 [3,1,10,2] 二者取一并说明",
+   "who": "editor",
+   "finding_ids": [
+    "M2-003",
+    "M2-009",
+    "M5-002"
+   ]
+  },
+  {
+   "priority": "P1",
+   "action": "要求作者增加局限性与可比性段落（队列重叠、部位、样本量、标志物不一致、CAF 可塑性），'No doubt' 改条件式",
+   "who": "domain_reviewer",
+   "finding_ids": [
+    "M7-001"
+   ]
+  },
+  {
+   "priority": "P1",
+   "action": "pseudotime 表述改谱系对冲（标明轨迹出处、NP 对照 caveat；'are shown to appear late' → 'are inferred to'）",
+   "who": "domain_reviewer",
+   "finding_ids": [
+    "M2-004"
+   ]
+  },
+  {
+   "priority": "P2",
+   "action": "Table 1 修订包：补细胞数/QC/分母、rare clusters 命名、跨研究映射列、'targeted' 补主语、统一符号（CCL4L2/COL1A2）与书写规范、行序",
+   "who": "author",
+   "finding_ids": [
+    "M4-003",
+    "M5-003",
+    "M5-004",
+    "M5-005",
+    "M3-003",
+    "M6-002"
+   ]
+  },
+  {
+   "priority": "P2",
+   "action": "图注与强度统一包：energy metabolism CAF 贴邻主张给出处或删除；图注/表注回归 'largely' 级对冲；摘要 'causative role' 与 [3] 对齐；LRCC15→LRRC15；'longitudinal studies [6]' 改写",
+   "who": "author",
+   "finding_ids": [
+    "M5-006",
+    "M5-007",
+    "M3-002",
+    "M2-005"
+   ]
+  },
+  {
+   "priority": "P2",
+   "action": "引文与语言包：L21 共线性句、L15 TGFβ、L29 免疫治疗句补引文；'consensus' 弱化；Dominguez/Krishnamurty 拆句署名；语法润色；'10-year outcome' 注明出处",
+   "who": "author",
+   "finding_ids": [
+    "M2-006",
+    "M7-003",
+    "M2-007",
+    "M2-008",
+    "M7-004",
+    "M7-005"
+   ]
+  },
+  {
+   "priority": "P2",
+   "action": "sec-0003 标题/内容对齐：回接 PDAC 警示或改标题；核对功能实验模型局限表述",
+   "who": "author",
+   "finding_ids": [
+    "M7-002",
+    "M3-004"
+   ]
+  },
+  {
+   "priority": "P2",
+   "action": "材料恢复后再审：Figure 1 图像（SYS-1）、[3] 全文（SYS-4）、Duan 原文（SYS-5）、ref[2] 更正（SYS-8）；编辑留档合规汇总（M6-001）",
+   "who": "editor",
+   "finding_ids": [
+    "M5-001",
+    "M6-001"
+   ]
+  }
+ ],
+ "unresolved_external_items": [
+  "[3] 全文：QIF 10-year outcome 出处、截断值/多因素/多重比较、异种移植宿主机型、iCAF 制备细节、bulk 签名组成与特异性、是否主张对侵袭-预后表型的因果角色",
+  "[2] 全文：ERS-CAF 复发关联的分析单位与检验方法、取材部位分布；更正 PMID40719554 内容",
+  "Duan [10] 原文：CCL4l2/Col1a2 原始写法、iCAF 标志物列表、'20%' 分母",
+  "[11] 是否报告 TBXT+/EMT/TGFβ/癌干细胞要素（'All studies concur' 逐篇匹配）",
+  "energy metabolism CAF 空间定位证据出处（[2]/[3] 全文）",
+  "pseudotime 轨迹出处（[2] vs [3]）与 NP 对照匹配方式",
+  "截至 2025-03 脊索瘤 scRNA-seq 图谱完备性（'至少四项'）",
+  "脊索瘤免疫检查点抑制剂临床证据基线（决定 'promising option' 措辞收敛幅度）",
+  "'loss of myofibroblast CAFs' 共识范围（[4],[8] 之外是否有其他独立模型）"
+ ]
+}
