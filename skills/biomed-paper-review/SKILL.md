@@ -36,13 +36,24 @@ Stage 0 完成前不得读取 `references/` 或套用 `schemas/`。候选清单�
 ### 0.2 当前实现边界与联网增强原则
 
 执行环境允许访问白名单内的公开科学数据源，网络与 12 小时超时**不再构成分期依据**。
-离线 Stage 1–5 是保底；可选 X1 位于 Stage 3b 后、Stage 4 前。当前已落地 X1 的
-`external` evidence、无 severity signal 与失败降级契约，但**尚未交付 connector 脚本**，
-因此在 connector 实现并通过录制响应回归前，不得声称已完成任何数据库核验。
+离线 Stage 1–5 是保底；可选 X1 位于 Stage 3b 后、Stage 4 前。
+
+**X1 的 connector 已交付**：`scripts/external_figure_validation.py`，十四条检查、
+十个数据库（Cellosaurus / ClinicalTrials.gov / UniProt / Europe PMC / Crossref /
+HGNC / SciCrunch / PubChem / NCBI Taxonomy·GEO·SRA / ChEMBL / RCSB PDB / PRIDE），
+45 项自检对着线上接口通过。**只查稿件里真的出现过的标识符，不预置任何数据集。**
+
+**X1 不是可有可无的补充，它是本 Skill 相对裸模型的主要价值来源。**
+离线检查只能查论文内部是否自洽，而内部自洽裸模型本来就会做 ——
+把它写成规则再让模型执行一遍，相对裸模型的增益结构上只能是零或负（已实测）。
+只有两类事情模型做不到：确定性计算，和查外部权威库。
 
 | 能力 | 当前离线做法 | 一期 X1 归属 | 接入前置条件 |
 | --- | --- | --- | --- |
-| 判断结论在科学上是否**为真** | 只做 claim↔evidence 对齐 | M7 | 文献库 MCP（PubMed / Europe PMC） |
+| 细胞系是否被认定污染 / 错误鉴定 | 不判断 | M3 | **已接入**（Cellosaurus） |
+| 试验是否回顾性注册、是否结局切换 | 不判断 | M4 / M6 | **已接入**（ClinicalTrials.gov） |
+| 引用文献是否已撤稿、DOI 是否真实 | 不判断 | M2 | **已接入**（Europe PMC / Crossref） |
+| 判断结论在科学上是否**为真** | 只做 claim↔evidence 对齐 | M7 | 文献库检索与既往结论比对 |
 | 判断领域**创新性 / 重要性** | 不判断 | M7 | 文献库 + 引用网络；需先定义可量化新颖度判据 |
 | 判断违背基础常识的结论 | 标记「结论超出证据支持范围」交人工 | M7 | 领域常识规则库；先积累一期误判样本 |
 | 复现统计计算 | 已做 p/CI/计数-百分比/GRIM/表格合计五类无需原始数据的一致性取证 | M4 | 原始数据可得时重跑主要分析 |
@@ -636,7 +647,7 @@ CLI 产物仍是工具原始结果：输入已带 `observation_refs[]` / `eviden
 | `scripts/ethics_compliance_check.py` | 伦理规范库筛查 | Stage 2，产 signal 交 M6 |
 | `scripts/sequence_identifier_audit.py` | 序列与标识符审计：HGVS 支持子集、版本化完整参考序列上的位点/残基核对、登录号格式、基因符号物种惯例、引物 QC；参考上下文不全时只产 `partial_extraction` | Stage 2，产 signal 交 M2 / M3 |
 | `scripts/figure_integrity_audit.py` | 论文内图像完整性：候选重复区域、拼接不连续、异常均匀区块。**只出候选，禁止自动定性** | Stage 3，产 signal 交 M5 |
-| `scripts/external_figure_validation.py` | **外部数据核验**：细胞系污染（Cellosaurus）、回顾性注册与结局切换（ClinicalTrials.gov）、引用已撤稿文献（Europe PMC）、蛋白分子量与变异位点（UniProt）、登录号存在性（GEO/SRA/PRIDE）、活性数量级（ChEMBL）。按需联网，不预置数据集；源不可达时产 `system_limitation` 而非 finding | Stage 3c，产 signal 交 M2/M3/M4/M5/M6/M7 |
+| `scripts/external_figure_validation.py` | **外部数据核验**（十四条检查，十个数据库）：细胞系污染（Cellosaurus）、回顾性注册与结局切换（ClinicalTrials.gov）、引用已撤稿文献（Europe PMC）、参考文献 DOI 能否解析（Crossref）、基因符号现行性与 Excel 日期化（HGNC）、试剂 RRID（SciCrunch）、蛋白分子量与变异位点（UniProt）、化合物分子量（PubChem）、物种学名（NCBI Taxonomy）、结构条目（RCSB PDB）、登录号存在性（GEO/SRA/PRIDE）、活性数量级（ChEMBL）。按需联网，不预置数据集；源不可达时产 `system_limitation` 而非 finding | Stage 3c，产 signal 交 M2/M3/M4/M5/M6/M7 |
 | `resources/ethics_rules.json` | 三法域伦理规范库（28 部规范 / 22 条要求） | M6 |
 | `schemas/*.json` | 全部输出的机器可校验模式 | 输出前自检 |
 | `templates/review_report.md` | 报告渲染模板 | Stage 5 |
