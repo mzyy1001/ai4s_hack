@@ -31,14 +31,31 @@
 
 | 工具 | 回答的问题 | 什么时候用 |
 | --- | --- | --- |
-| `tools/fault_injection_benchmark.py` | **有标准答案**：植入 N 条已知错误，两臂各查出几条？ | **首选** —— 改了任何东西之后 |
+| `tools/fetch_ground_truth_papers.py`<br>+ `tools/real_paper_benchmark.py` | **有标准答案**：真实论文，权威来源出题，四类错误各一两篇 | **首选** —— 改了任何东西之后 |
+| ~~`tools/fault_injection_benchmark.py`~~ | 植入式基准 —— **已弃用**，两轮都饱和 | 不要用，见 [方法篇 §2.3](ab-test-method.md) |
 | `tools/uplift_ab.py` | 无标准答案：两份自由文本意见的粗对比 | 只作辅助，结论要人读 |
 | `tools/baseline_probe.py` | **某一条具体检查**，裸模型能不能自己查出来？ | **加任何新检查之前** |
 | `tools/uplift_sweep.py` | 已实现的**全部**检查里，哪些其实是零 uplift？ | 定期体检；决定哪些写详细规则 |
 
 ---
 
-## 2. 整体 A/B：`uplift_ab.py`
+### 首选：真实论文基准
+
+```bash
+set -a && source ~/.config/qwen/credentials.env && set +a
+
+# 建语料：四类错误各两篇，标准答案来自 Cellosaurus / Europe PMC /
+# ClinicalTrials.gov / 期刊撤稿声明
+python3 tools/fetch_ground_truth_papers.py --per-kind 2
+
+# 跑两臂并逐条判定
+caffeinate -i python3 tools/real_paper_benchmark.py --corpus datasets/ground_truth
+```
+
+**按错误类型读结果，不要只看总分** —— 总分只说明「有没有用」，
+分类型才说明「哪里有用」，而裸模型本来就会的那几类应该从 Skill 里删掉。
+
+## 2. 整体 A/B（辅助）：`uplift_ab.py`
 
 ```bash
 # 凭据（官方统一模型是 GLM / Kimi 系列；我们手上有 Qwen）

@@ -457,6 +457,21 @@ def _ctgov(nct, led, target, modules):
         return None, url, raw, http, None
 
 
+def registered_late(reg, start):
+    """注册是否**确定**晚于研究开始。
+
+    ClinicalTrials.gov 的 startDate 常常只有 YYYY-MM 精度，而注册日期是
+    YYYY-MM-DD。直接字符串比较会把「同月注册」误判为回顾性注册 ——
+    start=2011-02、reg=2011-02-24 时，研究完全可能是 24 号之后才开始的，
+    我们无从判断。**取两者中较粗的精度比较，并要求严格大于**，
+    宁可漏报也不能凭猜测给稿件扣帽子。
+    """
+    if not (reg and start):
+        return False
+    n = min(len(reg), len(start))
+    return reg[:n] > start[:n]
+
+
 def check_trial_registration(item, led, sid):
     """注册号是否存在、是否**回顾性注册**（注册晚于研究开始）。
 
@@ -494,7 +509,7 @@ def check_trial_registration(item, led, sid):
              "unit": None,
              "source_path": "protocolSection.statusModule.startDateStruct.date"},
         ]))
-    if not (reg and start) or reg <= start:
+    if not registered_late(reg, start):
         return None
     return make_signal(
         sid, target,
@@ -1014,6 +1029,10 @@ def _selftest():
     expect("结局一致 -> 不报警",
            len(one({"check": "outcome_switching", "nct": "NCT04368728",
                     "reported_primary": "local reactions after dose 1"})["signals"]), 0)
+    expect("同月注册不误报（start 只有 YYYY-MM 精度时无从判断）",
+           registered_late("2011-02-24", "2011-02"), False)
+    expect("确实晚一个月 -> 判为回顾性", registered_late("2011-02-24", "2011-01"), True)
+    expect("注册早于开始 -> 前瞻性", registered_late("2020-04-27", "2020-04-29"), False)
     expect("前瞻性注册不报警",
            len(one({"check": "trial_registration", "nct": "NCT04368728"})["signals"]), 0)
     r = one({"check": "trial_registration", "nct": "NCT99999999"})
