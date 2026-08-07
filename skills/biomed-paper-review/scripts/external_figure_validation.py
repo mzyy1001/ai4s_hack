@@ -58,6 +58,8 @@ import urllib.request
 PARSER_VERSION = "x1-2026-08-07"
 RULE_VERSION = "2026-08-07"
 UA = {"User-Agent": "ai4s-hack-biomed-review/1.0"}
+# HGNC 与 SciCrunch 默认返回 XML/HTML，必须显式要 JSON
+JSON_ACCEPT = {"Accept": "application/json"}
 
 UNIPROT = "https://rest.uniprot.org/uniprotkb"
 CHEMBL = "https://www.ebi.ac.uk/chembl/api/data"
@@ -66,6 +68,11 @@ PRIDE = "https://www.ebi.ac.uk/pride/ws/archive/v2"
 EPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest"
 CELLO = "https://api.cellosaurus.org"
 CTGOV = "https://clinicaltrials.gov/api/v2/studies"
+HGNC = "https://rest.genenames.org"
+CROSSREF = "https://api.crossref.org/works"
+SCICRUNCH = "https://scicrunch.org/resolver"
+PUBCHEM = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound"
+RCSB = "https://data.rcsb.org/rest/v1/core/entry"
 
 
 class Ledger:
@@ -107,7 +114,7 @@ class Ledger:
 
 
 # ---------------------------------------------------------------- 传输层
-def fetch(url, timeout=40, retries=2):
+def fetch(url, timeout=40, retries=2, headers=None):
     """返回 (text, http_status, error)。
 
     **任何失败都返回 error，绝不静默当成「查无此项」** —— 这正是本项目
@@ -116,7 +123,7 @@ def fetch(url, timeout=40, retries=2):
     last = None
     for i in range(retries + 1):
         try:
-            req = urllib.request.Request(url, headers=UA)
+            req = urllib.request.Request(url, headers={**UA, **(headers or {})})
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 return r.read().decode("utf-8", "replace"), r.status, None
         except urllib.error.HTTPError as e:
@@ -592,8 +599,316 @@ def check_cited_retracted(item, led, sid):
         "mismatch", "complete", item["evidence_refs"], [ev])
 
 
+# ---------------------------------------------- HGNC 基因符号
+# Excel 会把这些基因符号自动转成日期，是基因列表里最常见的静默污染。
+# 2020 年 HGNC 为此把整个 SEPT/MARCH/DEC 家族改名（SEPT2 -> SEPTIN2）。
+_EXCEL_DATE = re.compile(r"^(\d{1,2}-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+                         r"|(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\d{1,2})$",
+                         re.I)
+
+
+def check_gene_symbol(item, led, sid):
+    """人类基因符号是否为 HGNC 已批准符号；是否为已改名的旧符号；
+    是否是**被 Excel 转成日期**的基因名。
+
+    HGNC 只管人类命名；给了非人类物种就不查（小鼠走 MGI，斑马鱼走 ZFIN），
+    否则会把正常的小鼠符号误报成「未批准」。
+    """
+    sym = (item.get("symbol") or "").strip()
+    species = (item.get("species") or "").strip().lower()
+    target = item.get("target", "methods.genes")
+    if not sym:
+        return None
+    if species and species not in ("human", "homo sapiens", "hsa"):
+        return None
+
+    # Excel 日期化不需要联网就能判定，但仍登记外部证据以便复查改名后的正确符号
+    if _EXCEL_DATE.match(sym):
+        url = f"{HGNC}/search/prev_symbol/{urllib.parse.quote(sym)}"
+        return make_signal(
+            sid, target,
+            f"基因符号「{sym}」是日期格式 —— Excel 会把 SEPT/MARCH/DEC 家族的符号"
+            f"自动转成日期，这是基因列表里最常见的静默污染。HGNC 已于 2020 年"
+            f"将该家族改名（SEPT2→SEPTIN2、MARCH1→MARCHF1）以规避此问题。"
+            f"须回到原始数据核对该列究竟是哪个基因。",
+            ["M2", "M3"], "hgnc", "symbol_lookup", "gene_symbol_excel_corruption",
+            {"symbol": sym}, {"looks_like_date": True},
+            "mismatch", "complete", item["evidence_refs"],
+            [led.add_evidence(make_external_evidence(
+                "HGNC", url, "symbol_lookup", sym, None, "", 200, "not_addressed"))])
+
+    url = f"{HGNC}/fetch/symbol/{urllib.parse.quote(sym)}"
+    raw, http, err = fetch(url, headers=JSON_ACCEPT)
+    if err:
+        return led.add_limit(f"无法查询 HGNC 中的基因符号 {sym}", target,
+                             ["M2", "M3"], err)
+    try:
+        resp = json.loads(raw)["response"]
+    except Exception:                                            # noqa: BLE001
+        return led.add_limit("HGNC 返回无法解析", target, ["M2", "M3"],
+                             {"kind": "unparseable"})
+    if resp.get("numFound"):
+        d = resp["docs"][0]
+        led.add_evidence(make_external_evidence(
+            "HGNC", url, "symbol_lookup", sym, d.get("hgnc_id"), raw, http, "resolved",
+            assertions=[{"predicate": "symbol_status", "subject": d.get("hgnc_id"),
+                         "external_value": d.get("status"), "unit": None,
+                         "source_path": "response.docs[0].status"}]))
+        return None
+
+    # 未命中已批准符号 —— 可能是旧符号（已改名）、别名，或根本不存在
+    purl = f"{HGNC}/search/prev_symbol/{urllib.parse.quote(sym)}"
+    praw, phttp, perr = fetch(purl, headers=JSON_ACCEPT)
+    if perr:
+        return led.add_limit(f"无法查询 {sym} 是否为旧符号", target, ["M2", "M3"], perr)
+    try:
+        presp = json.loads(praw)["response"]
+    except Exception:                                            # noqa: BLE001
+        return led.add_limit("HGNC 返回无法解析", target, ["M2", "M3"],
+                             {"kind": "unparseable"})
+    if presp.get("numFound"):
+        cur = presp["docs"][0].get("symbol")
+        ev = led.add_evidence(make_external_evidence(
+            "HGNC", purl, "prev_symbol_search", sym, presp["docs"][0].get("hgnc_id"),
+            praw, phttp, "resolved",
+            assertions=[{"predicate": "current_symbol", "subject": sym,
+                         "external_value": cur, "unit": None,
+                         "source_path": "response.docs[0].symbol"}]))
+        return make_signal(
+            sid, target,
+            f"基因符号「{sym}」已非 HGNC 现行符号，现行符号为「{cur}」。"
+            f"旧符号本身不算错误，但与现行文献比对时容易张冠李戴。",
+            ["M2", "M3"], "hgnc", "prev_symbol_search", "gene_symbol_outdated",
+            {"symbol": sym}, {"current_symbol": cur},
+            "mismatch", "complete", item["evidence_refs"], [ev])
+
+    ev = led.add_evidence(make_external_evidence(
+        "HGNC", url, "symbol_lookup", sym, None, raw, http, "not_addressed"))
+    return make_signal(
+        sid, target,
+        f"基因符号「{sym}」既非 HGNC 已批准符号，也不是已登记的旧符号。"
+        f"可能是拼写错误、非人类物种的符号，或非标准的内部命名，须人工确认。",
+        ["M2", "M3"], "hgnc", "symbol_lookup", "gene_symbol_unrecognized",
+        {"symbol": sym}, {"found": False},
+        "needs_manual_review", "partial", item["evidence_refs"], [ev])
+
+
+# ---------------------------------------------- Crossref 参考文献存在性
+def check_reference_exists(item, led, sid):
+    """参考文献的 DOI 是否真实存在。
+
+    查的是**幻觉引文与纸厂引文** —— 生成式工具写出的参考文献常常格式完美
+    但 DOI 根本不存在。模型自己核不了：它没法解析 DOI。
+    """
+    doi = (item.get("doi") or "").strip()
+    target = item.get("target", "references")
+    if not doi:
+        return None
+    url = f"{CROSSREF}/{urllib.parse.quote(doi, safe='')}"
+    raw, http, err = fetch(url)
+    if err and err.get("kind") == "not_found":
+        ev = led.add_evidence(make_external_evidence(
+            "Crossref", url, "doi_resolve", doi, None, raw, 404, "not_found"))
+        return make_signal(
+            sid, target,
+            f"参考文献 DOI {doi} 在 Crossref 无法解析。格式完美但不存在的 DOI "
+            f"是幻觉引文与纸厂引文的典型特征，须核对该条文献是否真实。",
+            ["M2"], "crossref", "doi_resolve", "reference_doi_resolves",
+            {"doi": doi}, {"resolves": False},
+            "mismatch", "complete", item["evidence_refs"], [ev])
+    if err:
+        return led.add_limit(f"无法解析 DOI {doi}", target, ["M2"], err)
+    try:
+        msg = json.loads(raw)["message"]
+    except Exception:                                            # noqa: BLE001
+        return led.add_limit("Crossref 返回无法解析", target, ["M2"],
+                             {"kind": "unparseable"})
+    led.add_evidence(make_external_evidence(
+        "Crossref", url, "doi_resolve", doi, msg.get("DOI"), raw, http, "resolved",
+        assertions=[{"predicate": "title", "subject": msg.get("DOI"),
+                     "external_value": (msg.get("title") or [None])[0], "unit": None,
+                     "source_path": "message.title[0]"}]))
+    return None
+
+
+# ---------------------------------------------- NCBI Taxonomy 物种
+def check_species(item, led, sid):
+    """物种学名是否为 NCBI Taxonomy 中的有效名称。"""
+    name = (item.get("species") or "").strip()
+    target = item.get("target", "methods.species")
+    if not name:
+        return None
+    url = (f"{EUTILS}/esearch.fcgi?db=taxonomy&term="
+           f"{urllib.parse.quote(name)}&retmode=json")
+    raw, http, err = fetch(url)
+    if err:
+        return led.add_limit(f"无法查询物种名 {name}", target, ["M3"], err)
+    try:
+        r = json.loads(raw)["esearchresult"]
+        cnt, ids = int(r["count"]), r.get("idlist", [])
+    except Exception:                                            # noqa: BLE001
+        return led.add_limit("NCBI Taxonomy 返回无法解析", target, ["M3"],
+                             {"kind": "unparseable"})
+    if cnt:
+        led.add_evidence(make_external_evidence(
+            "NCBI Taxonomy", url, "scientific_name_search", name,
+            ids[0] if ids else name, raw, http, "resolved",
+            assertions=[{"predicate": "taxid", "subject": name,
+                         "external_value": ids[0] if ids else None, "unit": None,
+                         "source_path": "esearchresult.idlist[0]"}]))
+        return None
+    ev = led.add_evidence(make_external_evidence(
+        "NCBI Taxonomy", url, "scientific_name_search", name, None, raw, http,
+        "not_addressed"))
+    return make_signal(
+        sid, target,
+        f"物种名「{name}」在 NCBI Taxonomy 检索不到。可能是拼写错误、"
+        f"过时的分类名，或俗名被当作学名使用，须人工确认。",
+        ["M3"], "ncbi_taxonomy", "scientific_name_search", "species_name_valid",
+        {"species": name}, {"found": False},
+        "needs_manual_review", "partial", item["evidence_refs"], [ev])
+
+
+# ---------------------------------------------- RRID 试剂标识符
+def check_rrid(item, led, sid):
+    """抗体 / 试剂 / 质粒的 RRID 是否可解析。
+
+    抗体是生物医学复现危机的重灾区。RRID 是目前唯一能把「哪一支抗体」
+    唯一确定下来的标识符 —— 而它能不能解析，只有查 SciCrunch 才知道。
+    """
+    rrid = (item.get("rrid") or "").strip().replace("RRID:", "")
+    target = item.get("target", "methods.reagents")
+    if not rrid:
+        return None
+    url = f"{SCICRUNCH}/RRID:{urllib.parse.quote(rrid)}.json"
+    raw, http, err = fetch(url, headers=JSON_ACCEPT)
+    if err and err.get("kind") == "not_found":
+        ev = led.add_evidence(make_external_evidence(
+            "SciCrunch RRID", url, "rrid_resolve", rrid, None, raw, 404, "not_found"))
+        return make_signal(
+            sid, target,
+            f"RRID:{rrid} 无法解析。RRID 是唯一能把具体某支抗体/试剂确定下来的"
+            f"标识符，解析不了意味着该试剂无法被他人复现使用。",
+            ["M3"], "scicrunch", "rrid_resolve", "rrid_resolves",
+            {"rrid": rrid}, {"resolves": False},
+            "mismatch", "complete", item["evidence_refs"], [ev])
+    if err:
+        return led.add_limit(f"无法解析 RRID:{rrid}", target, ["M3"], err)
+    try:
+        hits = json.loads(raw).get("hits", {}).get("hits", [])
+    except Exception:                                            # noqa: BLE001
+        return led.add_limit("SciCrunch 返回无法解析", target, ["M3"],
+                             {"kind": "unparseable"})
+    if not hits:
+        ev = led.add_evidence(make_external_evidence(
+            "SciCrunch RRID", url, "rrid_resolve", rrid, None, raw, http, "not_found"))
+        return make_signal(
+            sid, target, f"RRID:{rrid} 解析到零条记录。",
+            ["M3"], "scicrunch", "rrid_resolve", "rrid_resolves",
+            {"rrid": rrid}, {"resolves": False},
+            "mismatch", "complete", item["evidence_refs"], [ev])
+    nm = (hits[0].get("_source", {}).get("item", {}) or {}).get("name")
+    led.add_evidence(make_external_evidence(
+        "SciCrunch RRID", url, "rrid_resolve", rrid, rrid, raw, http, "resolved",
+        assertions=[{"predicate": "reagent_name", "subject": rrid,
+                     "external_value": nm, "unit": None,
+                     "source_path": "hits.hits[0]._source.item.name"}]))
+    return None
+
+
+# ---------------------------------------------- PubChem 化合物
+def check_compound(item, led, sid):
+    """化合物名是否存在；若稿件报告了分子量，与 PubChem 是否相符。"""
+    name = (item.get("compound") or "").strip()
+    reported_mw = item.get("reported_mw")
+    target = item.get("target", "methods.compounds")
+    if not name:
+        return None
+    url = (f"{PUBCHEM}/name/{urllib.parse.quote(name)}/property/"
+           f"MolecularFormula,MolecularWeight/JSON")
+    raw, http, err = fetch(url)
+    if err and err.get("kind") == "not_found":
+        ev = led.add_evidence(make_external_evidence(
+            "PubChem", url, "compound_name_lookup", name, None, raw, 404,
+            "not_addressed"))
+        return make_signal(
+            sid, target,
+            f"化合物名「{name}」在 PubChem 检索不到。可能是内部代号、"
+            f"拼写错误或未收录的新化合物，须人工确认。",
+            ["M3", "M5"], "pubchem", "compound_name_lookup", "compound_name_valid",
+            {"compound": name}, {"found": False},
+            "needs_manual_review", "partial", item["evidence_refs"], [ev])
+    if err:
+        return led.add_limit(f"无法查询化合物 {name}", target, ["M3", "M5"], err)
+    try:
+        p = json.loads(raw)["PropertyTable"]["Properties"][0]
+        mw, formula = float(p["MolecularWeight"]), p["MolecularFormula"]
+    except Exception:                                            # noqa: BLE001
+        return led.add_limit("PubChem 返回无法解析", target, ["M3", "M5"],
+                             {"kind": "unparseable"})
+    ev = led.add_evidence(make_external_evidence(
+        "PubChem", url, "compound_name_lookup", name, str(p.get("CID") or name),
+        raw, http, "resolved",
+        assertions=[
+            {"predicate": "molecular_weight", "subject": name, "external_value": mw,
+             "unit": "g/mol", "source_path": "PropertyTable.Properties[0].MolecularWeight"},
+            {"predicate": "molecular_formula", "subject": name,
+             "external_value": formula, "unit": None,
+             "source_path": "PropertyTable.Properties[0].MolecularFormula"},
+        ]))
+    if reported_mw is None or abs(reported_mw - mw) / mw <= 0.02:
+        return None
+    return make_signal(
+        sid, target,
+        f"稿件报告 {name} 的分子量为 {reported_mw}，PubChem 记录为 {mw}"
+        f"（{formula}）。分子量直接影响摩尔浓度换算，偏差会传导到全部剂量计算。"
+        f"盐型、水合物、同位素标记均可解释此差异，须人工核对。",
+        ["M3", "M5"], "pubchem", "compound_name_lookup", "compound_molecular_weight",
+        {"reported_mw": reported_mw}, {"pubchem_mw": mw, "formula": formula},
+        "needs_manual_review", "partial", item["evidence_refs"], [ev])
+
+
+# ---------------------------------------------- PDB 结构
+def check_pdb(item, led, sid):
+    """稿件引用的 PDB 结构编号是否存在。"""
+    pdb = (item.get("pdb_id") or "").strip().upper()
+    target = item.get("target", "methods.structures")
+    if not pdb:
+        return None
+    url = f"{RCSB}/{urllib.parse.quote(pdb)}"
+    raw, http, err = fetch(url)
+    if err and err.get("kind") == "not_found":
+        ev = led.add_evidence(make_external_evidence(
+            "RCSB PDB", url, "entry_lookup", pdb, None, raw, 404, "not_found"))
+        return make_signal(
+            sid, target, f"稿件引用的 PDB 编号 {pdb} 在 RCSB 查不到条目。",
+            ["M3", "M5"], "rcsb_pdb", "entry_lookup", "pdb_entry_exists",
+            {"pdb_id": pdb}, {"found": False},
+            "mismatch", "complete", item["evidence_refs"], [ev])
+    if err:
+        return led.add_limit(f"无法查询 PDB {pdb}", target, ["M3", "M5"], err)
+    try:
+        d = json.loads(raw)
+        title = (d.get("struct") or {}).get("title")
+    except Exception:                                            # noqa: BLE001
+        return led.add_limit("RCSB 返回无法解析", target, ["M3", "M5"],
+                             {"kind": "unparseable"})
+    led.add_evidence(make_external_evidence(
+        "RCSB PDB", url, "entry_lookup", pdb, pdb, raw, http, "resolved",
+        assertions=[{"predicate": "structure_title", "subject": pdb,
+                     "external_value": title, "unit": None,
+                     "source_path": "struct.title"}]))
+    return None
+
+
 CHECKS = {
     "cell_line": check_cell_line,
+    "gene_symbol": check_gene_symbol,
+    "reference_exists": check_reference_exists,
+    "species": check_species,
+    "rrid": check_rrid,
+    "compound": check_compound,
+    "pdb": check_pdb,
     "variant": check_variant,
     "blot_band": check_blot_band,
     "accession": check_accession,
@@ -716,6 +1031,66 @@ def _selftest():
     expect("未撤稿文献不报警",
            len(one({"check": "cited_retracted",
                     "doi": "10.1038/nature12373"})["signals"]), 0)
+
+    # HGNC 基因符号
+    # 只断言「不报警」不够：调用失败也不报警。必须同时断言外部证据被登记，
+    # 证明这次查询真的成功了 —— 否则就是把「我们没查到」当成「论文没问题」
+    r = one({"check": "gene_symbol", "symbol": "TP53"})
+    expect("TP53 为现行符号，不报警",
+           (len(r["signals"]), len(r["evidence_registry"])), (0, 1))
+    r = one({"check": "gene_symbol", "symbol": "MARCH1"})
+    expect("MARCH1 已改名 -> 报警并给出现行符号",
+           r["signals"][0]["external_check"]["external_value"]["current_symbol"],
+           "MARCHF1")
+    r = one({"check": "gene_symbol", "symbol": "2-Sep"})
+    expect("Excel 日期化基因名 -> 确定性报警",
+           r["signals"][0]["external_check"]["check_type"],
+           "gene_symbol_excel_corruption")
+    r = one({"check": "gene_symbol", "symbol": "FAKE9999"})
+    expect("无法识别的符号 -> 需人工复核",
+           r["signals"][0]["external_check"]["comparison_result"],
+           "needs_manual_review")
+    expect("非人类物种不走 HGNC",
+           len(one({"check": "gene_symbol", "symbol": "Trp53",
+                    "species": "mouse"})["signals"]), 0)
+
+    # Crossref 参考文献
+    expect("真实 DOI 不报警",
+           len(one({"check": "reference_exists",
+                    "doi": "10.1038/nature12373"})["signals"]), 0)
+    expect("不存在的 DOI -> 确定性报警",
+           one({"check": "reference_exists",
+                "doi": "10.1234/fake.doi.99999"})["signals"][0][
+                    "external_check"]["comparison_result"], "mismatch")
+
+    # NCBI Taxonomy
+    expect("有效物种名不报警",
+           len(one({"check": "species", "species": "Mus musculus"})["signals"]), 0)
+    expect("无效物种名 -> 需人工复核",
+           one({"check": "species", "species": "Mus fakius"})["signals"][0][
+               "external_check"]["comparison_result"], "needs_manual_review")
+
+    # RRID
+    expect("有效 RRID 不报警",
+           len(one({"check": "rrid", "rrid": "AB_2298772"})["signals"]), 0)
+    expect("无效 RRID -> 确定性报警",
+           len(one({"check": "rrid", "rrid": "AB_9999999"})["signals"]), 1)
+
+    # PubChem
+    expect("已知化合物且分子量相符 -> 不报警",
+           len(one({"check": "compound", "compound": "imatinib",
+                    "reported_mw": 493.6})["signals"]), 0)
+    expect("分子量不符 -> 需人工复核",
+           one({"check": "compound", "compound": "imatinib",
+                "reported_mw": 250.0})["signals"][0][
+                    "external_check"]["comparison_result"], "needs_manual_review")
+
+    # PDB
+    expect("真实 PDB 编号不报警",
+           len(one({"check": "pdb", "pdb_id": "1TUP"})["signals"]), 0)
+    expect("不存在的 PDB 编号 -> 确定性报警",
+           one({"check": "pdb", "pdb_id": "9ZZZ"})["signals"][0][
+               "external_check"]["comparison_result"], "mismatch")
 
     # 缺稿件证据时不得产出不合契约的 signal
     r = validate([{"check": "cell_line", "cell_line": "MDA-MB-435"}])

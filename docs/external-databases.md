@@ -57,10 +57,12 @@ M1 不产 finding，它的职责是**把可核验的标识符抽出来，登记�
 | 试验注册号 NCT / ChiCTR / ISRCTN | M6 注册日期、M4 结局切换 | **已实现**（NCT） |
 | 数据可得性登录号 GSE / SRR / PXD | M7 | **已实现** |
 | 细胞系名称 | M3 | **已实现** |
-| UniProt accession、基因符号 | M5 | **已实现** |
+| UniProt accession | M5 | **已实现** |
+| 人类基因符号 | M2 / M3（HGNC） | **已实现** |
+| 物种学名、试剂 RRID、化合物名、PDB 编号 | M3 | **已实现** |
 | 参考文献 DOI 列表 | M2 | **已实现** |
 | 化合物名 / ChEMBL ID | M5 | **已实现** |
-| 抗体 catalog number / RRID | M3 | 待建 |
+| 抗体 catalog number / RRID | M3 | **已实现** |
 
 ChiCTR 与 ISRCTN 尚未接：ChiCTR 无稳定公开 REST 接口，ISRCTN 有但格式不同。
 
@@ -69,7 +71,7 @@ ChiCTR 与 ISRCTN 尚未接：ChiCTR 无稳定公开 REST 接口，ISRCTN 有但
 | 能查什么 | 拿什么核 | 模型能否自己做 | 状态 |
 | --- | --- | --- | --- |
 | 引用了**已撤稿**的文献 | Europe PMC `pubType` | **不能** —— 撤稿常在训练截止后 | **已实现** |
-| 参考文献是否真实存在 | Crossref DOI 解析 | 不能（幻觉引文、纸厂引文） | 待建 |
+| 参考文献是否真实存在 | Crossref DOI 解析 | 不能（幻觉引文、纸厂引文） | **已实现** |
 | 「首次报道」类主张 | PubMed 检索既往文献 | 部分能，长尾不能 | 待建 |
 
 注：Crossref 的 `update-by` 字段对已撤稿论文**常常是空的** —— 实测 Surgisphere 那篇
@@ -81,8 +83,8 @@ Europe PMC 的 `pubType` 则正确标注为 `Retracted Publication`。所以撤�
 | 能查什么 | 拿什么核 | 模型能否自己做 | 状态 |
 | --- | --- | --- | --- |
 | **细胞系被认定污染 / 错误鉴定** | Cellosaurus | **不能** —— 约六百条，著名的几条知道，长尾不知道 | **已实现** |
-| 抗体 RRID 是否有效 | Antibody Registry | 不能 | 待建 |
-| 物种 / 品系名是否有效 | NCBI Taxonomy | 部分能 | 待建 |
+| 抗体 RRID 是否有效 | SciCrunch | 不能 | **已实现** |
+| 物种 / 品系名是否有效 | NCBI Taxonomy | 部分能 | **已实现** |
 
 **这是全套价值最高的一条。** MDA-MB-435 被大量论文当作乳腺癌细胞系，
 Cellosaurus 明确标注：`Problematic cell line: Contaminated. Shown to be a M14 derivative`
@@ -108,7 +110,9 @@ M4 其余部分（p 值重算、GRIM、CI 自洽）是纯计算，本来就该�
 | 突变位点越界 / 参考残基不符 | UniProt 序列 | 不能 | **已实现** |
 | 报告 IC50 vs 已知活性数量级 | ChEMBL | 不能 | **已实现** |
 | 基因表达方向 vs 参考队列 | GEO / TCGA | 不能 | 待建 |
-| 结构图所述结构域 | PDB / InterPro / AlphaFold | 部分能 | 待建 |
+| 引用的 PDB 条目是否存在 | RCSB PDB | 不能 | **已实现** |
+| 化合物名与分子量 | PubChem | 不能（精确分子量） | **已实现** |
+| 结构图所述结构域 | InterPro / AlphaFold | 部分能 | 待建 |
 
 突变核验这条同时**升级了本地工具**：`sequence_identifier_audit.py` 原先只能
 拿论文自己给的序列做比对，论文不给序列就查不了；接上 UniProt 后，
@@ -135,10 +139,10 @@ ICMJE 要求前瞻性注册（首例入组前完成注册）。注册日期与�
 
 ---
 
-## 已实现的八条
+## 已实现的十四条
 
 `skills/biomed-paper-review/scripts/external_figure_validation.py`，
-26 项自检全部对着**线上接口**通过（非 mock）：
+45 项自检全部对着**线上接口**通过（非 mock），覆盖十个数据库：
 
 | check | 数据库 | `comparison_result` |
 | --- | --- | --- |
@@ -146,10 +150,28 @@ ICMJE 要求前瞻性注册（首例入组前完成注册）。注册日期与�
 | `variant` | UniProt | `mismatch`（位点越界、残基不符） |
 | `trial_registration` | ClinicalTrials.gov | `mismatch`（回顾性注册）/ `needs_manual_review`（查无记录） |
 | `cited_retracted` | Europe PMC | `mismatch` |
+| `gene_symbol` | HGNC | `mismatch`（Excel 日期化、已改名）/ `needs_manual_review`（无法识别） |
+| `reference_exists` | Crossref | `mismatch`（DOI 无法解析） |
+| `rrid` | SciCrunch | `mismatch`（RRID 无法解析） |
+| `pdb` | RCSB PDB | `mismatch`（条目不存在） |
+| `species` | NCBI Taxonomy | `needs_manual_review`（可能是俗名或旧分类名） |
+| `compound` | PubChem | `needs_manual_review`（盐型、水合物可解释分子量差异） |
 | `outcome_switching` | ClinicalTrials.gov | `needs_manual_review`（措辞差异可致误判） |
 | `blot_band` | UniProt | `needs_manual_review`（修饰、二聚体改变迁移） |
 | `accession` | GEO / SRA / PRIDE | `needs_manual_review`（可能 embargo） |
 | `ic50` | ChEMBL | `needs_manual_review`（体系不同活性差异是常态） |
+
+几条值得单说的：
+
+- **`gene_symbol` 的 Excel 日期化**：Excel 会把 SEPT2、MARCH1、DEC1 这类符号
+  自动转成「2-Sep」「1-Mar」，这是基因列表里最常见的静默污染 ——
+  HGNC 已于 2020 年为此把整个家族改名（SEPT2→SEPTIN2、MARCH1→MARCHF1）。
+  日期格式本身不查库就能判，但仍去 HGNC 取现行符号供人工回溯。
+  **HGNC 只管人类命名**：给了非人类物种就不查，否则会把正常的小鼠符号误报。
+- **`reference_exists`**：查的是幻觉引文与纸厂引文 —— 格式完美但 DOI 根本不存在。
+  模型自己核不了，它没法解析 DOI。
+- **`rrid`**：抗体是复现危机的重灾区，RRID 是目前唯一能把「具体哪一支抗体」
+  唯一确定下来的标识符。
 
 产物三部分：`signals[]`（`type=external_validation_candidate`，带 `external_check` 比较块）、
 `evidence_registry`（external 型证据，带端点、查询、取回时刻、响应 sha256、数据库版本、
@@ -182,12 +204,16 @@ resolved/未解析的条件约束、端点无凭证、assertion 完整性、ref 
 需要申请加入白名单的域名：
 
 ```
-rest.uniprot.org
-api.cellosaurus.org
-clinicaltrials.gov
-www.ebi.ac.uk          # ChEMBL、PRIDE、Europe PMC
-eutils.ncbi.nlm.nih.gov # GEO、SRA
-api.crossref.org        # 待建项用
+rest.uniprot.org            # 蛋白分子量、序列
+api.cellosaurus.org         # 细胞系污染 / 错误鉴定
+clinicaltrials.gov          # 注册日期、登记结局
+www.ebi.ac.uk               # ChEMBL、PRIDE、Europe PMC
+eutils.ncbi.nlm.nih.gov     # GEO、SRA、Taxonomy
+rest.genenames.org          # HGNC 基因符号
+api.crossref.org            # 参考文献 DOI 解析
+scicrunch.org               # 抗体 / 试剂 RRID
+pubchem.ncbi.nlm.nih.gov    # 化合物分子量与分子式
+data.rcsb.org               # PDB 结构条目
 ```
 
 全部是公开科学数据源，无需鉴权，符合白名单准入。任一域名不可达时，
@@ -199,4 +225,10 @@ api.crossref.org        # 待建项用
 uplift 要重测，而且**必须以外部核验开着为前提**测 —— 之前那次负 uplift
 测的是一个没有任何外部能力的版本，结论只对那个版本成立。
 
-优先级最高的补齐项：抗体 RRID（M3）、参考文献存在性（M2）、注册样本量（M4）。
+优先级最高的补齐项：注册样本量 vs 报告样本量（M4）、基因表达方向 vs GEO/TCGA（M5）、
+「首次报道」类主张的既往文献检索（M2）。
+
+一条实现教训：HGNC 与 SciCrunch 不带 `Accept: application/json` 会返回 XML/HTML，
+`json.loads` 失败后静默降级成 `system_limitation` —— 看起来就像「查了，没问题」。
+自检里只断言「不报警」是查不出这种失败的，**必须同时断言外部证据真的被登记了**，
+否则又是一次「把我们没查到当成论文没问题」。

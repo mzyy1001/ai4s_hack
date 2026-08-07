@@ -1084,6 +1084,15 @@ def _collect_tool_signals():
             {"check": "trial_registration", "nct": "NCT99999999", "evidence_refs": R},
             {"check": "cited_retracted", "doi": "10.1016/S0140-6736(20)31180-6",
              "evidence_refs": R},
+            {"check": "gene_symbol", "symbol": "MARCH1", "evidence_refs": R},
+            {"check": "gene_symbol", "symbol": "2-Sep", "evidence_refs": R},
+            {"check": "reference_exists", "doi": "10.1234/fake.doi.99999",
+             "evidence_refs": R},
+            {"check": "species", "species": "Mus fakius", "evidence_refs": R},
+            {"check": "rrid", "rrid": "AB_9999999", "evidence_refs": R},
+            {"check": "compound", "compound": "imatinib", "reported_mw": 250.0,
+             "evidence_refs": R},
+            {"check": "pdb", "pdb_id": "9ZZZ", "evidence_refs": R},
         ])
         if not out["signals"]:
             skipped.append("external_figure_validation: 外部源不可达（离线？），本层未校验")
