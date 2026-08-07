@@ -1,0 +1,316 @@
+{
+  "paper": {
+    "title": "未署名两臂随机对照试验（fulltext.txt，28 例手术患者，48 小时随访）",
+    "doi": null,
+    "journal": null,
+    "input_format": "plain_text"
+  },
+  "execution_scope": {
+    "mode": "full_review",
+    "submode": null,
+    "executed_stages": ["stage_1", "stage_2", "stage_4", "stage_5"],
+    "executed_modules": ["M2", "M4", "M6", "M7"],
+    "skipped_modules": ["M3", "M5"],
+    "fields": [
+      "objective.primary_endpoint",
+      "population.subjects",
+      "design.study_design",
+      "design.randomization_method",
+      "design.allocation_concealment",
+      "design.blinding",
+      "design.interventions",
+      "design.registration",
+      "measurement.sample_size_justification",
+      "measurement.statistical_methods",
+      "measurement.followup_duration",
+      "declarations.ethics_statement",
+      "declarations.informed_consent",
+      "declarations.coi",
+      "declarations.funding",
+      "declarations.data_availability"
+    ],
+    "assets": ["table:1"],
+    "observations": ["OBS-001", "OBS-002"],
+    "supplements": [],
+    "scope_rationale": "full_review 模式。按路由规则：RCT 设计必开 M4/M6/M7；候选类型 possible_reporting_omission / possible_internal_inconsistency 触发 M2。全文无动物实验、无体外/细胞成分、无细胞系/抗体/基因标识符，故 M3 不适用；全文无图像资产，故 M5 不适用。跳过二者是路由结果而非偷懒，不等同于该两维度'无问题'。"
+  },
+  "structured_result": {
+    "version": "structured_result_v2",
+    "stage_3b_executed": false,
+    "fields": {
+      "objective": {
+        "primary_endpoint": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-013"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []}
+      },
+      "population": {
+        "subjects": {"applicability": "applicable", "requiredness": "required", "status": "reported", "value": "28 例 ASA I-III 级拟手术患者（未报告年龄、性别、弱势群体构成）", "unit": null, "evidence_refs": ["EV-001"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []}
+      },
+      "design": {
+        "study_design": {"applicability": "applicable", "requiredness": "required", "status": "reported", "value": "randomised controlled trial（两臂：Group A vs Group B）", "unit": null, "evidence_refs": ["EV-001"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "randomization_method": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-011"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "allocation_concealment": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-011"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "blinding": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-012"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "interventions": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-015"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "registration": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-009"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []}
+      },
+      "measurement": {
+        "sample_size_justification": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-010"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "statistical_methods": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-014"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "followup_duration": {"applicability": "applicable", "requiredness": "required", "status": "reported", "value": {"type": "point", "number": 48}, "unit": "hours after surgery", "unit_normalized": "h", "evidence_refs": ["EV-002"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []}
+      },
+      "declarations": {
+        "ethics_statement": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-007"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "informed_consent": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-008"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "coi": {"applicability": "applicable", "requiredness": "required", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-019"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "funding": {"applicability": "applicable", "requiredness": "recommended", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-017"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []},
+        "data_availability": {"applicability": "applicable", "requiredness": "recommended", "status": "not_reported", "value": null, "unit": null, "evidence_refs": ["EV-018"], "extraction_confidence": "high", "na_reason": null, "resolution_state": null, "system_limitation_ref": null, "candidate_refs": [], "alternatives": []}
+      }
+    },
+    "key_data": [
+      {
+        "id": "KD-001",
+        "metric_name": "participant_count_total",
+        "metric_family": "participant_flow",
+        "grouping_key": {"experiment_id": "EXP-01", "group": null, "comparison": null, "timepoint": null, "endpoint": "enrolled_total"},
+        "status": "conflicting",
+        "canonical_observation": null,
+        "canonical_rationale": null,
+        "observations": [
+          {
+            "observation_id": "OBS-001",
+            "value": {"type": "point", "number": 28},
+            "unit": null,
+            "unit_normalized": null,
+            "uncertainty": {"type": "none"},
+            "n": null,
+            "replicate_type": null,
+            "provenance": {"source_type": "explicit_main_text", "source_id": "methods-p1", "evidence_ref": "EV-001", "derivation": {"extraction_method": "text_parse", "ocr_used": false}},
+            "extraction_confidence": "high",
+            "manual_review_needed": false
+          },
+          {
+            "observation_id": "OBS-002",
+            "value": {"type": "point", "number": 30},
+            "unit": null,
+            "unit_normalized": null,
+            "uncertainty": {"type": "none"},
+            "n": null,
+            "replicate_type": null,
+            "provenance": {"source_type": "explicit_main_text", "source_id": "results-p1（Group A 12 + Group B 18，求和推导）", "evidence_ref": "EV-003", "derivation": {"extraction_method": "text_parse", "ocr_used": false}},
+            "extraction_confidence": "high",
+            "manual_review_needed": true
+          }
+        ],
+        "compatible_observations": [],
+        "conflicting_observations": ["OBS-001", "OBS-002"],
+        "reporting_completeness": "not_assessed",
+        "missing_elements": [],
+        "signal_refs": ["SIG-050", "SIG-101"]
+      }
+    ]
+  },
+  "evidence_registry": {
+    "EV-001": {"id": "EV-001", "type": "present", "locator": {"section": "methods", "paragraph_id": "methods-p1", "scope": "paragraph"}, "quote": "This randomised controlled trial enrolled 28 patients. Patients with ASA I-III were eligible.", "created_by": "stage_2"},
+    "EV-002": {"id": "EV-002", "type": "present", "locator": {"section": "methods", "paragraph_id": "methods-p2", "scope": "paragraph"}, "quote": "Follow-up was 48 hours after surgery.", "created_by": "stage_2"},
+    "EV-003": {"id": "EV-003", "type": "present", "locator": {"section": "results", "paragraph_id": "results-p1", "scope": "paragraph"}, "quote": "Group A comprised 12 patients and Group B comprised 18 patients.", "created_by": "stage_2"},
+    "EV-004": {"id": "EV-004", "type": "present", "locator": {"section": "results", "paragraph_id": "results-p2", "scope": "paragraph", "table": "1"}, "quote": "Baseline characteristics are shown in Table 1 (ASA II: 15, ASA III: 13).", "created_by": "stage_2"},
+    "EV-005": {"id": "EV-005", "type": "present", "locator": {"section": "conclusion", "paragraph_id": "conclusion-p1", "scope": "paragraph"}, "quote": "All 28 patients were accounted for.", "created_by": "stage_2"},
+    "EV-006": {"id": "EV-006", "type": "present", "locator": {"section": "conclusion", "paragraph_id": "conclusion-p1", "scope": "paragraph"}, "quote": "No serious complications occurred.", "created_by": "stage_2"},
+    "EV-007": {"id": "EV-007", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}, {"section": "results", "scope": "section"}, {"section": "conclusion", "scope": "section"}], "search_terms": ["ethics", "ethical", "IRB", "institutional review board", "approval", "committee", "Helsinki", "伦理"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-008": {"id": "EV-008", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}, {"section": "results", "scope": "section"}, {"section": "conclusion", "scope": "section"}], "search_terms": ["consent", "informed", "written consent", "知情同意"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-009": {"id": "EV-009", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}, {"section": "results", "scope": "section"}, {"section": "conclusion", "scope": "section"}], "search_terms": ["registration", "registered", "NCT", "ChiCTR", "ISRCTN", "clinicaltrials", "trial registry", "注册号"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-010": {"id": "EV-010", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}], "search_terms": ["sample size", "power calculation", "effect size", "样本量"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-011": {"id": "EV-011", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}], "search_terms": ["random sequence", "sequence generation", "randomisation method", "allocation concealment", "allocation ratio"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-012": {"id": "EV-012", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}, {"section": "results", "scope": "section"}], "search_terms": ["blind", "blinded", "masking", "double-blind", "open-label"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-013": {"id": "EV-013", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}, {"section": "results", "scope": "section"}], "search_terms": ["primary outcome", "secondary outcome", "endpoint", "主要终点"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-014": {"id": "EV-014", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}, {"section": "results", "scope": "section"}], "search_terms": ["statistical analysis", "t-test", "chi-square", "ANOVA", "regression", "p value", "confidence interval"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-015": {"id": "EV-015", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}, {"section": "results", "scope": "section"}], "search_terms": ["intervention", "treatment", "drug", "surgical technique", "procedure", "control group"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-016": {"id": "EV-016", "type": "absence", "scope": "document", "searched_locations": [{"section": "methods", "scope": "section"}, {"section": "results", "scope": "section"}], "search_terms": ["adverse event", "complication rate", "complication count", "event table", "safety data"], "search_result": "no_match", "note": "并发症一词仅出现于 Conclusion 的主张句（EV-006）；Methods/Results 中无任何事件层面数据、定义或表格", "created_by": "stage_2"},
+    "EV-017": {"id": "EV-017", "type": "absence", "scope": "document", "searched_locations": [{"section": "document", "scope": "document"}], "search_terms": ["funding", "grant", "supported by", "funded"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-018": {"id": "EV-018", "type": "absence", "scope": "document", "searched_locations": [{"section": "document", "scope": "document"}], "search_terms": ["data availability", "data sharing", "repository"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-019": {"id": "EV-019", "type": "absence", "scope": "document", "searched_locations": [{"section": "document", "scope": "document"}], "search_terms": ["conflict of interest", "competing interest"], "search_result": "no_match", "created_by": "stage_2"},
+    "EV-020": {"id": "EV-020", "type": "absence", "scope": "document", "searched_locations": [{"section": "document", "scope": "document"}], "search_terms": ["Abstract", "Introduction", "Discussion", "Limitations", "References", "Figure", "CONSORT flow"], "search_result": "no_match", "note": "全文仅 Methods/Results/Conclusion 三节共 10 行；无 Abstract、Introduction、Discussion、References，无任何图", "created_by": "stage_2"}
+  },
+  "all_findings": [
+    {"id": "M2-001", "module": "M2", "category": "missing_reporting_guideline_element", "severity": "critical", "title": "随机化核心要素缺失：序列产生、分配隐藏、分配比例均未报告", "detail": "稿件声称 randomised controlled trial，但随机序列产生方法、分配隐藏与分配比例均未描述（CONSORT 核心要素）。Results 报告 Group A 12 vs Group B 18；确定性核验（SIG-101）证实 12+18=30≠28，使分组与 n=28 下任何合理分配方案均无法对账。随机化声明因此缺乏任何支撑。", "evidence_refs": ["EV-001", "EV-011", "EV-003"], "rule_ref": "02-macro-logic#missing_reporting_guideline_element", "review_confidence": "high", "derived_from_signals": ["SIG-101"], "related_findings": ["M4-001"], "manual_review": {"action": "要求作者报告随机序列产生方法、分配隐藏机制与分配比例，并提交受试者流向明细以核对 12/18 与 n=28 的对账", "who": "statistical_reviewer", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-07"]},
+    {"id": "M2-002", "module": "M2", "category": "missing_reporting_guideline_element", "severity": "critical", "title": "盲法报告完全缺失", "detail": "全文未提及受试者、干预实施者、结局评估者或数据分析者是否设盲，也未说明为何无法设盲。因干预措施本身未描述（M2-004），盲法可行性无法评估；本条仅针对报告缺失，不推断未实施。", "evidence_refs": ["EV-012", "EV-001"], "rule_ref": "02-macro-logic#missing_reporting_guideline_element", "review_confidence": "high", "derived_from_signals": [], "related_findings": ["M2-004"], "manual_review": {"action": "要求作者说明是否设盲（各角色），若无法设盲需说明理由与结局评估的偏倚控制措施", "who": "domain_reviewer", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-08"]},
+    {"id": "M2-003", "module": "M2", "category": "missing_reporting_guideline_element", "severity": "major", "title": "未定义任何主要/次要结局，无统计方法描述", "detail": "Methods 未定义任何结局指标，全文无统计方法描述；Results 亦无任何结局数据。结论（M7-001）因此悬空于未测量的指标之上。", "evidence_refs": ["EV-013", "EV-014", "EV-001"], "rule_ref": "02-macro-logic#missing_reporting_guideline_element", "review_confidence": "high", "derived_from_signals": [], "related_findings": ["M7-001"], "manual_review": {"action": "要求作者定义主要/次要结局并给出统计方法；核对是否存在未报告的预先指定结局", "who": "statistical_reviewer", "priority": "P1"}, "origin": "multiple", "candidate_ids": ["CAND-12"]},
+    {"id": "M2-004", "module": "M2", "category": "missing_reporting_guideline_element", "severity": "critical", "title": "干预措施完全未描述", "detail": "全文无任何关于 Group A / Group B 各接受何种干预的内容，两臂比较失去实质含义，主要结论不可解释。已在完整全文中核实为未报告，而非材料缺失。", "evidence_refs": ["EV-015", "EV-001", "EV-003"], "rule_ref": "02-macro-logic#missing_reporting_guideline_element", "review_confidence": "high", "derived_from_signals": [], "related_findings": [], "manual_review": {"action": "要求作者完整描述两组干预内容、剂量/方式/时机与对照设置", "who": "domain_reviewer", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-14"]},
+    {"id": "M2-005", "module": "M2", "category": "missing_section", "severity": "major", "title": "Introduction 与 Discussion 完全缺失", "detail": "研究问题/假设与结果解读均不存在，逻辑链（研究问题→设计→结果→结论）无头无尾；无局限性讨论，结论的边界无人限定。", "evidence_refs": ["EV-020"], "rule_ref": "02-macro-logic#missing_section", "review_confidence": "high", "derived_from_signals": [], "related_findings": [], "manual_review": {"action": "要求补齐研究背景/目的与讨论（含局限性）", "who": "author", "priority": "P1"}, "origin": "specialist_rule", "candidate_ids": []},
+    {"id": "M2-006", "module": "M2", "category": "missing_section", "severity": "major", "title": "Abstract 完全缺失", "detail": "无结构化摘要：无任何研究背景、方法、关键数值结果或结论摘要。", "evidence_refs": ["EV-020"], "rule_ref": "02-macro-logic#missing_section", "review_confidence": "high", "derived_from_signals": [], "related_findings": [], "manual_review": {"action": "要求补齐结构化摘要", "who": "author", "priority": "P1"}, "origin": "specialist_rule", "candidate_ids": []},
+    {"id": "M2-007", "module": "M2", "category": "missing_section", "severity": "major", "title": "References 完全缺失", "detail": "全文无任何引用文献，研究定位与方法学依据无从追溯。", "evidence_refs": ["EV-020"], "rule_ref": "02-macro-logic#missing_section", "review_confidence": "high", "derived_from_signals": [], "related_findings": [], "manual_review": {"action": "要求补齐参考文献", "who": "author", "priority": "P1"}, "origin": "specialist_rule", "candidate_ids": []},
+    {"id": "M2-008", "module": "M2", "category": "missing_section", "severity": "major", "title": "利益冲突声明缺失", "detail": "涉及人类受试者的 RCT，按刊型要求应报告利益冲突声明；全文检索无匹配（伦理声明与知情同意的重复条目已并入 M6-001/M6-002，注册条目并入 M6-003）。", "evidence_refs": ["EV-019"], "rule_ref": "02-macro-logic#missing_section", "review_confidence": "high", "derived_from_signals": [], "related_findings": ["M6-001", "M6-002", "M6-003"], "manual_review": {"action": "要求作者补交利益冲突声明", "who": "author", "priority": "P1"}, "origin": "specialist_rule", "candidate_ids": []},
+    {"id": "M2-009", "module": "M2", "category": "missing_section", "severity": "minor", "title": "资助与数据可得性声明缺失", "detail": "无资助声明、无数据可得性声明；作者贡献亦未报告。", "evidence_refs": ["EV-017", "EV-018"], "rule_ref": "02-macro-logic#missing_section", "review_confidence": "high", "derived_from_signals": [], "related_findings": [], "manual_review": {"action": "要求补交资助与数据可得性声明", "who": "author", "priority": "P2"}, "origin": "specialist_rule", "candidate_ids": []},
+    {"id": "M2-010", "module": "M2", "category": "missing_reporting_guideline_element", "severity": "major", "title": "无 CONSORT 受试者流向图", "detail": "RCT 应报告受试者流向（入组→随机化→干预→分析）。全文无图，流向不可见；叠加 28 vs 30 计数矛盾（M4-001），受试者流完全无法闭合。样本量计算缺失的重复条目已并入 M4-002。", "evidence_refs": ["EV-020", "EV-010"], "rule_ref": "02-macro-logic#missing_reporting_guideline_element", "review_confidence": "high", "derived_from_signals": ["SIG-101"], "related_findings": ["M4-001", "M4-002"], "manual_review": {"action": "要求提供 CONSORT 流程图与逐环节例数", "who": "author", "priority": "P1"}, "origin": "specialist_rule", "candidate_ids": ["CAND-04"]},
+    {"id": "M2-011", "module": "M2", "category": "internal_inconsistency", "severity": "minor", "title": "纳入标准（ASA I–III）与基线表（仅 ASA II/III）跨节不符", "detail": "Methods 声明 ASA I–III 均可入组，但 Table 1 摘要仅有 ASA II 15 例、ASA III 13 例，无 1 例 ASA I。要么实际未筛入任何 ASA I（需说明），要么纳入标准或基线表其一报告有误。此为跨节对账新发现，各分块专家结构上不可见。Table 1 表体缺失限制了进一步定位（SYS-001）。", "evidence_refs": ["EV-001", "EV-004"], "rule_ref": "cross_section_reconciliation", "review_confidence": "medium", "derived_from_signals": [], "related_findings": [], "manual_review": {"action": "向作者核实是否有 ASA I 受试者被筛入/入组，若无请说明原因；若获得 Table 1 表体则复核", "who": "author", "priority": "P2"}, "origin": "cross_section_reconciliation", "candidate_ids": ["CAND-03"]},
+    {"id": "M4-001", "module": "M4", "category": "table_total_mismatch", "severity": "major", "title": "分组人数合计 30 ≠ 声明总数 28（确定性计数错误）", "detail": "Results 报告 Group A=12、Group B=18，合计 30；与 Methods『入组 28 例』及 Conclusion『All 28 patients were accounted for』不符。确定性工具 SIG-101（table_total_mismatch，difference=2）确认。跨节三源对账（Methods/Conclusion/Table 1 ASA 合计 15+13=28）一致为 28，错误定位于分组计数或存在未报告的脱落/交叉。该矛盾直接动摇受试者流与安全性分母（CLM-06/CLM-07 均依赖该分母）。按规则库该类不得 critical。", "evidence_refs": ["EV-003", "EV-001", "EV-005", "EV-004"], "rule_ref": "04-statistics#table_total_mismatch", "review_confidence": "high", "derived_from_signals": ["SIG-101", "SIG-050"], "related_findings": ["M2-001", "M2-010"], "manual_review": {"action": "向作者索取入组→随机化→分析逐环节例数与 Table 1 表体，定位 12/18 与 28 的差异来源（计数错误 vs 未报告的排除/交叉）", "who": "statistical_reviewer", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-01", "CAND-02", "CAND-04"]},
+    {"id": "M4-002", "module": "M4", "category": "power_and_sample_size", "severity": "minor", "title": "N=28 无任何样本量/功效依据", "detail": "两臂 RCT 全文无样本量估算、功效或精度依据，亦未报告计划入组数。因主要结局未定义（M2-003），依据所应对的 estimand 也无从谈起。无可复算的计划—报告矛盾、无确证性区间主张，按规则默认 minor。", "evidence_refs": ["EV-001", "EV-010"], "rule_ref": "04-statistics#power_and_sample_size", "review_confidence": "high", "derived_from_signals": [], "related_findings": ["M2-003"], "manual_review": {"action": "要求作者补充样本量依据或说明本研究为探索性/可行性研究", "who": "statistical_reviewer", "priority": "P1"}, "origin": "multiple", "candidate_ids": ["CAND-06"]},
+    {"id": "M6-001", "module": "M6", "category": "ETH-HUM-001", "severity": "major", "title": "伦理委员会审批与批件号未报告", "detail": "涉及人体受试者的干预性 RCT，全文未见伦理委员会审批声明及批件编号（双语检索 0 命中，SIG-601 确认）。定性为报告缺口，不推定未获审批。规范依据：赫尔辛基宣言 2024 第23段（citation_confidence high）、45 CFR 46.109、21 CFR 56.109、中国《涉及人的生命科学和医学研究伦理审查办法》2023 第29条（rulebase 2026-08-07）。", "evidence_refs": ["EV-001", "EV-007"], "rule_ref": "ethics_rules.json#ETH-HUM-001", "review_confidence": "high", "derived_from_signals": ["SIG-601"], "related_findings": [], "manual_review": {"action": "向作者索取伦理委员会名称、批件编号及获批方案版本", "who": "ethics_committee", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-09"]},
+    {"id": "M6-002", "module": "M6", "category": "ETH-HUM-002", "severity": "major", "title": "知情同意获取过程未报告", "detail": "前瞻性手术 RCT，无任何知情同意表述（SIG-602 确认）。非回顾性去标识数据豁免场景；若作者主张豁免，须按 ETH-HUM-003 说明豁免依据。规范依据：赫尔辛基宣言 2024 第25–32段、45 CFR 46.116、21 CFR 50.25、CIOMS 2016 Guideline 9、中国伦理审查办法第33–38条。", "evidence_refs": ["EV-001", "EV-008"], "rule_ref": "ethics_rules.json#ETH-HUM-002", "review_confidence": "high", "derived_from_signals": ["SIG-602"], "related_findings": [], "manual_review": {"action": "向作者索取知情同意流程说明与同意书获取记录；若主张豁免须提供法源依据", "who": "ethics_committee", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-11"]},
+    {"id": "M6-003", "module": "M6", "category": "ETH-HUM-005", "severity": "major", "title": "临床试验前瞻性注册缺失（无任何注册号）", "detail": "干预性 RCT 全文不存在任何注册号（SIG-605 确认），无法核对预先注册的结局指标与分析计划。注册号时序核验 not_applicable（无注册号可输入，非工具失败）；作者补交后须复核首次提交是否晚于首例入组（默认 major；与前瞻性注册声明相悖时 critical）。规范依据：赫尔辛基宣言 2024 第35段、ICMJE Clinical Trial Registration、CIOMS 2016 Guideline 24。", "evidence_refs": ["EV-001", "EV-009"], "rule_ref": "ethics_rules.json#ETH-HUM-005", "review_confidence": "high", "derived_from_signals": ["SIG-605"], "related_findings": [], "manual_review": {"action": "向作者索取注册平台、注册号与注册日期；收到后运行回顾性注册时序核验", "who": "ethics_committee", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-10"]},
+    {"id": "M6-004", "module": "M6", "category": "ETH-HUM-004", "severity": "info", "title": "赫尔辛基宣言遵循声明缺失", "detail": "SIG-604：稿件未包含赫尔辛基宣言遵循声明（WMA Helsinki 适用范围；ICMJE Protection of Research Participants）。按规则库基准 info 级；核心合规缺口（伦理审批缺失）已由 M6-001 覆盖，不叠加定级。", "evidence_refs": ["EV-001", "EV-007"], "rule_ref": "ethics_rules.json#ETH-HUM-004", "review_confidence": "high", "derived_from_signals": ["SIG-604"], "related_findings": ["M6-001"], "manual_review": {"action": "建议作者在伦理声明中补充赫尔辛基宣言遵循表述", "who": "author", "priority": "P2"}, "origin": "deterministic_tool", "candidate_ids": []},
+    {"id": "M7-001", "module": "M7", "category": "unsupported_claim", "severity": "critical", "title": "主要结论『No serious complications occurred』无任何事件层面支撑", "detail": "全文无不良事件表、无 serious 的定义、无事件计数，连显式的 0 事件数据陈述也不存在；Results 仅有分组计数与 Table 1 基线 ASA 分布。该句是 Conclusion 中唯一的实质性主张，构成正文主要结论，且全部直接支撑缺失。按 §3.3 safety 口径，0 事件描述仍须绑定人群、观察时窗、样本量与监测方式，本句均未给出。分组计数矛盾（M4-001）另行处理，本条不重复计。", "evidence_refs": ["EV-006", "EV-016", "EV-003", "EV-004"], "rule_ref": "07-conclusions-discussion#unsupported_claim", "review_confidence": "high", "derived_from_signals": [], "related_findings": ["M7-002", "M4-001"], "manual_review": {"action": "要求作者提供事件层面数据：serious 的定义、监测方式、观察时窗、各组事件数；在获得前该安全性结论不可采信", "who": "domain_reviewer", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-13"]},
+    {"id": "M7-002", "module": "M7", "category": "claim_beyond_evidence", "severity": "major", "title": "安全性主张未限定于 48 小时观察窗（范围扩张）", "detail": "『No serious complications occurred』为无限定的直陈，未绑定任何时间窗，而唯一观察窗为术后 48 小时（Methods）。48 小时窗口不能排除迟发性严重并发症（短期观察不能覆盖迟发、罕见或特定亚组风险）。主张删除了支撑证据中的时间窗限定，构成范围扩张。", "evidence_refs": ["EV-006", "EV-002"], "rule_ref": "07-conclusions-discussion#claim_beyond_evidence", "review_confidence": "high", "derived_from_signals": [], "related_findings": ["M7-001"], "manual_review": {"action": "要求作者把安全性结论显式限定为『术后 48 小时内』，并声明该窗口不能排除迟发性并发症", "who": "domain_reviewer", "priority": "P0"}, "origin": "multiple", "candidate_ids": ["CAND-05"]}
+  ],
+  "issue_clusters": [
+    {"cluster_id": "CL-01", "representative_finding": "M7-001", "member_findings": ["M7-001"], "categories": ["unsupported_claim"], "max_severity": "critical", "anchor": {"paragraph_id": "conclusion-p1"}, "evidence_refs": ["EV-006", "EV-016", "EV-003", "EV-004"]},
+    {"cluster_id": "CL-02", "representative_finding": "M2-004", "member_findings": ["M2-004"], "categories": ["missing_reporting_guideline_element"], "max_severity": "critical", "anchor": {"paragraph_id": "methods-p1"}, "evidence_refs": ["EV-015", "EV-001", "EV-003"]},
+    {"cluster_id": "CL-03", "representative_finding": "M2-001", "member_findings": ["M2-001"], "categories": ["missing_reporting_guideline_element"], "max_severity": "critical", "anchor": {"paragraph_id": "methods-p1"}, "evidence_refs": ["EV-001", "EV-011", "EV-003"]},
+    {"cluster_id": "CL-04", "representative_finding": "M2-002", "member_findings": ["M2-002"], "categories": ["missing_reporting_guideline_element"], "max_severity": "critical", "anchor": {"scope": "document"}, "evidence_refs": ["EV-012", "EV-001"]},
+    {"cluster_id": "CL-05", "representative_finding": "M4-001", "member_findings": ["M4-001"], "categories": ["table_total_mismatch"], "max_severity": "major", "anchor": {"paragraph_id": "results-p1"}, "evidence_refs": ["EV-003", "EV-001", "EV-005", "EV-004"]},
+    {"cluster_id": "CL-06", "representative_finding": "M7-002", "member_findings": ["M7-002"], "categories": ["claim_beyond_evidence"], "max_severity": "major", "anchor": {"paragraph_id": "conclusion-p1"}, "evidence_refs": ["EV-006", "EV-002"]},
+    {"cluster_id": "CL-07", "representative_finding": "M6-001", "member_findings": ["M6-001"], "categories": ["ETH-HUM-001"], "max_severity": "major", "anchor": {"scope": "document"}, "evidence_refs": ["EV-001", "EV-007"]},
+    {"cluster_id": "CL-08", "representative_finding": "M6-002", "member_findings": ["M6-002"], "categories": ["ETH-HUM-002"], "max_severity": "major", "anchor": {"scope": "document"}, "evidence_refs": ["EV-001", "EV-008"]},
+    {"cluster_id": "CL-09", "representative_finding": "M6-003", "member_findings": ["M6-003"], "categories": ["ETH-HUM-005"], "max_severity": "major", "anchor": {"scope": "document"}, "evidence_refs": ["EV-001", "EV-009"]},
+    {"cluster_id": "CL-10", "representative_finding": "M2-003", "member_findings": ["M2-003"], "categories": ["missing_reporting_guideline_element"], "max_severity": "major", "anchor": {"paragraph_id": "methods-p1"}, "evidence_refs": ["EV-013", "EV-014", "EV-001"]},
+    {"cluster_id": "CL-11", "representative_finding": "M2-005", "member_findings": ["M2-005"], "categories": ["missing_section"], "max_severity": "major", "anchor": {"scope": "document"}, "evidence_refs": ["EV-020"]},
+    {"cluster_id": "CL-12", "representative_finding": "M2-006", "member_findings": ["M2-006"], "categories": ["missing_section"], "max_severity": "major", "anchor": {"scope": "document"}, "evidence_refs": ["EV-020"]},
+    {"cluster_id": "CL-13", "representative_finding": "M2-007", "member_findings": ["M2-007"], "categories": ["missing_section"], "max_severity": "major", "anchor": {"scope": "document"}, "evidence_refs": ["EV-020"]},
+    {"cluster_id": "CL-14", "representative_finding": "M2-008", "member_findings": ["M2-008"], "categories": ["missing_section"], "max_severity": "major", "anchor": {"scope": "document"}, "evidence_refs": ["EV-019"]},
+    {"cluster_id": "CL-15", "representative_finding": "M2-010", "member_findings": ["M2-010"], "categories": ["missing_reporting_guideline_element"], "max_severity": "major", "anchor": {"scope": "document"}, "evidence_refs": ["EV-020", "EV-010"]},
+    {"cluster_id": "CL-16", "representative_finding": "M2-009", "member_findings": ["M2-009"], "categories": ["missing_section"], "max_severity": "minor", "anchor": {"scope": "document"}, "evidence_refs": ["EV-017", "EV-018"]},
+    {"cluster_id": "CL-17", "representative_finding": "M2-011", "member_findings": ["M2-011"], "categories": ["internal_inconsistency"], "max_severity": "minor", "anchor": {"table": "1"}, "evidence_refs": ["EV-001", "EV-004"]},
+    {"cluster_id": "CL-18", "representative_finding": "M4-002", "member_findings": ["M4-002"], "categories": ["power_and_sample_size"], "max_severity": "minor", "anchor": {"paragraph_id": "methods-p1"}, "evidence_refs": ["EV-001", "EV-010"]},
+    {"cluster_id": "CL-19", "representative_finding": "M6-004", "member_findings": ["M6-004"], "categories": ["ETH-HUM-004"], "max_severity": "info", "anchor": {"scope": "document"}, "evidence_refs": ["EV-001", "EV-007"]}
+  ],
+  "all_extraction_signals": [
+    {"id": "SIG-050", "type": "source_value_conflict", "target": "key_data.KD-001", "detail": "受试者总数两个来源不兼容：Methods/Conclusion/Table 1 一致为 28；Results 分组计数之和为 30。数值本体比较 28 vs 30 差 2，超出任何舍入容差，判定冲突。", "observation_refs": ["OBS-001", "OBS-002"], "evidence_refs": ["EV-001", "EV-003"], "routed_to": ["M2", "M4"], "produced_by": "stage_2"},
+    {"id": "SIG-101", "type": "table_total_mismatch", "target": "Group allocation (Results): Group A + Group B vs enrolled total", "detail": "各类别计数合计为 30（12 + 18），但声明的分母为 28，相差 2。在类别互斥且穷尽的前提下，这是确定性的计数错误。forensics: ran=true, rule_version=2026-08-07, observed_sum=30, declared_total=28, difference=2。", "observation_refs": [], "evidence_refs": ["EV-003", "EV-001", "EV-005"], "routed_to": ["M4", "M2"], "produced_by": "stage_2"},
+    {"id": "SIG-601", "type": "ethics_requirement_unmet", "target": "ethics.ETH-HUM-001", "detail": "[ETH-HUM-001] 伦理委员会批准与批件号：规范要求稿件报告 [ethics_committee_name, approval_number]，已完整检索确认 declarations.ethics_statement 未报告。（赫尔辛基 2024 ¶23；45 CFR 46.109；21 CFR 56.109；中国 2023 办法第29条）", "observation_refs": [], "evidence_refs": ["EV-001", "EV-007"], "routed_to": ["M6"], "produced_by": "stage_2"},
+    {"id": "SIG-602", "type": "ethics_requirement_unmet", "target": "ethics.ETH-HUM-002", "detail": "[ETH-HUM-002] 知情同意：规范要求稿件报告 [informed_consent_obtained, consent_form_type_or_waiver_basis]，已完整检索确认 declarations.informed_consent 未报告。（赫尔辛基 2024 ¶25–32；45 CFR 46.116；21 CFR 50.25；CIOMS 2016 G9；中国办法第33–38条）", "observation_refs": [], "evidence_refs": ["EV-001", "EV-008"], "routed_to": ["M6"], "produced_by": "stage_2"},
+    {"id": "SIG-603", "type": "partial_extraction", "target": "ethics.ETH-HUM-003", "detail": "[ETH-HUM-003] 知情同意豁免的依据：适用性所需事实（has_human_subjects, consent_waived）无法从结构化结果可靠推出，本条未评估。", "observation_refs": [], "evidence_refs": ["EV-001"], "routed_to": ["M6"], "produced_by": "stage_2"},
+    {"id": "SIG-604", "type": "ethics_requirement_unmet", "target": "ethics.ETH-HUM-004", "detail": "[ETH-HUM-004] 赫尔辛基宣言遵循声明：declarations.ethics_statement 中未见 [Helsinki, 赫尔辛基]。", "observation_refs": [], "evidence_refs": ["EV-001", "EV-007"], "routed_to": ["M6"], "produced_by": "stage_2"},
+    {"id": "SIG-605", "type": "ethics_requirement_unmet", "target": "ethics.ETH-HUM-005", "detail": "[ETH-HUM-005] 临床试验前瞻性注册：规范要求稿件报告 [registry_name, registration_number, registration_date]，已完整检索确认 design.registration 未报告。（赫尔辛基 2024 ¶35；ICMJE；CIOMS 2016 G24）", "observation_refs": [], "evidence_refs": ["EV-001", "EV-009"], "routed_to": ["M6"], "produced_by": "stage_2"},
+    {"id": "SIG-606", "type": "partial_extraction", "target": "ethics.ETH-HUM-008", "detail": "[ETH-HUM-008] 个人健康数据的去标识化与隐私保护：适用性所需事实（has_human_subjects, uses_identifiable_data）无法从结构化结果可靠推出，本条未评估。", "observation_refs": [], "evidence_refs": ["EV-001"], "routed_to": ["M6"], "produced_by": "stage_2"},
+    {"id": "SIG-607", "type": "ethics_requirement_unmet", "target": "ethics.ETH-CELL-001", "detail": "[ETH-CELL-001] 人源细胞/组织供者同意与伦理批准：由 declarations.informed_consent 未报告触发。**M6 复议后驳回**：触发原因是受试者描述中 'patient' 一词命中 human-derived-primary-material 标记，属词面误报；本研究为手术患者 RCT，未使用任何离体人源组织/原代细胞/细胞系，规则适用对象不存在。患者层面缺口已由 SIG-601/602 覆盖。", "observation_refs": [], "evidence_refs": ["EV-001", "EV-008"], "routed_to": ["M6"], "produced_by": "stage_2"},
+    {"id": "SIG-608", "type": "partial_extraction", "target": "ethics.ETH-HGR-001", "detail": "[ETH-HGR-001] 中国人类遗传资源审批、备案与事先报告：适用性所需事实（uses_chinese_human_genetic_resources）无法从结构化结果可靠推出，本条未评估。", "observation_refs": [], "evidence_refs": ["EV-001"], "routed_to": ["M6"], "produced_by": "stage_2"}
+  ],
+  "all_system_limitations": [
+    {"id": "SYS-001", "category": "table_unparseable", "impact": "Table 1 表格本体未随输入提供，仅有正文括号摘要（ASA II: 15, ASA III: 13）。无法完成：按组基线对账、28 vs 30 矛盾在表内的精确定位、其他基线变量（年龄/性别）核对。M4/M2 对该表的审核不完整。", "affected_modules": ["M2", "M4"], "affected_targets": ["table:1"], "affected_fields": [], "evidence_refs": ["EV-004"], "recommended_action": "调取 Table 1 表体（或稿件 PDF）后复核按组计数；在此之前 28 vs 30 只能维持'错误定位于分组计数或存在未报告脱落'的结论", "produced_by": "stage_1"}
+  ],
+  "manuscript_risk_score": {
+    "value": 100,
+    "partial": true,
+    "executed_modules": ["M2", "M4", "M6", "M7"],
+    "skipped_modules": ["M3", "M5"],
+    "comparable_to_full_review": false,
+    "band": "partial_not_classified",
+    "priority_manual_review": true,
+    "threshold_caveat": "分段阈值未经实证验证，是初始经验值，不得表述为自动化的录用/退稿决定。本分数为 partial 分数（未覆盖全部六个审核模块），禁止与任何其他报告的风险分并列比较或排序。",
+    "scoring_detail": {
+      "cluster_weights": "critical 25 / major 10 / minor 3 / info 0，每簇计一次；每 category 上限 30",
+      "per_category_capped": {
+        "missing_reporting_guideline_element": "95 → 30（M2-001 25 + M2-002 25 + M2-004 25 + M2-003 10 + M2-010 10）",
+        "missing_section": "43 → 30（M2-005/006/007/008 各 10 + M2-009 3）",
+        "table_total_mismatch": "10（M4-001）",
+        "unsupported_claim": "25（M7-001）",
+        "claim_beyond_evidence": "10（M7-002）",
+        "ETH-HUM-001": "10（M6-001）",
+        "ETH-HUM-002": "10（M6-002）",
+        "ETH-HUM-005": "10（M6-003）",
+        "internal_inconsistency": "3（M2-011）",
+        "power_and_sample_size": "3（M4-002）",
+        "ETH-HUM-004": "0（M6-004）"
+      },
+      "sum_before_cap": 141,
+      "final": "min(100, 141) = 100"
+    }
+  },
+  "extraction_coverage": {
+    "value": 0.75,
+    "field_resolution": {"resolved": 14, "total": 14, "rate": 1.0},
+    "asset_readability": {"resolved": 0, "total": 1, "rate": 0.0},
+    "supplement_accessibility": {"resolved": 0, "total": 0, "rate": 1.0},
+    "recommended_field_coverage": {"resolved": 2, "total": 2, "rate": 1.0}
+  },
+  "coverage_breakdown": {
+    "resolved_fields": [
+      "objective.primary_endpoint", "population.subjects", "design.study_design",
+      "design.randomization_method", "design.allocation_concealment", "design.blinding",
+      "design.interventions", "design.registration", "measurement.sample_size_justification",
+      "measurement.statistical_methods", "measurement.followup_duration",
+      "declarations.ethics_statement", "declarations.informed_consent", "declarations.coi"
+    ],
+    "unresolved_required_fields": [],
+    "unreadable_assets": ["table:1"],
+    "inaccessible_supplements": [],
+    "scope_denominators": {"required_fields_total": 14, "assets_total": 1, "supplements_total": 0}
+  },
+  "review_confidence": {
+    "value": 0.675,
+    "pixel_dependency_rate": 0.0,
+    "ocr_dependency_rate": 0.0,
+    "low_conf_finding_rate": 0.0,
+    "Q": 1.0,
+    "conflicting_key_data_groups": 1,
+    "C": 0.9,
+    "formula": "review_confidence = extraction_coverage(0.75) × Q(1.0) × C(0.9) = 0.675",
+    "weak_evidence_warning": null
+  },
+  "manual_review_plan": [
+    {"priority": "P0", "action": "核对受试者流与核心计数：索取入组→随机化→分析逐环节例数与 Table 1 表体，定位 12+18=30 与 n=28 的差异来源", "who": "statistical_reviewer", "finding_ids": ["M4-001"]},
+    {"priority": "P0", "action": "核对试验核心方法学要素：干预内容、随机序列产生/分配隐藏/分配比例、盲法", "who": "domain_reviewer", "finding_ids": ["M2-001", "M2-002", "M2-004"]},
+    {"priority": "P0", "action": "核对安全性结论：索取事件层面数据（serious 定义、监测方式、时窗、各组事件数），并将结论限定于 48 小时观察窗", "who": "domain_reviewer", "finding_ids": ["M7-001", "M7-002"]},
+    {"priority": "P0", "action": "核对伦理授权链：伦理委员会名称+批件号、知情同意流程、注册平台+注册号+注册日期", "who": "ethics_committee", "finding_ids": ["M6-001", "M6-002", "M6-003"]},
+    {"priority": "P1", "action": "补交结局定义、统计方法与样本量依据，并提供 CONSORT 流程图", "who": "statistical_reviewer", "finding_ids": ["M2-003", "M2-010", "M4-002"]},
+    {"priority": "P1", "action": "补齐缺失章节与声明：Abstract、Introduction、Discussion（含局限性）、References、利益冲突声明", "who": "author", "finding_ids": ["M2-005", "M2-006", "M2-007", "M2-008"]},
+    {"priority": "P2", "action": "核实 ASA I–III 纳入标准与 Table 1 无 ASA I 的不符", "who": "author", "finding_ids": ["M2-011"]},
+    {"priority": "P2", "action": "补交资助、数据可得性声明与赫尔辛基宣言遵循表述", "who": "author", "finding_ids": ["M2-009", "M6-004"]}
+  ],
+  "candidate_resolution_log": [
+    {"candidate_id": "CAND-01", "resolution": "promoted_to_finding", "final_finding_id": "M4-001", "merged_into": null, "rejection_reason": null},
+    {"candidate_id": "CAND-02", "resolution": "merged", "final_finding_id": null, "merged_into": "M4-001", "rejection_reason": null, "note": "可核对部分（15+13=28 佐证总数为 28）并入 M4-001；按组核对部分 blocked_by_system_limitation（SYS-001，见下条）"},
+    {"candidate_id": "CAND-02#groupwise", "resolution": "blocked_by_system_limitation", "final_finding_id": null, "merged_into": null, "rejection_reason": "Table 1 表体未随输入提供（SYS-001），无法完成按组基线核对——不得记 rejected"},
+    {"candidate_id": "CAND-03", "resolution": "promoted_to_finding", "final_finding_id": "M2-011", "merged_into": null, "rejection_reason": null, "note": "由 Layer 4 跨节对账发现，无分块专家认领"},
+    {"candidate_id": "CAND-04", "resolution": "merged", "final_finding_id": null, "merged_into": "M4-001", "rejection_reason": null, "note": "计数矛盾面并入 M4-001；无 CONSORT 流面由 M2-010 承载"},
+    {"candidate_id": "CAND-05", "resolution": "promoted_to_finding", "final_finding_id": "M7-002", "merged_into": null, "rejection_reason": null},
+    {"candidate_id": "CAND-06", "resolution": "promoted_to_finding", "final_finding_id": "M4-002", "merged_into": null, "rejection_reason": null},
+    {"candidate_id": "CAND-07", "resolution": "promoted_to_finding", "final_finding_id": "M2-001", "merged_into": null, "rejection_reason": null, "note": "M4 以'规则库无对应 slug'移交，M2 按 CONSORT 核心要素受理"},
+    {"candidate_id": "CAND-08", "resolution": "promoted_to_finding", "final_finding_id": "M2-002", "merged_into": null, "rejection_reason": null},
+    {"candidate_id": "CAND-09", "resolution": "promoted_to_finding", "final_finding_id": "M6-001", "merged_into": null, "rejection_reason": null, "note": "M2-P08 重复条目按 Layer 4 merge 指令并入"},
+    {"candidate_id": "CAND-10", "resolution": "promoted_to_finding", "final_finding_id": "M6-003", "merged_into": null, "rejection_reason": null, "note": "M2-P09 重复条目按 Layer 4 merge 指令并入"},
+    {"candidate_id": "CAND-11", "resolution": "promoted_to_finding", "final_finding_id": "M6-002", "merged_into": null, "rejection_reason": null, "note": "M2-P08 重复条目按 Layer 4 merge 指令并入"},
+    {"candidate_id": "CAND-12", "resolution": "promoted_to_finding", "final_finding_id": "M2-003", "merged_into": null, "rejection_reason": null, "note": "M4 判定零检验无法绑定统计结论，移交 M2 报告规范"},
+    {"candidate_id": "CAND-13", "resolution": "promoted_to_finding", "final_finding_id": "M7-001", "merged_into": null, "rejection_reason": null},
+    {"candidate_id": "CAND-14", "resolution": "promoted_to_finding", "final_finding_id": "M2-004", "merged_into": null, "rejection_reason": null},
+    {"candidate_id": "CAND-15", "resolution": "blocked_by_system_limitation", "final_finding_id": null, "merged_into": null, "rejection_reason": "Table 1 表体未随输入提供，需原表复核——输入材料限制而非稿件问题，不得记 rejected"}
+  ],
+  "merge_log": [
+    {"duplicates": ["M2-P08（伦理审批部分）"], "merged_into": "M6-001", "reason": "同一缺失；M6 为专职模块并持 SIG-601 依据"},
+    {"duplicates": ["M2-P08（知情同意部分）"], "merged_into": "M6-002", "reason": "同一缺失；SIG-602"},
+    {"duplicates": ["M2-P09"], "merged_into": "M6-003", "reason": "同一缺失；SIG-605"},
+    {"duplicates": ["M2-P13（无事件支撑部分）"], "merged_into": "M7-001", "reason": "同一问题：安全性结论无事件层面数据支撑"},
+    {"duplicates": ["M2-P13（48h 窗+n<30 部分）"], "merged_into": "M7-002", "reason": "同一问题：主张未限定观察窗"},
+    {"duplicates": ["M2-P12（样本量计算部分）"], "merged_into": "M4-002", "reason": "同一样本量依据缺失（CAND-06）；M2-P12 保留 CONSORT 流程图方面为 M2-010"},
+    {"duplicates": ["XREC-01"], "merged_into": "M4-001", "reason": "对同一计数错误的跨节佐证与定位，非新问题"}
+  ],
+  "runtime_utilization": {
+    "child_sessions": 6,
+    "task_calls": 9,
+    "continuations": 3,
+    "modules_run": ["M2", "M4", "M6", "M7"],
+    "modules_skipped": {"M3": "全文无动物实验、无体外/细胞成分、无细胞系/抗体/基因等湿实验标识符", "M5": "全文无图像资产（figure_integrity_audit not_applicable）"},
+    "references_required": ["02-macro-logic", "04-statistics", "06-ethics-compliance", "07-conclusions-discussion"],
+    "references_read": ["02-macro-logic", "04-statistics", "06-ethics-compliance", "07-conclusions-discussion"],
+    "routing_recall": 1.0,
+    "tool_execution_recall": 1.0,
+    "tool_execution_ledger": [
+      {"tool": "statistical_forensics.table_total", "target": "Group A+B vs n=28", "terminal_state": "executed", "result": "SIG-101 mismatch（30≠28）"},
+      {"tool": "statistical_forensics.table_total", "target": "Table 1 ASA vs n=28", "terminal_state": "executed", "result": "15+13=28，一致，无信号"},
+      {"tool": "statistical_forensics.count_percentage", "target": "—", "terminal_state": "not_applicable", "reason": "全文无百分比报告"},
+      {"tool": "statistical_forensics.grim", "target": "—", "terminal_state": "not_applicable", "reason": "全文无均值"},
+      {"tool": "statistical_forensics.test_statistic_p", "target": "—", "terminal_state": "not_applicable", "reason": "全文无检验统计量/df/p"},
+      {"tool": "statistical_forensics.ci_estimate", "target": "—", "terminal_state": "not_applicable", "reason": "全文无点估计/CI"},
+      {"tool": "ethics_compliance_check", "target": "structured_result（16 字段）", "terminal_state": "executed", "result": "SIG-601/602/604/605/607 + SIG-603/606/608 partial"},
+      {"tool": "external_figure_validation.cell_line", "target": "—", "terminal_state": "not_applicable", "reason": "全文无细胞系名"},
+      {"tool": "external_figure_validation.trial_registration", "target": "—", "terminal_state": "not_applicable", "reason": "全文无注册号（缺失本身已由 M6-003 覆盖）"},
+      {"tool": "external_figure_validation.reference_exists/cited_retracted", "target": "—", "terminal_state": "not_applicable", "reason": "全文无参考文献/DOI"},
+      {"tool": "external_figure_validation.gene_symbol", "target": "—", "terminal_state": "not_applicable", "reason": "全文无人类基因符号"},
+      {"tool": "figure_integrity_audit", "target": "—", "terminal_state": "not_applicable", "reason": "无图像文件"},
+      {"tool": "normalize_biomed_units", "target": "—", "terminal_state": "not_applicable", "reason": "全文无剂量/单位对"}
+    ],
+    "candidate_count_discovery": 15,
+    "candidate_count_promoted": 12,
+    "finding_origin_breakdown": {"multiple": 10, "specialist_rule": 7, "deterministic_tool": 1, "cross_section_reconciliation": 1, "external_validation": 0}
+  },
+  "disclaimer": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号，不构成录用、退稿或发表决定。"
+}
