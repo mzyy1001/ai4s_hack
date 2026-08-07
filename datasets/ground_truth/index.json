@@ -152,12 +152,77 @@
         "expected_finding": "本文声称的注册号 NCT06188091 的注册日期为 2023-12-05，晚于研究开始日期 2022-10-29 —— 属回顾性注册，不符合 ICMJE 的前瞻性注册要求。注册日期只存在于注册库，正文通常不写。"
       },
       "_note": "标准答案由权威来源给出，不是我们编的，也不是植入的。错误长在论文自己的血肉里，且骗过了真实的同行评审。判定时只问一件事：审稿意见有没有指出这个问题。"
+    },
+    {
+      "pmcid": "PMC11985696",
+      "doi": "10.1002/path.6420",
+      "title": "Cancer-associated fibroblast heterogeneity in chordoma&lt;sup&gt;†&lt;/sup&gt;.",
+      "journal": null,
+      "year": "2025",
+      "kind": "cell_line",
+      "ground_truth": {
+        "cell_line": "CCL4",
+        "cellosaurus_accession": "CVCL_M024",
+        "problem": "Misclassified. Originally thought to be a chordoma cell line but is either contaminated or established from nonchordoma cells (PubMed=21253487).",
+        "claimed_origin": "tissue=chordoma",
+        "source": "Cellosaurus",
+        "corpus_size_hint": 34,
+        "expected_finding": "论文使用 CCL4 作为 chordoma 的模型，但 Cellosaurus（CVCL_M024）标注该细胞系：Misclassified. Originally thought to be a chordoma cell line but is either contaminated or established from nonchordoma cells (PubMed=21253487). 研究对象前提不成立，基于它的结论均需重新评估。"
+      },
+      "_note": "标准答案由权威来源给出，不是我们编的，也不是植入的。错误长在论文自己的血肉里，且骗过了真实的同行评审。判定时只问一件事：审稿意见有没有指出这个问题。"
+    },
+    {
+      "pmcid": "PMC7439339",
+      "doi": "10.1002/jcla.23304",
+      "title": "A long non-coding RNA OLBC15 promotes triple-negative breast cancer progression via enhancing ZNF326 degradation.",
+      "journal": null,
+      "year": "2020",
+      "kind": "retracted_statistical",
+      "ground_truth": {
+        "notice_pmcid": "PMC12888758",
+        "source": "期刊撤稿声明",
+        "reason_text": "RETRACTION : Deng C., Zhang B., Zhang Y., Xu X., Xiong D., Chen X., and Wu J., “A Long Non‐Coding RNA OLBC15 Promotes Triple‐Negative Breast Cancer Progression Via Enhancing ZNF326 Degradation,” Journal of Clinical Laboratory Analysis 34, no. 8 (2020): e23304, 10.1002/jcla.23304. The above article, published online on 24 April 2020, in Wiley Online Library ( http://onlinelibrary.wiley.com/ ), has been retracted by agreement between the authors; the journal Editor‐in‐Chief, Rong Fu; and Wiley Periodicals, LLC. The corresponding author Jiaojiao Wu contacted the journal to request that the article be retracted for the following reasons: 1. An inability to reproduce key experimental results; 2. Technical errors in the experimental protocols that may have compromised the reliability and reproducibility of the data (inconsistencies in RNA pulldown assay conditions, potential cross‐contamination in cell line experiments, and insufficient validation of antibody specificity for ZNF326 detection); and 3. Discrepancies in the original data, calling into question the western blot images in Figures 4B, 5A, and 5B; the quantification data for migration assays; and IHC scoring consistency in clinical samples. Following an investigation, images in Figures 4 and 5 were found to be duplicated from earlier publications: Figure 4D being from Figure 3A in Koo et al. 2017 ( https://doi.org/10.1158/1535‐7163.MCT‐17‐0077 ), Figure 5B being from Figure 5B in Shen et al. 2019 ( https://doi.org/10.1002",
+        "expected_finding": "本文后被撤稿，期刊给出的理由为：RETRACTION : Deng C., Zhang B., Zhang Y., Xu X., Xiong D., Chen X., and Wu J., “A Long Non‐Coding RNA OLBC15 Promotes Triple‐Negative Breast Cancer Progression Via Enhancing ZNF326 Degradation,” Journal of Clinical Laboratory Analysis 34, no. 8 (2020): e23304, 10.1002/jcla.23304. The above article, "
+      },
+      "_note": "标准答案由权威来源给出，不是我们编的，也不是植入的。错误长在论文自己的血肉里，且骗过了真实的同行评审。判定时只问一件事：审稿意见有没有指出这个问题。"
+    },
+    {
+      "pmcid": "PMC8021923",
+      "doi": "10.3389/fonc.2021.629916",
+      "title": "PTIP Inhibits Cell Invasion in Esophageal Squamous Cell Carcinoma &lt;i&gt;via&lt;/i&gt; Modulation of EphA2 Expression.",
+      "journal": null,
+      "year": "2021",
+      "kind": "retracted_statistical",
+      "ground_truth": {
+        "notice_pmcid": "PMC13254844",
+        "source": "期刊撤稿声明",
+        "reason_text": "The publisher retracts the article cited above. Following the publication of the article, the authors contacted the Editorial Office to request a correction of the cited article after a comment on PubPeer reported image duplication. An investigation was conducted in accordance with Frontiers’ policies, during which the authors requested the retraction of the article, citing that they had discovered significant errors in the data post-publication. Upon applying the corrected data, the results no longer supported the original conclusions. Given the serious concerns regarding the validity of the data, the editors no longer have confidence in the findings presented in the article. This retraction was approved by the Chief Editors of Frontiers in Oncology and the Chief Executive Editor of Frontiers. The authors were formally notified of the retraction and were given an opportunity to respond. The publisher has documented this communication. Frontiers would like to thank Sholto David for bringing the published article to our attention.",
+        "expected_finding": "本文后被撤稿，期刊给出的理由为：The publisher retracts the article cited above. Following the publication of the article, the authors contacted the Editorial Office to request a correction of the cited article after a comment on PubPeer reported image duplication. An investigation was conducted in accordance with Frontiers’ polici"
+      },
+      "_note": "标准答案由权威来源给出，不是我们编的，也不是植入的。错误长在论文自己的血肉里，且骗过了真实的同行评审。判定时只问一件事：审稿意见有没有指出这个问题。"
     }
   ],
   "by_kind": {
-    "cell_line": 3,
-    "cited_retracted": 3,
-    "retrospective_registration": 3
+    "cell_line": [
+      "PMC11985696",
+      "PMC13262544",
+      "PMC3742493",
+      "PMC6998324"
+    ],
+    "cited_retracted": [
+      "PMC11253070",
+      "PMC11335168",
+      "PMC12227643"
+    ],
+    "retracted_statistical": [
+      "PMC7439339",
+      "PMC8021923"
+    ],
+    "retrospective_registration": [
+      "PMC13169472",
+      "PMC13245602",
+      "PMC13254492"
+    ]
   },
   "_method": "真实论文 + 权威来源客观标准答案，无任何人工植入"
 }

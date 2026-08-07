@@ -1,0 +1,18 @@
+{
+  "pmcid": "PMC11985696",
+  "doi": "10.1002/path.6420",
+  "title": "Cancer-associated fibroblast heterogeneity in chordoma&lt;sup&gt;†&lt;/sup&gt;.",
+  "journal": null,
+  "year": "2025",
+  "kind": "cell_line",
+  "ground_truth": {
+    "cell_line": "CCL4",
+    "cellosaurus_accession": "CVCL_M024",
+    "problem": "Misclassified. Originally thought to be a chordoma cell line but is either contaminated or established from nonchordoma cells (PubMed=21253487).",
+    "claimed_origin": "tissue=chordoma",
+    "source": "Cellosaurus",
+    "corpus_size_hint": 34,
+    "expected_finding": "论文使用 CCL4 作为 chordoma 的模型，但 Cellosaurus（CVCL_M024）标注该细胞系：Misclassified. Originally thought to be a chordoma cell line but is either contaminated or established from nonchordoma cells (PubMed=21253487). 研究对象前提不成立，基于它的结论均需重新评估。"
+  },
+  "_note": "标准答案由权威来源给出，不是我们编的，也不是植入的。错误长在论文自己的血肉里，且骗过了真实的同行评审。判定时只问一件事：审稿意见有没有指出这个问题。"
+}

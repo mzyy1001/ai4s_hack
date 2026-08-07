@@ -1,0 +1,234 @@
+
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Archiving and Interchange DTD with MathML3 v1.4 20241031//EN" "JATS-archivearticle1-4-mathml3.dtd">
+<article id="path6420" xml:lang="en" article-type="article-commentary" dtd-version="1.4"><?da-xref-anchor-style autodetect?><processing-meta base-tagset="archiving" mathml-version="3.0" table-model="xhtml" tagset-family="jats"><restricted-by>pmc</restricted-by></processing-meta><front><journal-meta><journal-id journal-id-type="nlm-ta">J Pathol</journal-id><journal-id journal-id-type="iso-abbrev">J Pathol</journal-id><journal-id journal-id-type="pmc-domain-id">379</journal-id><journal-id journal-id-type="pmc-domain">blackwellopen</journal-id><journal-id journal-id-type="nlm-id">0204634</journal-id><journal-id journal-id-type="publisher-id">PATH</journal-id><journal-title-group><journal-title>The Journal of Pathology</journal-title></journal-title-group><issn pub-type="ppub">0022-3417</issn><issn pub-type="epub">1096-9896</issn><?publisher_abbrev blackwell?><custom-meta-group><custom-meta><meta-name>pmc-is-collection-domain</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-collection-title</meta-name><meta-value>Wiley Open Access Collection</meta-value></custom-meta></custom-meta-group></journal-meta><article-meta><article-id pub-id-type="pmcid">PMC11985696</article-id><article-id pub-id-type="pmcid-ver">PMC11985696.1</article-id><article-id pub-id-type="pmcaid">11985696</article-id><article-id pub-id-type="pmcaiid">11985696</article-id><article-id pub-id-type="pmid">40088426</article-id><article-id pub-id-type="doi">10.1002/path.6420</article-id><article-id pub-id-type="publisher-id">PATH6420</article-id><article-version article-version-type="pmc-version">1</article-version><article-categories><subj-group subj-group-type="overline"><subject>Invited Commentary</subject></subj-group><subj-group subj-group-type="heading"><subject>Invited Commentary</subject></subj-group></article-categories><title-group><article-title>Cancer‐associated fibroblast heterogeneity in chordoma<sup>†</sup>
+</article-title><alt-title alt-title-type="right-running-head">CAF heterogeneity in chordoma</alt-title><alt-title alt-title-type="left-running-head">JC Henry and AJM Cameron</alt-title></title-group><contrib-group><contrib id="path6420-cr-0001" contrib-type="author"><name name-style="western"><surname>Henry</surname><given-names initials="JC">Jack C</given-names></name><contrib-id contrib-id-type="orcid" authenticated="false">https://orcid.org/0000-0003-1521-5146</contrib-id><xref rid="path6420-aff-0001" ref-type="aff">
+<sup>1</sup>
+</xref></contrib><contrib id="path6420-cr-0002" contrib-type="author" corresp="yes"><name name-style="western"><surname>Cameron</surname><given-names initials="AJM">Angus J M</given-names></name><contrib-id contrib-id-type="orcid" authenticated="false">https://orcid.org/0000-0003-3906-2789</contrib-id><xref rid="path6420-aff-0001" ref-type="aff">
+<sup>1</sup>
+</xref><address><email>a.cameron@qmul.ac.uk</email></address></contrib></contrib-group><aff id="path6420-aff-0001">
+<label>
+<sup>1</sup>
+</label>
+<institution>Barts Cancer Institute, Queen Mary University of London, John Vane Science Centre, Charterhouse Square</institution>
+<city>London</city>
+<country country="GB">UK</country>
+</aff><author-notes><corresp id="correspondenceTo">
+<label>*</label>
+Correspondence to: AJM Cameron, Barts Cancer Institute, Queen Mary University of London, John Vane Science Centre, Charterhouse Square, London, EC1M 6BQ, UK.<break/>
+E‐mail: <email>a.cameron@qmul.ac.uk</email>
+<break/>
+</corresp></author-notes><pub-date pub-type="epub"><day>15</day><month>3</month><year>2025</year></pub-date><pub-date pub-type="ppub"><month>5</month><year>2025</year></pub-date><volume>266</volume><issue seq="60">1</issue><issue-id pub-id-type="pmc-issue-id">486426</issue-id><issue-id pub-id-type="doi">10.1002/path.v266.1</issue-id><fpage>5</fpage><lpage>8</lpage><history>
+<date date-type="received"><day>31</day><month>1</month><year>2025</year></date>
+<date date-type="accepted"><day>24</day><month>2</month><year>2025</year></date>
+</history><pub-history><event event-type="pmc-release"><date><day>11</day><month>04</month><year>2025</year></date></event><event event-type="pmc-live"><date><day>12</day><month>04</month><year>2025</year></date></event><event event-type="pmc-last-change"><date iso-8601-date="2025-04-12 00:25:13.760"><day>12</day><month>04</month><year>2025</year></date></event></pub-history><permissions><copyright-statement content-type="article-copyright">© 2025 The Author(s). <italic toggle="yes">The Journal of Pathology</italic> published by John Wiley &amp; Sons Ltd on behalf of The Pathological Society of Great Britain and Ireland.</copyright-statement><license><ali:license_ref xmlns:ali="http://www.niso.org/schemas/ali/1.0/" specific-use="textmining" content-type="ccbylicense">https://creativecommons.org/licenses/by/4.0/</ali:license_ref><license-p>This is an open access article under the terms of the <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" ext-link-type="uri" xlink:href="https://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</ext-link> License, which permits use, distribution and reproduction in any medium, provided the original work is properly cited.</license-p></license></permissions><self-uri xmlns:xlink="http://www.w3.org/1999/xlink" content-type="pmc-pdf" xlink:href="PATH-266-5.pdf"><?pdf-name PATH-266-5.pdf?><?pdf-size 317124?><?pdf-md5 50f6a005fe555585f99247f9dbba835d?><?pdf-image-server-status NEVER_LOAD?><?pdf-cloudpmc-urn urn:app:e525/11985696/50f6a005fe55/PATH-266-5.pdf?></self-uri><self-uri xmlns:xlink="http://www.w3.org/1999/xlink" content-type="pdf" xlink:href="file:PATH-266-5.pdf"/><abstract><title>Abstract</title><p>In solid tumours, malignant cells develop relationships with nonmalignant stromal cells to support tumour growth, tissue structure, and nutrient supply. In a recent issue of this journal, Zheng and Guo catalogue the cellular landscape in chordoma using a combination of single‐cell and spatial transcriptomics. Despite the mesenchymal nature of chordoma, malignant cells retain expression of epithelial markers, in addition to mesenchymal, partial‐EMT, and stem‐cell signatures. Cancer‐associated fibroblasts (CAFs) are among the most abundant stromal cells and the authors define an inflammatory CAF subtype (iCAF), which is associated with poor outcome and tumour invasion. It is proposed that iCAFs arise from normal fibroblasts during malignant tumour progression and play a causative role in driving an invasive poor prognosis tumour phenotype. Recent reports by this and other groups have separately catalogued cell populations, including CAFs and immune cells in chordoma. The next challenge will be to integrate findings from these distinct studies to allow a consensus to be reached regarding cellular heterogeneity within chordoma, and to allow comparison of CAF populations with those found in other tumour types. Comparison of CAF functions in these predominantly mesenchymal tumours with epithelial solid tumours may reveal interesting lessons about the diverse phenotypes CAFs can bring to distinct tumour ecosystems. Understanding the role of CAFs in chordoma progression may also lead to therapeutic opportunities, but separation of correlation and causation in CAF regulation of tumour phenotypes remains a significant challenge. © 2025 The Author(s). <italic toggle="yes">The Journal of Pathology</italic> published by John Wiley &amp; Sons Ltd on behalf of The Pathological Society of Great Britain and Ireland.</p></abstract><kwd-group kwd-group-type="author-generated"><kwd id="path6420-kwd-0001">cancer‐associated fibroblasts</kwd><kwd id="path6420-kwd-0002">chordoma</kwd><kwd id="path6420-kwd-0003">tumour invasion</kwd><kwd id="path6420-kwd-0004">single‐cell transcriptomics</kwd><kwd id="path6420-kwd-0005">spatial transcriptomics</kwd></kwd-group><funding-group><award-group id="funding-0001"><funding-source><institution-wrap><institution>Medical Research Council
+</institution><institution-id institution-id-type="doi">10.13039/501100000265</institution-id></institution-wrap></funding-source><award-id>MR/X018997/1</award-id></award-group><award-group id="funding-0002"><funding-source><institution-wrap><institution>Cancer Research UK
+</institution><institution-id institution-id-type="doi">10.13039/501100000289</institution-id></institution-wrap></funding-source><award-id>C355/A25137</award-id><award-id>C7893/A26233</award-id></award-group></funding-group><counts><fig-count count="1"/><table-count count="1"/><page-count count="4"/><word-count count="2400"/></counts><custom-meta-group><custom-meta><meta-name>pmc-status-qastatus</meta-name><meta-value>0</meta-value></custom-meta><custom-meta><meta-name>pmc-status-live</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-status-embargo</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-status-released</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-open-access</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-olf</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-manuscript</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-legally-suppressed</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-has-pdf</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-has-supplement</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-pdf-only</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-suppress-copyright</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-is-real-version</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-is-scanned-article</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-preprint</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-in-epmc</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-license-ref</meta-name><meta-value>CC BY</meta-value></custom-meta><custom-meta><meta-name>source-schema-version-number</meta-name><meta-value>2.0</meta-value></custom-meta><custom-meta><meta-name>cover-date</meta-name><meta-value>May 2025</meta-value></custom-meta><custom-meta><meta-name>details-of-publishers-convertor</meta-name><meta-value>Converter:WILEY_ML3GV2_TO_JATSPMC version:6.5.4 mode:remove_FC converted:10.04.2025</meta-value></custom-meta></custom-meta-group></article-meta><notes><fn-group id="path6420-ntgp-0001"><fn id="path6420-note-0001"><p>
+<sup>†</sup>Invited commentary for Zheng BW, Guo W. Multi‐omics analysis unveils the role of inflammatory cancer‐associated fibroblasts in chordoma progression. <italic toggle="yes">J Pathol</italic> 2025; <bold>265:</bold> 69–83.</p></fn><fn id="path6420-note-0002"><p>No conflicts of interest were declared.</p></fn></fn-group></notes></front><body id="path6420-body-0001"><p>Chordomas are rare mesenchymal tumours that develop in the base of the skull, spine, or sacrum. They are widely understood to arise from remnants of the embryonic notochord, based on anatomic, histological, and molecular features. Despite their mesenchymal nature, single‐cell (sc) transcriptional analyses indicate retention of epithelial markers in malignant cell populations, expressed alongside mesenchymal and epithelial‐mesenchymal transition (EMT) markers [<xref rid="path6420-bib-0001" ref-type="bibr">1</xref>, <xref rid="path6420-bib-0002" ref-type="bibr">2</xref>]. Cancer‐stem cell populations have also been described in multiple studies [<xref rid="path6420-bib-0001" ref-type="bibr">1</xref>, <xref rid="path6420-bib-0002" ref-type="bibr">2</xref>]. Chordomas are typically characterised by brachyury (TBXT) dependence, indicative of their notochord origins, and high levels of TGFβ pathway activation. Chordomas contain numerous noncancerous stromal cells, dominated by subsets of heterogeneous cancer‐associated fibroblasts (CAFs) and diverse immune populations.</p><p>In a recent issue of this journal, Zheng and Guo [<xref rid="path6420-bib-0003" ref-type="bibr">3</xref>] use scRNA sequencing to describe the presence of an abundant subset of inflammatory CAFs (iCAFs), which are associated with chordoma invasion and poor outcome (Figure <xref rid="path6420-fig-0001" ref-type="fig">1</xref>). While the majority of CAF populations in solid tumours express a variety of extracellular matrix (ECM) and myofibroblast markers, iCAFs are distinguished by their abundant expression of inflammatory genes, including cytokines, chemokines, and inflammatory signalling components. Spatial transcriptomic and immunofluorescence studies indicate that these iCAFs are largely distal to malignant cells and associate with high levels of immune infiltrate, as has been described for iCAF populations in other solid tumours [<xref rid="path6420-bib-0004" ref-type="bibr">4</xref>]. The authors propose that iCAFs drive tumour progression through various mechanisms, predominated by reciprocal paracrine interactions with immune cells. Using a powerful multiplexed quantitative immunofluorescence (QIF) dataset from 116 patients, with associated 10‐year outcome data, the authors show that high iCAF density associates with both clinicopathological features, including local invasion and adverse outcome; this is corroborated in bulk RNA‐seq datasets using an iCAF gene‐signature scoring system.</p><fig position="float" fig-type="Figure" id="path6420-fig-0001" orientation="portrait"><label>Figure 1</label><caption><p>Distinct CAF subtypes arising in chordoma. Endoplasmic reticulum stress (ERS) and energy metabolism CAFs are localised in close association with chordoma tumour cells, in contrast to inflammatory iCAFs, which are not found in close proximity [<xref rid="path6420-bib-0002" ref-type="bibr">2</xref>, <xref rid="path6420-bib-0003" ref-type="bibr">3</xref>]. In separate studies, both ERS CAFs and iCAFs are associated with tumour invasion and poor prognosis, albeit with distinct proposed mechanisms. Further, ERS CAFs are almost exclusively found in recurrent chordomas. Created in BioRender; Henry, J. (2025) <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://biorender.com/a94t585" ext-link-type="uri">https://BioRender.com/a94t585</ext-link>.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="anchor" id="jats-graphic-1" orientation="portrait" xlink:href="PATH-266-5-g001.jpg"><?image-name PATH-266-5-g001.jpg?><?image-size 57869?><?image-md5 4ab3c6345ff6bc38673f9df21624f9fb?><?image-image-server-status LOAD_COMPLETED?><?image-original-height 595?><?image-original-width 968?><?image-scaled-height 396?><?image-scaled-width 645?><?image-cloudpmc-urn urn:cdn:blobs/e525/11985696/4ab3c6345ff6/PATH-266-5-g001.jpg?><?thumb-name PATH-266-5-g001.gif?><?thumb-size 5785?><?thumb-md5 8a53f172c935981e1d544374a80903b2?><?thumb-image-server-status NEVER_LOAD?><?thumb-scaled-height 80?><?thumb-scaled-width 130?><?thumb-cloudpmc-urn urn:cdn:blobs/e525/11985696/8a53f172c935/PATH-266-5-g001.gif?></graphic></fig><sec id="path6420-sec-0002"><title>Causation versus correlation for distinct <styled-content style="fixed-case" toggle="no">CAF</styled-content> subtypes</title><p>Evidence for iCAFs populations, alongside myofibroblast CAFs and other subtypes, have been described in many solid tumour types, and association of inflammatory tumour signatures with poor outcome has been variously reported (reviewed in ref. [<xref rid="path6420-bib-0004" ref-type="bibr">4</xref>]). However, there remain open questions about causal <italic toggle="yes">versus</italic> correlative relationships between distinct CAF subtypes and disease outcome. While iCAFs may be associated with sites of invasion, their phenotype could be driven by invasion and inflammation rather than playing a causative role. Further, co‐occurrence of multiple CAF types can make attribution of causation problematic. Indeed, a previous scRNA‐seq analysis of chordoma from the lead author of the current study helped define a distinct endoplasmic reticulum stress‐related CAF (ERS‐CAF) subpopulation, which also predicts invasion and poor outcome [<xref rid="path6420-bib-0002" ref-type="bibr">2</xref>]. Critically, implication of this ERS CAF subtype in tumour progression, by examining transcriptomic signatures or through immunofluorescence, used the same tumour cohorts as the current study. In contrast to the iCAFs described here, ERS CAFs associate closely with malignant cells, where they are proposed to promote malignant tumour cell behaviour directly, through paracrine growth‐factor secretion, ECM modulation, and adhesion signalling (Figure <xref rid="path6420-fig-0001" ref-type="fig">1</xref>). In stroma‐rich tumours, the abundance of distinct CAF subtypes is strongly correlated; myofibroblast CAF‐rich tumours tend to also be rich in iCAFs and immune cells. Which of these characteristics is critical for defining outcome is therefore difficult to untangle. Indeed, the current authors previously reported that chordoma outcome could be predicted by the tumour‐stroma ratio, without qualitative assessment of stromal content [<xref rid="path6420-bib-0005" ref-type="bibr">5</xref>]. These parallel studies beg the question as to which CAFs are drivers and which passengers on the road to malignant progression.</p><p>Clues may be found in CAF origins and abundance across the disease time course. In the two separate CAF studies described above, chordoma CAF populations were compared with CAFs from nucleus pulposus samples, and little overlap was seen between the normal tissue resident fibroblasts and the chordoma‐associated CAFs. Pseudotime analysis suggests that all CAF subtypes in chordoma differentiate from resident fibroblasts, which progressively evolve into activated myofibroblast CAF populations, from which iCAFs eventually emerge. This concurs with powerful longitudinal studies in other cancers, including pancreatic cancer [<xref rid="path6420-bib-0006" ref-type="bibr">6</xref>]. To complicate matters, myofibroblast ERS CAFs were almost exclusively found in recurrent chordomas, which might implicate prior therapy as a factor driving the ERS phenotype, in addition to endogenous signals. When it comes to attribution of adverse outcome to individual CAF subtypes, the picture remains unclear, as both ERS and iCAFs arise as tumours progress and both separately associate with invasion (Figure <xref rid="path6420-fig-0001" ref-type="fig">1</xref>).</p><p>To address causation in the current study, <italic toggle="yes">in vivo</italic> data are presented where chordoma isolated iCAFs are shown to promote malignant behaviours <italic toggle="yes">in vitro</italic> and support tumour growth in a subcutaneous xenograft model; normal fibroblasts are used as a control in these studies. While encouraging, caution must be applied here. Co‐culture of malignant cells with CAF models has been widely shown to confer survival advantage and promote growth and invasive behaviour in many cancer models both <italic toggle="yes">in vitro</italic> and <italic toggle="yes">in vivo</italic>, but this has not always translated to appropriate genetic models. Perhaps lessons can be learned here from pancreatic ductal adenocarcinoma (PDAC), where targeting CAFs and the fibrotic microenvironment has been the subject of extensive work. Numerous studies have indicated that CAFs, derived from pancreatic stellate cells and resident fibroblasts, play diverse tumour supporting roles, including promotion of invasion and suppression of antitumour immunity. Surprisingly, however, ablation of α‐SMA expressing CAFs in spontaneously developing pancreatic tumours resulted in more aggressive metastatic disease [<xref rid="path6420-bib-0007" ref-type="bibr">7</xref>]; this has been corroborated in other related pancreatic cancer models, with consensus suggesting that loss of myofibroblast CAFs can result in more inflammatory and aggressive tumours [<xref rid="path6420-bib-0004" ref-type="bibr">4</xref>, <xref rid="path6420-bib-0008" ref-type="bibr">8</xref>]. Attributing causative functions to specific subsets of CAFs thus requires a more nuanced approach. As a useful example, Dominguez <italic toggle="yes">et al</italic> identified a minor subset of LRCC15+ CAFs in PDAC, which arise during late pancreatic tumour development [<xref rid="path6420-bib-0006" ref-type="bibr">6</xref>]; specific targeting of this subset <italic toggle="yes">in vivo</italic> in a pancreatic tumour model (KPR; <italic toggle="yes">Kras</italic>
+<sup>
+<italic toggle="yes">LSL.G12D/wt</italic>
+</sup>
+<italic toggle="yes">;p16/p19</italic>
+<sup>
+<italic toggle="yes">fl/wt</italic>
+</sup>
+<italic toggle="yes">;p53</italic>
+<sup>
+<italic toggle="yes">LSL.R270H/wt</italic>
+</sup>
+<italic toggle="yes">;Pdx1.Cre</italic>) was effective at limiting tumour growth, while also promoting antitumour immunity and checkpoint inhibitor response [<xref rid="path6420-bib-0009" ref-type="bibr">9</xref>]. Informatively, the aggressive inflammatory tumours observed with the deletion of α‐SMA‐positive CAFs also enhanced tumour response to anti‐CTLA4 checkpoint blockade [<xref rid="path6420-bib-0007" ref-type="bibr">7</xref>]. Such studies highlight the need to separate correlation from causation, which will be critical when considering therapeutic targeting of the tumour stroma.</p></sec><sec id="path6420-sec-0003"><title>Can targeting the stroma in chordoma provide clinical benefit?</title><p>To date, at least four separate studies have reported the single‐cell transcriptomic landscape of chordoma, alongside immune‐cell focussed studies (Table <xref rid="path6420-tbl-0001" ref-type="table">1</xref>) [<xref rid="path6420-bib-0001" ref-type="bibr">1</xref>, <xref rid="path6420-bib-0002" ref-type="bibr">2</xref>, <xref rid="path6420-bib-0010" ref-type="bibr">10</xref>, <xref rid="path6420-bib-0011" ref-type="bibr">11</xref>]. All studies concur on the identification of TBXT‐expressing cancer cells exhibiting high epithelial‐mesenchymal signatures and TGFβ pathway activation. Cancer‐stem cells and a highly complex immune infiltrate are also common features. Abundant fibroblast populations are identified in each of these datasets, although little effort has been made to cross‐compare the transcriptomic data. A more comprehensive description of the evolving CAF landscape during malignant progression, therapy response and disease relapse would provide important context for the development of stromal targeting strategies. As an example, the ERS CAFs described by Zhang et al are almost exclusively found in relapsed chordoma [<xref rid="path6420-bib-0002" ref-type="bibr">2</xref>]. Relapse occurs in cases refractory to surgery and radiotherapy, where immunotherapy is emerging as a promising option. To what degree would ERS CAFs suppress antitumour immunity and would targeting these cells be useful? In contrast, iCAFs are shown to appear late in poor prognosis, primary invasive disease, and may play an important role in sculpting the immune infiltrate, with implications for immunotherapy responses. Combining data from multiple studies will be required to better understand commonalties and heterogeneity between CAF subtypes identified in chordoma.</p><table-wrap position="float" id="path6420-tbl-0001" content-type="Table" orientation="portrait"><label>Table 1</label><caption><p>Cancer‐associated fibroblast subtypes identified in single cell RNA‐sequencing studies on chordoma.</p></caption><table frame="hsides" rules="groups"><col align="left" span="1"/><col align="left" span="1"/><col align="left" span="1"/><col align="left" span="1"/><col align="left" span="1"/><thead valign="top"><tr style="border-bottom:solid 1px #000000"><th align="left" valign="top" rowspan="1" colspan="1">CAF subtypes</th><th align="center" valign="top" rowspan="1" colspan="1">Selected markers</th><th align="center" valign="top" rowspan="1" colspan="1">Biological functions/notes</th><th align="center" valign="top" rowspan="1" colspan="1">Samples/cancer type</th><th align="center" valign="top" rowspan="1" colspan="1">References</th></tr></thead><tbody valign="top"><tr><td align="left" valign="top" rowspan="1" colspan="1">
+<p>4 CAF clusters:</p>
+<p>‐ iCAFs (inflammatory)</p>
+<p>‐ Energy metabolism enriched CAFs</p>
+<p>‐ Cell junction enriched CAFs</p>
+<p>‐ ECM CAFs</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>All clusters<italic toggle="yes">: POSTN, THY1, ACTA2, FBLN1, FAP, PDGFRA</italic>
+</p>
+<p>iCAF: <italic toggle="yes">IL1B, HLA‐DRA, MMP9, CCL4</italic>
+</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">iCAFs: tumour invasion, poor prognosis. Localised distant from cancer cells.</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>7 primary sacral chordomas</p>
+<p>4 nucleus pulposus</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">Zheng 2025 [<xref rid="path6420-bib-0003" ref-type="bibr">3</xref>]</td></tr><tr><td align="left" valign="top" rowspan="1" colspan="1">
+<p>4 CAF clusters:</p>
+<p>‐ myCAFs (myofibroblast)</p>
+<p>‐ ECM CAFs</p>
+<p>‐ Ribosomal CAFs</p>
+<p>‐ Fibroblast‐like</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>myCAF: ACTA2, <italic toggle="yes">MYLK, MYL9</italic>
+</p>
+<p>ECM CAF: <italic toggle="yes">PDGFRA</italic>
+</p>
+<p>
+<italic toggle="yes">Fibroblast‐like: APOD and CYP1B1</italic>
+</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">FN1, collagen and TGFβ interactions between CAFs and cancer cells; EMT/TGFβ pathway targeted.</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>6 primary skull base chordomas</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">Zhang 2022 [<xref rid="path6420-bib-0001" ref-type="bibr">1</xref>]</td></tr><tr><td align="left" valign="top" rowspan="1" colspan="1">
+<p>6 CAF clusters:</p>
+<p>‐ mCAFs – ECM/matrix</p>
+<p>‐ iCAFs</p>
+<p>‐ bone CAFs</p>
+<p>‐ vascular CAFs (2 clusters)</p>
+<p>‐ EMT CAFs</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>All clusters: ACTA2, Col1a2, PDGFRB</p>
+<p>mCAFs: collagens</p>
+<p>iCAFs: IL1RL1, CCL3, CCL4l2, CCL8</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>20% of cells are fibroblasts.</p>
+<p>TGFβ most prominent pathway driving invasion and immune suppression.</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>6 primary chordomas:</p>
+<p>‐ 2 skull base</p>
+<p>‐ 3 vertebrae</p>
+<p>‐ 1 sacrum</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">Duan 2022 [<xref rid="path6420-bib-0010" ref-type="bibr">10</xref>]</td></tr><tr><td align="left" valign="top" rowspan="1" colspan="1">
+<p>4 CAF clusters</p>
+<p>‐ ERS CAFs</p>
+<p>‐ Energy metabolism enriched CAFs</p>
+<p>‐ 2 rare CAF clusters</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>All clusters: POSTN, ACTA2, FAP, PDGFRA</p>
+<p>ERS CAFs: ERS and Hypoxia signature genes, HSPs, VEGFA</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>Endoplasmic reticulum</p>
+<p>Stress (ERS) CAFs associated with recurrence, invasion, poor prognosis. ERS CAFs associate closely with cancer cells.</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>3 primary chordomas</p>
+<p>3 recurrent chordomas</p>
+<p>3 nucleus pulposus</p>
+</td><td align="left" valign="top" rowspan="1" colspan="1">
+<p>Zhang 2024 [<xref rid="path6420-bib-0002" ref-type="bibr">2</xref>]</p>
+</td></tr></tbody></table></table-wrap><p>Chordoma is a clinically important but relatively rare disease. It may therefore also be useful to cross‐compare CAF subsets with those arising in other mesenchymal bone tumours. No doubt the clusters identified in chordomas, and other related tumours, would share significant overlap, and this would allow advances in clinical trials in related tumour types to be more readily translated to chordoma. As in other cancers, the need to identify discriminatory biomarkers to define functionally distinct CAF types remains critical; the chordoma studies published here can support this endeavour. The rapidly advancing technology for examining spatial transcriptomics at single‐cell resolution also provides an increasing opportunity to explore the local relationships between these distinct stromal populations, the malignant components, and the immune landscape. Ultimately, this has the potential to define biomarkers to identify, and even target, cell types of therapeutic interest. A framework for integrating single‐cell and spatially resolved data from diverse studies will, however, be necessary to better define mechanisms of tumour progression and therapeutic vulnerabilities.</p></sec><sec id="path6420-sec-0005"><title>Author contributions statement</title><p>AJMC and JCH conceived and wrote the article, compiled the table, and designed the figure.</p></sec></body><back><ack id="path6420-sec-0004"><title>Acknowledgements</title><p>AJMC is supported by Cancer Research UK Centre Grants to Barts Cancer Institute (C355/A25137) and the City of London Centre (C7893/A26233). AJMC and JCH are supported by MRC grant MR/X018997/1. Figure <xref rid="path6420-fig-0001" ref-type="fig">1</xref> was created in BioRender.</p></ack><sec sec-type="data-availability" id="path6420-sec-0007"><title>Data availability statement</title><p>Data sharing is not applicable to this article, as no datasets were generated or analysed during the current study.</p></sec><ref-list id="path6420-bibl-0001" content-type="cited-references"><title>References</title><ref id="path6420-bib-0001"><label>1</label><mixed-citation publication-type="journal" id="path6420-cit-0001">
+<string-name name-style="western">
+<surname>Zhang</surname>
+<given-names>Q</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Fei</surname>
+<given-names>L</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Han</surname>
+<given-names>R</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>Single‐cell transcriptome reveals cellular hierarchies and guides p‐EMT‐targeted trial in skull base chordoma</article-title>. <source>Cell Discov</source>
+<year>2022</year>; <volume>8</volume>: <fpage>94</fpage>.<pub-id pub-id-type="pmid">36127333</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1038/s41421-022-00459-2</pub-id><pub-id pub-id-type="pmcid">PMC9489773</pub-id></mixed-citation></ref><ref id="path6420-bib-0002"><label>2</label><mixed-citation publication-type="journal" id="path6420-cit-0002">
+<string-name name-style="western">
+<surname>Zhang</surname>
+<given-names>TL</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Xia</surname>
+<given-names>C</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Zheng</surname>
+<given-names>BW</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>Integrating single‐cell and spatial transcriptomics reveals endoplasmic reticulum stress‐related CAF subpopulations associated with chordoma progression</article-title>. <source>Neuro Oncol</source>
+<year>2024</year>; <volume>26</volume>: <fpage>295</fpage>–<lpage>308</lpage>.<pub-id pub-id-type="pmid">37772937</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1093/neuonc/noad173</pub-id><pub-id pub-id-type="pmcid">PMC10836767</pub-id></mixed-citation></ref><ref id="path6420-bib-0003"><label>3</label><mixed-citation publication-type="journal" id="path6420-cit-0003">
+<string-name name-style="western">
+<surname>Zheng</surname>
+<given-names>BW</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Guo</surname>
+<given-names>W</given-names>
+</string-name>. <article-title>Multi‐omics analysis unveils the role of inflammatory cancer‐associated fibroblasts in chordoma progression</article-title>. <source>J Pathol</source>
+<year>2025</year>; <volume>265</volume>: <fpage>69</fpage>–<lpage>83</lpage>.<pub-id pub-id-type="pmid">39611243</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1002/path.6369</pub-id></mixed-citation></ref><ref id="path6420-bib-0004"><label>4</label><mixed-citation publication-type="journal" id="path6420-cit-0004">
+<string-name name-style="western">
+<surname>Menezes</surname>
+<given-names>S</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Okail</surname>
+<given-names>MH</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Jalil</surname>
+<given-names>SMA</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>Cancer‐associated fibroblasts in pancreatic cancer: new subtypes, new markers, new targets</article-title>. <source>J Pathol</source>
+<year>2022</year>; <volume>257</volume>: <fpage>526</fpage>–<lpage>544</lpage>.<pub-id pub-id-type="pmid">35533046</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1002/path.5926</pub-id><pub-id pub-id-type="pmcid">PMC9327514</pub-id></mixed-citation></ref><ref id="path6420-bib-0005"><label>5</label><mixed-citation publication-type="journal" id="path6420-cit-0005">
+<string-name name-style="western">
+<surname>Zou</surname>
+<given-names>MX</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Zheng</surname>
+<given-names>BW</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Liu</surname>
+<given-names>FS</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>The relationship between tumor‐stroma ratio, the immune microenvironment, and survival in patients with spinal chordoma</article-title>. <source>Neurosurgery</source>
+<year>2019</year>; <volume>85</volume>: <fpage>E1095</fpage>–<lpage>E1110</lpage>.<pub-id pub-id-type="pmid">31501892</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1093/neuros/nyz333</pub-id></mixed-citation></ref><ref id="path6420-bib-0006"><label>6</label><mixed-citation publication-type="journal" id="path6420-cit-0006">
+<string-name name-style="western">
+<surname>Dominguez</surname>
+<given-names>CX</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Müller</surname>
+<given-names>S</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Keerthivasan</surname>
+<given-names>S</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>Single‐cell RNA sequencing reveals stromal evolution into LRRC15<sup>+</sup> myofibroblasts as a determinant of patient response to cancer immunotherapy</article-title>. <source>Cancer Discov</source>
+<year>2020</year>; <volume>10</volume>: <fpage>232</fpage>–<lpage>253</lpage>.<pub-id pub-id-type="pmid">31699795</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1158/2159-8290.CD-19-0644</pub-id></mixed-citation></ref><ref id="path6420-bib-0007"><label>7</label><mixed-citation publication-type="journal" id="path6420-cit-0007">
+<string-name name-style="western">
+<surname>Özdemir</surname>
+<given-names>BC</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Pentcheva‐Hoang</surname>
+<given-names>T</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Carstens</surname>
+<given-names>JL</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>Depletion of carcinoma‐associated fibroblasts and fibrosis induces immunosuppression and accelerates pancreas cancer with reduced survival</article-title>. <source>Cancer Cell</source>
+<year>2014</year>; <volume>25</volume>: <fpage>719</fpage>–<lpage>734</lpage>.<pub-id pub-id-type="pmid">24856586</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1016/j.ccr.2014.04.005</pub-id><pub-id pub-id-type="pmcid">PMC4180632</pub-id></mixed-citation></ref><ref id="path6420-bib-0008"><label>8</label><mixed-citation publication-type="journal" id="path6420-cit-0008">
+<string-name name-style="western">
+<surname>Murray</surname>
+<given-names>ER</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Menezes</surname>
+<given-names>S</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Henry</surname>
+<given-names>JC</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>Disruption of pancreatic stellate cell myofibroblast phenotype promotes pancreatic tumor invasion</article-title>. <source>Cell Rep</source>
+<year>2022</year>; <volume>38</volume>: <elocation-id>110227</elocation-id>.<pub-id pub-id-type="pmid">35081338</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1016/j.celrep.2021.110227</pub-id><pub-id pub-id-type="pmcid">PMC8810397</pub-id></mixed-citation></ref><ref id="path6420-bib-0009"><label>9</label><mixed-citation publication-type="journal" id="path6420-cit-0009">
+<string-name name-style="western">
+<surname>Krishnamurty</surname>
+<given-names>AT</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Shyer</surname>
+<given-names>JA</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Thai</surname>
+<given-names>M</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>LRRC15<sup>+</sup> myofibroblasts dictate the stromal setpoint to suppress tumour immunity</article-title>. <source>Nature</source>
+<year>2022</year>; <volume>611</volume>: <fpage>148</fpage>–<lpage>154</lpage>.<pub-id pub-id-type="pmid">36171287</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1038/s41586-022-05272-1</pub-id><pub-id pub-id-type="pmcid">PMC9630141</pub-id></mixed-citation></ref><ref id="path6420-bib-0010"><label>10</label><mixed-citation publication-type="journal" id="path6420-cit-0010">
+<string-name name-style="western">
+<surname>Duan</surname>
+<given-names>W</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Zhang</surname>
+<given-names>B</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Li</surname>
+<given-names>X</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>Single‐cell transcriptome profiling reveals intra‐tumoral heterogeneity in human chordomas</article-title>. <source>Cancer Immunol Immunother</source>
+<year>2022</year>; <volume>71</volume>: <fpage>2185</fpage>–<lpage>2195</lpage>.<pub-id pub-id-type="pmid">35084549</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1007/s00262-022-03152-1</pub-id><pub-id pub-id-type="pmcid">PMC10992276</pub-id></mixed-citation></ref><ref id="path6420-bib-0011"><label>11</label><mixed-citation publication-type="journal" id="path6420-cit-0011">
+<string-name name-style="western">
+<surname>Niu</surname>
+<given-names>HQ</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Zheng</surname>
+<given-names>BY</given-names>
+</string-name>, <string-name name-style="western">
+<surname>Zou</surname>
+<given-names>MX</given-names>
+</string-name>, <italic toggle="yes">et al</italic>. <article-title>Complex immune microenvironment of chordoma: a road map for future treatment</article-title>. <source>J Immunother Cancer</source>
+<year>2024</year>; <volume>12</volume>: <elocation-id>e009313</elocation-id>.<pub-id pub-id-type="pmid">38908855</pub-id>
+<pub-id pub-id-type="doi" assigning-authority="pmc">10.1136/jitc-2024-009313</pub-id><pub-id pub-id-type="pmcid">PMC11328617</pub-id></mixed-citation></ref></ref-list></back></article>
