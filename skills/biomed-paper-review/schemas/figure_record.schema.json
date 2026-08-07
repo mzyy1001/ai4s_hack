@@ -75,6 +75,7 @@
     "axes": {
       "type": "object",
       "description": "对数轴误判为线性会导致全部读数错误，必须显式记录",
+      "minProperties": 1,
       "additionalProperties": false,
       "properties": {
         "x": {"$ref": "#/$defs/axis"},
@@ -215,12 +216,35 @@
           "manual_review_needed": {"const": true}
         }
       }
+    },
+    {
+      "description": "axis_readable 表示数值可由坐标轴直接读取，因此至少必须登记一条带 scale 的轴。",
+      "if": {
+        "properties": {
+          "observations": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "provenance": {
+                  "type": "object",
+                  "properties": {"source_type": {"const": "axis_readable"}},
+                  "required": ["source_type"]
+                }
+              },
+              "required": ["provenance"]
+            }
+          }
+        },
+        "required": ["observations"]
+      },
+      "then": {"required": ["axes"]}
     }
   ],
 
   "$defs": {
     "axis": {
       "type": "object",
+      "required": ["scale"],
       "additionalProperties": false,
       "properties": {
         "label": {"type": ["string", "null"]},

@@ -171,6 +171,9 @@ def check_schemas(rep):
               "observation_core" in key_defs and
               key_defs.get("observation", {}).get("unevaluatedProperties") is False,
               "figure observation 可追加路由字段且两种落盘形状均封闭")
+    axis_def = figrec.get("$defs", {}).get("axis", {})
+    rep.check("scale" in axis_def.get("required", []),
+              "figure axis 显式要求 scale，禁止空轴对象")
 
     syslim = schemas.get("system_limitation.schema.json", {})
     rep.check("severity" in json.dumps(syslim.get("not", {})),
@@ -348,6 +351,7 @@ def check_instance(rep, name, inst):
     # --- Figure Parser → Stage 3b 路由包络 ---
     fig_bad = []
     route_keys = {"experiment_id", "group", "comparison", "timepoint", "endpoint"}
+    figure_observations = {}
     for fig in inst.get("figure_records", []):
         fobs = fig.get("observations", [])
         if any((o.get("provenance") or {}).get("source_type") == "pixel_estimated"
@@ -357,6 +361,11 @@ def check_instance(rep, name, inst):
             if fig.get("manual_review_needed") is not True:
                 fig_bad.append(f"{fig.get('figure_id')}: 含 pixel observation 但未强制人工复核")
         for obs in fobs:
+            obs_id = obs.get("observation_id")
+            if obs_id in figure_observations and figure_observations[obs_id] != obs:
+                fig_bad.append(f"{fig.get('figure_id')}/{obs_id}: Stage 3 重复 id 的完整内容不一致")
+            else:
+                figure_observations[obs_id] = obs
             route = obs.get("target_grouping_key")
             if not isinstance(route, dict) or set(route) != route_keys:
                 fig_bad.append(f"{fig.get('figure_id')}/{obs.get('observation_id')}: 五键路由不完整")
@@ -367,6 +376,9 @@ def check_instance(rep, name, inst):
                     "correlation", "time_to_event", "dose_response", "classification_metric",
                     "diagnostic_accuracy"}:
                 fig_bad.append(f"{fig.get('figure_id')}/{obs.get('observation_id')}: metric_family 非法")
+            if (obs.get("provenance") or {}).get("source_type") == "axis_readable" and \
+                    not fig.get("axes"):
+                fig_bad.append(f"{fig.get('figure_id')}/{obs_id}: axis_readable 但未登记坐标轴")
         curve = fig.get("curve_fit")
         if isinstance(curve, dict) and "reported_in_manuscript" not in curve:
             fig_bad.append(f"{fig.get('figure_id')}: curve_fit 未声明 reported_in_manuscript")
@@ -484,6 +496,10 @@ def check_instance(rep, name, inst):
 
         # key_data 组约束
         kd_bad = []
+        merged_figure_ids = set()
+        core_keys = {"observation_id", "value", "unit", "unit_normalized", "uncertainty",
+                     "n", "replicate_type", "provenance", "extraction_confidence",
+                     "manual_review_needed", "quote"}
         for k in sr.get("key_data", []):
             st = k.get("status")
             if st not in KEY_DATA_STATUS:
@@ -502,6 +518,21 @@ def check_instance(rep, name, inst):
             ids_in = set(obs_ids)
             if len(obs_ids) != len(ids_in):
                 kd_bad.append(f"{k.get('id')}: observation_id 重复")
+            for obs in obs_list:
+                obs_id = obs.get("observation_id")
+                source = figure_observations.get(obs_id)
+                if source is None:
+                    continue
+                if obs_id in merged_figure_ids:
+                    kd_bad.append(f"{obs_id}: 同一 Figure observation 落入多个 key_data 组")
+                merged_figure_ids.add(obs_id)
+                source_core = {key: source[key] for key in core_keys if key in source}
+                if source_core != obs:
+                    kd_bad.append(f"{obs_id}: Stage 3b 未原样保留全部 observation_core 字段")
+                if source.get("metric_name") != k.get("metric_name") or \
+                        source.get("metric_family") != k.get("metric_family") or \
+                        source.get("target_grouping_key") != k.get("grouping_key"):
+                    kd_bad.append(f"{obs_id}: Stage 3 路由身份与 v2 目标组不一致")
             canonical = k.get("canonical_observation")
             if st == "reported":
                 if len(obs_list) != 1 or canonical not in ids_in:
@@ -530,6 +561,24 @@ def check_instance(rep, name, inst):
             for ref in pair_refs:
                 if ref not in ids_in:
                     kd_bad.append(f"{k.get('id')}: 引用了不存在的 {ref}")
+        if version == "v2" and figure_observations:
+            rejected_figure_ids = {
+                target
+                for limitation in inst.get("all_system_limitations", [])
+                if limitation.get("category") == "parse_failed" and
+                limitation.get("produced_by") == "stage_3b"
+                for target in limitation.get("affected_targets", [])
+                if target in figure_observations
+            }
+            multiply_accounted = merged_figure_ids & rejected_figure_ids
+            if multiply_accounted:
+                kd_bad.append("Figure observations 同时落盘和拒收: " +
+                              ", ".join(sorted(multiply_accounted)))
+            missing_figure_ids = (set(figure_observations) - merged_figure_ids -
+                                  rejected_figure_ids)
+            if missing_figure_ids:
+                kd_bad.append("Figure observations 未全部回流 v2: " +
+                              ", ".join(sorted(missing_figure_ids)))
         rep.check(not kd_bad, "key_data 观测组约束成立", "; ".join(kd_bad[:5]))
 
         # 覆盖率原始数据自洽
@@ -590,6 +639,15 @@ def check_instance(rep, name, inst):
             s_bad.append(f"{s.get('id')}: 携带 severity")
         if s.get("type") == "source_value_conflict" and s.get("produced_by") != "stage_3b":
             s_bad.append(f"{s.get('id')}: 冲突 signal 非 Stage 3b 产出")
+        if s.get("type") == "source_value_conflict" and sr:
+            source_by_observation = {
+                obs.get("observation_id"): (obs.get("provenance") or {}).get("source_type")
+                for group in sr.get("key_data", []) for obs in group.get("observations", [])
+            }
+            if any(source_by_observation.get(ref) in VISUALLY_DERIVED
+                   for ref in s.get("observation_refs", [])) and \
+                    "M5" not in s.get("routed_to", []):
+                s_bad.append(f"{s.get('id')}: 含视觉来源的冲突未路由 M5")
         if s.get("type") == "external_validation_candidate":
             if s.get("produced_by") != "stage_3c_external_validation":
                 s_bad.append(f"{s.get('id')}: external signal 非 X1 产出")

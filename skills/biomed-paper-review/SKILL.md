@@ -299,8 +299,10 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 1. **收敛 pending** —— 每个 `status: "unresolved"` 必须解析为 `reported` /
    `not_reported` / `ambiguous` / `conflicting` / `parse_failed`。
    **v2 中不得残留 `unresolved`。**
-2. **观测分组** —— 对 `figure_record.observations[]`，先比较 `metric_family + metric_name`，再逐项比较 `target_grouping_key` 与 `key_data.grouping_key` 五键。完全相同则并入，否则新建组，**不得猜配或判冲突**。入组时移除临时路由字段，保持 `observation_id`、`value`、`provenance`；同一 id 的重复副本不一致时终止入组，产出
-   `category: "parse_failed"` 的 Stage 3b `system_limitation`，不得择一覆盖。
+2. **观测分组** —— 对 `figure_record.observations[]`，先比较 `metric_family + metric_name`，再逐项比较 `target_grouping_key` 与 `key_data.grouping_key` 五键。完全相同则并入，否则新建组，**不得猜配或判冲突**。入组时只移除 `target_grouping_key` / `metric_name` / `metric_family` 三个临时路由字段，`observation_core` 的全部字段原样保留；同一 id 的重复副本任一字段不一致时终止入组，产出
+   `category: "parse_failed"` 的 Stage 3b `system_limitation`，并把该 `observation_id`
+   写入 `affected_targets[]`；不得择一覆盖。v2 中每条图观测必须恰好落入一个
+   `key_data` 组，或被上述 limitation 明确拒收，不得无轨迹丢失。
 3. **兼容性判定** —— 单位换算工作副本 → 分类/数值本体 → 同型 uncertainty 端点。
    先比点估计，禁止以 CI 重叠代替同一结果跨位置一致性；
    **四舍五入差异不得判为冲突**，无法建立可比性判 `ambiguous`，不判 `conflicting`。
@@ -308,7 +310,8 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
    「主要结果 → 带不确定度 → 精度 → 非叙述性摘要 → 要素齐全 → 字典序」有序判据。
    **给不出可辩护选择时 `canonical_observation = null`，组判 `ambiguous`。**
 5. **保全** —— 全部 observation 保留，**禁止静默覆盖**。不兼容时产出
-   `source_value_conflict` signal，交 M2 判定。
+   `source_value_conflict` signal，交 M2/M4 判定；冲突组只要含 `axis_readable` 或
+   `pixel_estimated` 观测，`routed_to` 还必须包含 M5，由 M5 判断是否构成图文矛盾。
 6. **claim 链接** —— `claims[].supported_by` 解析不到任何 `key_data.id` 或证据的，
    产出 `claim_without_resolved_evidence_link` signal（`target` 携带 `claim_id`
    与 `unresolved_refs[]`），交 M7 判定。**M1 与 Stage 3b 都不下这个结论。**

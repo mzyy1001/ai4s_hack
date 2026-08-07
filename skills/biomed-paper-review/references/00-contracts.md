@@ -525,9 +525,17 @@ observation 的证据与 `quote`，不用原始大小写或别名参与分组。
 
 Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就新建组，不按相似名称
 猜配。入组时移除 `target_grouping_key` / `metric_name` / `metric_family` 三个临时路由字段，
-由组级字段承载它们；`observation_id`、`value`、`provenance` 必须原样保留。
-同一 `observation_id` 的重复副本若 `value` 或 `provenance` 不完全一致，Stage 3b 必须
-停止该 id 入组并产出 `category: "parse_failed"` 的 `system_limitation`，不得择一覆盖。
+由组级字段承载它们；其余 `observation_core` 字段必须逐字段原样保留，包括
+`observation_id` / `value` / `unit` / `unit_normalized` / `uncertainty` / `n` /
+`replicate_type` / `provenance` / `extraction_confidence` / `manual_review_needed` / `quote`。
+同一 `observation_id` 在两个 Stage 3 副本中出现时，含三个路由字段在内的全部字段必须
+完全相同；它在 `structured_result_v2.key_data` 中的落盘副本必须与移除三个路由字段后的
+`observation_core` 完全相同，且目标组的指标身份与五键必须等于原路由字段。任一不一致时，
+Stage 3b 必须停止该 id 入组并产出 `category: "parse_failed"` 的 `system_limitation`，
+把该 `observation_id` 写入 `affected_targets[]`；不得择一覆盖或仅比较 `value` /
+`provenance`。`structured_result_v2` 中每条 Stage 3 图观测必须恰好落入一个 `key_data`
+组，或被这类 Stage 3b limitation 明确拒收；既未落盘又未列入 `affected_targets[]` 即为
+无轨迹数据丢失。
 
 **第二步 · 可比性。** 同组内对全部无序 observation 对逐对判定，顺序固定；
 每一对必须得到 `compatible` / `conflicting` / `ambiguous` 中的恰好一个结果：
@@ -573,7 +581,9 @@ Stage 3 图观测与既有组完全匹配则并入；没有完全匹配的组就
 **全部 observation 一律保留在 `observations[]`，禁止删除或静默覆盖。**
 
 **第四步 · 出信号。** 存在 `conflicting_observations[]` → 产出一条
-`source_value_conflict` signal（§6.2），`signal_refs[]` 回填。
+`source_value_conflict` signal（§6.2），`signal_refs[]` 回填。默认路由 M2/M4；若冲突组
+至少含一个 `axis_readable` 或 `pixel_estimated` 观测，`routed_to` 还必须包含 M5，
+由 M5 回查原图后判断是否构成 `figure_text_contradiction`。Stage 3b 只产 signal，不产 finding。
 
 ### 5.5 canonical_observation 的选择
 
@@ -712,7 +722,7 @@ finding id 升序排列。
 
 | type | 触发条件 | 路由到 | 下游判定什么 |
 | --- | --- | --- | --- |
-| `source_value_conflict` | 同一观测组多来源不兼容（§5.4） | M2（主）、M4 | 是否构成稿件内部矛盾 |
+| `source_value_conflict` | 同一观测组多来源不兼容（§5.4） | M2（主）、M4；含视觉来源时再路由 M5 | 是否构成稿件内部矛盾；M5 判断图文矛盾 |
 | `claim_without_resolved_evidence_link` | claim 的 `supported_by` 解析不到任何 `key_data.id` 或证据 | M7 | 是否构成无支撑主张 |
 | `ambiguous_study_design` | 设计线索冲突或不足以唯一归类 | M2、M3、M4、M6 | 是否构成设计描述不清 |
 | `unresolved_cross_reference` | 正文引用的图/表/补充材料解析不到实体 | M2、M5 | 是否构成引用错误 |
