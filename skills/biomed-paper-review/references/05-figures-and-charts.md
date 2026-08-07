@@ -183,7 +183,7 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 | `error_bar_undefined` | 误差棒类型未定义 | minor |
 | `significance_undefined` | 星号阈值未定义 | minor |
 | `n_not_shown_in_figure` | 图中未标注样本量 | minor |
-| `terminology_inconsistency` | 图/图注/正文术语不一致 | minor |
+| `figure_terminology_inconsistency` | 图/图注/正文术语不一致 | minor |
 | `legend_color_confusing` | 图例或配色易误读 | minor |
 | `caption_not_self_contained` | 图注不自足 | minor |
 | `figure_text_contradiction` | 图与图注/正文矛盾 | major |
@@ -193,6 +193,41 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 | `redundant_presentation` | 图表信息冗余 | info |
 | `panel_reference_broken` | panel 引用缺失/重复/顺序错乱 | major |
 | `figure_unreadable` | 分辨率不足、文字或坐标轴不可读 | major |
+
+### C.1 接住 X1 外部核验的 signal（**待敏怡确认 severity**）
+
+`scripts/external_figure_validation.py`（Stage 3c）会把五类外部核验结果
+路由给 M5。它们是 `type=external_validation_candidate` 的 signal，
+**没有 severity** —— 按契约，X1 只做「稿件事实 vs 外部权威事实」的可复算比较，
+**是否成立、多严重，一律由 M5 在回查原图与稿件证据后决定**。
+
+| X1 `check_type` | 数据库 | 比较结果 | M5 category slug |
+| --- | --- | --- | --- |
+| `blot_band_molecular_weight` | UniProt | `needs_manual_review` | `blot_band_mw_implausible` |
+| `ic50_order_of_magnitude` | ChEMBL | `needs_manual_review` | `reported_activity_off_reference` |
+| `compound_molecular_weight` | PubChem | `needs_manual_review` | `compound_mw_mismatch` |
+| `compound_name_valid` | PubChem | `needs_manual_review` | `compound_not_found_in_reference` |
+| `pdb_entry_exists` | RCSB PDB | `mismatch` | `pdb_entry_not_found` |
+
+**处理规则**
+
+1. **`needs_manual_review` 的四类一律不得直接立 finding。** 它们各自都有
+   完全合法的解释：翻译后修饰、糖基化、二聚体、切割片段都会改变 WB 迁移位置；
+   不同细胞系与终点的 IC50 差一两个数量级是常态；盐型、水合物、同位素标记
+   都会改变分子量；内部代号与未收录新化合物本来就查不到。
+   M5 必须先回查原图与方法学描述，能被上述任一解释覆盖时**丢弃该候选**。
+2. **`pdb_entry_exists` 的 `mismatch` 是确定性事实**（RCSB 返回权威 404），
+   可直接立 finding。
+3. X1 产 `system_limitation`（接口不可达、限流、记录不足）时，
+   **不得**当作「稿件没问题」，也不得当作「稿件有问题」——
+   按 `00-contracts.md` 登记限制并在报告中说明该项未覆盖。
+4. 每条由 X1 候选升格而来的 finding，`evidence_refs[]` 必须同时包含
+   **稿件证据**与 X1 登记的 **external evidence**，缺一不可。
+
+> **待敏怡确认**：上表 severity 尚未定。建议起点 ——
+> `pdb_entry_not_found` 取 `major`（引用了不存在的结构，可复现性直接受损）；
+> 其余四类经人工核对确认后取 `major`，仅涉及标注笔误时取 `minor`。
+> 这一节只是把接口接上，判据仍以你的实操经验为准。
 
 ---
 

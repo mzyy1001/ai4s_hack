@@ -419,7 +419,7 @@ finding 判据；它们会误伤合理的小样本探索研究，也可能放过
 | `power_and_sample_size` | 适用的样本量/精度依据缺失，或作者声称的计算不可复算（§5） | 确证性主要目标无依据或计划—实际明显矛盾 → major；探索性研究不因未做疗效 power 自动报警 |
 | `multiple_testing_control` | 多重比较未校正（§8） | 高维组学数据无校正 → critical；普通多重比较未校正 → major |
 | `replication_independence` | 独立分配单位内的亚样本/技术重复被当独立 n（§4.9） | 默认 major；分配层、分析层与主要结论影响均有证据时才 critical |
-| `selective_reporting` | 疑似选择性报告 / 终点事后更换 | critical |
+| `selective_significant_reporting` | 只报显著结果、隐去预设但不显著的分析（§8） | critical |
 | `error_bar_reporting` | 误差类型未标注或图文不一致（§7） | 影响结果解释 → major；仅格式不规范 → minor |
 | `p_value_reporting` | 仅报 `p<0.05`，无精确值或统计量（§7） | 影响结果解释 → major；仅格式不规范 → minor |
 | `effect_size_reporting` | 未报告效应量；或仅凭 p 值支撑关键结论而未对照临床显著标准（§7） | 仅 p 值支撑关键结论 → major；次要指标缺失 → minor |
@@ -544,7 +544,7 @@ over_precision                    -> （并入 p_value_reporting 的 minor 档�
       统计 `undetermined` 的比例 —— 若超过 50%，说明 M1 的
       `statistical_methods` 抽取粒度不够，需与 M1 对齐字段
 - [ ] 与 M5 确认误差棒类型的抽取字段（§7 图文矛盾判定依赖它）
-- [ ] 与 M2 划清「选择性报告」的边界：终点更换归 M2，只报显著结果归 M4
+- [x] 与 M2 划清「选择性报告」的边界：**终点事后更换归 M2 的 `selective_reporting`；只报显著结果归 M4 的 `selective_significant_reporting`**。两模块曾用同一个 slug，Stage 5 聚簇时无法区分来源，已按本条拆开
 - [ ] 补充贝叶斯方法与稳健估计的判定规则（当前一律 `undetermined`）
 
 ---

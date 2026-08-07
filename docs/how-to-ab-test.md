@@ -58,7 +58,7 @@ caffeinate -i python3 tools/real_paper_benchmark.py --corpus datasets/ground_tru
 ## 2. 整体 A/B（辅助）：`uplift_ab.py`
 
 ```bash
-# 凭据（官方统一模型是 GLM / Kimi 系列；我们手上有 Qwen）
+# 凭据（官方统一模型就是 Qwen 系列 —— 我们测的就是评测环境用的模型）
 source ~/.config/qwen/credentials.env
 
 python3 tools/uplift_ab.py \
@@ -180,7 +180,7 @@ python3 tools/uplift_sweep.py --host /tmp/host.txt --repeats 3 --gap 15
 3. **本方法只测「能不能发现」**，没测「发现后的表述质量与证据可审计性」。
    后者是 skill 的另一类价值（证据链维度 25%），
    **不因某条检查被判零 uplift 而否定**。
-4. **官方统一模型是 GLM / Kimi 系列。** 我们手上是 Qwen，同为国产同族，
+4. **官方统一模型就是 Qwen 系列。** 我们跑 A/B 用的 qwen3.8-max 与评测同族，
    但**不是**评测用的那一个。跨模型结论要保守。
 5. 改 SKILL.md 主流程后**一定要重跑整体 A/B** —— 我们已经踩过一次
    「加了很多东西反而变差」。
