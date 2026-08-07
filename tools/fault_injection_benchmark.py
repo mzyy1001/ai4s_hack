@@ -100,6 +100,28 @@ def make_env(root, name, paper_text, with_skill):
     return d
 
 
+# opencode 失败时会把错误 JSON 打到 stdout，长度很短。
+# 正常的审稿意见至少有几百字符且含条目结构。
+MIN_REVIEW_CHARS = 400
+ERROR_MARKERS = ("[TIMEOUT]", "[opencode 不可用]", '"name": "UnknownError"',
+                 '"name":"UnknownError"', "Error: {", "usage limit",
+                 "rate limit", "Unexpected server error")
+
+
+def review_is_valid(text):
+    """判断这份「审稿意见」是不是真的审稿意见。
+
+    **审阅调用失败绝不能当成「什么都没发现」** —— 那是我们没问到，
+    不是模型没查出来。与契约里 parse_failed != not_reported 同理。
+    """
+    if not text or len(text.strip()) < MIN_REVIEW_CHARS:
+        return False, f"输出仅 {len(text.strip())} 字符，短于 {MIN_REVIEW_CHARS}"
+    for m in ERROR_MARKERS:
+        if m in text:
+            return False, f"输出含错误标记 {m!r}"
+    return True, ""
+
+
 def run_opencode(cwd, model, timeout):
     cmd = ["opencode", "run"]
     if model:
@@ -183,10 +205,25 @@ def main():
                      faulty_text, with_skill)
         print(f"[{arm}] 审阅中 …")
         review = run_opencode(d, a.model, a.timeout)
-        with open(os.path.join(root, ("withskill" if with_skill else "baseline")
-                               + ".out.md"), "w", encoding="utf-8") as fh:
+        out_path = os.path.join(root, ("withskill" if with_skill else "baseline")
+                                + ".out.md")
+        with open(out_path, "w", encoding="utf-8") as fh:
             fh.write(review)
-        print(f"[{arm}] 逐条判定 …")
+
+        ok, why = review_is_valid(review)
+        if not ok:
+            print(f"\n[{arm}] **审阅调用失败：{why}**")
+            print(f"    输出已存至 {out_path}")
+            print("\n" + "=" * 74)
+            print("本次基准作废 —— 审阅没有真正跑起来。")
+            print("**不得**把这种情况记作「两臂都没查出来」：")
+            print("那是我们没问到，不是模型没查出来")
+            print("（与契约里 parse_failed != not_reported 同理）。")
+            print("\n常见原因：opencode 服务端错误、模型配额用尽、超时。")
+            print("修好后重跑；不要据此下任何 uplift 结论。")
+            return 3
+
+        print(f"[{arm}] 审阅有效（{len(review)} 字符），逐条判定 …")
         results[arm] = judge_all(review, applied, key, a.base, judge_model)
 
     # ---- 报表 ----
@@ -226,7 +263,15 @@ def main():
         for i in only_base:
             print(f"  - {i}")
     if not only_skill and not only_base:
-        print("\n两臂完全一致 —— skill 既没加分也没减分。")
+        if b_hit == 0 and s_hit == 0:
+            print("\n**两臂均 0 命中 —— 高度可疑。**")
+            print("植入的错误是刻意加进去的，比天然错误显眼；"
+                  "裸模型在真实论文上都能报出十几条问题，")
+            print("两臂同时 0 命中通常意味着**审阅或裁判没真正跑起来**，"
+                  "而不是「都没查出来」。")
+            print("请先人工打开两份 .out.md 确认里面确实是审稿意见。")
+        else:
+            print("\n两臂完全一致 —— skill 既没加分也没减分。")
 
     print(f"\n两份完整意见：\n  {root}/baseline.out.md\n  {root}/withskill.out.md")
     print("\n注意：植入方式会让绝对命中率偏高（错误是刻意加进去的，比天然错误显眼），")
