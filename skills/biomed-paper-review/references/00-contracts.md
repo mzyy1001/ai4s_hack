@@ -31,7 +31,7 @@
 
 - `00-runtime-contract.md` —— 从本文件摘出的最小集合，供专家通道使用。
   **它不是第二事实来源**，冲突时以本文件与 schema 为准。
-- `00-routing.md` —— 候选类型 → 专家 → 证据包 → 规则库 → 工具的映射。
+- `00-routing.md` —— 问题类型 → 专家 → 索引 → 规则库 → 工具的映射（专家拿全文）。
 
 每个候选必须在 `candidate_resolution_log[]` 结清（见 `discovery.schema.json`），
 每次运行必须输出 `runtime_utilization` 遥测。
