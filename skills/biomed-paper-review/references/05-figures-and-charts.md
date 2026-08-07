@@ -33,6 +33,15 @@
 
 多 panel 图**优先按 panel 输出**，再给整体 figure 解释。
 
+### A.1a 视觉输入优先规则
+
+若当前执行模型支持视觉输入，Stage 3 Figure Parser 应优先读取原始图像证据，而不是只依赖 PDF 文本或 OCR。
+
+图像来源优先级：
+
+```text
+original_figure_file > extracted_pdf_figure > rendered_pdf_page > text_only_caption
+
 ### A.2 图表类型知识库
 
 按研究场景判断图表是否匹配研究目标，并给出该场景的必查项。
@@ -50,6 +59,12 @@
 | 相关性或关联分析 | 散点图、回归图、相关矩阵 | 相关系数类型、拟合方法、置信区间、离群点、轴变量定义 | `statistical_plot` |
 | 实验流程或研究设计 | workflow、实验时间线、样本筛选流程、CONSORT-like flow | 步骤、分组、时间点、干预、检测终点、**纳入/排除数量是否守恒** | `workflow` |
 | 分子实验结果 | Western blot、qPCR、ELISA、流式细胞术、凝胶图 | **loading control**、归一化方式、门控策略、重复数、统计注释 | `blot` / `flow_cytometry` |
+| 空间转录组 / 空间组学 | spatial feature plot、spot map、cell type fraction map、niche map | spot 尺度、颜色条、归一化方式、空间坐标、组织切片对应、cluster/niche 定义、样本来源 | `heatmap` / `micrograph` / `statistical_plot` |
+| 细胞通讯 / ligand-receptor | chord diagram、bubble plot、network graph、sender-receiver heatmap | ligand/receptor 名称、方向性、score 定义、阈值、校正方法、数据库来源 | `heatmap` / `schematic` / `statistical_plot` |
+| 富集分析 | bubble plot、bar plot、dot plot、ridge plot | gene set 名称、NES/OR/p 值/FDR、排序依据、背景基因集、多重校正 | `statistical_plot` / `heatmap` |
+| 流式细胞术 | gating plot、UMAP、histogram、MFI bar plot | gating strategy、阳性阈值、补偿、代表性图、n、MFI/percent 定义 | `flow_cytometry` |
+| IHC/IF/mIF 定量 | representative image + quantification | scale bar、通道/marker、ROI、阈值、每组样本数、field 数、定量方法 | `micrograph` / `statistical_plot` |
+| 动物实验肿瘤曲线 | tumor volume curve、endpoint tumor weight、growth inhibition | n、随机化、时间轴、误差线、终点定义、重复测量、个体曲线 | `statistical_plot` |
 
 ### A.3 数值抽取的证据分级
 
@@ -194,40 +209,54 @@ panel_id | scientific_question | current_chart_type | recent_field_convention | 
 | `panel_reference_broken` | panel 引用缺失/重复/顺序错乱 | major |
 | `figure_unreadable` | 分辨率不足、文字或坐标轴不可读 | major |
 
-### C.1 接住 X1 外部核验的 signal（**待敏怡确认 severity**）
+### C.1 接住 X1 外部核验的 signal
 
-`scripts/external_figure_validation.py`（Stage 3c）会把五类外部核验结果
-路由给 M5。它们是 `type=external_validation_candidate` 的 signal，
-**没有 severity** —— 按契约，X1 只做「稿件事实 vs 外部权威事实」的可复算比较，
-**是否成立、多严重，一律由 M5 在回查原图与稿件证据后决定**。
+`scripts/external_figure_validation.py`（Stage 3c）会把外部核验结果路由给 M5。
+它们是 `type=external_validation_candidate` 的 signal，**signal 本身没有 severity**。
 
-| X1 `check_type` | 数据库 | 比较结果 | M5 category slug |
-| --- | --- | --- | --- |
-| `blot_band_molecular_weight` | UniProt | `needs_manual_review` | `blot_band_mw_implausible` |
-| `ic50_order_of_magnitude` | ChEMBL | `needs_manual_review` | `reported_activity_off_reference` |
-| `compound_molecular_weight` | PubChem | `needs_manual_review` | `compound_mw_mismatch` |
-| `compound_name_valid` | PubChem | `needs_manual_review` | `compound_not_found_in_reference` |
-| `pdb_entry_exists` | RCSB PDB | `mismatch` | `pdb_entry_not_found` |
+X1 只做「稿件事实 vs 外部权威事实」的可复算比较；是否升格为 finding、使用什么 severity，
+必须由 M5 在回查原图、图注、正文、方法学描述和 external evidence 后决定。
+
+| X1 `check_type` | 数据库 | 比较结果 | M5 category slug | M5 suggested severity after confirmation |
+| --- | --- | --- | --- | --- |
+| `blot_band_molecular_weight` | UniProt | `needs_manual_review` | `blot_band_mw_implausible` | `major`；若可由修饰/剪切/糖基化解释则不立 finding；若仅标注疑似笔误可为 `minor` |
+| `ic50_order_of_magnitude` | ChEMBL | `needs_manual_review` | `reported_activity_off_reference` | `major`；若细胞系、终点、时间或 assay 条件不同可解释则不立 finding |
+| `compound_molecular_weight` | PubChem | `needs_manual_review` | `compound_mw_mismatch` | `major`；若盐型/水合物/同位素标记/前药形式可解释则不立 finding |
+| `compound_name_valid` | PubChem | `needs_manual_review` | `compound_not_found_in_reference` | `minor`；若作者声称为已知化合物但查无权威记录，可升为 `major` |
+| `pdb_entry_exists` | RCSB PDB | `mismatch` | `pdb_entry_not_found` | `major` |
+| `gene_symbol_valid` | HGNC / NCBI Gene | `mismatch` / `needs_manual_review` | `gene_symbol_not_found_or_deprecated` | `minor`；若错误基因符号影响核心图表解释，可升为 `major` |
+| `protein_name_accession_match` | UniProt | `mismatch` / `needs_manual_review` | `protein_accession_mismatch` | `major`；若只是别名/isoform 标注差异，可为 `minor` 或不立 finding |
+| `antibody_catalog_exists` | vendor page / Antibody Registry | `mismatch` / `needs_manual_review` | `antibody_catalog_not_found` | `major`；若供应商/货号写法不完整但可人工确认，可为 `minor` |
+| `cell_line_identity_valid` | Cellosaurus | `mismatch` / `needs_manual_review` | `cell_line_not_found_or_misidentified` | `major` |
+| `cell_line_contamination_flag` | Cellosaurus / ICLAC | `mismatch` | `cell_line_contamination_risk` | `major`；若该细胞系只用于边缘验证，可为 `minor` |
+| `geo_accession_exists` | GEO | `mismatch` | `dataset_accession_not_found` | `major` |
+| `sra_accession_exists` | SRA / ENA | `mismatch` | `dataset_accession_not_found` | `major` |
+| `clinical_trial_id_exists` | ClinicalTrials.gov / WHO ICTRP | `mismatch` | `clinical_trial_id_not_found` | `major` |
 
 **处理规则**
 
-1. **`needs_manual_review` 的四类一律不得直接立 finding。** 它们各自都有
-   完全合法的解释：翻译后修饰、糖基化、二聚体、切割片段都会改变 WB 迁移位置；
-   不同细胞系与终点的 IC50 差一两个数量级是常态；盐型、水合物、同位素标记
-   都会改变分子量；内部代号与未收录新化合物本来就查不到。
-   M5 必须先回查原图与方法学描述，能被上述任一解释覆盖时**丢弃该候选**。
-2. **`pdb_entry_exists` 的 `mismatch` 是确定性事实**（RCSB 返回权威 404），
-   可直接立 finding。
+1. **所有 `needs_manual_review` 候选一律不得直接立 finding。**
+   M5 必须回查原图、图注、正文和方法学描述；若存在合理解释，应丢弃该候选或仅记录为 manual-review note。
+
+2. **确定性 `mismatch` 也不得绕过证据链。**
+   M5 可以更快升格为 finding，但仍必须同时引用稿件证据和 external evidence。
+   例如 `pdb_entry_exists` 返回权威 404、GEO/SRA accession 不存在、clinical trial ID 不存在，
+   通常可升格为 `major`。
+
 3. X1 产 `system_limitation`（接口不可达、限流、记录不足）时，
-   **不得**当作「稿件没问题」，也不得当作「稿件有问题」——
-   按 `00-contracts.md` 登记限制并在报告中说明该项未覆盖。
-4. 每条由 X1 候选升格而来的 finding，`evidence_refs[]` 必须同时包含
+   **不得**当作「稿件没问题」，也不得当作「稿件有问题」。
+   按 `00-contracts.md` 登记限制，并在报告中说明该外部核验未覆盖。
+
+4. 每条由 X1 候选升格而来的 finding，`evidence_refs[]` 必须同时包含：
    **稿件证据**与 X1 登记的 **external evidence**，缺一不可。
 
-> **待敏怡确认**：上表 severity 尚未定。建议起点 ——
-> `pdb_entry_not_found` 取 `major`（引用了不存在的结构，可复现性直接受损）；
-> 其余四类经人工核对确认后取 `major`，仅涉及标注笔误时取 `minor`。
-> 这一节只是把接口接上，判据仍以你的实操经验为准。
+5. 若外部数据库结果和稿件表述存在可解释差异，例如别名、isoform、盐型、水合物、细胞系特异 assay、
+   供应商货号格式差异、旧版基因符号，应优先降级为 `minor` 或不立 finding。
+
+> **severity 说明**：
+> 上表是 M5 在候选被确认后的建议 severity，不是 X1 signal 的 severity。
+> X1 永远不直接产生 finding，也不写 severity。
+> M5 可根据证据权重、该实体是否支撑核心结论、是否影响可复现性，将建议 severity 上调、下调或丢弃候选。
 
 ---
 
