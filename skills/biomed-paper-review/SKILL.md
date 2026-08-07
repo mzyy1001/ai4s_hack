@@ -129,6 +129,8 @@ Stage 1
 - 最小 Stage 2 是 Stage 3b 的前置 —— 没有 `structured_result_v1` 就无从合并。
 - 产出 M5 finding 与 partial `issue_clusters[]`。
 - `manuscript_risk_score.partial = true`，`comparable_to_full_review = false`。
+- 该局部分数不得与任何其他报告的风险分并列比较或排序，包括不同定向核查范围的
+  partial 分数。
 - 置信度用 **`review_confidence`**（跑了审核模块）。
 
 ### 1.4 `targeted_check`
@@ -475,8 +477,9 @@ manuscript_risk_score = min(100, Σ_category min(30, Σ_cluster w))    每 categ
 ```
 
 未跑满六个审核模块时**必须**标 `partial: true` + `comparable_to_full_review: false`，
-并列出 `executed_modules[]` / `skipped_modules[]`；partial 分数**禁止**与完整分数比较，
-其 `band` 固定为 `partial_not_classified`，不得套用完整审核的三个分段。
+并列出 `executed_modules[]` / `skipped_modules[]`；partial 分数**禁止**与任何其他报告的
+风险分并列比较或排序，包括 partial↔partial 与 partial↔完整审核；其 `band` 固定为
+`partial_not_classified`，不得套用完整审核的三个分段。
 `executed_modules` 为空时**不输出本项**。分段（`routine_review` 0–19 /
 `clarification_needed` 20–49 / `major_revision_suggested` 50+）**仅为筛查信号，
 且只适用于 `partial: false`；阈值未经实证验证，报告中必须注明，不得表述为录用/退稿决定。

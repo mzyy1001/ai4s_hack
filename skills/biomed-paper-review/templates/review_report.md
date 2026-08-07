@@ -57,7 +57,8 @@
   `{{manuscript_risk_score.band}}`；`partial={{manuscript_risk_score.partial}}`。
 {{#if manuscript_risk_score.partial}}
 > ⚠️ 这是已执行模块范围内的局部筛查分，`comparable_to_full_review=false`。
-> 未执行模块没有被判定为“无问题”，本分数不得与完整审核分数横向比较。
+> 未执行模块没有被判定为“无问题”；本分数不得与任何其他报告的风险分横向比较或排序，
+> 包括不同定向核查范围的 partial 分数。
 {{else}}
 - 分段说明：{{manuscript_risk_score.threshold_caveat}}
 {{/if}}

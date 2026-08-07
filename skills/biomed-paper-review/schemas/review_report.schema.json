@@ -93,7 +93,7 @@
         "band": {
           "enum": ["routine_review", "clarification_needed", "major_revision_suggested",
                    "partial_not_classified"],
-          "description": "partial=true 时固定为 partial_not_classified；仅完整审核使用 0–19 / 20–49 / 50+ 分段。"
+          "description": "partial=true 时固定为 partial_not_classified，且不得与任何其他报告的风险分比较或排序；仅完整审核使用 0–19 / 20–49 / 50+ 分段。"
         },
         "priority_manual_review": {
           "type": "boolean",

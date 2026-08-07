@@ -938,15 +938,19 @@ manuscript_risk_score = min(100, Σ_category min(30, Σ_cluster w))
     "partial": true,
     "executed_modules": ["M6"],
     "skipped_modules": ["M2", "M3", "M4", "M5", "M7"],
-    "comparable_to_full_review": false
+    "comparable_to_full_review": false,
+    "band": "partial_not_classified",
+    "priority_manual_review": false,
+    "threshold_caveat": "分段阈值未经实证验证，是初始经验值，不得表述为自动化的录用/退稿决定。"
   }
 }
 ```
 
 - `executed_modules` 未覆盖全部六个审核模块时，`partial` **必须**为 `true`。
-- `partial: true` 的分数**禁止**与 `full_review` 的分数并列比较或排序；
-  报告与 JSON 均须带 `comparable_to_full_review: false`，且 `band` 固定为
-  `partial_not_classified`，不得套用完整审核分段。
+- `partial: true` 的分数**禁止**与任何其他报告的风险分并列比较或排序，包括
+  partial↔partial 与 partial↔`full_review`；报告与 JSON 均须带
+  `comparable_to_full_review: false`，且 `band` 固定为 `partial_not_classified`，
+  不得套用完整审核分段。
 - 仅当 `executed_modules` 恰好覆盖 M2–M7 时，`partial` 才能为 `false`、
   `comparable_to_full_review` 才能为 `true`，并按下表生成 `band`。
 - `executed_modules` 为空数组时**不得输出本项**（见 SKILL.md §1 模式约束）。
@@ -1195,6 +1199,7 @@ review_confidence = extraction_coverage × Q × C
 [ ] 覆盖率与置信度的分母全部取自 execution_scope
 [ ] 未跑审核模块的模式不输出 review_confidence 与 manuscript_risk_score
 [ ] executed_modules 未覆盖六个审核模块时 manuscript_risk_score.partial = true
+[ ] partial 风险分未与任何其他报告的风险分并列比较或排序
 [ ] coverage_breakdown 的条目未被称为 finding
 [ ] resolved_fields + unresolved_required_fields = scope_denominators.required_fields_total
 ```

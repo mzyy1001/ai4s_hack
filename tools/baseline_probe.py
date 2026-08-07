@@ -39,7 +39,7 @@ DEFAULT_BASE = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 CRED = os.path.expanduser("~/.config/qwen/credentials.env")
 
 REVIEW_PROMPT = (
-    "你是资深生物医药论文审稿人。请审阅下面的论文片段，"
+    "你是资深生物医药论文审稿人。请审阅下面的论文，"
     "指出你发现的所有问题（统计学、方法学、报告规范、伦理、图表、结论等）。"
     "每条给出具体依据。不要客套，直接列问题。\n\n---\n\n{case}"
 )
@@ -53,6 +53,26 @@ JUDGE_PROMPT = (
     "【审稿意见】\n{review}\n\n"
     "先输出一行 VERDICT: YES 或 VERDICT: NO，再用一句话说明理由。"
 )
+
+
+def embed_in_host(case_text, host_text, position=0.6):
+    """把含错误的片段**埋进**一篇真实论文里。
+
+    这是探针方法学上最关键的一步。用孤立片段测会**高估裸模型**：
+    片段里几乎只有那一个错误，注意力不被稀释，错误因为「是唯一内容」而显眼。
+    真实审稿是在整篇论文里找问题，几十个观察互相竞争，难度完全不同。
+
+    注入点取正文约 60% 处的章节边界，让它看起来像论文本来就有的一节。
+    """
+    marks = [i for i, ln in enumerate(host_text.split("\n"))
+             if ln.startswith("## ")]
+    lines = host_text.split("\n")
+    if not marks:
+        cut = int(len(lines) * position)
+    else:
+        cut = marks[min(len(marks) - 1, max(1, int(len(marks) * position)))]
+    injected = lines[:cut] + ["", case_text.strip(), ""] + lines[cut:]
+    return "\n".join(injected)
 
 
 def load_key():
@@ -98,7 +118,7 @@ def chat(key, base, model, prompt, max_tokens=2000, temperature=0.3,
     return last
 
 
-def probe(case_text, error_desc, key, base, model, repeats):
+def probe(case_text, error_desc, key, base, model, repeats, host_text=None):
     """返回 (hits, valid, failures, transcripts)。
 
     **调用失败绝不能算作「漏掉」** —— 那是我们没问到，不是模型没查出来。
@@ -106,7 +126,9 @@ def probe(case_text, error_desc, key, base, model, repeats):
     """
     hits, valid, failures, transcripts = 0, 0, 0, []
     for i in range(1, repeats + 1):
-        review = chat(key, base, model, REVIEW_PROMPT.format(case=case_text))
+        payload = embed_in_host(case_text, host_text) if host_text else case_text
+        review = chat(key, base, model, REVIEW_PROMPT.format(case=payload),
+                      max_tokens=4000)
         if review.startswith(("[HTTP", "[ERROR]")):
             failures += 1
             print(f"  第 {i} 次：调用失败（不计入判定）—— {review[:110]}")
@@ -137,6 +159,9 @@ def main():
     ap.add_argument("--base", default=DEFAULT_BASE)
     ap.add_argument("--repeats", type=int, default=3,
                     help="官方评测取 3 次中位数，这里默认同样跑 3 次")
+    ap.add_argument("--host", default=None,
+                    help="宿主论文文本文件。给了就用**埋入式**探针（错误藏在整篇论文里），"
+                         "这才是真实审稿的难度；不给则是孤立片段，会高估裸模型")
     ap.add_argument("--save", default=None, help="保存完整对话的目录")
     args = ap.parse_args()
 
@@ -149,12 +174,17 @@ def main():
         return 2
 
     case_text = open(args.case, encoding="utf-8").read()
+    host_text = None
+    if args.host:
+        host_text = open(args.host, encoding="utf-8").read()
+    print(f"模式：{'埋入式（错误藏在整篇论文里）' if host_text else '孤立片段（会高估裸模型）'}")
     print(f"案例：{args.case}")
     print(f"目标错误：{args.error}")
     print(f"模型：{args.model} × {args.repeats} 次\n")
 
     hits, valid, failures, transcripts = probe(case_text, args.error, key,
-                                               args.base, args.model, args.repeats)
+                                               args.base, args.model, args.repeats,
+                                               host_text=host_text)
 
     print("\n" + "=" * 60)
     if valid == 0:
@@ -196,6 +226,7 @@ def main():
     print(json.dumps({"case": args.case, "error": args.error,
                       "model": args.model, "hits": hits, "valid": valid,
                       "failures": failures, "repeats": args.repeats,
+                      "mode": "embedded" if host_text else "isolated",
                       "verdict": verdict}, ensure_ascii=False))
     return 0
 
