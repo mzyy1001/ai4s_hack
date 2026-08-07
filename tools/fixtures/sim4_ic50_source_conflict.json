@@ -1,0 +1,481 @@
+{
+  "_simulation": "④ 正文与图注 IC50 不兼容。验证：观测组保全双方、canonical 置 null、组判 conflicting、Stage 3b（非 M1）出 source_value_conflict signal、M2 据独立稿件证据立 finding、C 因子拉低 review_confidence。",
+
+  "paper": {
+    "title": "Compound A inhibits proliferation of hepatocellular carcinoma cells",
+    "doi": "10.1371/journal.pone.0339999",
+    "journal": "PLOS One",
+    "input_format": "pdf"
+  },
+
+  "execution_scope": {
+    "mode": "full_review",
+    "submode": null,
+    "executed_stages": ["stage_1", "stage_2", "stage_3", "stage_3b", "stage_4", "stage_5"],
+    "executed_modules": ["M2", "M3", "M4", "M5", "M6", "M7"],
+    "skipped_modules": [],
+    "fields": ["objective.primary_endpoint", "measurement.assays",
+               "measurement.statistical_methods"],
+    "assets": ["fig:2"],
+    "observations": ["OBS-014", "OBS-015", "OBS-016"],
+    "supplements": [],
+    "scope_rationale": "整篇论文完整审核",
+    "stage_3b_executed": true
+  },
+
+  "coverage_breakdown": {
+    "resolved_fields": ["objective.primary_endpoint", "measurement.assays",
+                        "measurement.statistical_methods"],
+    "unresolved_required_fields": [],
+    "unreadable_assets": [],
+    "inaccessible_supplements": [],
+    "scope_denominators": {
+      "required_fields_total": 3,
+      "assets_total": 1,
+      "supplements_total": 0
+    }
+  },
+
+  "evidence_registry": {
+    "EV-001": {
+      "id": "EV-001", "type": "present",
+      "locator": {"figure": "2", "panel": "C", "pdf_file_page": 5, "scope": "panel"},
+      "quote": "Figure 2C. Dose-response curve for Compound A. IC50 = 12.4 μM (95% CI 9.8-15.7), four-parameter logistic fit, n = 3 biological replicates.",
+      "created_by": "stage_2"
+    },
+    "EV-002": {
+      "id": "EV-002", "type": "present",
+      "locator": {"section": "results", "paragraph_id": "results-p08",
+                  "pdf_file_page": 6, "scope": "paragraph"},
+      "quote": "Compound A inhibited cell viability with an IC50 of 15.1 μM at 72 h.",
+      "created_by": "stage_2"
+    },
+    "EV-003": {
+      "id": "EV-003", "type": "present",
+      "locator": {"section": "abstract", "paragraph_id": "abstract-p01",
+                  "pdf_file_page": 1, "scope": "paragraph"},
+      "quote": "Compound A showed potent antiproliferative activity (IC50 15.1 μM).",
+      "created_by": "stage_2"
+    },
+    "EV-004": {
+      "id": "EV-004", "type": "present",
+      "locator": {"section": "methods", "paragraph_id": "methods-p09",
+                  "pdf_file_page": 4, "scope": "paragraph"},
+      "quote": "Cell viability was assessed by CCK-8 assay after 72 h of treatment.",
+      "created_by": "stage_2"
+    },
+    "EV-005": {
+      "id": "EV-005", "type": "present",
+      "locator": {"section": "discussion", "paragraph_id": "discussion-p03",
+                  "pdf_file_page": 9, "scope": "paragraph"},
+      "quote": "The sub-micromolar potency of Compound A supports its development as a clinical candidate.",
+      "created_by": "stage_2"
+    },
+    "EV-006": {
+      "id": "EV-006", "type": "absence", "scope": "document",
+      "searched_locations": [
+        {"section": "methods", "scope": "section"},
+        {"section": "results", "scope": "section"}
+      ],
+      "search_terms": ["sample size", "power", "effect size", "样本量", "效能"],
+      "search_result": "no_match", "created_by": "stage_2"
+    },
+    "EV-007": {
+      "id": "EV-007", "type": "absence", "scope": "document",
+      "searched_locations": [
+        {"section": "discussion", "scope": "section"},
+        {"section": "conclusion", "scope": "section"}
+      ],
+      "search_terms": ["limitation", "limitations", "局限", "不足"],
+      "search_result": "no_match", "created_by": "stage_2"
+    }
+  },
+
+  "structured_result": {
+    "version": "v2",
+    "stage_3b_executed": true,
+    "meta": {
+      "title": "Compound A inhibits proliferation of hepatocellular carcinoma cells",
+      "journal": "PLOS One", "year": 2025, "doi": "10.1371/journal.pone.0339999",
+      "article_type": "research-article", "input_format": "pdf", "page_count": 14
+    },
+    "article_design": {
+      "primary_design": {
+        "family": "experimental", "type": "in_vitro",
+        "status": "reported", "evidence_refs": ["EV-004"],
+        "extraction_confidence": "high", "alternatives": []
+      },
+      "design_components": []
+    },
+    "objective": {
+      "research_question": {
+        "field_path": "objective.research_question", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "化合物 A 对肝癌细胞增殖的抑制作用及其半数抑制浓度",
+        "evidence_refs": ["EV-004"], "extraction_confidence": "high"
+      },
+      "hypothesis": {
+        "field_path": "objective.hypothesis", "applicability": "applicable",
+        "requiredness": "optional", "status": "reported",
+        "value": "化合物 A 以剂量依赖方式抑制肝癌细胞活力",
+        "evidence_refs": ["EV-004"], "extraction_confidence": "high"
+      },
+      "primary_endpoint": {
+        "field_path": "objective.primary_endpoint", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "72 h 细胞活力 IC50",
+        "evidence_refs": ["EV-004"], "extraction_confidence": "high"
+      },
+      "secondary_endpoints": {
+        "field_path": "objective.secondary_endpoints", "applicability": "applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "本文仅报告单一活力终点，无次要终点",
+        "evidence_refs": [], "extraction_confidence": "high"
+      }
+    },
+    "population": {
+      "subjects": {
+        "field_path": "population.subjects", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "HepG2 与 Huh7 人肝癌细胞系",
+        "evidence_refs": ["EV-004"], "extraction_confidence": "high"
+      },
+      "inclusion_criteria": {
+        "field_path": "population.inclusion_criteria", "applicability": "not_applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "in_vitro 设计无人群纳入标准概念",
+        "evidence_refs": [], "extraction_confidence": "high"
+      },
+      "exclusion_criteria": {
+        "field_path": "population.exclusion_criteria", "applicability": "not_applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "in_vitro 设计无人群排除标准概念",
+        "evidence_refs": [], "extraction_confidence": "high"
+      }
+    },
+    "design": {
+      "arms": [
+        {
+          "experiment_id": "EXP-02", "arm_name": "Compound A",
+          "n": {"field_path": "design.arms[0].n", "applicability": "applicable",
+                "requiredness": "required", "status": "reported",
+                "value": {"type": "point", "number": 3},
+                "evidence_refs": ["EV-001"], "extraction_confidence": "high"},
+          "replicate_type": "biological"
+        }
+      ],
+      "interventions": {
+        "field_path": "design.interventions", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "化合物 A 梯度浓度处理 72 h",
+        "evidence_refs": ["EV-004"], "extraction_confidence": "high"
+      },
+      "controls": {
+        "field_path": "design.controls", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": "DMSO 溶剂对照", "evidence_refs": ["EV-004"],
+        "extraction_confidence": "high"
+      },
+      "randomization": {
+        "field_path": "design.randomization", "applicability": "not_applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "experimental/in_vitro 专门规则：随机化仅对 in_vivo_animal 适用",
+        "evidence_refs": [], "extraction_confidence": "high"
+      },
+      "allocation_concealment": {
+        "field_path": "design.allocation_concealment", "applicability": "not_applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "experimental 族无分配隐藏概念",
+        "evidence_refs": [], "extraction_confidence": "high"
+      },
+      "blinding": {
+        "field_path": "design.blinding", "applicability": "not_applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "experimental/in_vitro 专门规则：盲法仅对 in_vivo_animal 适用",
+        "evidence_refs": [], "extraction_confidence": "high"
+      },
+      "registration": {
+        "field_path": "design.registration", "applicability": "not_applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "experimental 族研究不适用临床试验注册",
+        "evidence_refs": [], "extraction_confidence": "high"
+      }
+    },
+    "measurement": {
+      "assays": {
+        "field_path": "measurement.assays", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": [{"name": "CCK-8", "purpose": "细胞活力测定", "reference_citation": null}],
+        "evidence_refs": ["EV-004"], "extraction_confidence": "high"
+      },
+      "statistical_methods": {
+        "field_path": "measurement.statistical_methods", "applicability": "applicable",
+        "requiredness": "required", "status": "reported",
+        "value": [{"test": "four-parameter logistic regression", "applied_to": "剂量响应拟合",
+                   "software": "GraphPad Prism 9", "correction": null}],
+        "evidence_refs": ["EV-001"], "extraction_confidence": "high"
+      },
+      "sample_size_justification": {
+        "field_path": "measurement.sample_size_justification", "applicability": "applicable",
+        "requiredness": "recommended", "status": "not_reported", "value": null,
+        "evidence_refs": ["EV-006"], "extraction_confidence": "high"
+      }
+    },
+    "conclusion": {
+      "claims": [
+        {
+          "claim_id": "CLM-01",
+          "statement": "化合物 A 具有亚微摩尔级效力，支持其作为临床候选物开发",
+          "scope": "肝癌细胞系",
+          "supported_by": ["KD-007"],
+          "evidence_refs": ["EV-005"]
+        }
+      ],
+      "limitations": {
+        "field_path": "conclusion.limitations", "applicability": "applicable",
+        "requiredness": "recommended", "status": "not_reported", "value": null,
+        "evidence_refs": ["EV-007"], "extraction_confidence": "high"
+      },
+      "generalization_scope": {
+        "field_path": "conclusion.generalization_scope", "applicability": "applicable",
+        "requiredness": "optional", "status": "reported",
+        "value": "作者主张可外推至临床开发",
+        "evidence_refs": ["EV-005"], "extraction_confidence": "high"
+      }
+    },
+    "declarations": {
+      "ethics_statement": {
+        "field_path": "declarations.ethics_statement", "applicability": "not_applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "in_vitro 细胞系研究，无动物或人体受试者",
+        "evidence_refs": [], "extraction_confidence": "high"
+      },
+      "informed_consent": {
+        "field_path": "declarations.informed_consent", "applicability": "not_applicable",
+        "requiredness": "optional", "status": "not_applicable", "value": null,
+        "na_reason": "in_vitro 细胞系研究，无人体受试者",
+        "evidence_refs": [], "extraction_confidence": "high"
+      },
+      "funding": {
+        "field_path": "declarations.funding", "applicability": "applicable",
+        "requiredness": "recommended", "status": "reported",
+        "value": "国家自然科学基金 82000000", "evidence_refs": ["EV-004"],
+        "extraction_confidence": "high"
+      },
+      "conflict_of_interest": {
+        "field_path": "declarations.conflict_of_interest", "applicability": "applicable",
+        "requiredness": "recommended", "status": "reported",
+        "value": "无利益冲突", "evidence_refs": ["EV-004"],
+        "extraction_confidence": "high"
+      },
+      "data_availability": {
+        "field_path": "declarations.data_availability", "applicability": "applicable",
+        "requiredness": "recommended", "status": "reported",
+        "value": "数据见正文与补充材料", "evidence_refs": ["EV-004"],
+        "extraction_confidence": "high"
+      }
+    },
+    "key_data": [
+      {
+        "id": "KD-007",
+        "metric_name": "IC50",
+        "metric_family": "dose_response",
+        "grouping_key": {
+          "experiment_id": "EXP-02",
+          "group": "Compound A",
+          "comparison": "Compound A vs vehicle",
+          "timepoint": "72h",
+          "endpoint": "cell_viability"
+        },
+        "status": "conflicting",
+        "canonical_observation": null,
+        "canonical_rationale": null,
+        "observations": [
+          {
+            "observation_id": "OBS-014",
+            "value": {"type": "point", "number": 12.4},
+            "unit": "μM", "unit_normalized": "uM",
+            "uncertainty": {"type": "95CI", "low": 9.8, "high": 15.7},
+            "n": 3, "replicate_type": "biological",
+            "provenance": {
+              "source_type": "explicit_figure_caption", "source_id": "fig:2C",
+              "evidence_ref": "EV-001",
+              "derivation": {"extraction_method": "caption_parse", "ocr_used": false}
+            },
+            "extraction_confidence": "high", "manual_review_needed": false
+          },
+          {
+            "observation_id": "OBS-015",
+            "value": {"type": "point", "number": 15.1},
+            "unit": "μM", "unit_normalized": "uM",
+            "uncertainty": {"type": "none"},
+            "n": 3, "replicate_type": "biological",
+            "provenance": {
+              "source_type": "explicit_main_text", "source_id": "results-p08",
+              "evidence_ref": "EV-002",
+              "derivation": {"extraction_method": "text_parse", "ocr_used": false}
+            },
+            "extraction_confidence": "high", "manual_review_needed": false
+          },
+          {
+            "observation_id": "OBS-016",
+            "value": {"type": "point", "number": 15.1},
+            "unit": "μM", "unit_normalized": "uM",
+            "uncertainty": {"type": "none"},
+            "n": null, "replicate_type": null,
+            "provenance": {
+              "source_type": "explicit_main_text", "source_id": "abstract-p01",
+              "evidence_ref": "EV-003",
+              "derivation": {"extraction_method": "text_parse", "ocr_used": false}
+            },
+            "extraction_confidence": "high", "manual_review_needed": false
+          }
+        ],
+        "compatible_observations": ["OBS-015", "OBS-016"],
+        "conflicting_observations": ["OBS-014", "OBS-015"],
+        "reporting_completeness": "not_assessed",
+        "missing_elements": [],
+        "signal_refs": ["SIG-002"]
+      }
+    ],
+    "evaluation_matrix": {
+      "figure_count": 4,
+      "table_count": 1,
+      "group_sizes": [
+        {"experiment_id": "EXP-02", "group": "Compound A", "n": 3,
+         "replicate_type": "biological", "evidence_refs": ["EV-001"]}
+      ]
+    },
+    "coverage_inputs": {
+      "fields_in_scope": ["objective.primary_endpoint", "measurement.assays",
+                          "measurement.statistical_methods"],
+      "resolved": ["objective.primary_endpoint", "measurement.assays",
+                   "measurement.statistical_methods"],
+      "unresolved": [],
+      "required_applicable_total": 3,
+      "recommended_applicable_total": 4
+    }
+  },
+
+  "figure_records": [],
+  "table_records": [],
+
+  "all_findings": [
+    {
+      "id": "M2-004",
+      "module": "M2",
+      "category": "internal_inconsistency",
+      "severity": "major",
+      "title": "同一实验的 IC50 在图注与正文/摘要间不一致",
+      "detail": "Fig 2C 图注报告 IC50 = 12.4 μM (95% CI 9.8-15.7)，Results 正文与 Abstract 均报告 15.1 μM。两值属同一 grouping_key（EXP-02 / Compound A / 72h / cell_viability）；只有图注提供区间，因此按两个点估计的四舍五入容差 0.05 判定，差值 2.7 远超容差，构成稿件内部矛盾。",
+      "evidence_refs": ["EV-001", "EV-002", "EV-003"],
+      "rule_ref": "02-macro-logic#internal-value-inconsistency",
+      "review_confidence": "high",
+      "derived_from_signals": ["SIG-002"],
+      "related_findings": [],
+      "manual_review": {
+        "action": "要求作者说明哪一个 IC50 为准，并核对图注拟合参数与正文数值是否出自同一次拟合；若为不同拟合应分别标注",
+        "who": "author",
+        "priority": "P1"
+      }
+    },
+    {
+      "id": "M7-002",
+      "module": "M7",
+      "category": "claim_magnitude_mismatch",
+      "severity": "major",
+      "title": "结论称『亚微摩尔级效力』，与本文任一 IC50 读数矛盾",
+      "detail": "Discussion 称化合物 A 具 sub-micromolar potency 并据此主张临床开发价值，但本文报告的两个 IC50（12.4 μM 与 15.1 μM）均在两位数微摩尔量级，比亚微摩尔高约一个数量级以上。该主张不被本文数据支持。",
+      "evidence_refs": ["EV-005", "EV-001", "EV-002"],
+      "rule_ref": "07-conclusions-discussion#5-2-unsupported-claim",
+      "review_confidence": "high",
+      "derived_from_signals": [],
+      "related_findings": [],
+      "manual_review": {
+        "action": "要求作者修正效力表述为微摩尔级，或撤回临床候选物开发的外推主张",
+        "who": "domain_reviewer",
+        "priority": "P0"
+      }
+    }
+  ],
+
+  "all_extraction_signals": [
+    {
+      "id": "SIG-002",
+      "type": "source_value_conflict",
+      "target": "key_data.KD-007",
+      "detail": "IC50 图注 12.4 μM (95% CI 9.8-15.7)，正文与摘要 15.1 μM 无区间。归一化器将 μM 解析为 uM；取精度较低方最后一位有效数字 0.1，容差 0.05，差值 2.7 > 0.05，判定不兼容。正文与摘要两值互相兼容（差值 0）。",
+      "observation_refs": ["OBS-014", "OBS-015"],
+      "evidence_refs": ["EV-001", "EV-002"],
+      "routed_to": ["M2", "M4"],
+      "produced_by": "stage_3b"
+    }
+  ],
+
+  "all_system_limitations": [],
+
+  "issue_clusters": [
+    {
+      "cluster_id": "CL-001",
+      "representative_finding": "M7-002",
+      "member_findings": ["M7-002"],
+      "categories": ["claim_magnitude_mismatch"],
+      "max_severity": "major",
+      "anchor": {"paragraph_id": "discussion-p03"},
+      "evidence_refs": ["EV-005", "EV-001", "EV-002"]
+    },
+    {
+      "cluster_id": "CL-002",
+      "representative_finding": "M2-004",
+      "member_findings": ["M2-004"],
+      "categories": ["internal_inconsistency"],
+      "max_severity": "major",
+      "anchor": {"figure": "2", "panel": "C"},
+      "evidence_refs": ["EV-001", "EV-002", "EV-003"]
+    }
+  ],
+
+  "manuscript_risk_score": {
+    "value": 20,
+    "partial": false,
+    "executed_modules": ["M2", "M3", "M4", "M5", "M6", "M7"],
+    "skipped_modules": [],
+    "comparable_to_full_review": true,
+    "band": "clarification_needed",
+    "priority_manual_review": false,
+    "threshold_caveat": "分段阈值未经实证验证，是初始经验值，不得表述为自动化的录用/退稿决定。"
+  },
+
+  "extraction_coverage": {
+    "value": 1.0,
+    "field_resolution": {"resolved": 3, "total": 3, "rate": 1.0},
+    "asset_readability": {"resolved": 1, "total": 1, "rate": 1.0},
+    "supplement_accessibility": {"resolved": 0, "total": 0, "rate": 1.0}
+  },
+
+  "review_confidence": {
+    "value": 0.9,
+    "pixel_dependency_rate": 0.0,
+    "ocr_dependency_rate": 0.0,
+    "low_conf_finding_rate": 0.0,
+    "unresolved_conflict_count": 1,
+    "weak_evidence_warning": null
+  },
+
+  "manual_review_plan": [
+    {
+      "finding_ids": ["M7-002"],
+      "action": "要求作者修正效力表述为微摩尔级，或撤回临床候选物开发的外推主张",
+      "who": "domain_reviewer",
+      "priority": "P0"
+    },
+    {
+      "finding_ids": ["M2-004"],
+      "action": "要求作者说明哪一个 IC50 为准，并核对图注拟合参数与正文数值是否出自同一次拟合",
+      "who": "author",
+      "priority": "P1"
+    }
+  ],
+
+  "disclaimer": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号（screening / triage signal），不构成录用、退稿或发表决定。"
+}
