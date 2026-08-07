@@ -3,96 +3,152 @@
   "$id": "review_report.schema.json",
   "title": "ReviewReport",
   "description": "Skill 的顶层输出。Markdown 报告由本对象渲染而来（见 templates/review_report.md）。必须内含完整 evidence_registry 以保证全部 evidence_refs 自洽可校验。",
-
   "type": "object",
-  "required": ["paper", "execution_scope", "coverage_breakdown", "evidence_registry",
-               "all_extraction_signals", "all_system_limitations", "extraction_coverage",
-               "disclaimer"],
+  "required": [
+    "paper",
+    "execution_scope",
+    "coverage_breakdown",
+    "evidence_registry",
+    "all_extraction_signals",
+    "all_system_limitations",
+    "extraction_coverage",
+    "disclaimer"
+  ],
   "additionalProperties": false,
-
   "properties": {
-
     "paper": {
       "type": "object",
-      "required": ["title", "input_format"],
+      "required": [
+        "title",
+        "input_format"
+      ],
       "additionalProperties": false,
       "properties": {
-        "title": {"type": "string"},
-        "doi": {"type": ["string", "null"]},
-        "journal": {"type": ["string", "null"]},
-        "input_format": {"enum": ["jats_xml", "pdf", "plain_text"]}
+        "title": {
+          "type": "string"
+        },
+        "doi": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "journal": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "input_format": {
+          "enum": [
+            "jats_xml",
+            "pdf",
+            "plain_text"
+          ]
+        }
       }
     },
-
-    "execution_scope": {"$ref": "execution_scope.schema.json#/properties/execution_scope"},
-    "coverage_breakdown": {"$ref": "execution_scope.schema.json#/properties/coverage_breakdown"},
-
-    "evidence_registry": {"$ref": "evidence.schema.json#/properties/evidence_registry"},
-
+    "execution_scope": {
+      "$ref": "execution_scope.schema.json#/properties/execution_scope"
+    },
+    "coverage_breakdown": {
+      "$ref": "execution_scope.schema.json#/properties/coverage_breakdown"
+    },
+    "evidence_registry": {
+      "$ref": "evidence.schema.json#/properties/evidence_registry"
+    },
     "structured_result": {
       "$ref": "structured_result.schema.json",
       "description": "v1 或 v2，由其 version 字段标明。structured_extraction 无视觉需求时为 v1。"
     },
-
     "figure_records": {
       "type": "array",
-      "items": {"$ref": "figure_record.schema.json"}
+      "items": {
+        "$ref": "figure_record.schema.json"
+      }
     },
-
     "table_records": {
       "type": "array",
-      "items": {"type": "object"}
+      "items": {
+        "$ref": "table_record.schema.json"
+      }
     },
-
     "issue_clusters": {
       "type": "array",
       "description": "Stage 5 聚簇产物，manuscript_risk_score 的唯一计分单位",
-      "items": {"$ref": "#/$defs/issue_cluster"}
+      "items": {
+        "$ref": "#/$defs/issue_cluster"
+      }
     },
-
     "all_findings": {
       "type": "array",
-      "items": {"$ref": "finding.schema.json"},
+      "items": {
+        "$ref": "finding.schema.json"
+      },
       "description": "Stage 5 聚合 m2_findings[]…m7_findings[]。M1 不产出 finding。"
     },
-
     "all_extraction_signals": {
       "type": "array",
-      "items": {"$ref": "extraction_signal.schema.json"},
+      "items": {
+        "$ref": "extraction_signal.schema.json"
+      },
       "description": "Stage 5 聚合 Stage 2/3/3b 与可选 X1 的 stage-local extraction signals"
     },
-
     "all_system_limitations": {
       "type": "array",
-      "items": {"$ref": "system_limitation.schema.json"},
+      "items": {
+        "$ref": "system_limitation.schema.json"
+      },
       "description": "Stage 5 聚合 Stage 1/2/3/3b 与可选 X1 的 stage-local 数组。报告中必须单列一节。"
     },
-
     "manuscript_risk_score": {
       "type": "object",
       "description": "仅在至少跑过一个审核模块时输出。executed_modules 为空时不得出现本字段。",
-      "required": ["value", "partial", "executed_modules", "skipped_modules",
-                   "comparable_to_full_review", "band", "priority_manual_review",
-                   "threshold_caveat"],
+      "required": [
+        "value",
+        "partial",
+        "executed_modules",
+        "skipped_modules",
+        "comparable_to_full_review",
+        "band",
+        "priority_manual_review",
+        "threshold_caveat"
+      ],
       "additionalProperties": false,
       "properties": {
-        "value": {"type": "integer", "minimum": 0, "maximum": 100},
-        "partial": {"type": "boolean"},
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "partial": {
+          "type": "boolean"
+        },
         "executed_modules": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"$ref": "common.schema.json#/$defs/module_id_review"}
+          "items": {
+            "$ref": "common.schema.json#/$defs/module_id_review"
+          }
         },
         "skipped_modules": {
           "type": "array",
           "uniqueItems": true,
-          "items": {"$ref": "common.schema.json#/$defs/module_id_review"}
+          "items": {
+            "$ref": "common.schema.json#/$defs/module_id_review"
+          }
         },
-        "comparable_to_full_review": {"type": "boolean"},
+        "comparable_to_full_review": {
+          "type": "boolean"
+        },
         "band": {
-          "enum": ["routine_review", "clarification_needed", "major_revision_suggested",
-                   "partial_not_classified"],
+          "enum": [
+            "routine_review",
+            "clarification_needed",
+            "major_revision_suggested",
+            "partial_not_classified"
+          ],
           "description": "partial=true 时固定为 partial_not_classified，且不得与任何其他报告的风险分比较或排序；仅完整审核使用 0–19 / 20–49 / 50+ 分段。"
         },
         "priority_manual_review": {
@@ -107,201 +163,481 @@
       "allOf": [
         {
           "description": "未跑满六个审核模块时必须标 partial 且不可比",
-          "if": {"properties": {"partial": {"const": true}}, "required": ["partial"]},
-          "then": {"properties": {
-            "comparable_to_full_review": {"const": false},
-            "band": {"const": "partial_not_classified"}
-          }},
-          "else": {"properties": {
-            "comparable_to_full_review": {"const": true},
-            "band": {"enum": ["routine_review", "clarification_needed",
-                               "major_revision_suggested"]}
-          }}
+          "if": {
+            "properties": {
+              "partial": {
+                "const": true
+              }
+            },
+            "required": [
+              "partial"
+            ]
+          },
+          "then": {
+            "properties": {
+              "comparable_to_full_review": {
+                "const": false
+              },
+              "band": {
+                "const": "partial_not_classified"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "comparable_to_full_review": {
+                "const": true
+              },
+              "band": {
+                "enum": [
+                  "routine_review",
+                  "clarification_needed",
+                  "major_revision_suggested"
+                ]
+              }
+            }
+          }
         },
         {
-          "if": {"properties": {"executed_modules": {"maxItems": 5}}, "required": ["executed_modules"]},
-          "then": {"properties": {"partial": {"const": true}}},
-          "else": {"properties": {"partial": {"const": false}}}
+          "if": {
+            "properties": {
+              "executed_modules": {
+                "maxItems": 5
+              }
+            },
+            "required": [
+              "executed_modules"
+            ]
+          },
+          "then": {
+            "properties": {
+              "partial": {
+                "const": true
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "partial": {
+                "const": false
+              }
+            }
+          }
         }
       ]
     },
-
     "extraction_coverage": {
       "type": "object",
       "description": "三个子率必须分别列出显式分子分母 —— 覆盖率 0.6 因字段缺失与因图像不可读，含义完全不同。",
-      "required": ["value", "field_resolution", "asset_readability", "supplement_accessibility"],
+      "required": [
+        "value",
+        "field_resolution",
+        "asset_readability",
+        "supplement_accessibility"
+      ],
       "additionalProperties": false,
       "properties": {
-        "value": {"type": "number", "minimum": 0, "maximum": 1},
-        "field_resolution": {"$ref": "#/$defs/rate"},
-        "asset_readability": {"$ref": "#/$defs/rate"},
-        "supplement_accessibility": {"$ref": "#/$defs/rate"},
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "field_resolution": {
+          "$ref": "#/$defs/rate"
+        },
+        "asset_readability": {
+          "$ref": "#/$defs/rate"
+        },
+        "supplement_accessibility": {
+          "$ref": "#/$defs/rate"
+        },
         "recommended_field_coverage": {
           "$ref": "#/$defs/rate",
           "description": "可选旁路指标，不进 extraction_coverage 加权"
         }
       }
     },
-
     "review_confidence": {
       "type": "object",
       "description": "仅在至少跑过一个审核模块时输出。与 output_confidence 互斥。",
-      "required": ["value", "pixel_dependency_rate", "ocr_dependency_rate",
-                   "low_conf_finding_rate", "unresolved_conflict_count"],
+      "required": [
+        "value",
+        "pixel_dependency_rate",
+        "ocr_dependency_rate",
+        "low_conf_finding_rate",
+        "unresolved_conflict_count"
+      ],
       "additionalProperties": false,
       "properties": {
-        "value": {"type": "number", "minimum": 0, "maximum": 1},
-        "pixel_dependency_rate": {"type": "number", "minimum": 0, "maximum": 1},
-        "ocr_dependency_rate": {"type": "number", "minimum": 0, "maximum": 1},
-        "low_conf_finding_rate": {"type": "number", "minimum": 0, "maximum": 1},
-        "unresolved_conflict_count": {"type": "integer", "minimum": 0},
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pixel_dependency_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ocr_dependency_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "low_conf_finding_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unresolved_conflict_count": {
+          "type": "integer",
+          "minimum": 0
+        },
         "weak_evidence_warning": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "value < 0.5 时必填：『本次审核证据基础较弱，结论仅供参考』"
         }
       },
       "allOf": [
         {
-          "if": {"properties": {"value": {"exclusiveMaximum": 0.5}}, "required": ["value"]},
-          "then": {
-            "required": ["weak_evidence_warning"],
-            "properties": {"weak_evidence_warning": {
-              "const": "本次审核证据基础较弱，结论仅供参考"
-            }}
+          "if": {
+            "properties": {
+              "value": {
+                "exclusiveMaximum": 0.5
+              }
+            },
+            "required": [
+              "value"
+            ]
           },
-          "else": {"properties": {"weak_evidence_warning": {"type": "null"}}}
+          "then": {
+            "required": [
+              "weak_evidence_warning"
+            ],
+            "properties": {
+              "weak_evidence_warning": {
+                "const": "本次审核证据基础较弱，结论仅供参考"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "weak_evidence_warning": {
+                "type": "null"
+              }
+            }
+          }
         }
       ]
     },
-
     "output_confidence": {
       "type": "object",
       "description": "仅在未跑任何审核模块时输出（structured_extraction / interpretation_only）。与 review_confidence 互斥。",
-      "required": ["value", "pixel_share", "ocr_share"],
+      "required": [
+        "value",
+        "pixel_share",
+        "ocr_share"
+      ],
       "additionalProperties": false,
       "properties": {
-        "value": {"type": "number", "minimum": 0, "maximum": 1},
-        "pixel_share": {"type": "number", "minimum": 0, "maximum": 1},
-        "ocr_share": {"type": "number", "minimum": 0, "maximum": 1}
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pixel_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ocr_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
       }
     },
-
     "manual_review_plan": {
       "type": "array",
       "description": "每条 severity >= major 的 finding 必须对应一条可执行复核动作；带 P2 priority 的 minor/info 也必须进入。按 P0→P1→P2 渲染。",
       "items": {
         "type": "object",
-        "required": ["finding_ids", "action", "who", "priority"],
+        "required": [
+          "finding_ids",
+          "action",
+          "who",
+          "priority"
+        ],
         "additionalProperties": false,
         "properties": {
-          "finding_ids": {"type": "array", "minItems": 1, "uniqueItems": true,
-                          "items": {"type": "string", "pattern": "^M[2-7]-[0-9]{3}$"}},
-          "action": {"type": "string", "minLength": 1},
-          "who": {
-            "enum": ["statistical_reviewer", "domain_reviewer", "ethics_committee",
-                     "editor", "author"]
+          "finding_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^M[2-7]-[0-9]{3}$"
+            }
           },
-          "priority": {"enum": ["P0", "P1", "P2"]}
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "who": {
+            "enum": [
+              "statistical_reviewer",
+              "domain_reviewer",
+              "ethics_committee",
+              "editor",
+              "author"
+            ]
+          },
+          "priority": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2"
+            ]
+          }
         }
       }
     },
-
     "disclaimer": {
       "type": "string",
       "const": "本 Skill 自动化并辅助论文审核的基础环节，包括结构化证据抽取、图表解读、报告规范核查与人工复核优先级排序。它不替代具备资质的审稿人在科学、统计、临床与伦理方面的判断。本 Skill 的任何评分均为筛查信号（screening / triage signal），不构成录用、退稿或发表决定。"
     }
   },
-
   "allOf": [
     {
       "description": "review_confidence 与 output_confidence 互斥，不得同时出现",
-      "not": {"required": ["review_confidence", "output_confidence"]}
+      "not": {
+        "required": [
+          "review_confidence",
+          "output_confidence"
+        ]
+      }
     },
     {
       "description": "跑过审核模块时必须给 review_confidence，且不得给 output_confidence",
       "if": {
         "properties": {
           "execution_scope": {
-            "properties": {"executed_modules": {"minItems": 1}},
-            "required": ["executed_modules"]
+            "properties": {
+              "executed_modules": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "executed_modules"
+            ]
           }
         },
-        "required": ["execution_scope"]
+        "required": [
+          "execution_scope"
+        ]
       },
       "then": {
-        "required": ["structured_result", "all_findings", "issue_clusters",
-                     "manual_review_plan", "review_confidence", "manuscript_risk_score"],
-        "not": {"required": ["output_confidence"]}
+        "required": [
+          "structured_result",
+          "all_findings",
+          "issue_clusters",
+          "manual_review_plan",
+          "review_confidence",
+          "manuscript_risk_score"
+        ],
+        "not": {
+          "required": [
+            "output_confidence"
+          ]
+        }
       },
       "else": {
-        "required": ["output_confidence"],
-        "not": {"anyOf": [{"required": ["review_confidence"]},
-                          {"required": ["manuscript_risk_score"]}]}
+        "required": [
+          "output_confidence"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "review_confidence"
+              ]
+            },
+            {
+              "required": [
+                "manuscript_risk_score"
+              ]
+            }
+          ]
+        }
       }
     },
     {
       "description": "除纯图解读外，各主模式都必须输出结构化结果",
       "if": {
-        "properties": {"execution_scope": {"properties": {"mode": {
-          "enum": ["full_review", "structured_extraction", "targeted_check"]
-        }}, "required": ["mode"]}},
-        "required": ["execution_scope"]
+        "properties": {
+          "execution_scope": {
+            "properties": {
+              "mode": {
+                "enum": [
+                  "full_review",
+                  "structured_extraction",
+                  "targeted_check"
+                ]
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          }
+        },
+        "required": [
+          "execution_scope"
+        ]
       },
-      "then": {"required": ["structured_result"]}
+      "then": {
+        "required": [
+          "structured_result"
+        ]
+      }
     },
     {
       "description": "figure_review 必须输出合并后的结构化结果",
       "if": {
-        "properties": {"execution_scope": {"properties": {"submode": {"const": "figure_review"}},
-                                             "required": ["submode"]}},
-        "required": ["execution_scope"]
+        "properties": {
+          "execution_scope": {
+            "properties": {
+              "submode": {
+                "const": "figure_review"
+              }
+            },
+            "required": [
+              "submode"
+            ]
+          }
+        },
+        "required": [
+          "execution_scope"
+        ]
       },
-      "then": {"required": ["structured_result"]}
+      "then": {
+        "required": [
+          "structured_result"
+        ]
+      }
     }
   ],
-
   "$defs": {
-
     "rate": {
       "type": "object",
-      "required": ["resolved", "total", "rate"],
+      "required": [
+        "resolved",
+        "total",
+        "rate"
+      ],
       "additionalProperties": false,
       "properties": {
-        "resolved": {"type": "integer", "minimum": 0},
-        "total": {"type": "integer", "minimum": 0},
-        "rate": {"type": "number", "minimum": 0, "maximum": 1,
-                 "description": "total 为 0 时 rate 记为 1.0"}
+        "resolved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "total 为 0 时 rate 记为 1.0"
+        }
       }
     },
-
     "issue_cluster": {
       "type": "object",
-      "required": ["cluster_id", "representative_finding", "member_findings",
-                   "categories", "max_severity", "anchor", "evidence_refs"],
+      "required": [
+        "cluster_id",
+        "representative_finding",
+        "member_findings",
+        "categories",
+        "max_severity",
+        "anchor",
+        "evidence_refs"
+      ],
       "additionalProperties": false,
       "properties": {
-        "cluster_id": {"type": "string", "pattern": "^CL-[0-9]{3,}$"},
-        "representative_finding": {"type": "string"},
-        "member_findings": {"type": "array", "minItems": 1, "items": {"type": "string"}},
-        "categories": {"type": "array", "items": {"type": "string"}},
-        "max_severity": {"enum": ["critical", "major", "minor", "info"]},
+        "cluster_id": {
+          "type": "string",
+          "pattern": "^CL-[0-9]{3,}$"
+        },
+        "representative_finding": {
+          "type": "string"
+        },
+        "member_findings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "max_severity": {
+          "enum": [
+            "critical",
+            "major",
+            "minor",
+            "info"
+          ]
+        },
         "anchor": {
           "type": "object",
           "description": "主锚点：evidence_refs[0] 解析出的 figure+panel / paragraph_id / table",
           "additionalProperties": false,
           "properties": {
-            "figure": {"type": ["string", "null"]},
-            "panel": {"type": ["string", "null"]},
-            "table": {"type": ["string", "null"]},
-            "paragraph_id": {"type": ["string", "null"]},
+            "figure": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "panel": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "table": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "paragraph_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "evidence_ref": {
-              "type": ["string", "null"],
+              "type": [
+                "string",
+                "null"
+              ],
               "pattern": "^EV-[0-9]{3,}$",
               "description": "absence 或无细粒度 locator 时的确定性回退锚点"
             }
           }
         },
-        "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
+        "evidence_refs": {
+          "$ref": "evidence.schema.json#/$defs/evidence_refs"
+        }
       }
     }
   }

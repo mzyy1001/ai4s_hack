@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "table_record.schema.json",
+  "title": "TableRecord",
+  "description": "Stage 3 Figure Parser 从稿件表格中解析出的结构化记录。与 figure_record 平行：只解读，不评判，不产 finding。此前 table_records[] 在 SKILL.md 与报告模板中被引用，却没有任何契约（review_report.schema.json 只写 {type: object}），属于承诺了但没定义 —— 本文件补齐该契约。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "table_id",
+    "location",
+    "scientific_question",
+    "columns",
+    "observations",
+    "extraction_confidence",
+    "manual_review_needed"
+  ],
+  "properties": {
+    "table_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "稿件原始标签，如 Table 1 / Supplementary Table S2；保留原文写法"
+    },
+    "caption": {
+      "type": "string",
+      "description": "表题与表注原文"
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["table_label", "placement", "locator"],
+      "properties": {
+        "table_label": { "type": "string", "minLength": 1 },
+        "placement": { "enum": ["main_text", "supplement"] },
+        "locator": { "$ref": "common.schema.json#/$defs/locator" },
+        "first_cited_at": { "$ref": "common.schema.json#/$defs/locator" }
+      }
+    },
+    "scientific_question": {
+      "type": "string",
+      "minLength": 1,
+      "description": "这张表要回答什么问题。先判断问题，再判断呈现是否足以支撑 —— 与 figure_record 同一原则"
+    },
+    "table_kind": {
+      "enum": [
+        "baseline_characteristics",
+        "outcome_summary",
+        "adverse_events",
+        "reagent_or_material",
+        "model_parameters",
+        "other"
+      ],
+      "description": "表格用途。baseline_characteristics 与 outcome_summary 是统计取证的主要来源"
+    },
+    "columns": {
+      "type": "array",
+      "minItems": 1,
+      "description": "列定义。分母、单位与分组归属必须在此说明清楚，否则下游无法判断计数是否自洽",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "unit": { "type": ["string", "null"] },
+          "group": {
+            "type": ["string", "null"],
+            "description": "该列属于哪个试验组／队列；无分组语义时为 null"
+          },
+          "denominator": {
+            "type": ["integer", "null"],
+            "minimum": 0,
+            "description": "该列百分比所依据的分母。**未在表中明确写出时必须为 null，不得由行内数值反推** —— 反推出来的分母会让 statistical_forensics 的计数校验产生假阳性"
+          }
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "description": "逐单元格抽取的数值。数值形态与 provenance 复用全局定义，与 figure_record.observations 保持一致",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["row_label", "column", "value", "provenance"],
+        "properties": {
+          "row_label": { "type": "string", "minLength": 1 },
+          "column": { "type": "string", "minLength": 1 },
+          "value": { "$ref": "common.schema.json#/$defs/numeric_value" },
+          "provenance": { "$ref": "common.schema.json#/$defs/provenance" },
+          "evidence_refs": { "$ref": "evidence.schema.json#/$defs/evidence_refs" }
+        }
+      }
+    },
+    "footnote_definitions": {
+      "type": "array",
+      "description": "表注中定义的缩写、星号阈值与统计量含义。星号阈值各刊不同，必须回查表注，不得套用惯例",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "parse_limitations": {
+      "type": "array",
+      "description": "合并单元格、跨页断裂、图片型表格等导致的解析限制。**登记在此不等于稿件有问题** —— 那是我们没读到，与 parse_failed != not_reported 同理",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "extraction_confidence": { "enum": ["high", "medium", "low"] },
+    "manual_review_needed": { "type": "boolean" },
+    "manual_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "action": { "type": "string", "minLength": 1 },
+        "who": { "enum": ["reviewer", "editor", "statistician"] }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "标记需人工复核时必须说明复核什么 —— 只置 true 不给动作等于没提示",
+      "if": {
+        "properties": { "manual_review_needed": { "const": true } },
+        "required": ["manual_review_needed"]
+      },
+      "then": { "required": ["manual_review"] }
+    }
+  ]
+}

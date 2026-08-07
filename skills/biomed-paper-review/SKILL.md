@@ -240,7 +240,7 @@ Stage 3b 合并与冲突消解     └─> structured_result_v2, merge_extractio
                                 stage3b_system_limitations[]
 X1 可选外部验证层           └─> external evidence, external_validation_signals[],
                                 external_system_limitations[]
-Stage 4  M2–M7 并行审核     └─> m2_findings[] … m7_findings[]
+Stage 4  M2–M6 并行 → M7    └─> m2_findings[] … m7_findings[]
 Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_limitations[],
                                 all_findings[], issue_clusters[], 三项评分, review_report
 ```
@@ -256,13 +256,13 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 | `asset_inventory` | Stage 1 | Stage 3, Stage 5（覆盖率） |
 | `evidence_registry` | Stage 1 建立，各阶段**追加**（id 全局递增，不改已有条目） | 全部 |
 | `structured_result_v1` | Stage 2 (M1) | Stage 3（上下文）, Stage 3b |
-| `m1_extraction_signals[]` | Stage 2 (M1) | Stage 5 聚合 |
+| `m1_extraction_signals[]` | Stage 2 (M1) | **M7（Stage 4，只取 `claim_without_resolved_evidence_link`）**, Stage 5 聚合 |
 | `figure_records[]` / `table_records[]` | Stage 3 (Figure Parser) | Stage 3b, M4, M5, M7 |
 | `stage3_extraction_signals[]` | Stage 3（图像完整性审计） | Stage 5 聚合 |
 | `structured_result_v2` | Stage 3b | **M2–M7 全部** |
-| `merge_extraction_signals[]` | Stage 3b | Stage 5 聚合 |
+| `merge_extraction_signals[]` | Stage 3b | **M7（Stage 4）**, Stage 5 聚合 |
 | `stage{1,2,3,3b}_system_limitations[]` | 对应阶段 | Stage 5 聚合 |
-| `external_validation_signals[]` / `external_system_limitations[]` | 可选 X1 | M2/M4/M6/M7、Stage 5 聚合 |
+| `external_validation_signals[]` / `external_system_limitations[]` | 可选 X1 | M2–M7、Stage 5 聚合 |
 | `m2_findings[]` … `m7_findings[]` | 对应审核模块 | Stage 5 |
 | `all_extraction_signals[]` | **Stage 5** 聚合 Stage 2/3/3b + 可选 X1 | 报告 |
 | `all_system_limitations[]` | **Stage 5** 聚合 Stage 1/2/3/3b + 可选 X1 | 报告 |
@@ -336,21 +336,24 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 ### 2.8.1 X1 · 可选外部验证层
 
 **前置条件：Stage 3b 已封闭 `structured_result_v2`。** 仅当 v2 中有可规范化的精确标识符、
-注册信息、引文或外部可核验主张，且本次执行 M2/M4/M6/M7 中至少一个消费者时运行。
+注册信息、引文、细胞系、试剂或外部可核验主张，且本次执行 M2–M7 中至少一个消费者时运行。
 
 1. 先为稿件事实登记 `present` evidence，再创建 `lookup_request`；不得从模型记忆构造查询值。
 2. connector 按 `references/00-contracts.md §1.6` 获取、缓存、重试并登记 `external` evidence。
 3. 取得 `retrieval_status: resolved` 的外部原子事实后才可产
    `external_validation_candidate`；`match/mismatch` 还要求完全可比。signal 无 severity，
-   只路由 M2/M4/M6/M7。
+   只路由 M2–M7（不路由 M1）。
 4. 白名单、权限、429、5xx、超时、DNS/TLS 或响应漂移只产
    `external_system_limitations[]`。`not_found` / `not_addressed` 不是稿件 finding。
 5. 下游若据外部候选立 finding，`evidence_refs[0]` 必须是稿件内 `present`，并同时引用
    external evidence；仅有外部记录、absence 或 system limitation 时禁止立 finding。
 
-### 2.9 Stage 4 · M2–M7 并行审核
+### 2.9 Stage 4 · M2–M6 并行审核，随后 M7
 
-**前置条件：Stage 2、Stage 3b 与本次声明的可选 X1 均已完成。** 六个审核模块此时可并行执行，
+**前置条件：Stage 2、Stage 3b 与本次声明的可选 X1 均已完成。**
+**M2–M6 五个模块此时可并行执行**；**M7 必须等 M2–M6 全部完成后再跑** ——
+它要消费 M2–M6 的 findings 判断结论可信度（`07-conclusions-discussion.md` §2），
+与它们并行会读到不完整的输入。各模块
 各自读取自己的 reference 文件，消费 `structured_result_v2`、`figure_records[]`、
 `all` 之前的 stage-local signals 与可用 external evidence，输出统一格式的 `finding`。
 
@@ -645,7 +648,7 @@ CLI 产物仍是工具原始结果：输入已带 `observation_refs[]` / `eviden
 | `references/06-ethics-compliance.md` | 伦理批件、知情同意、3R 原则核查 | Stage 4 M6 |
 | `references/07-conclusions-discussion.md` | 结论-证据对齐、过度外推识别 | Stage 4 M7 |
 | `scripts/normalize_biomed_units.py` | 单位归一化（fail-closed，只做同量纲确定性换算） | Stage 3b 兼容性判定 |
-| `scripts/statistical_forensics.py` | 统计取证：p 反算 / CI 自洽 / 计数-百分比 / GRIM / 表格合计 | Stage 2，产 signal 交 M4 |
+| `scripts/statistical_forensics.py` | 统计取证：p 反算 / CI 自洽 / 计数-百分比 / GRIM / 表格合计 | Stage 2，产 signal 交 M4；计数-百分比与表格合计另交 M2 |
 | `scripts/ethics_compliance_check.py` | 伦理规范库筛查 | Stage 2，产 signal 交 M6 |
 | `scripts/sequence_identifier_audit.py` | 序列与标识符审计：HGVS 支持子集、版本化完整参考序列上的位点/残基核对、登录号格式、基因符号物种惯例、引物 QC；参考上下文不全时只产 `partial_extraction` | Stage 2，产 signal 交 M2 / M3 |
 | `scripts/figure_integrity_audit.py` | 论文内图像完整性：候选重复区域、拼接不连续、异常均匀区块。**只出候选，禁止自动定性** | Stage 3，产 signal 交 M5 |

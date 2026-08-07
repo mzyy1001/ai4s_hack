@@ -737,7 +737,7 @@ finding id 升序排列。
 | `ethics_requirement_unmet` | 规范库某条伦理要求适用，但稿件未见对应报告 | M6 | 是否构成伦理合规问题 |
 | `sequence_identifier_inconsistent` | 变异命名/序列/登录号/基因符号存在明确违规，或表达式超出本地解析子集、需人工复核 | M2、M3 | 是否构成表述或方法学错误 |
 | `figure_integrity_candidate` | 图像审计检出候选重复区域、背景拼接不连续或异常均匀区块 | M5 | 人工核对原图、图注与合法复用说明后，是否构成图像完整性问题 |
-| `external_validation_candidate` | X1 对稿件 `present` 事实与 `external` 原子事实完成可比性判定 | M2、M4、M6、M7 | 回查稿件与外部记录后，是否存在身份、注册、统计或主张不一致 |
+| `external_validation_candidate` | X1 对稿件 `present` 事实与 `external` 原子事实完成可比性判定 | M2–M7（不含 M1） | 回查稿件与外部记录后，是否存在身份、注册、统计或主张不一致 |
 
 > 五种统计取证 signal（`test_statistic_p_mismatch`、`ci_estimate_mismatch`、
 > `count_percentage_mismatch`、`grim_incompatible_mean`、`table_total_mismatch`）由

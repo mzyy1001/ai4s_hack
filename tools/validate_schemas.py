@@ -1245,6 +1245,25 @@ def check_tool_signals(rep, schemas):
     bad_prod = sorted({x.get("produced_by") for x in sigs} - produced_enum)
     rep.check(not bad_prod, "工具产出的 produced_by 合法", f"越界: {bad_prod}")
 
+    # schema 用 allOf 条件约束 routed_to 白名单，而上面几项只查了顶层字段 ——
+    # 实测漏过一次：schema 只允许 X1 路由 M2/M4/M6/M7，工具却发往 M3/M5，
+    # 164 项检查全绿却根本没查这一条。条件约束必须单独展开验证。
+    cond = {}
+    for a in sig_schema.get("allOf", []):
+        t = ((a.get("if") or {}).get("properties") or {}).get("type", {}).get("const")
+        wl = (((a.get("then") or {}).get("properties") or {})
+              .get("routed_to", {}).get("items", {}).get("enum"))
+        if t and wl:
+            cond[t] = set(wl)
+    bad_route = []
+    for x in sigs:
+        wl = cond.get(x.get("type"))
+        if wl and not set(x.get("routed_to") or []).issubset(wl):
+            bad_route.append(f"{x.get('id')}({x.get('type')}): "
+                             f"{sorted(set(x.get('routed_to') or []) - wl)} 不在白名单")
+    rep.check(not bad_route, "工具产出的 routed_to 满足 schema 的条件白名单",
+              "; ".join(bad_route[:4]))
+
     bad_route = [x.get("id") for x in sigs
                  if not set(x.get("routed_to") or []) <= REVIEW_MODULES]
     rep.check(not bad_route, "工具产出的 routed_to 全在 M2–M7", "; ".join(bad_route[:4]))

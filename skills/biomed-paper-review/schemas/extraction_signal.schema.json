@@ -3,81 +3,135 @@
   "$id": "extraction_signal.schema.json",
   "title": "ExtractionSignal",
   "description": "机器级观察。references/00-contracts.md §6.2。signal 不是结论，没有 severity，不直接影响 manuscript_risk_score。由 Stage 2、Stage 3、Stage 3b 或可选 X1 产出，路由给下游审核模块判定。",
-
   "type": "object",
-  "required": ["id", "type", "target", "detail", "evidence_refs", "routed_to", "produced_by"],
+  "required": [
+    "id",
+    "type",
+    "target",
+    "detail",
+    "evidence_refs",
+    "routed_to",
+    "produced_by"
+  ],
   "additionalProperties": false,
-
   "properties": {
-    "id": {"type": "string", "pattern": "^SIG-[0-9]{3,}$"},
-
+    "id": {
+      "type": "string",
+      "pattern": "^SIG-[0-9]{3,}$"
+    },
     "type": {
-      "enum": ["source_value_conflict",
-               "claim_without_resolved_evidence_link",
-               "ambiguous_study_design",
-               "unresolved_cross_reference",
-               "partial_extraction",
-               "ambiguous_extraction",
-               "test_statistic_p_mismatch",
-               "ci_estimate_mismatch",
-               "count_percentage_mismatch",
-               "grim_incompatible_mean",
-               "table_total_mismatch",
-               "ethics_requirement_unmet",
-               "sequence_identifier_inconsistent",
-               "figure_integrity_candidate",
-               "external_validation_candidate"],
+      "enum": [
+        "source_value_conflict",
+        "claim_without_resolved_evidence_link",
+        "ambiguous_study_design",
+        "unresolved_cross_reference",
+        "partial_extraction",
+        "ambiguous_extraction",
+        "test_statistic_p_mismatch",
+        "ci_estimate_mismatch",
+        "count_percentage_mismatch",
+        "grim_incompatible_mean",
+        "table_total_mismatch",
+        "ethics_requirement_unmet",
+        "sequence_identifier_inconsistent",
+        "figure_integrity_candidate",
+        "external_validation_candidate"
+      ],
       "description": "十五值。external_validation_candidate 仅由 X1 产出；旧值 parse_failure 已废除 —— 解析失败是 system_limitation，不是 signal。"
     },
-
     "target": {
       "description": "signal 指向的对象。字符串形式为字段路径或实体 id；对象形式用于携带类型专属元数据。",
       "oneOf": [
-        {"type": "string", "description": "如 key_data.KD-007 / article_design.primary_design"},
-        {"$ref": "#/$defs/claim_target"},
-        {"$ref": "#/$defs/external_target"}
+        {
+          "type": "string",
+          "description": "如 key_data.KD-007 / article_design.primary_design"
+        },
+        {
+          "$ref": "#/$defs/claim_target"
+        },
+        {
+          "$ref": "#/$defs/external_target"
+        }
       ]
     },
-
-    "detail": {"type": "string", "minLength": 1},
-
+    "detail": {
+      "type": "string",
+      "minLength": 1
+    },
     "observation_refs": {
       "type": "array",
-      "items": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"},
+      "items": {
+        "type": "string",
+        "pattern": "^OBS-[0-9]{3,}$"
+      },
       "description": "指向 key_data.observations[].observation_id"
     },
-
-    "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
-
+    "evidence_refs": {
+      "$ref": "evidence.schema.json#/$defs/evidence_refs"
+    },
     "routed_to": {
       "type": "array",
       "minItems": 1,
-      "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
+      "items": {
+        "$ref": "common.schema.json#/$defs/module_id_review"
+      },
       "description": "下游判定模块。signal 本身不下结论。"
     },
-
     "produced_by": {
-      "enum": ["stage_2", "stage_3", "stage_3b", "stage_3c_external_validation"],
+      "enum": [
+        "stage_2",
+        "stage_3",
+        "stage_3b",
+        "stage_3c_external_validation"
+      ],
       "description": "stage_3 仅用于图像完整性审计；stage_3c_external_validation 仅用于 X1"
     },
-
     "external_check": {
       "type": "object",
       "description": "仅 external_validation_candidate 使用。保存稿件事实与 external evidence 的可复算比较，不是稿件结论。",
-      "required": ["connector", "query_kind", "check_type", "manuscript_value",
-                   "external_value", "comparison_result", "comparability",
-                   "manuscript_evidence_refs", "external_evidence_refs", "rule_version"],
+      "required": [
+        "connector",
+        "query_kind",
+        "check_type",
+        "manuscript_value",
+        "external_value",
+        "comparison_result",
+        "comparability",
+        "manuscript_evidence_refs",
+        "external_evidence_refs",
+        "rule_version"
+      ],
       "additionalProperties": false,
       "properties": {
-        "connector": {"type": "string", "pattern": "^[a-z0-9_]+$"},
-        "query_kind": {"type": "string", "minLength": 1},
-        "check_type": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "connector": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "query_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "check_type": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
         "manuscript_value": {},
         "external_value": {},
         "comparison_result": {
-          "enum": ["match", "mismatch", "not_comparable", "needs_manual_review"]
+          "enum": [
+            "match",
+            "mismatch",
+            "not_comparable",
+            "needs_manual_review"
+          ]
         },
-        "comparability": {"enum": ["complete", "partial", "none"]},
+        "comparability": {
+          "enum": [
+            "complete",
+            "partial",
+            "none"
+          ]
+        },
         "manuscript_evidence_refs": {
           "$ref": "evidence.schema.json#/$defs/evidence_refs",
           "minItems": 1,
@@ -89,98 +143,221 @@
           "description": "必须全部解析到 retrieval_status=resolved 的 external evidence；跨登记表约束由契约校验器执行"
         },
         "noncomparability_reasons": {
-          "type": "array", "uniqueItems": true,
-          "items": {"type": "string", "minLength": 1}
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "rule_version": {"type": "string", "minLength": 1}
+        "rule_version": {
+          "type": "string",
+          "minLength": 1
+        }
       },
       "allOf": [
         {
-          "if": {"properties": {"comparison_result": {"enum": ["match", "mismatch"]}},
-                 "required": ["comparison_result"]},
-          "then": {"properties": {"comparability": {"const": "complete"}}}
-        },
-        {
-          "if": {"properties": {"comparison_result": {"const": "not_comparable"}},
-                 "required": ["comparison_result"]},
+          "if": {
+            "properties": {
+              "comparison_result": {
+                "enum": [
+                  "match",
+                  "mismatch"
+                ]
+              }
+            },
+            "required": [
+              "comparison_result"
+            ]
+          },
           "then": {
             "properties": {
-              "comparability": {"const": "none"},
-              "noncomparability_reasons": {"minItems": 1}
+              "comparability": {
+                "const": "complete"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "comparison_result": {
+                "const": "not_comparable"
+              }
             },
-            "required": ["noncomparability_reasons"]
+            "required": [
+              "comparison_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "comparability": {
+                "const": "none"
+              },
+              "noncomparability_reasons": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "noncomparability_reasons"
+            ]
           }
         }
       ]
     },
-
     "image_audit": {
       "type": "object",
       "description": "仅 figure_integrity_candidate 使用。由 scripts/figure_integrity_audit.py 产出。severity_hint 恒为 null —— 契约禁止把图像重复自动定性为学术不端。",
-      "required": ["check", "candidate", "severity_hint", "manual_review_required", "rule_version"],
+      "required": [
+        "check",
+        "candidate",
+        "severity_hint",
+        "manual_review_required",
+        "rule_version"
+      ],
       "additionalProperties": true,
       "properties": {
         "check": {
-          "enum": ["duplicated_region_candidate", "splice_discontinuity_candidate",
-                   "uniform_patch_candidate"]
+          "enum": [
+            "duplicated_region_candidate",
+            "splice_discontinuity_candidate",
+            "uniform_patch_candidate"
+          ]
         },
-        "candidate": {"const": true, "description": "恒为 true：图像审计只出候选"},
-        "severity_hint": {"type": "null", "description": "恒为 null：禁止自动定性"},
-        "manual_review_required": {"const": true},
-        "rule_version": {"type": "string"}
+        "candidate": {
+          "const": true,
+          "description": "恒为 true：图像审计只出候选"
+        },
+        "severity_hint": {
+          "type": "null",
+          "description": "恒为 null：禁止自动定性"
+        },
+        "manual_review_required": {
+          "const": true
+        },
+        "rule_version": {
+          "type": "string"
+        }
       }
     },
-
     "sequence_audit": {
       "type": "object",
       "description": "仅 sequence_identifier_inconsistent 使用。记录判据与是否为候选。由 scripts/sequence_identifier_audit.py 产出。",
-      "required": ["check", "candidate", "rule_version"],
+      "required": [
+        "check",
+        "candidate",
+        "rule_version"
+      ],
       "additionalProperties": true,
       "properties": {
         "check": {
-          "enum": ["hgvs_syntax_invalid", "hgvs_syntax_unresolved",
-                   "reference_context_incomplete",
-                   "variant_position_out_of_range",
-                   "variant_reference_mismatch", "gene_symbol_species_mismatch",
-                   "accession_format_invalid", "primer_qc_out_of_range",
-                   "sequence_alphabet_invalid"]
+          "enum": [
+            "hgvs_syntax_invalid",
+            "hgvs_syntax_unresolved",
+            "reference_context_incomplete",
+            "variant_position_out_of_range",
+            "variant_reference_mismatch",
+            "gene_symbol_species_mismatch",
+            "accession_format_invalid",
+            "primer_qc_out_of_range",
+            "sequence_alphabet_invalid"
+          ]
         },
         "candidate": {
           "type": "boolean",
           "description": "true = 惯例偏离或解析器未覆盖，只作候选交人工；false = 明确语法/范围类确定性违规"
         },
-        "rule_version": {"type": "string"}
+        "rule_version": {
+          "type": "string"
+        }
       }
     },
-
     "forensics": {
       "type": "object",
       "description": "仅统计取证类 signal 使用。记录复算输入与结果，使 M4 能独立复现该判定。由 Skill 根目录相对路径 scripts/statistical_forensics.py 产出。",
-      "required": ["check", "ran", "rule_version"],
+      "required": [
+        "check",
+        "ran",
+        "rule_version"
+      ],
       "additionalProperties": true,
       "properties": {
         "check": {
-          "enum": ["test_statistic_p_mismatch", "ci_estimate_mismatch",
-                   "count_percentage_mismatch", "grim_incompatible_mean",
-                   "table_total_mismatch"]
+          "enum": [
+            "test_statistic_p_mismatch",
+            "ci_estimate_mismatch",
+            "count_percentage_mismatch",
+            "grim_incompatible_mean",
+            "table_total_mismatch"
+          ]
         },
         "ran": {
           "type": "boolean",
           "description": "false 表示适用前提不满足、本项未运行 —— 此时 type 必为 partial_extraction"
         },
-        "rule_version": {"type": "string"},
-        "test_family": {"enum": ["t", "F", "chi2", "z"]},
-        "statistic": {"type": "number"},
-        "df": {"type": ["number", "null"]},
-        "df1": {"type": ["number", "null"]},
-        "df2": {"type": ["number", "null"]},
-        "tail": {"enum": ["one", "two"]},
-        "recomputed_p": {"type": "number"},
-        "reported_p": {"type": ["string", "number"]},
-        "reported_bound": {"type": "number"},
-        "reported_operator": {"enum": ["<", "≤"]},
+        "rule_version": {
+          "type": "string"
+        },
+        "test_family": {
+          "enum": [
+            "t",
+            "F",
+            "chi2",
+            "z"
+          ]
+        },
+        "statistic": {
+          "type": "number"
+        },
+        "df": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "df1": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "df2": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "tail": {
+          "enum": [
+            "one",
+            "two"
+          ]
+        },
+        "recomputed_p": {
+          "type": "number"
+        },
+        "reported_p": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "reported_bound": {
+          "type": "number"
+        },
+        "reported_operator": {
+          "enum": [
+            "<",
+            "≤"
+          ]
+        },
         "expected_interval": {
-          "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"},
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          },
           "description": "报告精度对应的舍入区间；比较用区间而非点值相等"
         }
       },
@@ -188,187 +365,421 @@
         {
           "if": {
             "properties": {
-              "check": {"const": "test_statistic_p_mismatch"},
-              "ran": {"const": true}
+              "check": {
+                "const": "test_statistic_p_mismatch"
+              },
+              "ran": {
+                "const": true
+              }
             },
-            "required": ["check", "ran"]
+            "required": [
+              "check",
+              "ran"
+            ]
           },
           "then": {
-            "required": ["test_family", "statistic", "tail", "recomputed_p", "reported_p"]
+            "required": [
+              "test_family",
+              "statistic",
+              "tail",
+              "recomputed_p",
+              "reported_p"
+            ]
           }
         },
         {
           "if": {
             "properties": {
-              "check": {"const": "test_statistic_p_mismatch"},
-              "ran": {"const": true},
-              "test_family": {"enum": ["t", "chi2"]}
+              "check": {
+                "const": "test_statistic_p_mismatch"
+              },
+              "ran": {
+                "const": true
+              },
+              "test_family": {
+                "enum": [
+                  "t",
+                  "chi2"
+                ]
+              }
             },
-            "required": ["check", "ran", "test_family"]
+            "required": [
+              "check",
+              "ran",
+              "test_family"
+            ]
           },
-          "then": {"properties": {"df": {"type": "number"}}, "required": ["df"]}
+          "then": {
+            "properties": {
+              "df": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "df"
+            ]
+          }
         },
         {
           "if": {
             "properties": {
-              "check": {"const": "test_statistic_p_mismatch"},
-              "ran": {"const": true},
-              "test_family": {"const": "F"}
+              "check": {
+                "const": "test_statistic_p_mismatch"
+              },
+              "ran": {
+                "const": true
+              },
+              "test_family": {
+                "const": "F"
+              }
             },
-            "required": ["check", "ran", "test_family"]
+            "required": [
+              "check",
+              "ran",
+              "test_family"
+            ]
           },
           "then": {
-            "properties": {"df1": {"type": "number"}, "df2": {"type": "number"}},
-            "required": ["df1", "df2"]
+            "properties": {
+              "df1": {
+                "type": "number"
+              },
+              "df2": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "df1",
+              "df2"
+            ]
           }
         }
       ]
     },
-
     "ethics": {
       "type": "object",
       "description": "仅 ethics_requirement_unmet 使用的规范库命中轨迹；不携带 severity，严重度完全由 M6 判定。",
-      "required": ["rule_id", "domain", "citations",
-                   "manuscript_must_report", "rulebase_version"],
+      "required": [
+        "rule_id",
+        "domain",
+        "citations",
+        "manuscript_must_report",
+        "rulebase_version"
+      ],
       "additionalProperties": false,
       "properties": {
-        "rule_id": {"type": "string", "pattern": "^ETH-[A-Z]+-[0-9]{3}$"},
+        "rule_id": {
+          "type": "string",
+          "pattern": "^ETH-[A-Z]+-[0-9]{3}$"
+        },
         "domain": {
-          "enum": ["animal", "biosafety", "cell_line_general",
-                   "clinical_trial_registration", "data_privacy", "genetic_resources",
-                   "human_clinical", "human_derived_cells_tissue", "stem_cell_embryo"]
+          "enum": [
+            "animal",
+            "biosafety",
+            "cell_line_general",
+            "clinical_trial_registration",
+            "data_privacy",
+            "genetic_resources",
+            "human_clinical",
+            "human_derived_cells_tissue",
+            "stem_cell_embryo"
+          ]
         },
         "citations": {
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "object",
-            "required": ["instrument", "locus", "citation_confidence"],
+            "required": [
+              "instrument",
+              "locus",
+              "citation_confidence"
+            ],
             "additionalProperties": false,
             "properties": {
-              "instrument": {"type": "string", "minLength": 1},
-              "locus": {"type": "string", "minLength": 1},
-              "citation_confidence": {"enum": ["high", "medium", "low"]}
+              "instrument": {
+                "type": "string",
+                "minLength": 1
+              },
+              "locus": {
+                "type": "string",
+                "minLength": 1
+              },
+              "citation_confidence": {
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              }
             }
           }
         },
         "manuscript_must_report": {
-          "type": "array", "minItems": 1,
-          "items": {"type": "string", "minLength": 1}
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "rulebase_version": {"type": "string", "minLength": 1}
+        "rulebase_version": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     }
   },
-
   "not": {
-    "required": ["severity"],
+    "required": [
+      "severity"
+    ],
     "description": "signal 不得携带 severity"
   },
-
   "allOf": [
     {
       "description": "source_value_conflict 只能由 Stage 3b 产出 —— 兼容性判定是 Stage 3b 的职责，M1 不做",
-      "if": {"properties": {"type": {"const": "source_value_conflict"}}, "required": ["type"]},
+      "if": {
+        "properties": {
+          "type": {
+            "const": "source_value_conflict"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
       "then": {
-        "properties": {"produced_by": {"const": "stage_3b"},
-                       "observation_refs": {"minItems": 2}},
-        "required": ["observation_refs"]
+        "properties": {
+          "produced_by": {
+            "const": "stage_3b"
+          },
+          "observation_refs": {
+            "minItems": 2
+          }
+        },
+        "required": [
+          "observation_refs"
+        ]
       }
     },
     {
       "description": "claim 链接类 signal 必须携带 claim 元数据",
-      "if": {"properties": {"type": {"const": "claim_without_resolved_evidence_link"}}, "required": ["type"]},
-      "then": {"properties": {"target": {"$ref": "#/$defs/claim_target"}}}
+      "if": {
+        "properties": {
+          "type": {
+            "const": "claim_without_resolved_evidence_link"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "$ref": "#/$defs/claim_target"
+          }
+        }
+      }
     },
     {
       "description": "图像完整性 signal 必须带 image_audit，且只能由 Stage 3 产出",
-      "if": {"properties": {"type": {"const": "figure_integrity_candidate"}},
-             "required": ["type"]},
-      "then": {"required": ["image_audit"],
-               "properties": {"produced_by": {"const": "stage_3"},
-                              "routed_to": {"const": ["M5"]}}}
+      "if": {
+        "properties": {
+          "type": {
+            "const": "figure_integrity_candidate"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "image_audit"
+        ],
+        "properties": {
+          "produced_by": {
+            "const": "stage_3"
+          },
+          "routed_to": {
+            "const": [
+              "M5"
+            ]
+          }
+        }
+      }
     },
     {
       "description": "序列/标识符审计类 signal 必须带 sequence_audit 判据记录",
-      "if": {"properties": {"type": {"const": "sequence_identifier_inconsistent"}},
-             "required": ["type"]},
-      "then": {"required": ["sequence_audit"],
-               "properties": {"produced_by": {"const": "stage_2"}}}
+      "if": {
+        "properties": {
+          "type": {
+            "const": "sequence_identifier_inconsistent"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "sequence_audit"
+        ],
+        "properties": {
+          "produced_by": {
+            "const": "stage_2"
+          }
+        }
+      }
     },
     {
       "description": "统计取证类 signal 必须带 forensics 复算记录，且只能由 Stage 2 产出",
       "if": {
         "properties": {
-          "type": {"enum": ["test_statistic_p_mismatch", "ci_estimate_mismatch",
-                            "count_percentage_mismatch", "grim_incompatible_mean",
-                            "table_total_mismatch"]}
+          "type": {
+            "enum": [
+              "test_statistic_p_mismatch",
+              "ci_estimate_mismatch",
+              "count_percentage_mismatch",
+              "grim_incompatible_mean",
+              "table_total_mismatch"
+            ]
+          }
         },
-        "required": ["type"]
+        "required": [
+          "type"
+        ]
       },
       "then": {
-        "required": ["forensics"],
+        "required": [
+          "forensics"
+        ],
         "properties": {
-          "produced_by": {"const": "stage_2"},
-          "forensics": {"properties": {"ran": {"const": true}}}
+          "produced_by": {
+            "const": "stage_2"
+          },
+          "forensics": {
+            "properties": {
+              "ran": {
+                "const": true
+              }
+            }
+          }
         }
       }
     },
     {
       "description": "伦理规范库命中必须带可审计的规则轨迹",
       "if": {
-        "properties": {"type": {"const": "ethics_requirement_unmet"}},
-        "required": ["type"]
+        "properties": {
+          "type": {
+            "const": "ethics_requirement_unmet"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "then": {
-        "required": ["ethics"],
-        "properties": {"produced_by": {"const": "stage_2"}}
+        "required": [
+          "ethics"
+        ],
+        "properties": {
+          "produced_by": {
+            "const": "stage_2"
+          }
+        }
       }
     },
     {
-      "description": "外部验证候选必须由 X1 产出、同时引用稿件 present 与 external evidence，且只路由 M2/M4/M6/M7",
+      "description": "外部验证候选必须由 X1 产出、同时引用稿件 present 与 external evidence，且只路由 M2–M7（不路由 M1：M1 只抽取标识符供 X1 使用，自身不产 finding）",
       "if": {
-        "properties": {"type": {"const": "external_validation_candidate"}},
-        "required": ["type"]
+        "properties": {
+          "type": {
+            "const": "external_validation_candidate"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "then": {
-        "required": ["external_check"],
+        "required": [
+          "external_check"
+        ],
         "properties": {
-          "produced_by": {"const": "stage_3c_external_validation"},
-          "target": {"$ref": "#/$defs/external_target"},
-          "evidence_refs": {"minItems": 2},
+          "produced_by": {
+            "const": "stage_3c_external_validation"
+          },
+          "target": {
+            "$ref": "#/$defs/external_target"
+          },
+          "evidence_refs": {
+            "minItems": 2
+          },
           "routed_to": {
-            "items": {"enum": ["M2", "M4", "M6", "M7"]}
+            "items": {
+              "enum": [
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7"
+              ]
+            }
           }
         }
       }
     }
   ],
-
   "$defs": {
     "claim_target": {
       "type": "object",
       "description": "替代已废除的 unresolved_evidence_links[] 数组（00-contracts.md §10）",
-      "required": ["claim_id", "unresolved_refs"],
+      "required": [
+        "claim_id",
+        "unresolved_refs"
+      ],
       "additionalProperties": false,
       "properties": {
-        "claim_id": {"type": "string", "pattern": "^CLM-[0-9]{2,}$"},
+        "claim_id": {
+          "type": "string",
+          "pattern": "^CLM-[0-9]{2,}$"
+        },
         "unresolved_refs": {
           "type": "array",
           "minItems": 1,
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "claims[].supported_by 中解析不到实体的条目原文，如 [\"Fig 5D\"]"
         }
       }
     },
     "external_target": {
       "type": "object",
-      "required": ["lookup_request_id", "entity_type", "entity_id"],
+      "required": [
+        "lookup_request_id",
+        "entity_type",
+        "entity_id"
+      ],
       "additionalProperties": false,
       "properties": {
-        "lookup_request_id": {"type": "string", "pattern": "^XREQ-[0-9]{3,}$"},
-        "entity_type": {"type": "string", "pattern": "^[a-z0-9_]+$"},
-        "entity_id": {"type": "string", "minLength": 1}
+        "lookup_request_id": {
+          "type": "string",
+          "pattern": "^XREQ-[0-9]{3,}$"
+        },
+        "entity_type": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "entity_id": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     }
   }

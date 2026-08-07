@@ -34,7 +34,7 @@
 | `structured_result_v2.key_data[]` | 核对 `supported_by` 指向的数值是否真的支持该主张 |
 | `structured_result_v2.conclusion.limitations` | 判定 `limitations_evasive` |
 | `figure_records[]` | claim 引用图时核对图是否真的展示了该结论 |
-| 各 stage-local signal 数组（`m1_extraction_signals[]` / `stage3_extraction_signals[]` / `merge_extraction_signals[]` / `external_validation_signals[]`）中的 `claim_without_resolved_evidence_link` | 提示哪些 claim 的支撑链断了。**不得消费 `all_extraction_signals[]`** —— 那是 Stage 5 的聚合产物，M7 在 Stage 4 运行，读它会构成时序环 |
+| `m1_extraction_signals[]` 与 `merge_extraction_signals[]` 中的 `claim_without_resolved_evidence_link` | 提示哪些 claim 的支撑链断了。**只有这两个数组会产生该类型** —— Stage 3 只产图像完整性候选，X1 只产 external candidate，去那里找是找不到的。**不得消费 `all_extraction_signals[]`**：那是 Stage 5 的聚合产物，M7 在 Stage 4 运行，读它会构成时序环 |
 | **M2–M6 的 findings** | 结论的可信度取决于底下几层有没有塌（§6） |
 
 **M7 必须最后跑。** 它是唯一需要消费其他审核模块产物的模块。
