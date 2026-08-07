@@ -1,0 +1,62 @@
+{
+  "channel": "B",
+  "paper_map": {
+    "FRONT": "开头（第1-6行）：标题、DOI、PMID、PMCID 与作者列表（Horwitz 等，PLOS ONE 2025）。",
+    "ABSTRACT": "ABSTRACT（第8-9行）：概述 sRAGE 通过 AAV 递送与遗传敲入两种策略，在冷冻损伤而非 BaCl2 损伤模型中促进老龄/疾病小鼠肌肉再生。",
+    "Introduction": "sec001（第11-17行）：背景介绍 RAGE/sRAGE 在肌肉再生中的作用缺口与本研究的创新点。",
+    "Materials and methods": "sec002（第19-75行）：含 19 个子区块——AGER 品系构建(sec003)、其他小鼠品系(sec004)、组织学(sec005)、体内再生实验(sec006)、FACS 分离卫星细胞(sec007)、免疫荧光(sec008)、细胞移植(sec009)、Western blot(sec010)、ELISA(sec011)、血糖(sec012)、AAV9-sRAGE 构建(sec013)、AAV 生产(sec014)、HPLC 纯化(sec015)、AAV 滴定(sec016)、AAV 体内实验(sec017)、倒挂网格(sec018)、跑台耐力(sec019)、统计分析(sec020)。",
+    "Results": "sec021（第77-105行）：三个子结果区块——老龄小鼠冷冻损伤(sec022)、db/db 与 ApoE-/- 疾病模型(sec023)、转基因/敲除遗传面板(sec024)。",
+    "Discussion": "sec025（第107-116行）：讨论 sRAGE 在冷冻 vs BaCl2 损伤模型中的差异性及其可能机制，强调损伤模型选择的重要性。",
+    "Conclusion": "sec026（第118-121行）：总结并提出 sRAGE 作为肌肉损伤治疗策略的潜在转化价值。",
+    "Supporting information": "sec027（第123-132行）：S1-S3 支持图图注（均为 BaCl2 损伤无增强效应的对应实验），仅图注可见。",
+    "Acknowledgments": "ack1（第134-137行）。",
+    "Data Availability": "notes1（第139-142行）：Dryad 仓库 DOI: 10.5061/dryad.3j9kd51vx。",
+    "Funding Statement": "funding-statement1（第144-147行）。",
+    "References": "ref-list1（第149-154行）。",
+    "AUTHOR NOTES": "第156-157行：竞争利益声明（AJW 与 Elevian 等相关）。"
+  },
+  "study_design": "小鼠体内实验研究。模型：(1) AAV9-sRAGE（scAAV-Cbh-sRAGE，经眶后静脉注射 1e11 vg/只）vs 载体对照（FFB）；(2) Ager 基因座遗传面板——AGERs/s、AGERs/+、AGERs/-、AGER-/-、AGER+/-、AGER+/+；(3) 疾病模型：db/db（Leprdb，2型糖尿病）与 ApoE-/-（动脉粥样硬化），背景主要为 C57BL/6J。损伤方式：腓肠前肌（TA）冷冻损伤（冷金属棒压 10 秒）与 BaCl2 损伤（50 μL 1.2% BaCl2 肌注）两种平行模型。附加实验：卫星细胞 FACS 分离与向 mdx 受体肌的移植。所有实验动物均为雄性、年龄与性别匹配。",
+  "followup_duration": "AAV9 血清 sRAGE 动力学：给药后第 5、20、30 天内连续监测（最长约 30 天）。再生结局取材：冷冻损伤或 BaCl2 损伤后 7 天（7 dpi）取材评估 CSA 与纤维分布。移植实验：移植后 3 周取材计数 dystrophin+ 纤维。功能/代谢指标（体重、抓网悬挂、跑台耐力、血糖）在 AAV 给药后 30 天测评。",
+  "n_total": "样本量以小鼠为单位且混合使用精确 n 与 n≥：Fig 1A（年龄谱 ELISA）n=5/年龄点；Fig 1 成年 n≥7、老龄 n=10；Fig 2（db/db 与 ApoE）n=6/条件；Fig 3B n≥5、Fig 3D（未损伤 CSA）n=3、Fig 3G/H（冷冻损伤再生）n≥3、Fig 3I/J（移植）n≥5；S1 n≥7（成年）、n=10（老龄）；S2 n=6；S3 n≥3。生物学重复为个体小鼠；技术层面：每只 TA 连续切片 10-15 层、每个切片取 4 张 20X 图像定量，最终数据点为小鼠个体均值；Fig 3I/J 每个数据点为一只受体鼠、跨 ≥3 切片深度平均。",
+  "experiment_map": [
+    {"id": "EXP-01", "name": "寿命期血清 sRAGE 基线谱", "model": "野生型 C57BL/6J", "intervention": "无", "genotypes/groups": "WT 各年龄组", "timepoints": "4/7/12/18 月龄", "endpoints": "血清 sRAGE ELISA", "key_figures": "Figure 1A"},
+    {"id": "EXP-02", "name": "AAV9-sRAGE vs 载体在成年与老龄 WT 的冷冻损伤", "model": "C57BL/6J 成年(7-8月)与老龄(18月)", "intervention": "AAV9-sRAGE 或 FFB 载体，眶后 1e11 vg", "genotypes/groups": "成年/老龄 × AAV/载体", "timepoints": "给药后血清动力学至 30 天；冷冻损伤后 7 dpi", "endpoints": "血清 sRAGE 动力学、再生纤维平均 CSA 及分布、体重、抓网悬挂、跑台耐力、血糖", "key_figures": "Figure 1C-M; Supporting Fig S1(BaCl2)"},
+    {"id": "EXP-03", "name": "AAV9-sRAGE 在糖尿病 db/db 模型的冷冻/BaCl2 损伤", "model": "Leprdb(db/db) 与 WT，2-3 月", "intervention": "AAV9-sRAGE 或 FFB", "genotypes/groups": "db/db 与 WT × AAV/载体", "timepoints": "血清至给药后 30 天；损伤后 7 dpi", "endpoints": "血清 sRAGE、体重、血糖、CSA 与分布", "key_figures": "Figure 2A-F; Supporting Fig S2"},
+    {"id": "EXP-04", "name": "AAV9-sRAGE 在动脉粥样硬化 ApoE-/- 模型的冷冻/BaCl2 损伤", "model": "ApoE-/- 与 WT，2-3 月", "intervention": "AAV9-sRAGE 或 FFB", "genotypes/groups": "ApoE-/- (部分含 WT) × AAV/载体", "timepoints": "血清至给药后 30 天；损伤后 7 dpi", "endpoints": "血清 sRAGE、体重、血糖、CSA 与分布", "key_figures": "Figure 2G-L; Supporting Fig S2"},
+    {"id": "EXP-05", "name": "Ager 遗传面板的冷冻/BaCl2 损伤", "model": "AGERs/s、AGERs/+、AGERs/-、AGER-/-、AGER+/-、AGER+/+，7-8 月", "intervention": "无外源干预（内源基因型）", "genotypes/groups": "六种 Ager 基因型", "timepoints": "损伤后 7 dpi；另测未损伤", "endpoints": "血清 sRAGE ELISA、C 端 RAGE Western blot、未损伤 CSA、再生 CSA 与分布", "key_figures": "Figure 3A-H; Supporting Fig S3"},
+    {"id": "EXP-06", "name": "卫星细胞移植至 mdx 受体", "model": "六种基因型供体 MuSC 移植入 BaCl2 预损伤的 mdx 受体", "intervention": "移植 3000 或 6000 供体卫星细胞", "genotypes/groups": "六种 Ager 基因型供体", "timepoints": "移植后 3 周", "endpoints": "dystrophin+ 纤维计数", "key_figures": "Figure 3I-J"},
+    {"id": "EXP-07", "name": "老龄 AAV 队列功能与代谢评估（EXP-02 子集）", "model": "老龄(18月) C57BL/6J", "intervention": "AAV9-sRAGE 或 FFB", "genotypes/groups": "AAV/载体", "timepoints": "给药后 30 天", "endpoints": "体重、抓网悬挂时间、跑台耐力、血糖", "key_figures": "Figure 1J-M"}
+  ],
+  "claim_map": [
+    {"id": "CL-01", "claim": "急性提高 sRAGE 可加速老龄小鼠冷冻损伤后的肌肉再生", "supporting_evidence": "Fig 1H/I 老龄 7 dpi 平均 CSA 与分布增大；Results sec022", "locations": ["Results sec022 第87行", "Figure 1 H/I", "Abstract"]},
+    {"id": "CL-02", "claim": "sRAGE 增强动脉粥样硬化 ApoE-/- 小鼠冷冻损伤后的再生", "supporting_evidence": "Fig 2K/L 平均 CSA 增大；Results sec023", "locations": ["Results sec023 第96行", "Figure 2 K/L", "Abstract"]},
+    {"id": "CL-03", "claim": "sRAGE 不足以挽救糖尿病 db/db 小鼠冷冻损伤后的再生缺陷（仅趋势未达显著）", "supporting_evidence": "Fig 2E/F 趋势无统计学显著；Results sec023", "locations": ["Results sec023 第91行", "Figure 2 E/F"]},
+    {"id": "CL-04", "claim": "内源/终身表达 sRAGE 转基因（AGERs/s、AGERs/+）使冷冻损伤后再生纤维 CSA 约增大 30%", "supporting_evidence": "Fig 3G/H；Results sec024", "locations": ["Results sec024 第104行", "Figure 3 G/H"]},
+    {"id": "CL-05", "claim": "sRAGE 经 AAV 或转基因提高后在 BaCl2 损伤模型中无再生获益", "supporting_evidence": "Supporting Fig S1-S3（各模型 BaCl2 均无增强）", "locations": ["Results sec022/023/024", "Supporting Fig S1-S3", "Abstract", "Discussion"]},
+    {"id": "CL-06", "claim": "sRAGE 的促再生作用是细胞外微环境（非卫星细胞内在）依赖", "supporting_evidence": "Fig 3I/J 各基因型 MuSC 移植后 dystrophin+ 纤维计数无差异", "locations": ["Results sec024 第105行", "Figure 3 I/J", "Discussion"]},
+    {"id": "CL-07", "claim": "sRAGE 降低老龄小鼠血清血糖，但不影响体重、肌力与耐力", "supporting_evidence": "Fig 1J-M", "locations": ["Results sec022 第88行", "Figure 1 J-M"]},
+    {"id": "CL-08", "claim": "sRAGE 可作为冻伤后肌肉再生的促进剂，并可能成为肌肉损伤/衰老的潜在治疗策略", "supporting_evidence": "Conclusion 综合各模型结果", "locations": ["Conclusion sec026 第121行", "Discussion 第110行"]}
+  ],
+  "candidate_issues": [
+    {"id": "B-01", "description": "载体缓冲液命名不一致：Methods 与 Results 将其定义为 FFB（1xPBS、35mM NaCl、0.001% Pluronic），但 Figure 1C 与 Figure 2A/G 的实验方案面板写作 FBB（疑为拼写错误），同一对照物命名在文内不统一。", "locations": ["Methods sec014 第60行 与 sec017 第66行（FFB）", "Results sec022 第87行（FFB）", "Figure 1C 图注（FBB）", "Figure 2A/G 图注（FBB）"], "confidence": "high"},
+    {"id": "B-02", "description": "卫星细胞表面标志不一致：Methods FACS 分选以 CD29（β1-Integrin）阳性作为卫星细胞正筛标志（CD11b-/CD45-/CD31-/Ter119-/Sca1-；CD29+；CD184+），但 Figure 3I/J 图注将移植的 MuSC 标为 ItgB7+（整合素β7）。同一细胞群的标志定义在方法（CD29/β1-integrin）与图注（ItgB7）间不符。", "locations": ["Methods sec007 第36行（CD29+/β1-Integrin；CD184+）", "Figure 3 I/J 图注（ItgB7+; CXCR4+）"], "confidence": "high"},
+    {"id": "B-03", "description": "小鼠基因命名书写不一致：文内混用 AGER/Ager 及上标写法（AGERs/s、Agers/+、AGER-/-、Ager-/-、AGER+/-），小鼠基因符号规范应为斜体 Ager；此外 db/db 模型在图注中写作 Leprdb、在正文中写作 db/db，命名不统一。", "locations": ["Methods sec003 第24行", "Figure 3A 图注", "Results sec024 第99-105行", "Figure 2 图注（Leprdb）", "Results sec023 第91行（db/db）"], "confidence": "medium"},
+    {"id": "B-04", "description": "结论超出数据/内部一致性：Discussion 声称 sRAGE 升高后在 adult、aged 与 diseased 小鼠冷冻损伤 7 dpi 均出现肌纤维显著增大，并将效应归于 AAV 递送与转基因两套系统；但成年(7-8月) AAV 实验结果明确显示成年 AAV 组 CSA 与载体无差异，成年的增强仅见于转基因 AGERs/+。将 adult 笼统归入两种系统不一致。", "locations": ["Discussion sec025 第110行（significant increases ... in adult, aged, and diseased mice ... using two complementary animal model systems: (1) AAV delivery ... (2) transgenic）", "Results sec022 第87行（adult AAV 组 CSA similar）", "Figure 1 E/F（成年无差异）", "Figure 3 G/H（转基因成年有效应）"], "confidence": "medium"},
+    {"id": "B-05", "description": "精确 n 与 n≥ 混用、分母不清：各图同时报告精确 n（n=5/6/10/3）与 n≥（n≥7/5/3），未解释为何使用 n≥ 及实际分母为何；Supporting 图注中还有大小写不一致（N=6 vs n=6）。", "locations": ["Figure 1（n≥7 成年、n=10 老龄、n=5 年龄谱）", "Figure 2（n=6）", "Figure 3（n≥5、n=3、n≥3、n≥5）", "Supporting S1 第126行（n≥7、n=10）", "Supporting S2 第128行（N=6、n=6）", "Supporting S3 第130行（n≥3）"], "confidence": "low"},
+    {"id": "B-06", "description": "统计检验与研究设计不匹配且前后不一致：血清 sRAGE 时间-动力学数据（含多时间点、两组）在 Fig 1D/G 采用 one-way ANOVA+Tukey（未建模 time×treatment），而 Fig 2B 同类动力学数据采用 two-way ANOVA+Tukey。对同一类数据使用不同统计模型，且 one-way ANOVA 可能不适用于纵向两组比较。", "locations": ["Figure 1 图注统计行（one-way ANOVA ... (A, D, G)）", "Figure 2 图注统计行（two-way ANOVA ... (B)）"], "confidence": "medium"},
+    {"id": "B-07", "description": "2×2 设计按 one-way ANOVA 处理：Fig 2E 冷冻损伤 CSA 涉及 基因型(db/db vs WT) × 处理(AAV vs 载体) 的 2×2 设计，却使用 one-way ANOVA+Tukey（而非 two-way ANOVA），无法检验基因型×处理交互作用；与同图 B/C/D 的 two-way ANOVA 不一致。", "locations": ["Figure 2 图注统计行（one way ANOVA with Tukey post hoc test (E, H, I, J)）", "Results sec023 第91行"], "confidence": "medium"},
+    {"id": "B-08", "description": "统计前提与功效缺失：未报告正态性/方差齐性检验；全文未见样本量依据或功效分析（power analysis）；连续尾静脉采血的动力学数据未说明重复测量/相关性处理方式。", "locations": ["Methods sec020 第75行（统计部分）", "全文各图"], "confidence": "low"},
+    {"id": "B-09", "description": "随机化与盲法报告不完整：未见动物分配/笼内随机化或分配隐藏的报告；盲法仅见于组织学 CSA 定量（Slides were coded ... blinded），ELISA、Western blot、血糖、抓网悬挂、跑台耐力等功能代谢终点未见盲法描述。", "locations": ["Methods sec006 第33行（仅 CSA 分析盲法）", "Methods sec008/010/011/012/018/019（未提盲法）"], "confidence": "medium"},
+    {"id": "B-10", "description": "ARRIVE 要素不完整：未见 ARRIVE 指南清单或声明；缺乏对随机化、各终点结局评估盲法、排除标准、样本量计算、饲养/环境富集等关键 ARRIVE 条目的说明。", "locations": ["Materials and methods 全体（未见 ARRIVE 声明）"], "confidence": "medium"},
+    {"id": "B-11", "description": "分析单元/非独立性：文中称队列 regularly consisted of mice from multiple litters，但未对同窝别（litter）聚集进行统计处理，同窝多只小鼠被当作独立观察，可能影响独立性假设。", "locations": ["Methods sec003 第24行（multiple litters）", "Methods sec004 第27行"], "confidence": "low"},
+    {"id": "B-12", "description": "试剂标识符不完整：抗体提供了货号/克隆号（如 CD31 Clone 390、Sca-1 Clone E3-161.7、anti-RAGE ab3611、GAPDH sc-32233 等），但均未给出 RRID；亦未见抗体验证信息。", "locations": ["Methods sec007 第36行（FACS 抗体）", "Methods sec008 第39行（IF 抗体）", "Methods sec010 第45行（Western 抗体）"], "confidence": "low"},
+    {"id": "B-13", "description": "图注/方法细节拼写与化学式错误：Supporting 图注中 BaCl2 写作 Bacl2；Methods 免疫荧光中 Hoechst 写作 Hoescht 33342。", "locations": ["Supporting S1 第126行（Bacl2）", "Supporting S3 第130行（Bacl2）", "Methods sec008 第39行（Hoescht）"], "confidence": "low"},
+    {"id": "B-14", "description": "功能实验命名不一致：正文 Results 称肌力测试为 wire hang test，Methods 命名为 Inverted grid hanging，Figure 1K 图注为 grid hang time，三者命名不统一。", "locations": ["Results sec022 第88行（wire hang test）", "Methods sec018 第69行（inverted grid）", "Figure 1K 图注（grid hang time）"], "confidence": "low"},
+    {"id": "B-15", "description": "图注方案面板与呈现组别不一致：Figure 2G 实验方案面板提及 atherosclerotic(ApoE-null) 与 wild-type(WT) 两组，但后续数据面板 H-L 与 Results 仅呈现 ApoE-null 组，未见 WT 数据，图注方案与实际组别不符。", "locations": ["Figure 2G 图注（提及 WT）", "Figure 2H-L 图注（仅 ApoE-null）", "Results sec023 第96行（仅比较 ApoE AAV 与载体）"], "confidence": "low"},
+    {"id": "B-16", "description": "安全性结论与随访时长不匹配：AAV 最长随访约 30 天（血清）与损伤后 7 dpi（再生），但 Conclusion 将 sRAGE 表述为 potential therapeutic strategy ... guiding clinical investigations，缺乏长期安全性/毒性与持久性数据支撑该类转化表述。", "locations": ["Conclusion sec026 第121行", "Results sec022 第87行（30 days）", "Figure 1"], "confidence": "low"},
+    {"id": "B-17", "description": "数据与材料可用性声明不充分：Dryad DOI 已给出，但未说明关键材料（scAAV-Cbh-sRAGE 表达质粒、自产 AAV9-sRAGE、AGER 转基因/敲除小鼠品系）的存储库或获取途径；仅引用了公开 AAV9 rep/cap（Addgene #112862）。", "locations": ["Data Availability 第142行", "Methods sec013-014（质粒/病毒/小鼠品系）"], "confidence": "low"},
+    {"id": "B-18", "description": "ELISA 检测对象与归一化说明不足：使用 Mouse RAGE Quantikine ELISA（R&D #MRG00）定量所谓 sRAGE，但未说明该试剂盒如何区分可溶性 RAGE 与全/膜型 RAGE；组织与血液样本的归一化与稀释处理在 Methods 中描述不清（血液为 50 μL 血+50 μL RIPA）。", "locations": ["Methods sec011 第48行", "Figure 1 A/D/G、Figure 2 B/H、Figure 3 B"], "confidence": "low"},
+    {"id": "B-19", "description": "性别作为生物学变量：所有实验仅纳入雄性小鼠（Only male animals were included / Male mice），未给出理由，也未讨论其对结论外推的限制；摘要与标题泛称 aged and diseased mice 可能过度概括。", "locations": ["Methods sec003 第24行", "Methods sec004 第27行", "Abstract/Title"], "confidence": "low"},
+    {"id": "B-20", "description": "缺基线特征表：声称 age-matched、sex-matched 与多窝别混合，但未提供基线（体重/健康状态/初始 sRAGE 等）表格以核验各组匹配性，纳入标准与基线核验无法对应。", "locations": ["Materials and methods 全体（无基线表）", "Results 各实验起始"], "confidence": "low"}
+  ]
+}
