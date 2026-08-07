@@ -590,7 +590,7 @@ Conclude with:
 > (`scripts/external_figure_validation.py` — 12 databases, 14 checks;
 > verified 43 reference DOIs plus a Dryad dataset DOI in a real run).
 > **Call these now**; do not treat them as phase-2 ideas.
-> Invocation: see `SKILL.md` §4. Evidence: `docs/results/realpaper-pmc11856280-*`.
+> Invocation: see `SKILL.md` §4. Self-check: `python3 scripts/external_figure_validation.py --selftest`.
 
 | Function | Data source | New slug |
 |----------|-------------|---------|
