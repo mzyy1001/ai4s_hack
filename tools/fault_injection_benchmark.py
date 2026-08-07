@@ -33,6 +33,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -105,7 +106,9 @@ def make_env(root, name, paper_text, with_skill):
 MIN_REVIEW_CHARS = 400
 ERROR_MARKERS = ("[TIMEOUT]", "[opencode 不可用]", '"name": "UnknownError"',
                  '"name":"UnknownError"', "Error: {", "usage limit",
-                 "rate limit", "Unexpected server error")
+                 "rate limit", "Unexpected server error",
+                 # 没读到论文 = 跑错目录了，也算无效
+                 '"**/paper.md" 0 matches', "0 matches")
 
 
 def review_is_valid(text):
@@ -123,18 +126,45 @@ def review_is_valid(text):
 
 
 def run_opencode(cwd, model, timeout):
-    cmd = ["opencode", "run"]
+    """跑一次审阅。
+
+    **必须用 `--dir` 指定目录，不能只靠 subprocess 的 cwd** ——
+    opencode 会自己解析「项目目录」，忽略进程 cwd。踩过一次：
+    两臂都跑到了仓库根，baseline 臂甚至因此加载了仓库里的 skill，
+    根本不是基线；而 paper.md 不在那儿，等于两臂什么都没审。
+    """
+    cmd = ["opencode", "run", "--dir", cwd]
     if model:
         cmd += ["--model", model]
     cmd.append(REVIEW_PROMPT)
+
+    # 用独立进程组 + killpg：subprocess.run(timeout=) 只杀直接子进程，
+    # opencode 派生的孙进程会继续持有管道，父进程在 communicate() 上永远阻塞。
+    # 实测踩过：设了 40 分钟超时，实际跑了 77 分钟也没被杀。
     try:
-        r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True,
-                           timeout=timeout)
-        return r.stdout + (("\n" + r.stderr) if r.stderr.strip() else "")
-    except subprocess.TimeoutExpired:
-        return "[TIMEOUT]"
+        p = subprocess.Popen(cmd, cwd=cwd, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, text=True,
+                             start_new_session=True)
     except FileNotFoundError:
         return "[opencode 不可用]"
+
+    try:
+        out, err = p.communicate(timeout=timeout)
+        return out + (("\n" + err) if err and err.strip() else "")
+    except subprocess.TimeoutExpired:
+        for sig in (signal.SIGTERM, signal.SIGKILL):
+            try:
+                os.killpg(os.getpgid(p.pid), sig)
+            except (ProcessLookupError, PermissionError):
+                break
+            try:
+                p.wait(timeout=10)
+                break
+            except subprocess.TimeoutExpired:
+                continue
+        return (f"[TIMEOUT] 超过 {timeout} 秒未返回，已杀掉整个进程组。\n"
+                f"常见原因：笔记本睡眠导致经本地代理的连接静默失效 —— "
+                f"socket 仍是 ESTABLISHED，但对端早断了。")
 
 
 def judge_all(review, faults, key, base, model):
@@ -158,7 +188,8 @@ def main():
     ap.add_argument("--judge-model", default=None, help="默认与 --model 相同")
     ap.add_argument("--base", default=bp.DEFAULT_BASE)
     ap.add_argument("--only", nargs="*", default=None, help="只植入 id 以此开头的错误")
-    ap.add_argument("--timeout", type=int, default=2400)
+    ap.add_argument("--timeout", type=int, default=900,
+                    help="单臂审阅超时秒数。正常几分钟即可完成；设太大时卡住会白等很久")
     ap.add_argument("--outdir", default=None)
     ap.add_argument("--keep-paper", action="store_true", help="保存植入后的论文供人工核对")
     a = ap.parse_args()

@@ -245,3 +245,143 @@ python3 tools/baseline_probe.py --case tools/probe_cases/<x>.md \
 ## 7. 一句话总结
 
 **造标准答案，控制单一变量，把失败和「没发现」严格分开，只信差值不信绝对值。**
+
+---
+
+## 8. 自己动手：不依赖我们的脚本，从零做一次
+
+如果你想自己造一篇含错误的论文、自己把流程跑通（或者想验证我们的脚本没骗你），
+照下面六步走。全程只需要 opencode 和一个文本编辑器。
+
+### 第 1 步：准备一篇干净的论文
+
+从语料里挑一篇，转成纯文本：
+
+```bash
+python3 tools/make_host_paper.py \
+  datasets/papers/omics_heatmap__journal.pone.0338705/fulltext.xml \
+  --max-chars 26000 > /tmp/clean.md
+```
+
+没有这个脚本也行 —— 任何一篇真实论文的正文纯文本都可以，
+**但必须是完整论文，不能是几行片段**（理由见 §3.1）。
+
+### 第 2 步：手工植入错误，并记下标准答案
+
+打开 `/tmp/clean.md`，在正文中间插入几段含错误的内容。
+**每插一条，就在一张表里记下「这条错误是什么」** —— 这就是你的标准答案。
+
+例如插入这一段：
+
+```markdown
+## Dose-response characterisation
+
+化合物的半数抑制浓度经四参数 logistic 拟合为
+IC50 = 20.0 μM（95% CI 9.8–15.7 μM），拟合优度 R² = 0.98。
+```
+
+对应的标准答案记为：
+
+> 报告的点估计 20.0 μM 落在其自身报告的 95% CI [9.8, 15.7] 之外，点估计与区间不自洽
+
+**造错误的几条建议**
+
+- 一次埋 10–15 条，太少统计噪声大，太多单次审阅顾不过来
+- 分散在论文不同位置，别全塞结尾
+- 覆盖不同类型：算术自洽、统计方法、单位量纲、命名规范、伦理缺失、结论越界
+- 每条都要能**一眼确认对错**，别埋「这个设计不够好」这种主观的
+- 存一份 `faults.md` 记录：编号 + 标准答案描述 + 埋在哪一节
+
+存成 `/tmp/paper_with_faults.md`。
+
+### 第 3 步：搭两个只差一个变量的目录
+
+```bash
+mkdir -p /tmp/ab/baseline /tmp/ab/withskill
+cp /tmp/paper_with_faults.md /tmp/ab/baseline/paper.md
+cp /tmp/paper_with_faults.md /tmp/ab/withskill/paper.md
+
+# 只有 withskill 挂 skill
+mkdir -p /tmp/ab/withskill/.opencode/skill
+cp -R skills/biomed-paper-review /tmp/ab/withskill/.opencode/skill/
+```
+
+**检查一遍**：两个目录里的 `paper.md` 必须**逐字节相同**，
+`baseline/` 里**不能有** `.opencode/`：
+
+```bash
+cmp /tmp/ab/baseline/paper.md /tmp/ab/withskill/paper.md && echo "论文一致"
+ls -a /tmp/ab/baseline/    # 不应出现 .opencode
+```
+
+### 第 4 步：两臂各跑一次审阅
+
+```bash
+set -a && source ~/.config/qwen/credentials.env && set +a
+
+PROMPT="你是资深生物医药论文审稿人。请审阅 paper.md 这篇论文，指出你发现的所有问题（统计学、方法学、报告规范、伦理、图表、结论等）。逐条列出，每条给出具体依据与出处。不要客套。"
+
+opencode run --dir /tmp/ab/baseline  --model dashscope/qwen3.8-max "$PROMPT" > /tmp/ab/baseline.out.md
+opencode run --dir /tmp/ab/withskill --model dashscope/qwen3.8-max "$PROMPT" > /tmp/ab/withskill.out.md
+```
+
+**`--dir` 必须给。** opencode 会自己解析「项目目录」，
+**忽略你的 shell cwd** —— 不给 `--dir` 会跑到别的目录去，
+两臂都读不到 paper.md，而且 baseline 臂可能误加载仓库里的 skill，
+根本不是基线。这个坑我们踩过。
+
+### 第 5 步：先验货，再算数
+
+**打开两份输出看一眼**，确认里面确实是审稿意见：
+
+```bash
+head -30 /tmp/ab/baseline.out.md
+wc -c /tmp/ab/*.out.md        # 几百字节 = 多半是错误串，不是意见
+```
+
+看到 `Error:`、`0 matches`、几百字节的短输出 —— **本次作废，重跑**。
+**不要**把它当成「什么都没查出来」。
+
+### 第 6 步：逐条判定，算差值
+
+对标准答案里的每一条，分别问：这份意见指出这个问题了吗？
+人工读也行，交给模型判也行：
+
+```bash
+# 交给模型判（对每条错误、每份意见各问一次）
+opencode run --model dashscope/qwen3.8-max "下面是一份审稿意见和一个问题描述。判断这份意见是否明确指出了该问题？实质说到即算 YES，措辞不必相同；只泛泛提到相关章节算 NO。先输出 VERDICT: YES 或 VERDICT: NO。
+
+【问题描述】报告的点估计 20.0 μM 落在其自身报告的 95% CI [9.8, 15.7] 之外
+
+【审稿意见】
+$(cat /tmp/ab/baseline.out.md)"
+```
+
+最后填这张表：
+
+| 错误 | 裸模型 | 挂 skill |
+| --- | --- | --- |
+| ci_self_inconsistent | ✗ | ✓ |
+| … | | |
+| **命中数** | **A** | **B** |
+
+**uplift = B − A**
+
+然后看两个差集：**只有挂 skill 查出来的**（skill 的价值）、
+**只有裸模型查出来的**（skill 挡住了发现，红灯）。
+
+### 想省事就用脚本
+
+上面六步等价于：
+
+```bash
+set -a && source ~/.config/qwen/credentials.env && set +a
+python3 tools/fault_injection_benchmark.py \
+  --paper datasets/papers/omics_heatmap__journal.pone.0338705/fulltext.xml \
+  --model dashscope/qwen3.8-max --judge-model qwen3.8-max \
+  --keep-paper --outdir /tmp/faultbench
+```
+
+错误库在 `tools/probe_cases/fault_library.json`，加一条就是加一个 JSON 对象（格式见 §3.2）。
+**但脚本跑完也要按第 5 步人工验一次货** —— 我们已经因为跳过这一步，
+把「两臂都没跑起来」误报成过「uplift = +0，两臂完全一致」。
