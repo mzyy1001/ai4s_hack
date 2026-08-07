@@ -567,8 +567,8 @@ test -f "${BIOMED_REVIEW_SKILL_DIR}/SKILL.md" || exit 2
 python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/normalize_biomed_units.py" \
   --compare 'mg/mL' 'g/L'
 
-# 统计取证：12+18≠28，stdout 的 signals[] 产生 table_total_mismatch
-printf '%s' '[{"check":"table_total","counts":[12,18],"declared_total":28,"categories_exhaustive":true,"target":"Table 1"}]' |
+# 统计取证：12+18≠28；同时把已绑定的证据 ref 原样带入 signal
+printf '%s' '[{"check":"table_total","counts":[12,18],"declared_total":28,"categories_exhaustive":true,"target":"Table 1","evidence_refs":["EV-001"]}]' |
   python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/statistical_forensics.py" --input -
 
 # 伦理筛查：structured_result_v2.json 为 Stage 3b 产物；规则库按脚本位置自动定位
@@ -584,7 +584,8 @@ python3 "${BIOMED_REVIEW_SKILL_DIR}/scripts/figure_integrity_audit.py" \
   --input figures > figure_integrity.json
 ```
 
-CLI 产物仍是工具原始结果：调用阶段必须为每条 signal 补齐稿件 `evidence_refs[]` 后再汇总；
+CLI 产物仍是工具原始结果：输入已带 `observation_refs[]` / `evidence_refs[]` 时脚本原样保留；
+未带时，调用阶段必须为每条 signal 补齐稿件 `evidence_refs[]` 后再汇总；
 脚本不产 finding。任何命令退出码非 0 都视为工具未完成，登记对应 `system_limitation`，
 禁止把空 stdout 解释为“未发现问题”。
 

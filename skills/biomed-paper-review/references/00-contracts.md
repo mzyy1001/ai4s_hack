@@ -645,7 +645,7 @@ Stage 3b 必须停止该 id 入组并产出 `category: "parse_failed"` 的 `syst
 {
   "id": "M4-003",
   "module": "M4",
-  "category": "sample_size_reporting",
+  "category": "power_and_sample_size",
   "severity": "major",
   "title": "组间比较未报告样本量依据与效应量",
   "detail": "Fig 3B 三组比较使用 one-way ANOVA，各组 n=3 且未说明为生物学或技术重复；正文与方法节均未见效能分析或效应量报告。",
@@ -746,6 +746,9 @@ finding id 升序排列。
 > 是一期就能做的确定性一致性检验（`produced_by: "stage_2"`，`routed_to: ["M4"]`）。
 > 它们**仍然只是 signal** —— 工具层不下稿件结论，是否构成稿件问题由 M4 判定。
 > 每种检验的适用前提见该脚本文档；**前提不满足一律产出 `partial_extraction` 而不是猜**。
+> Stage 2 构造脚本输入时应同时传入已绑定的 `observation_refs[]` / `evidence_refs[]`；脚本原样
+> 保留这些 ref，但不会自行生成 locator。`test_statistic_p_mismatch.forensics` 必须保存
+> `test_family`、`statistic`、`tail` 与相应自由度，确保 M4 可独立复算。
 
 `ethics_requirement_unmet` 与 `sequence_identifier_inconsistent` 分别由
 `scripts/ethics_compliance_check.py`、`scripts/sequence_identifier_audit.py` 在 Stage 2 产出。
@@ -1131,7 +1134,7 @@ review_confidence = extraction_coverage × Q × C
   "cluster_id": "CL-002",
   "representative_finding": "M4-003",
   "member_findings": ["M4-003", "M2-011"],
-  "categories": ["sample_size_reporting", "internal_inconsistency"],
+  "categories": ["power_and_sample_size", "internal_inconsistency"],
   "max_severity": "major",
   "anchor": {"figure": "3", "panel": "B"},
   "evidence_refs": ["EV-018", "EV-019", "EV-020"]

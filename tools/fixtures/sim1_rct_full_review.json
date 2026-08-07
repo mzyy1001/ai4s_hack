@@ -391,7 +391,7 @@
     {
       "id": "M4-001",
       "module": "M4",
-      "category": "multiple_comparison_correction",
+      "category": "multiple_testing_control",
       "severity": "major",
       "title": "四个时点重复组间比较未做多重比较校正",
       "detail": "次要终点在 6/12/24/48 h 四个时点各做一次独立样本 t 检验，方法节与统计节均未见任何多重比较校正说明。族系错误率未受控。",
@@ -468,7 +468,7 @@
       "cluster_id": "CL-001",
       "representative_finding": "M4-001",
       "member_findings": ["M4-001"],
-      "categories": ["multiple_comparison_correction"],
+      "categories": ["multiple_testing_control"],
       "max_severity": "major",
       "anchor": {"paragraph_id": "results-p07"},
       "evidence_refs": ["EV-006", "EV-005"]

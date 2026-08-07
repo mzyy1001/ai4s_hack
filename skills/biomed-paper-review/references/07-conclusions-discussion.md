@@ -341,7 +341,7 @@ M7 **不得**因此立 finding，也不得自创“观察”记录；终止 M7�
   2. 对存在公认 MCID 的连续量表或患者报告结局，claim 直陈**临床重要改善**，
      但未把效应估计/置信区间与预设 MCID 对照；死亡、住院等硬终点不得机械要求 MCID，
      应核对绝对风险差、置信区间及获益-伤害；
-  3. M4 已报出同一分析的 `no_multiple_comparison_correction`，claim 却把探索性亚组/
+  3. M4 已报出同一分析的 `multiple_testing_control`，claim 却把探索性亚组/
      次要终点写成确证性“显著”结果。
 - **severity**：`major`。
 - **证据要求**：claim 原文 + `p` 值、效应估计与区间所在位置的 `present` 证据
@@ -359,7 +359,7 @@ M7 **不得**因此立 finding，也不得自创“观察”记录；终止 M7�
 | --- | --- | --- |
 | M4 `sample_size` | 样本量 / sample size / underpowered | 精度或 CI / 检出能力 / 不确定性 / 可推广性 |
 | M3 `missing_control` | 对照 / comparator / placebo / control | 无法归因 / 替代解释 / 因果受限 |
-| M4 `no_multiple_comparison_correction` | 多重比较 / 亚组 / exploratory / multiplicity | 假阳性 / 偶然发现 / 需独立验证 |
+| M4 `multiple_testing_control` | 多重比较 / 亚组 / exploratory / multiplicity | 假阳性 / 偶然发现 / 需独立验证 |
 
 表中词语只用于召回候选句，**不得**用关键词未命中直接证明作者回避。最终判定必须解析两条
 语义命题：①作者承认该问题确实适用于本研究；②作者说明它限制哪一类推断。近义表达可以覆盖，
@@ -411,9 +411,9 @@ M7 消费 M2–M6 的 findings。**联动只影响 M7 自己 finding 的 severit
 
 | 上游 finding | 触发条件 | 对 M7 的影响 |
 | --- | --- | --- |
-| M4 `wrong_test` (critical) | 同一分析是 claim 的全部直接支撑，且 M4 明确说明估计/检验不可解释 | `unsupported_claim`；主要结论可为 critical，否则 major |
+| M4 `statistical_test_selection` (critical) | 同一分析是 claim 的全部直接支撑，且 M4 明确说明估计/检验不可解释 | `unsupported_claim`；主要结论可为 critical，否则 major |
 | M4 `sample_size` (major) | claim 引用该分析 | 不自动判 unsupported；只进入 §5.6 的局限披露核对 |
-| M4 `no_multiple_comparison_correction` | claim 引用了同一未校正的探索性亚组/次要终点 | 触发 §5.5 情形 3 |
+| M4 `multiple_testing_control` | claim 引用了同一未校正的探索性亚组/次要终点 | 触发 §5.5 情形 3 |
 | M3 `missing_control` | 同一实验是 `C3+` claim 的全部直接支撑 | `claim_beyond_evidence`；默认 major，禁止机械给 Δ 加分 |
 | M3 `animal_use_unjustified` | —— | 不影响 M7（属伦理与设计，不直接改变数据方向） |
 | M5 `figure_text_contradiction` | claim 引用该图，且矛盾涉及 claim 所用方向/数值 | 无其他支撑时判 `unsupported_claim`；默认 major，主要结论且方向相反时 critical |

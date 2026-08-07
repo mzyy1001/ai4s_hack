@@ -169,13 +169,60 @@
           "description": "false 表示适用前提不满足、本项未运行 —— 此时 type 必为 partial_extraction"
         },
         "rule_version": {"type": "string"},
+        "test_family": {"enum": ["t", "F", "chi2", "z"]},
+        "statistic": {"type": "number"},
+        "df": {"type": ["number", "null"]},
+        "df1": {"type": ["number", "null"]},
+        "df2": {"type": ["number", "null"]},
+        "tail": {"enum": ["one", "two"]},
         "recomputed_p": {"type": "number"},
         "reported_p": {"type": ["string", "number"]},
+        "reported_bound": {"type": "number"},
+        "reported_operator": {"enum": ["<", "≤"]},
         "expected_interval": {
           "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"},
           "description": "报告精度对应的舍入区间；比较用区间而非点值相等"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "check": {"const": "test_statistic_p_mismatch"},
+              "ran": {"const": true}
+            },
+            "required": ["check", "ran"]
+          },
+          "then": {
+            "required": ["test_family", "statistic", "tail", "recomputed_p", "reported_p"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {"const": "test_statistic_p_mismatch"},
+              "ran": {"const": true},
+              "test_family": {"enum": ["t", "chi2"]}
+            },
+            "required": ["check", "ran", "test_family"]
+          },
+          "then": {"properties": {"df": {"type": "number"}}, "required": ["df"]}
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {"const": "test_statistic_p_mismatch"},
+              "ran": {"const": true},
+              "test_family": {"const": "F"}
+            },
+            "required": ["check", "ran", "test_family"]
+          },
+          "then": {
+            "properties": {"df1": {"type": "number"}, "df2": {"type": "number"}},
+            "required": ["df1", "df2"]
+          }
+        }
+      ]
     },
 
     "ethics": {

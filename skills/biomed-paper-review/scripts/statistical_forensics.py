@@ -5,7 +5,7 @@
 最能拉开差距的一期能力：下列错误人眼极难发现，大模型也查不出来，
 但用论文自己报告的数字就能确定性地判定。
 
-四项检查
+五项检查
 --------
 1. `test_statistic_p_mismatch`  —— 由检验统计量 + 自由度反算 p，与报告值比对
 2. `ci_estimate_mismatch`       —— 点估计是否落在自己报告的 95% CI 内
@@ -228,6 +228,11 @@ def check_test_statistic_p(item, signal_id="SIG-101"):
                     "统计取证前提不全（缺 test_family / statistic / tail），本项未运行。",
                     {"check": "test_statistic_p_mismatch", "ran": False})
 
+    if fam in {"F", "chi2"} and tail != "one":
+        return _sig(signal_id, "partial_extraction", item.get("target", "statistics"),
+                    f"{fam} 统计量使用上尾概率；tail 必须为 one，本项未运行。",
+                    {"check": "test_statistic_p_mismatch", "ran": False})
+
     if fam == "t":
         df = item.get("df")
         if df is None:
@@ -260,16 +265,23 @@ def check_test_statistic_p(item, signal_id="SIG-101"):
     if interval is None:
         # '<0.001' 形式：只检查方向
         s = str(rep).strip()
-        m = re.match(r"^[<≤]\s*([\d.]+)$", s)
+        m = re.match(r"^(<|≤)\s*([\d.]+)$", s)
         if m:
-            bound = float(m.group(1))
-            if p >= bound:
+            operator = m.group(1)
+            bound = float(m.group(2))
+            violates = p >= bound if operator == "<" else p > bound
+            if violates:
                 return _sig(signal_id, "test_statistic_p_mismatch",
                             item.get("target", "statistics"),
                             f"报告 p {rep}，但由 {fam} 统计量 {stat}（df={item.get('df', (item.get('df1'), item.get('df2')))}）"
                             f"反算得 p={p:.4g}，不小于所声称的上界。",
                             {"check": "test_statistic_p_mismatch", "ran": True,
-                             "recomputed_p": p, "reported_p": rep})
+                             "test_family": fam, "statistic": stat,
+                             "df": item.get("df"), "df1": item.get("df1"),
+                             "df2": item.get("df2"), "tail": tail,
+                             "recomputed_p": p, "reported_p": rep,
+                             "reported_bound": bound, "reported_operator": operator})
+            return None
         return _sig(signal_id, "partial_extraction", item.get("target", "statistics"),
                     f"报告 p 值形式 {rep!r} 无法解析为舍入区间，未比对。",
                     {"check": "test_statistic_p_mismatch", "ran": False})
@@ -281,6 +293,9 @@ def check_test_statistic_p(item, signal_id="SIG-101"):
                 f"报告 p = {rep}（舍入区间 [{lo:.6g}, {hi:.6g}]），"
                 f"但由 {fam} 统计量 {stat} 反算得 p = {p:.6g}，落在区间之外。",
                 {"check": "test_statistic_p_mismatch", "ran": True,
+                 "test_family": fam, "statistic": stat,
+                 "df": item.get("df"), "df1": item.get("df1"),
+                 "df2": item.get("df2"), "tail": tail,
                  "recomputed_p": p, "reported_p": rep,
                  "expected_interval": [lo, hi]})
 
@@ -333,6 +348,11 @@ def check_count_percentage(item, signal_id="SIG-103"):
         return _sig(signal_id, "count_percentage_mismatch", item.get("target", "proportion"),
                     f"分母 n = {n} 不合法。",
                     {"check": "count_percentage_mismatch", "ran": True})
+    if count < 0:
+        return _sig(signal_id, "count_percentage_mismatch", item.get("target", "proportion"),
+                    f"计数 {count} 不得为负数。",
+                    {"check": "count_percentage_mismatch", "ran": True,
+                     "count": count, "n": n})
     if count > n:
         return _sig(signal_id, "count_percentage_mismatch", item.get("target", "proportion"),
                     f"计数 {count} 超过分母 {n}。",
@@ -398,12 +418,17 @@ def check_grim(item, signal_id="SIG-104"):
     k = item.get("items_per_subject", 1)
     total_units = n * k
 
+    half = 0.5 * (10 ** -decimals)
+    mean_lo, mean_hi = mean - half, mean + half
+
     # 可能的总和为整数；对应的均值集合
     lo_sum = math.floor(mean * total_units) - 2
     hi_sum = math.ceil(mean * total_units) + 2
     for s in range(lo_sum, hi_sum + 1):
         cand = s / total_units
-        if round(cand, decimals) == round(mean, decimals):
+        # 舍入端点采用闭区间：原文未声明 half-even/half-up 时，边界候选视为可行，
+        # 以避免 Python 二进制浮点与 banker rounding 制造假阳性。
+        if mean_lo <= cand <= mean_hi:
             return None  # 存在可行整数总和 → 一致
     return _sig(signal_id, "grim_incompatible_mean", item.get("target", "mean"),
                 f"报告均值 {mean_text}（n = {n}"
@@ -500,6 +525,14 @@ def check_all(items, signal_start=100):
         except (TypeError, ValueError, OverflowError, ZeroDivisionError) as exc:
             raise ValueError(f"统计取证第 {i} 项参数非法：{exc}") from exc
         if sig is not None:
+            # 调用方若已绑定观察与稿件证据，保留这些 ref；工具不自行编造定位。
+            # 未提供时维持空数组，由 Stage 2 汇总器在进入 M4 前补齐。
+            for ref_key in ("observation_refs", "evidence_refs"):
+                refs = item.get(ref_key)
+                if refs is not None:
+                    if not isinstance(refs, list) or not all(isinstance(x, str) for x in refs):
+                        raise ValueError(f"统计取证第 {i} 项的 {ref_key} 必须为字符串数组")
+                    sig[ref_key] = list(refs)
             out.append(sig)
     return out
 
@@ -530,6 +563,20 @@ def _selftest():
     s = check_test_statistic_p({"test_family": "t", "statistic": 2.228, "df": 10,
                                 "tail": "two", "reported_p": "0.001"})
     expect("t 不一致 → 报警", s["type"] if s else None, "test_statistic_p_mismatch")
+    expect("p 反算 signal 保留检验族", s["forensics"].get("test_family"), "t")
+    expect("p 反算 signal 保留自由度", s["forensics"].get("df"), 10)
+
+    s = check_test_statistic_p({"test_family": "t", "statistic": 4.0, "df": 30,
+                                "tail": "two", "reported_p": "<0.001"})
+    expect("满足 p 上界 → 无信号", s, None)
+
+    s = check_test_statistic_p({"test_family": "z", "statistic": 0.0,
+                                "tail": "one", "reported_p": "≤0.5"})
+    expect("等于 p 非严格上界 → 无信号", s, None)
+
+    s = check_test_statistic_p({"test_family": "chi2", "statistic": 3.841, "df": 1,
+                                "tail": "two", "reported_p": "0.05"})
+    expect("chi2 双尾声明 → 不运行", s["forensics"]["ran"], False)
 
     # 缺 df → 不跑
     s = check_test_statistic_p({"test_family": "t", "statistic": 2.2, "tail": "two",
@@ -549,6 +596,9 @@ def _selftest():
     s = check_count_percentage({"count": 42, "n": 84, "reported_percent": 60.0,
                                 "reported_percent_text": "60.0"})
     expect("42/84≠60.0% → 报警", s["type"], "count_percentage_mismatch")
+    s = check_count_percentage({"count": -1, "n": 10, "reported_percent": -10.0,
+                                "reported_percent_text": "-10.0"})
+    expect("负计数 → 报警", s["type"], "count_percentage_mismatch")
 
     # --- 检查 4 GRIM ---
     # n=10, mean=3.10 可行（总和 31）
@@ -583,10 +633,11 @@ def _selftest():
 
     # --- 信号契约：不得带 severity ---
     sigs = check_all([{"check": "grim", "scale_is_integer": True, "n": 10,
-                       "mean_text": "3.14"}])
+                       "mean_text": "3.14", "evidence_refs": ["EV-001"]}])
     expect("信号 id 符合 schema", bool(re.match(r"^SIG-[0-9]{3,}$", sigs[0]["id"])), True)
     expect("信号无 severity", all("severity" not in x for x in sigs), True)
     expect("信号路由到 M4", sigs[0]["routed_to"], ["M4"])
+    expect("输入证据 ref 被保留", sigs[0]["evidence_refs"], ["EV-001"])
 
     try:
         check_all([None])

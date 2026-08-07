@@ -1,0 +1,11 @@
+{
+  "stat.test_statistic_p_mismatch": {
+    "hits": 0,
+    "valid": 2,
+    "failures": 1,
+    "repeats": 3,
+    "model": "qwen3.8-max",
+    "mode": "embedded",
+    "verdict": "BASELINE_MISSES_IT"
+  }
+}
