@@ -244,6 +244,12 @@ def check_slug_uniqueness(rep):
                     walk(v)
         walk(blob)
 
+    # X1 的 check_type 是**共享词汇**：同一个检查本来就可能路由给多个模块
+    # （compound_name_valid 同时给 M3 与 M5）。各模块的接收表首列写的是 check_type
+    # 而非自己的 category slug，不构成定义冲突。
+    x1 = read(os.path.join(SCRIPTS, "external_figure_validation.py"))
+    reserved.update(re.findall(r'"[a-z_]+",\s*"[a-z_]+",\s*"([a-z0-9_]+)"', x1))
+
     owner, dup = {}, []
     for m, fn in REF_OF.items():
         if m == "M1":

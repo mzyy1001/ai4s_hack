@@ -774,7 +774,8 @@ finding id 升序排列。
    `evidence_refs[]` 必须恰好覆盖 `external_check` 的两组 refs。`not_found` / `not_addressed`
    没有可比较原子事实，不得创建 signal。`comparison_result` 只取 `match` / `mismatch` /
    `not_comparable` / `needs_manual_review`；只有 `mismatch` 可进入下游 finding 候选，仍须
-   M2/M4/M6/M7 独立回查证据。X1 不路由 M1/M3/M5。
+   接收模块独立回查证据。**X1 可路由 M2/M3/M4/M5/M6/M7，不路由 M1**（M1 只抽取标识符供 X1 使用，自身不产 finding）。
+   每个 `check_type` 必须在接收模块的 reference 里登记消费判据，否则运行时模型拿到 signal 无处安放。
 
 > **图像完整性审计的定性禁令。** `figure_integrity_candidate` 的
 > `image_audit.severity_hint` **恒为 `null`**，`candidate` 恒为 `true`，

@@ -11,8 +11,8 @@
   可复算的 `extraction_signal`；M2–M7 只能在回查稿件证据后产 `finding`。
 - **当前可运行**：五个独立 CLI、自检、10 份 schema、四个契约模拟实例；离线工具失败和
   外部源不可得均降级为 `system_limitation`，不归责稿件。
-- **当前未打通**：尚无论文输入→最终 Markdown/JSON 的统一执行器；X1 只有契约、没有
-  connector 已交付；尚无三次中位数的正 uplift artifact。
+- **当前未打通**：尚无论文输入→最终 Markdown/JSON 的统一执行器；
+  尚无三次中位数的正 uplift artifact。X1 connector 已交付。
 - **当前不能声称**：不能把“脚本存在”写成“已产生 uplift”，不能把契约模拟实例写成
   端到端运行结果，不能声称已完成外部数据库核验。
 
@@ -50,6 +50,7 @@ skills/biomed-paper-review/     ← 交付物本体
 ├── scripts/                    运行时确定性能力（标准库 + 预装科学栈）
 │   ├── normalize_biomed_units.py      单位归一化，fail-closed
 │   ├── statistical_forensics.py       p 反算 / CI 自洽 / 计数 / GRIM
+│   ├── external_figure_validation.py  X1 外部核验，十四条检查 / 十个数据库
 │   ├── ethics_compliance_check.py     伦理规范库筛查
 │   ├── sequence_identifier_audit.py   序列 / HGVS / 登录号 / 引物候选审计
 │   └── figure_integrity_audit.py      图像重复 / 拼接 / 均匀区块候选审计

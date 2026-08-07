@@ -34,7 +34,7 @@
 | `structured_result_v2.key_data[]` | 核对 `supported_by` 指向的数值是否真的支持该主张 |
 | `structured_result_v2.conclusion.limitations` | 判定 `limitations_evasive` |
 | `figure_records[]` | claim 引用图时核对图是否真的展示了该结论 |
-| `all_extraction_signals[]` 中 `claim_without_resolved_evidence_link` | 提示哪些 claim 的支撑链断了 |
+| 各 stage-local signal 数组（`m1_extraction_signals[]` / `stage3_extraction_signals[]` / `merge_extraction_signals[]` / `external_validation_signals[]`）中的 `claim_without_resolved_evidence_link` | 提示哪些 claim 的支撑链断了。**不得消费 `all_extraction_signals[]`** —— 那是 Stage 5 的聚合产物，M7 在 Stage 4 运行，读它会构成时序环 |
 | **M2–M6 的 findings** | 结论的可信度取决于底下几层有没有塌（§6） |
 
 **M7 必须最后跑。** 它是唯一需要消费其他审核模块产物的模块。
@@ -566,7 +566,7 @@ the prespecified 5-point MCID」→ 效应大小、精度与 MCID 均可核对 �
 
 ---
 
-## 11. 一期联网增强（X1 契约已落地，connector 未实现）
+## 11. 联网增强（X1 connector **已交付**）
 
 三项能力都归本模块。**现在只写判据，不写实现**；数据源统一走外部证据层，
 本节只声明「需要什么数据」，不要自行实现调用方式。
@@ -603,3 +603,26 @@ the prespecified 5-point MCID」→ 效应大小、精度与 MCID 均可核对 �
 必须是稿件内 `present`，并同时引用 `retrieval_status: resolved` 的 external evidence；
 还必须溯源到 `comparison_result: mismatch` 且 `comparability: complete` 的 signal。
 `not_found`、`not_addressed`、接口失败或不可比均不得自动成为 finding。
+
+
+### 11.1 接住 X1 外部核验的 signal
+
+X1（`scripts/external_figure_validation.py`，Stage 3c）已交付，路由给 M7 两类：
+
+| X1 `check_type` | 数据库 | 比较结果 | M7 category slug |
+| --- | --- | --- | --- |
+| `cited_work_retracted` | Europe PMC | `mismatch` | `conclusion_rests_on_retracted_work` |
+| `outcome_switching` | ClinicalTrials.gov | `needs_manual_review` | `conclusion_on_switched_outcome` |
+
+**这两类之所以归 M7，是因为它们动摇的是结论的立足点，而不只是某处报告瑕疵。**
+
+- `cited_work_retracted`：**只有当该文献确实构成本文立论依据时才立 finding。**
+  论文若在讨论撤稿事件本身、或已写明该文献已撤稿，均**不构成问题**——
+  那是做对了。须回查引用位置与语境后再定，默认 `major`；
+  该文献支撑主要结论时取 `critical`。
+- `outcome_switching`：恒为候选。措辞差异足以造成关键词不匹配，
+  必须人工比对注册记录与论文所报结局。确认切换且主要结论建立在切换后的
+  结局上时取 `critical`。
+
+X1 产 `system_limitation` 时按 `00-contracts.md` 登记，不得当作任一方向的结论。
+由候选升格的 finding，`evidence_refs[]` 必须同时含稿件证据与 external evidence。

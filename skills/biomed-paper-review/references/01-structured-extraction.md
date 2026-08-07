@@ -990,7 +990,12 @@ M1 输出计算 `extraction_coverage` 所需的**原始计数**，
 
 ---
 
-## 14. 一期联网增强：标识符真实性核验（X1 契约已落地，connector 未实现）
+## 14. 联网增强：标识符真实性核验（X1 connector **已交付**）
+
+M1 在这条链上的职责是**把可核验的标识符抽出来**（细胞系名、UniProt accession、
+基因符号、物种学名、RRID、化合物名、PDB 编号、NCT 注册号、数据登录号、
+参考文献 DOI），登记为 X1 的查询入口。**M1 自身不产 finding，也不接收 X1 signal**
+—— 没有这一步，后面所有外部查询都无从触发。
 
 当前 `scripts/sequence_identifier_audit.py` 已离线检查常见登录号格式、HGVS 支持子集、
 序列字母表，以及版本化完整参考序列上的范围与参考残基。序列缺 accession、版本或完整性声明时

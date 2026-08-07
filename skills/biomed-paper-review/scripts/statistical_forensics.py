@@ -203,7 +203,12 @@ def _sig(signal_id, stype, target, detail, extra):
         "detail": detail,
         "observation_refs": [],
         "evidence_refs": [],
-        "routed_to": ["M4"],
+        # 契约（00-contracts.md §表）把计数类问题同时路由给 M4 与 M2：
+        # 数值本身归 M4，而「表格与正文数据不一致」属 M2 的完整性范畴。
+        # 曾经只发 M4，导致 M2 永远收不到这两类 signal。
+        "routed_to": (["M4", "M2"]
+                      if stype in ("count_percentage_mismatch", "table_total_mismatch")
+                      else ["M4"]),
         "produced_by": "stage_2",
         "forensics": dict(extra, rule_version=RULE_VERSION),
     }

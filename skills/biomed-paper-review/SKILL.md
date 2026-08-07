@@ -75,7 +75,8 @@ X1 只产 `external` evidence、`external_validation_candidate` 与 X1 `system_l
 ### 1.1 `full_review`
 
 ```
-Stage 1 → Stage 2 → Stage 3 → Stage 3b → [可选 X1] → Stage 4 (M2–M7) → Stage 5
+Stage 1 → Stage 2 → Stage 3 → Stage 3b → [可选 X1]
+  → Stage 4 (M2–M6 并行 → M7) → Stage 5
 ```
 
 输出：`review_report`、`structured_result_v2`、`figure_records[]`、`table_records[]`、
@@ -153,7 +154,7 @@ Stage 1
 → Stage 2
 → [条件] scoped Stage 3    问题依赖图表，或 v1 的 scope 内存在 `unresolved`
 → scoped Stage 3b
-→ [条件] scoped X1         请求外部核验且消费者属于 M2/M4/M6/M7
+→ [条件] scoped X1         请求外部核验且消费者属于 M2/M3/M4/M5/M6/M7
 → Stage 4: 仅选定模块
 → Stage 5 (partial aggregation)
 ```
@@ -208,9 +209,10 @@ Stage 1
 
 ### 2.1 模块关系（不要说错）
 
-本 Skill 含**七个分析模块**：**M1 是前置抽取层，M2–M7 是并行审核模块。**
+本 Skill 含**七个分析模块**：**M1 是前置抽取层，M2–M6 是并行审核模块，M7 最后跑。**
 
 M2–M7 全部消费 M1（经 Stage 3b 合并后）的产物，因此 **M1 与 M2–M7 不是并行关系**。
+**M7 也不与 M2–M6 并行** —— 它要消费 M2–M6 的 findings 来判断结论可信度（`07-conclusions-discussion.md` §2），调度上必须排在 M2–M6 全部完成之后。
 只有在 Stage 2、Stage 3b 与本次已声明的可选 X1 完成之后，M2–M7 才可执行。
 可以说「一个抽取层 + 六个审核模块」，**不要**说「七个模块相互独立」。
 

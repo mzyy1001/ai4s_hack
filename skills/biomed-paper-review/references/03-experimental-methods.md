@@ -63,7 +63,7 @@
 | 对已发表方法的改动是否说明？ | 出现 "modified from" / "adapted from" 但无改动细节 | `protocol_deviation_unexplained`（major） |
 
 **离线层做不到的**：被引文献里是否**真的**包含该方法。取回原文属于一期可选联网增强（§11.1）；
-connector 未实现或取回失败时只产 `system_limitation`。
+connector 已交付；取回失败时只产 `system_limitation`。
 **不得**因为「看起来像是套用了别人的方法」就判引用不当。
 
 ---
@@ -235,7 +235,7 @@ detail 写「未见动物实验必要性的说明，**建议作者补充**」，
 **不该报警**：写明「HeLa (ATCC CCL-2), STR-authenticated, mycoplasma-free」
 → **不报**。
 另：**不得**因为某细胞系「可能是误认细胞系」就报。误认状态必须由 X1 对精确
-Cellosaurus accession / RRID 调取 Cellosaurus / ICLAC 记录；connector 未实现、未运行或
+Cellosaurus accession / RRID 调取 Cellosaurus / ICLAC 记录；connector 未运行或
 外部源不可用时只记录 `system_limitation`，不得把数据库未核验当作稿件问题。
 
 ---
@@ -254,7 +254,7 @@ Cellosaurus accession / RRID 调取 Cellosaurus / ICLAC 记录；connector 未�
 
 ---
 
-## 11. 一期联网增强候选（connector 未实现）
+## 11. 联网增强（X1 connector **已交付**）
 
 离线层只看「有没有引用方法学文献、有没有写试剂来源」；X1 connector 落地后可核验这些
 引用与来源**是否成立**。外部失败按 `00-contracts.md §1.6/§6.3` 降级，不改变稿件风险分。
@@ -282,3 +282,36 @@ Cellosaurus accession / RRID 调取 Cellosaurus / ICLAC 记录；connector 未�
 输出应为「偏离同类研究常规区间 + 分布位置」这类**事实描述**，
 只产无 severity 的 `external_validation_candidate` 并交 M3 人工判断；**不得**直接判
 「方法错误」或因分布位置自动创建 finding。
+
+
+### 11.1 接住 X1 外部核验的 signal（**待 Peter 复核 severity**）
+
+`scripts/external_figure_validation.py`（Stage 3c）已交付，会把下列 `check_type`
+路由给 M3。它们是 `external_validation_candidate`，**没有 severity** ——
+X1 只做「稿件事实 vs 外部权威事实」的可复算比较，是否成立由 M3 回查稿件后决定。
+
+| X1 `check_type` | 数据库 | 比较结果 | M3 category slug |
+| --- | --- | --- | --- |
+| `cell_line_problematic` | Cellosaurus | `mismatch` | `cell_line_misidentified` |
+| `rrid_resolves` | SciCrunch | `mismatch` | `reagent_rrid_unresolvable` |
+| `species_name_valid` | NCBI Taxonomy | `needs_manual_review` | `species_name_unrecognized` |
+| `variant_position_range` / `variant_reference_residue` | UniProt | `mismatch` | `variant_inconsistent_with_reference` |
+| `gene_symbol_*` | HGNC | `mismatch` / `needs_manual_review` | `gene_symbol_nonstandard` |
+| `compound_name_valid` / `compound_molecular_weight` | PubChem | `needs_manual_review` | `compound_identity_unverified` |
+| `pdb_entry_exists` | RCSB PDB | `mismatch` | `pdb_entry_not_found` |
+
+**`cell_line_problematic` 是本模块最重要的一条。** 细胞系被错误鉴定意味着
+**研究对象本身不成立**（如 MDA-MB-435 实为 M14 黑色素瘤衍生系，
+大量论文却用它研究乳腺癌），影响的是全文结论而非某个次要瑕疵，
+默认 `critical`；仅在论文已自行说明该细胞系身份争议时降为 `major`。
+
+**处理规则**
+
+1. `needs_manual_review` 的三类不得直接立 finding：物种可能是旧分类名或俗名，
+   化合物可能是内部代号或未收录的新化合物，分子量差异可由盐型、水合物、
+   同位素标记解释。须回查方法学描述后再定。
+2. `gene_symbol_excel_corruption`（符号被 Excel 转成日期，如 `2-Sep`）是
+   确定性事实，但**它指向的是数据处理污染**，须提示作者回到原始数据核对该列。
+3. X1 产 `system_limitation` 时既不得当作「没问题」也不得当作「有问题」，
+   按 `00-contracts.md` 登记限制并在报告说明未覆盖。
+4. 由候选升格的 finding，`evidence_refs[]` 必须同时含稿件证据与 external evidence。
