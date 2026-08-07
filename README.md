@@ -2,11 +2,15 @@
 
 **交付物**：一个自包含的 Agent Skill 包 → [`skills/biomed-paper-review/`](skills/biomed-paper-review/)
 
-输入一篇生物医药论文（JATS XML / PDF / 纯文本），先以资深同行评审身份通读全文，
-再用六本领域规则库分头复核，并以**确定性计算**与**12 个外部权威数据库**交叉核验 ——
-被引文献是否已撤稿、细胞系是否被误认、试验注册与主要结局是否被切换、
-表格分母与统计量是否算得过来。输出可回溯到原文位置的分级发现、结构化证据表、
-抽取覆盖率与复核置信度，以及分优先级的人工复核建议。
+输入一篇生物医药论文（JATS XML / PDF / 纯文本），做两件事：
+
+1. **抽成可复用的结构化事实表** —— 研究设计、受试对象、干预分组、测量与终点、
+   关键数值、主张清单与各类声明，每个字段都带适用性、必要性、状态与原文证据引用。
+2. **审稿**：以资深同行评审身份通读全文，再由六本领域规则库分头复核，
+   并以**确定性计算**与**12 个外部权威数据库**交叉核验。
+
+输出结构化结果表、可回溯到原文位置的分级发现、抽取覆盖率与复核置信度，
+以及分优先级的人工复核建议。抽取与审稿可分开用（`structured_extraction` 模式）。
 
 > 本分支（`main`）只放交付物本体。开发工作区 —— 测试语料、评测工具、实验记录、
 > 设计文档与全部实跑产物 —— 在 [`dev`](../../tree/dev) 分支。
@@ -80,6 +84,29 @@ RCSB PDB、HGNC、SciCrunch/RRID、NCBI E-utilities、PRIDE。
 外部源不可达时一律产 `system_limitation`，**绝不**变成 finding ——
 「查不到」不等于「论文错」。
 
+### 结构化抽取：不只是审稿的前置，本身就是可复用产物
+
+`structured_result` 是一份**机器可消费的论文事实表**，按 `structured_result.schema.json`
+组织，实测一篇真实论文抽出约 16 KB：
+
+| 字段族 | 内容 |
+| --- | --- |
+| `article_design` | 研究设计族/类型（如 `experimental` / `in_vivo_animal`）与判定依据 |
+| `population` | 受试对象、纳排、样本量口径 |
+| `design` | 分组、干预、对照、随机化与盲法 |
+| `measurement` | 测定方法、终点、时间点 |
+| `key_data` | 关键数值，带分组键（实验 / 组别 / 比较 / 时间点 / 终点）与规范观测 |
+| `conclusion.claims[]` | 逐条主张（`CLM-01`…），供 M7 做证据层级比对 |
+| `declarations` | 伦理、注册、知情同意、利益冲突、数据可得性 |
+
+**每个字段都带四件套**：`applicability`（是否适用）、`requiredness`（是否必填）、
+`status`（reported / not_reported / parse_failed）、`evidence_refs`（原文出处）。
+所以「没写」与「我们没抽到」在数据结构层面就是两回事，不会混为一谈。
+
+实测字段解析率 **22/23 = 95.7%**。`extraction_coverage` 总分会低于此值，
+因为它同时计入图像可读性与补充材料可得性 —— 那两项受运行环境限制，
+**不是抽取失败**，且各自单独列出，不与字段解析率混算。
+
 ---
 
 ## 二、最小复现步骤
@@ -114,7 +141,18 @@ printf '%s' '[{"check":"cited_retracted","doi":"10.1002/jcp.26311","evidence_ref
   | python3 scripts/external_figure_validation.py --input -
 ```
 
-### 4. 跑一次完整审核（需 opencode + 模型凭据）
+### 4. 只跑结构化抽取（不产 finding，分钟级）
+
+```bash
+opencode run --dir . --model <统一模型> \
+  "请使用 biomed-paper-review skill，模式 structured_extraction：
+   只抽结构化结果，不做审核判定、不产 finding、不输出风险分。"
+```
+
+产出 `structured_result`（含字段解析率）与 `output_confidence`。
+**该模式不输出 `manuscript_risk_score`** —— 没跑审核模块就给风险分是无源之水。
+
+### 5. 跑一次完整审核（需 opencode + 模型凭据）
 
 ```bash
 mkdir -p run && cd run
@@ -187,7 +225,7 @@ skills/biomed-paper-review/
 | --- | --- |
 | 正文 <500 行 | ✅ **499 行** |
 | 引用只一层深（渐进披露） | ✅ SKILL.md 直接索引全部 reference，无二级跳转 |
-| 输入/输出 Schema 明确 | ✅ 12 份 JSON Schema |
+| 输入/输出 Schema 明确 | ✅ 12 份 JSON Schema；`structured_result` 为可被他项目直接消费的事实表（字段解析率 22/23） |
 | 工程健壮性：无硬编码路径 | ✅ 已在隔离目录验证（无仓库上下文亦可跑通自检） |
 | 正文语言建议中文 | ✅ SKILL.md 与多数规则库为中文（M3 与 06b 为英文） |
 | 具体使用示例 | ✅ 见 §二最小复现步骤 |
