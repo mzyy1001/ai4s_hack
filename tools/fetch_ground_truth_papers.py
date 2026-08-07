@@ -84,6 +84,24 @@ def body_text(xml):
     return strip_tags(m.group(1) if m else xml)
 
 
+def to_plain_text(xml):
+    """把 JATS XML 转成可读正文。
+
+    **为什么必须转**：原始 XML 有大量标记噪声，实测 397 KB 的 XML 会让审阅
+    调用挂死（进程零 CPU、零网络连接，十一分钟无产出）。转成纯文本后同一篇
+    只有 74 KB。而且审稿人本来就是读论文，不是读 JATS 标记 ——
+    喂纯文本既更省又更贴近真实任务。两臂拿到的是同一份文本，比较仍然公平。
+    """
+    m = re.search(r"<body[^>]*>(.*?)</body>", xml or "", re.S)
+    body = m.group(1) if m else (xml or "")
+    # 表格与图先压成单行，避免撑开大量空白
+    body = re.sub(r"<(table-wrap|fig)\b.*?</\1>",
+                  lambda x: " ".join(re.sub(r"<[^>]+>", " ", x.group(0)).split()),
+                  body, flags=re.S)
+    t = re.sub(r"<[^>]+>", " ", body)
+    return re.sub(r"[ \t]+", " ", re.sub(r"\n{3,}", "\n\n", t)).strip()
+
+
 def search(query, page_size=25):
     url = (f"{EPMC}/search?query={urllib.parse.quote(query)}&format=json"
            f"&pageSize={page_size}&resultType=core")
@@ -149,6 +167,28 @@ def claimed_origin(problem):
     return None
 
 
+# 细胞培养语境词。细胞系名必须出现在这些词附近，才算真的当作模型在用。
+_CULTURE_CUES = re.compile(
+    r"cell line|cells were|were cultur|was cultur|cultured in|maintained in|"
+    r"ATCC|DMEM|RPMI|FBS|fetal bovine|passage|seeded|transfect|"
+    r"grown in|incubat|trypsin|CO2|细胞系|培养", re.I)
+
+
+def _in_culture_context(text, name, window=400):
+    """该细胞系名是否出现在细胞培养语境附近。
+
+    只要有**任意一次**出现落在语境窗口内即可 —— 论文可能先在别处顺带提到。
+    查不到语境时宁可丢掉这篇，也不要出一道假题：
+    假题会让整个基准的数字失去意义。
+    """
+    for m in re.finditer(re.escape(name), text):
+        seg = text[max(0, m.start() - window): m.end() + window]
+        if _CULTURE_CUES.search(seg):
+            return True
+    return False
+
+
+
 def cases_cell_line(n, seen_lines):
     """每条细胞系只取一篇，保证类型内也有多样性。"""
     out = []
@@ -171,10 +211,19 @@ def cases_cell_line(n, seen_lines):
             xml = fulltext(pmcid)
             if not xml or len(xml) < 5000:
                 continue
-            # 必须**确实把它当作那个来源的模型在用** —— 只在参考文献里
-            # 提到名字不构成错误
-            t = body_text(xml).lower()
-            if ln["name"].lower() not in t or origin["value"] not in t:
+            # 必须**确实把它当作那个来源的模型在用**。三重把关，缺一不可：
+            #  1. 正文出现该细胞系名
+            #  2. 正文出现声称的组织/物种来源
+            #  3. **该名字出现在细胞培养语境里** —— 这一条是踩坑补的：
+            #     CCL4 既是细胞系名也是趋化因子基因名，一篇 chordoma 论文
+            #     在 CAF marker 列表里写了 "IL1B, HLA-DRA, MMP9, CCL4"，
+            #     前两条全中，却和细胞系毫无关系。短名细胞系与基因符号重名
+            #     很常见，只查「名字出现过」必然出假题。
+            t = body_text(xml)
+            tl = t.lower()
+            if ln["name"].lower() not in tl or origin["value"] not in tl:
+                continue
+            if not _in_culture_context(t, ln["name"]):
                 continue
             seen_lines.add(ln["name"])
             out.append({
@@ -439,6 +488,9 @@ def main():
             os.makedirs(d, exist_ok=True)
             with open(os.path.join(d, "fulltext.xml"), "w", encoding="utf-8") as fh:
                 fh.write(c["xml"])
+            # 同时落一份纯文本 —— 基准喂的是它，不是 XML（见 to_plain_text 说明）
+            with open(os.path.join(d, "fulltext.txt"), "w", encoding="utf-8") as fh:
+                fh.write(to_plain_text(c["xml"]))
             meta = {
                 "pmcid": c["pmcid"],
                 "doi": c["paper"].get("doi"),

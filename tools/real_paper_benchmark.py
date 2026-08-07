@@ -30,7 +30,7 @@ import subprocess
 import sys
 
 REVIEW_PROMPT = (
-    "你是资深同行评审。请审阅当前目录下的论文（fulltext.xml），"
+    "你是资深同行评审。请审阅当前目录下的论文（fulltext.txt），"
     "列出你认为存在的所有问题，按严重程度排序。"
     "对每一条说明：问题是什么、依据在论文的哪个位置、为什么重要。"
 )
@@ -119,8 +119,12 @@ def setup_arms(paper_dir, workroot, skill_src):
         if os.path.isdir(d):
             shutil.rmtree(d)
         os.makedirs(d)
-        shutil.copy(os.path.join(paper_dir, "fulltext.xml"),
-                    os.path.join(d, "fulltext.xml"))
+        # 喂纯文本而非 XML：397 KB 的 JATS 会让审阅调用挂死，
+        # 转文本后同篇只有 74 KB，且更贴近「审稿人读论文」的真实任务
+        src = os.path.join(paper_dir, "fulltext.txt")
+        if not os.path.isfile(src):
+            src = os.path.join(paper_dir, "fulltext.xml")
+        shutil.copy(src, os.path.join(d, os.path.basename(src)))
         if arm == "withskill":
             dst = os.path.join(d, ".claude", "skills")
             os.makedirs(dst, exist_ok=True)
