@@ -92,9 +92,9 @@ skills/biomed-paper-review/
 │   │                                三类记录、执行范围、评分公式、聚合聚簇、迁移表、lint 清单
 │   ├── 01-structured-extraction.md M1 前置抽取层：字段清单、设计路由、指标族、v1/v2、signals
 │   ├── 02-macro-logic.md          M2（**别人负责，禁止修改**）
-│   ├── 03-experimental-methods.md M3（**别人负责，禁止修改**）
+│   ├── 03-experimental-methods.md M3 实验方法（**可修改**，已交本方维护）
 │   ├── 04-statistics.md           M4 统计学（**可修改**，已交本方维护）
-│   ├── 05-figures-and-charts.md   M5（**别人负责，禁止修改**）
+│   ├── 05-figures-and-charts.md   M5 图表（**可修改**，已交本方维护）
 │   ├── 06-ethics-compliance.md    M6 伦理合规（**可修改**，已交本方维护）
 │   └── 07-conclusions-discussion.md M7 结论与讨论（可修改）
 ├── scripts/*.py                   运行时脚本（单位归一化 / 统计取证 / 伦理筛查）
@@ -129,15 +129,13 @@ datasets/                          10 篇 PLOS 开放获取论文语料（勿改
 
 ```
 skills/biomed-paper-review/references/02-macro-logic.md
-skills/biomed-paper-review/references/03-experimental-methods.md
-skills/biomed-paper-review/references/05-figures-and-charts.md
 datasets/**
 .gitignore
 loop/**
 ```
 
-这三个是**队友本人负责的模块**（M2 卓妍、M3 Peter、M5 敏怡），
-动了会造成合并冲突和信任问题。
+只剩 M2 是队友卓妍本人负责的模块，动了会造成合并冲突和信任问题。
+（M3、M5 已交本方维护；M3 与 M6 标注「待 Peter 复核」，M5 标注「待敏怡复核」。）
 你可以**指出**它们与主框架的衔接问题，写进提案文件，但**不要动文件本身**。
 
 ## 允许修改的路径
@@ -146,7 +144,9 @@ loop/**
 skills/biomed-paper-review/SKILL.md
 skills/biomed-paper-review/references/00-contracts.md
 skills/biomed-paper-review/references/01-structured-extraction.md
+skills/biomed-paper-review/references/03-experimental-methods.md ← M3，已交本方维护
 skills/biomed-paper-review/references/04-statistics.md          ← M4，已交本方维护
+skills/biomed-paper-review/references/05-figures-and-charts.md  ← M5，已交本方维护
 skills/biomed-paper-review/references/06-ethics-compliance.md   ← M6，已交本方维护
 skills/biomed-paper-review/references/07-conclusions-discussion.md
 skills/biomed-paper-review/resources/*.json                     ← 伦理规范库
@@ -235,6 +235,37 @@ python3 skills/biomed-paper-review/scripts/figure_integrity_audit.py --selftest
 ## 未解决 / 需要人来定的问题
 ```
 
+## 新组件必须先过基线探针（**本轮起强制**）
+
+**评审看的是 uplift。裸模型本来就能查出来的问题，做进 skill 贡献为零，
+还多花 token（负分）。** 所以提出任何新检查/新组件之前，**先问 Qwen**：
+
+```bash
+# 1) 把含该错误的最小案例写成 tools/probe_cases/<name>.md
+# 2) 探针：官方同族模型 qwen3.8-max 能不能自己查出来？
+python3 tools/baseline_probe.py \
+  --case tools/probe_cases/<name>.md \
+  --error "该错误的具体描述" --repeats 3
+```
+
+判定与行动：
+
+| 探针结果 | 含义 | 该怎么做 |
+| --- | --- | --- |
+| `BASELINE_FINDS_IT` | 裸模型多数能查出 | **不要实现**。写进提案的「已探针，放弃」一节并说明 |
+| `BASELINE_UNRELIABLE` | 时对时错 | **值得实现** —— 确定性检查能把它变成稳定命中 |
+| `BASELINE_MISSES_IT` | 完全查不出 | **优先实现**，这是 uplift 主来源 |
+| `INCONCLUSIVE` | 调用失败、有效样本 0 | **不得据此下任何结论**，修好再跑 |
+
+**已有实测结论（不要重复踩）**：
+- `table_total_mismatch`（分类计数之和 ≠ 声明分母）→ Qwen 自己查得出来，
+  实现了也没有 uplift。类似的「一眼算术」类检查都要先探针。
+- 裸模型在完整论文上能报出 15 条实质问题，包括表格计数错误、
+  同一结局 P 值前后矛盾、随机后排除破坏随机化。**别把这些当成卖点。**
+
+**每份提案必须包含一节「基线探针结果」**，列出探过哪些候选、各自结论、
+以及据此决定实现哪些、放弃哪些。没有探针结果的新组件提案视为无效。
+
 ## 新功能组件的提案（重点）
 
 除了修 bug，**主动提出新的功能组件**。沙箱**开放公开科学数据源白名单**且超时放宽到 12 小时，
@@ -285,6 +316,11 @@ python3 skills/biomed-paper-review/scripts/figure_integrity_audit.py --selftest
   - 氨基酸/核苷酸编号越界、密码子与氨基酸不对应
 - **剂量与药理合理性**：报告的剂量是否远超已知 LD50 或治疗窗；
   IC50 与已知同类化合物是否差数个数量级
+- **不要局限在已实现的部分**。动物实验、图表专业性、蛋白结构与功能、
+  病理与影像、药理与毒理、临床试验设计……都可以提。
+  例如：蛋白结构图与所述结构域是否相容、动物福利指标是否与实验时长匹配、
+  流式门控策略是否自洽、KM 曲线台阶与风险人数表是否吻合、
+  剂量是否超出该物种已知 MTD。
 - 你自己想到的、比上面更硬核的方向
 
 **判据**：一个好的提案，评委看完会觉得「这个团队真的懂生物医药审稿」。

@@ -107,7 +107,7 @@ echo "改动文件：" | tee -a "$LOG"
 echo "$CHANGED" | sed 's/^/  /' | tee -a "$LOG"
 
 FORBIDDEN=$(echo "$CHANGED" | grep -E \
-  '^(skills/biomed-paper-review/references/0[235]-|datasets/|loop/|\.gitignore)' || true)
+  '^(skills/biomed-paper-review/references/02-|datasets/|loop/|\.gitignore)' || true)
 
 if [ -n "$FORBIDDEN" ]; then
   echo "GUARD-FAIL 改动触碰禁止路径，整轮回滚：" | tee -a "$LOG"
