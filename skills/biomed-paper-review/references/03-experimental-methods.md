@@ -1,583 +1,657 @@
-# M3 · Experimental Methods Compliance (v2 — Rebuilt)
+# M3 · Experimental Methods: Method Reconstruction and Logic Audit (v3)
 
-**原负责人：Peter** · 状态：**v2 完整重建（2026-08-08）**
+**Owner: Peter** · Status: **v3 full rewrite (2026-08-08)**
 
-**核心原则（与 v1 的根本区别）**：
-先理解每个步骤在做什么，再评判它做得对不对。
-不允许跳过 Phase 1（步骤解构）直接套清单。
+**Core principle**: Reconstruct before you evaluate. Understand what every step does before looking for problems. Do not begin by searching for flaws.
 
-**本文件依赖 `00-contracts.md`。**
+**This file depends on `00-contracts.md`.**
 
 ---
 
-## 0. 执行顺序（不可颠倒）
+## Execution Order (must not be reversed)
 
 ```
-Phase 1:  步骤解构  → 理解每个步骤的目的、输出与实验角色（step_role）
-Phase 1b: 步骤角色要求核查 → 每类角色有自己的基础要求，逐项检查
-Phase 2:  流程连接验证 → 步骤间能否合理衔接
-Phase 3:  生物实体核查 → 实体的已知属性与交互是否合理
-Phase 4:  实验逻辑核查 → 剂量、结局、干扰因素、对照
-Phase 5:  汇总 → 严重性标定与 finding 产出
+Phase 1:  Evidence scope + step decomposition
+          → understand every step's purpose, output, role, and assumptions
+Phase 1b: Per-role requirements audit
+          → check fundamental requirements for each step's role
+Phase 2:  Method provenance tracing
+          → verify that citations support the specific methods attributed to them
+Phase 3:  Step connection audit
+          → trace input–output continuity and evidentiary level between consecutive steps
+Phase 4:  Domain-specific sanity checks
+          → biological entities, doses, confounders, controls, selection bias
+Phase 5:  Measurement and endpoint validity
+          → distinguish what was physically measured from what is claimed
+Phase 6:  Finding synthesis
+          → self-resolution, severity calibration, finding output
+Phase 7:  Final synthesis
+          → workflow reconstruction and overall assessment
 ```
 
-**不允许在 Phase 1 完成前立任何 finding。**
-所有 finding 只在 Phase 5 产出；Phase 1–4 只产内部候选账本条目。
+**No finding candidates may be recorded until Phase 1 is complete.**
+All findings are produced only at Phase 6. Phases 1–5 produce internal candidate ledger entries only.
 
-**Phase 1b 与 Phase 4 的分工**：
-Phase 1b 检查**单步骤本身**是否满足其角色的基础要求（可控性、可重复性）；
-Phase 4 检查**整体实验设计**的逻辑合理性（假设链、干扰因素、对照完整性）。
-同一缺失可能在两个 Phase 都被发现 — Phase 5 合并时只产一条 finding，取最高 severity。
+**Phase 1b vs. Phase 4 scope**: Phase 1b checks whether each individual step meets the fundamental requirements for its role (controllability, reproducibility). Phase 4 checks the overall experimental design logic (causal chain, confounders, control completeness). The same gap may surface in both phases; consolidate into one finding at Phase 6, taking the highest severity.
 
 ---
 
-## Phase 1 · 步骤解构
+## Phase 1 · Evidence Scope and Step Decomposition
 
-### 1.1 执行方式
+### 1.1 Evidence scope
 
-按**方法节的叙述顺序**，将每一个操作单元提取为原子步骤，并填写如下记录：
+Review all available methodological sources in this order:
+
+1. Main paper, including figures, tables, legends, footnotes, and references.
+2. Supplementary materials and supporting tables.
+3. Methods papers or protocols explicitly cited by the authors.
+4. Authoritative external protocols or primary literature describing the same method, if the cited source does not provide enough detail.
+5. Relevant curated databases, when biological entities, strains, genes, reagents, interactions, or annotations require verification.
+
+Do not report a method as missing merely because it is absent from the main text if it is adequately described in the supplement or a clearly cited protocol.
+
+Do not silently fill gaps using a generic protocol. Every reconstructed detail must carry one of the following labels:
+
+- **explicitly reported**: stated in the main text, supplement, or clearly cited source
+- **incorporated by citation**: taken from a cited methods paper that directly supports this step
+- **reasonably inferred**: derivable from context, field conventions, or the assay class
+- **unresolved**: cannot be determined from any available source
+
+If a cited protocol has multiple versions, identify which version was available and likely used at the time of the study. Distinguish limitations recognisable at the time from those identified only by later methodological work.
+
+### 1.2 Step decomposition
+
+Divide the complete method into numbered steps (S01, S02, …). Include computational, biological, measurement, and statistical steps.
+
+For each step, record:
 
 ```
-step_id        : S01, S02, ...（全文唯一递增）
-text_excerpt   : 方法节原文引用（≤150字）
-skill_type     : 见 §1.2 Lab Skill 分类表
-step_role      : 见 §1.3 Step Role 分类（新增）
-protocol_source: 见 §1.4 协议来源层级
-step_purpose   : 这一步产生了什么（输出物/状态）
-step_input     : 需要什么前置产物（来自哪个前置步骤）
-role_req_status: PASS / PARTIAL / FAIL / UNKNOWN（Phase 1b 填写）
-notes          : 任何需要在后续 Phase 中检查的线索
+step_id        : S01, S02, … (globally unique, incrementing)
+text_excerpt   : verbatim method text (≤150 words)
+skill_type     : see §1.3 Lab Skill categories
+step_role      : see §1.4 Step Role taxonomy
+protocol_source: see §1.5 Protocol source hierarchy
+purpose        : what question does this step answer?
+input          : what material, data, strain, sample, or intermediate result enters this step?
+action         : what is done to the input?
+output         : what result is produced?
+decision_role  : how is the output used in the next step?
+controls       : positive, negative, loading, procedural, or biological controls present
+quality_checks : how is successful execution demonstrated?
+assumptions    : what must be true for the output to support the intended interpretation?
+role_req_status: PASS / PARTIAL / FAIL / UNKNOWN (filled at Phase 1b)
+notes          : any flag or question to examine in later phases
 ```
 
-**粒度原则**：
-- 一个操作单元 = 一种方法对一种样本的一次独立处理。
-- 同一试剂的平行处理可合并为一条，但条件不同时必须分条。
-- 不拆到「吸管移液」级；保留到「离心 → 收集上清」级。
+**Granularity**: one operational unit = one method applied to one sample in one independent treatment. Parallel treatments of the same reagent on the same sample may be merged; different conditions must be separate entries. Do not decompose to the pipetting level; retain the "centrifuge → collect supernatant" level.
 
-### 1.2 Lab Skill 分类表
+### 1.3 Lab Skill categories (skill_type)
 
-| code | 类别 | 典型步骤举例 |
-|------|------|------------|
-| `CELL_CULTURE` | 细胞培养与维持 | 解冻、传代、冻存、培养基更换 |
-| `CELL_TREAT` | 细胞给药/处理 | 药物加入、siRNA 转染、慢病毒感染、辐射 |
-| `CELL_VIABILITY` | 细胞活力检测 | CCK-8、MTT、MTS、台盼蓝、LDH |
-| `COLONY_FORM` | 克隆形成/增殖 | 软琼脂克隆、平板克隆、BrdU/EdU 标记 |
-| `APOPTOSIS_DETECT` | 细胞死亡/凋亡检测 | Annexin V/PI、AO/EB、TUNEL、Caspase 活性 |
-| `PROTEIN_EXPR` | 蛋白表达检测 | Western blot、ELISA、流式胞内染色 |
-| `PROTEIN_INTERACT` | 蛋白互作 | Co-IP、pulldown、proximity ligation |
-| `NUCLEIC_ACID` | 核酸分析 | PCR、qPCR、RT-PCR、RNA-seq、ChIP-seq |
-| `MICROSCOPY` | 显微成像 | 共焦、荧光、明场、电镜、组织切片 |
-| `HISTOPATH` | 组织病理 | HE 染色、Masson 染色、IHC、特殊染色、评分 |
-| `FLOW_CYTOM` | 流式细胞术 | 表面标记、DNA 含量、多色 panel |
-| `ANIMAL_MODEL` | 动物模型建立 | 手术、注射造模、药物诱导、基因工程 |
-| `ANIMAL_BEHAV` | 动物行为学 | OFT、EPM、MWM、FST、NOR、旷场 |
-| `BIOCHEM_ASSAY` | 生化活性检测 | SOD/CAT/POD 活性、MDA、ATP、ROS |
-| `CHROMATOGRAPHY` | 色谱分析 | HPLC、LC-MS、GC-MS |
-| `IN_SILICO` | 计算/生信 | 分子对接、靶点预测、通路分析、网络药理 |
-| `SAMPLE_PREP` | 样品制备 | 裂解、离心、研磨、固定、包埋、切片 |
-| `ADMIN_ROUTE` | 给药途径 | 灌胃、IP 注射、IV 注射、吸入、经皮 |
-| `CLINICAL_PROC` | 临床操作 | 抽血、活检、影像、问卷、体格检查 |
-| `OTHER` | 其他 | 无法归入上述类别；在 notes 详述 |
+| code | Category | Example steps |
+|------|----------|---------------|
+| `CELL_CULTURE` | Cell culture and maintenance | thaw, passage, freeze, media change |
+| `CELL_TREAT` | Cell treatment / stimulation | drug addition, siRNA transfection, lentiviral infection, irradiation |
+| `CELL_VIABILITY` | Cell viability assay | CCK-8, MTT, MTS, trypan blue, LDH |
+| `COLONY_FORM` | Colony formation / proliferation | soft agar, plate colony, BrdU/EdU labelling |
+| `APOPTOSIS_DETECT` | Apoptosis / cell death | Annexin V/PI, AO/EB, TUNEL, caspase activity |
+| `PROTEIN_EXPR` | Protein expression | Western blot, ELISA, intracellular flow |
+| `PROTEIN_INTERACT` | Protein interaction | Co-IP, pulldown, proximity ligation |
+| `NUCLEIC_ACID` | Nucleic acid analysis | PCR, qPCR, RT-PCR, RNA-seq, ChIP-seq |
+| `MICROSCOPY` | Microscopy and imaging | confocal, fluorescence, brightfield, EM, histological sections |
+| `HISTOPATH` | Histopathology | H&E, Masson, IHC, special stains, scoring |
+| `FLOW_CYTOM` | Flow cytometry | surface markers, DNA content, multi-colour panel |
+| `ANIMAL_MODEL` | Animal model establishment | surgery, injection model, drug induction, genetic engineering |
+| `ANIMAL_BEHAV` | Animal behaviour | OFT, EPM, MWM, FST, NOR, open field |
+| `BIOCHEM_ASSAY` | Biochemical activity | SOD/CAT/POD, MDA, ATP, ROS |
+| `CHROMATOGRAPHY` | Chromatographic analysis | HPLC, LC-MS, GC-MS |
+| `IN_SILICO` | Computational / bioinformatic | docking, target prediction, pathway analysis, network pharmacology |
+| `SAMPLE_PREP` | Sample preparation | lysis, centrifugation, homogenisation, fixation, embedding, sectioning |
+| `ADMIN_ROUTE` | Administration route | gavage, IP injection, IV injection, inhalation, transdermal |
+| `CLINICAL_PROC` | Clinical procedure | blood draw, biopsy, imaging, questionnaire, physical examination |
+| `SURVIVAL_ANAL` | Survival analysis | lifespan assay, Kaplan-Meier curve, log-rank test |
+| `STATS_INFER` | Statistical inference | t-test, ANOVA, non-parametric tests, multiple comparison correction |
+| `SEQ_BIOINF` | Sequence bioinformatics | motif search, alignment, comparative genomics, genome annotation |
+| `OTHER` | Other | cannot be categorised above; explain in notes |
 
-### 1.3 Step Role 分类（每个步骤必须指定一个主要角色）
+### 1.4 Step Role taxonomy
 
-每个步骤除了属于某个 `skill_type` 之外，还有一个**实验角色（step_role）**。
-step_role 决定该步骤需要满足哪些基础要求（见 Phase 1b）。
+Every step must be assigned one primary role. The role determines which Phase 1b requirements apply.
 
-| role | 含义 | 典型示例 |
-|------|------|----------|
-| `INTERVENTION` | 施加实验变量 —— 处理、给药、基因操作、手术、刺激。**是结果差异的直接来源** | 给药（IP/口服/雾化）、siRNA 转染、CRISPR 编辑、OVA 致敏、模型造模 |
-| `DETECTION` | 测量/定量一个结局指标 —— 产生原始数值或图像数据。**是结论的直接依据** | Western blot、ELISA、qPCR、CCK-8、流式、行为学评分、病理评分 |
-| `PROCESSING` | 对样品进行不产生结局数据的中间转化 —— 必须对所有组均匀执行 | 组织裂解、离心、RNA 提取、石蜡包埋、切片、蛋白定量 |
-| `VALIDATION` | 确认模型/试剂/步骤的有效性 —— 是「继续推进」的前提 | 造模成功性评估（行为表现）、转染效率检测、细胞支原体检测、阳性对照组效果验证 |
-| `CALIBRATION` | 为 DETECTION 步骤提供定量参照 —— 没有 CALIBRATION，DETECTION 只能给出相对值 | ELISA 标准曲线、WB 内参蛋白、流式 FMO 对照、组织学阳性对照切片 |
-| `ANALYSIS` | 数据处理与统计推断 —— 将原始数值转化为结论 | ImageJ 定量、GraphPad 统计、评分系统、图像阈值分割 |
+| role | Meaning | Typical examples |
+|------|---------|-----------------|
+| `INTERVENTION` | Imposes the experimental variable — treatment, dosing, genetic manipulation, surgery, stimulation. **Direct source of observed differences.** | drug dosing (IP/oral/aerosol), siRNA transfection, CRISPR editing, OVA sensitisation, model creation |
+| `DETECTION` | Measures or quantifies an outcome endpoint — produces raw numeric or image data. **Direct basis for conclusions.** | Western blot, ELISA, qPCR, CCK-8, flow cytometry, behavioural scoring, pathology scoring |
+| `PROCESSING` | Intermediate sample transformation that does not itself produce outcome data — must be applied uniformly to all groups | tissue lysis, centrifugation, RNA extraction, paraffin embedding, sectioning, protein quantification |
+| `VALIDATION` | Confirms that a model, reagent, or step is valid — a prerequisite gate for proceeding | model success assessment (behavioural signs), transfection efficiency check, mycoplasma testing, positive control response |
+| `CALIBRATION` | Provides a quantitative reference for a DETECTION step — without it, DETECTION gives only relative values | ELISA standard curve, WB loading control, flow FMO control, histology positive-control section |
+| `ANALYSIS` | Data processing and statistical inference — converts raw numbers to conclusions | ImageJ quantification, GraphPad statistics, scoring systems, image threshold segmentation |
 
-**一个步骤可以同时承担多个角色**（如 ELISA 标准曲线既是 `CALIBRATION` 也是 `DETECTION` 的一部分）；
-此时取**主要角色**，在 notes 里注明附加角色。
+A step may serve multiple roles; assign the **primary role** and note secondary roles in the `notes` field.
 
-**关键规则**：
-- 每个 `DETECTION` 步骤必须能找到对应的 `CALIBRATION` 步骤（或在同一步骤内）。
-- 每个 `INTERVENTION` 步骤必须能找到对应的 `INTERVENTION` 对照条件。
-- 每个 `VALIDATION` 步骤必须有预先定义的成功/失败标准。
-- 上述对应关系缺失 → 候选账本标记 `ROLE_REQ_MISSING`。
+**Key rules**:
+- Every `DETECTION` step must have a corresponding `CALIBRATION` step (or inline calibration).
+- Every `INTERVENTION` step must have a corresponding paired control condition.
+- Every `VALIDATION` step must have pre-defined success/failure criteria.
+- Missing correspondence → candidate ledger entry `ROLE_REQ_MISSING`.
 
----
+### 1.5 Protocol source hierarchy
 
-### 1.4 协议来源层级（优先级从高到低）
+For each step, try the following levels in order and stop at the first that applies:
 
-对每个 step，依次尝试以下层级，命中即记录并停止向下查找：
+| Level | Source | Record |
+|-------|--------|--------|
+| **L1** | Methods paper explicitly cited ("following ref [X]") | citation number; verify via X1 that the cited paper contains this method |
+| **L2** | Commercial kit or instrument standard protocol ("per manufacturer's instructions") | vendor + catalogue number; if vendor only and no catalogue → candidate ledger |
+| **L3** | Field-recognised standard protocol (MIQE / ARRIVE / CONSORT etc.) | standard name and version |
+| **L4** | Paper self-described protocol (complete in the methods section) | excerpt of key parameters |
+| **L5** | No traceable source | mark `PROTOCOL_MISSING`; enter candidate ledger |
 
-| 层级 | 来源 | 记录方式 |
-|------|------|----------|
-| **L1** | 方法节明确引用的方法学文献（"按文献 [X] 方法"） | 引用编号；X1 可核验该文献是否包含该方法 |
-| **L2** | 商业试剂盒/仪器的标准流程（"按说明书"） | 厂商+货号；若仅写厂商无货号 → 记入候选账本 |
-| **L3** | 领域公认标准协议（MIQE/ARRIVE/CONSORT 等） | 标准名称与版本 |
-| **L4** | 论文自述流程（方法节内已自洽描述） | 摘录关键参数 |
-| **L5** | 无来源可溯 | 标记 `PROTOCOL_MISSING`，记入候选账本 |
-
-**L5 不自动产 finding**；是否构成问题取决于步骤的关键程度（Phase 5 判断）。
+L5 does not automatically produce a finding; criticality depends on the step's centrality (judged at Phase 6).
 
 ---
 
----
+## Phase 1b · Per-Role Requirements Audit
 
-## Phase 1b · 步骤角色要求核查
+After completing the Phase 1 step table, check every step against the fundamental requirements for its `step_role`. Record status in `role_req_status`:
+- `PASS`: all applicable requirements met
+- `PARTIAL`: some met, some unreported (non-fatal)
+- `FAIL`: at least one critical requirement clearly violated
+- `UNKNOWN`: insufficient information to judge
 
-完成 Phase 1 步骤表后，**对每个步骤**按其 `step_role` 核查下表中的基础要求。
-每条要求的状态填入 `role_req_status`（PASS / PARTIAL / FAIL / UNKNOWN）。
-**FAIL 和 PARTIAL 直接进入候选账本**，不自动产 finding（Phase 5 判 severity）。
+`FAIL` and `PARTIAL` items enter the candidate ledger with their failure code. They do not automatically become findings (severity is determined at Phase 6).
 
----
+**Anti-false-positive rule**: unreported ≠ absent. Only enter a candidate when absence is confirmed; ambiguous wording → `UNKNOWN`, not a candidate.
 
-### 1b.1 `INTERVENTION` 的基础要求
+### 1b.1 INTERVENTION requirements
 
-一个 INTERVENTION 步骤是受控实验的"变量"。受控要求是：**改变一个变量，保持其余不变。**
+A controlled experiment requirement: change one variable, hold all others constant.
 
-| 要求 | 检查方式 | 失败标记 |
-|------|----------|----------|
-| **并行对照存在** | 是否有一个同条件但省略/替代该变量的对照组与该步骤同时进行？（溶剂对照、空载体对照、假手术、生理盐水组） | `MISSING_PAIRED_CONTROL` |
-| **变量唯一性** | 同一步骤中是否同时改变了多个变量（如同时改变剂量和给药途径，却没有拆开的单变量组）？ | `CONFOUNDED_VARIABLE` |
-| **剂量/浓度/时长/途径全部记录** | 四项缺少任何一项 | `INTERVENTION_UNDERSPECIFIED` |
-| **所有组操作者一致** | 不同组是否由不同人员或不同批次处理而未说明？ | `OPERATOR_BATCH_UNREPORTED`（对动物/临床研究更关键） |
-| **随机分配** | 受试者/样本是否随机分配到各干预组（或说明了无法随机化的理由）？ | `RANDOM_ASSIGNMENT_MISSING` |
+| Requirement | Check | Failure code |
+|-------------|-------|-------------|
+| **Paired control exists** | Is there a concurrent condition that omits or substitutes the variable? (vehicle control, empty vector, sham surgery, saline group) | `MISSING_PAIRED_CONTROL` |
+| **Variable uniqueness** | Does this step change multiple variables simultaneously without single-variable comparator groups? | `CONFOUNDED_VARIABLE` |
+| **Dose/concentration/duration/route all recorded** | Any of the four missing | `INTERVENTION_UNDERSPECIFIED` |
+| **Consistent operator across groups** | Different groups handled by different personnel or batches without disclosure? | `OPERATOR_BATCH_UNREPORTED` |
+| **Random assignment** | Are subjects/samples randomly assigned to intervention groups, or is a rationale given for non-random assignment? | `RANDOM_ASSIGNMENT_MISSING` |
 
----
+### 1b.2 DETECTION requirements
 
-### 1b.2 `DETECTION` 的基础要求
+Reproducibility requirement: identical samples measured repeatedly should give consistent values.
 
-一个 DETECTION 步骤是受控实验的"读数"。可重复性要求是：**同样的样本多次检测应得到一致的数值。**
+| Requirement | Check | Failure code |
+|-------------|-------|-------------|
+| **Paired CALIBRATION step** | Is there a corresponding `CALIBRATION` step in the same experimental run (loading control, standard curve, positive control)? | `CALIBRATION_MISSING` |
+| **Reproducibility evidence** | Are technical replicate counts (replicate wells/tubes) or intra-run CV reported? | `REPRODUCIBILITY_UNREPORTED` |
+| **Objectivity or blinding** | If the result depends on subjective judgment (pathology scoring, behavioural timing, band reading), is blinding or algorithmic evaluation described? | `SUBJECTIVITY_UNCONTROLLED` |
+| **Pre-defined quantification criteria** | Are cut-offs, scoring thresholds, or counting rules defined prior to data acquisition (not driven by the data)? | `QUANTIFICATION_CRITERIA_UNDEFINED` |
+| **Detection range coverage** | Does the assay's linear range cover the expected concentration or signal of the analyte? | `DETECTION_RANGE_CONCERN` |
 
-| 要求 | 检查方式 | 失败标记 |
-|------|----------|----------|
-| **CALIBRATION 步骤配对** | 同一检测 run 中是否有对应的 `CALIBRATION` 步骤（内参、标准曲线、阳性对照）？ | `CALIBRATION_MISSING` |
-| **可重复性证据** | 是否报告了技术重复（复孔/复管）数量或批内 CV？ | `REPRODUCIBILITY_UNREPORTED` |
-| **客观性或盲法** | 若检测结果依赖主观判断（病理评分、行为计时、条带判读），是否说明盲法或算法化评判？ | `SUBJECTIVITY_UNCONTROLLED` |
-| **定量标准预定义** | 截断值/评分阈值/计数准则是否在执行前定义（非数据驱动地设定）？ | `QUANTIFICATION_CRITERIA_UNDEFINED` |
-| **检测范围覆盖** | 被测物的预期浓度/信号范围是否在检测方法的线性范围内（标准曲线覆盖，凝胶分辨率覆盖目标分子量）？ | `DETECTION_RANGE_CONCERN` |
+### 1b.3 PROCESSING requirements
 
----
+Uniformity requirement: all groups must share identical processing history.
 
-### 1b.3 `PROCESSING` 的基础要求
+| Requirement | Check | Failure code |
+|-------------|-------|-------------|
+| **All groups processed in the same batch** | Are all samples processed concurrently? Or is there batch separation (different days, different operators)? | `BATCH_EFFECT_UNCONTROLLED` |
+| **Key parameters recorded** | Duration, temperature, speed (centrifuge), buffer composition — all present? | `PROCESSING_UNDERSPECIFIED` |
+| **Sample stability window** | Is the interval between the prior step and this step within the analyte's known stability window (especially protein, RNA, cytokines)? | `STABILITY_WINDOW_VIOLATED` |
+| **No differential processing** | Do any groups receive extra processing steps not applied to others? | `DIFFERENTIAL_PROCESSING` |
 
-一个 PROCESSING 步骤本身不产数据，但其不一致会给不同组引入系统偏差。
-均匀性要求是：**所有组的样品必须经过完全相同的处理历史。**
+### 1b.4 VALIDATION requirements
 
-| 要求 | 检查方式 | 失败标记 |
-|------|----------|----------|
-| **所有组同时/同批处理** | 是否描述了各组样品同批处理？还是存在批次分离（如不同天裂解、不同人切片）？ | `BATCH_EFFECT_UNCONTROLLED` |
-| **关键参数记录** | 时间（孵育时长）、温度、速度（离心）、缓冲液成分是否记录？ | `PROCESSING_UNDERSPECIFIED` |
-| **样品稳定性** | 从前一步骤到本步骤的间隔时间是否在被测分析物的稳定窗口内（特别是蛋白质、RNA、细胞因子）？ | `STABILITY_WINDOW_VIOLATED` |
-| **差异处理缺席** | 是否存在某些组接受了额外处理步骤而其他组没有（如溶剂组额外离心）？ | `DIFFERENTIAL_PROCESSING` |
+A VALIDATION step is a gate. Without it, the premise of subsequent measurements cannot be confirmed.
 
----
+| Requirement | Check | Failure code |
+|-------------|-------|-------------|
+| **Pre-defined success criteria** | Are pass/fail criteria stated in the methods or a cited reference? (e.g. "≥5 coughs in 3 min = model success") | `VALIDATION_CRITERIA_UNDEFINED` |
+| **Applied equally to all groups** | Is the validation step applied uniformly to all groups, including controls? | `VALIDATION_SELECTIVELY_APPLIED` |
+| **Handling of failures described** | If validation fails, how is that animal/sample handled (excluded? replaced?)? | `VALIDATION_FAILURE_UNADDRESSED` |
+| **Results reported** | Is the outcome of the validation step presented in the results or methods (not merely claimed)? | `VALIDATION_RESULT_UNREPORTED` |
 
-### 1b.4 `VALIDATION` 的基础要求
+### 1b.5 CALIBRATION requirements
 
-一个 VALIDATION 步骤是"通行证"。没有它，就无法确认后续测量的前提是否成立。
+A CALIBRATION step is the reference frame for DETECTION results.
 
-| 要求 | 检查方式 | 失败标记 |
-|------|----------|----------|
-| **成功标准预定义** | 成功/失败的判定标准是否在方法节或已引文献中明确？（如"≥5次/3分钟咳嗽即视为造模成功"） | `VALIDATION_CRITERIA_UNDEFINED` |
-| **全组均等应用** | 验证步骤是否对所有组（包括对照组）均等执行？ | `VALIDATION_SELECTIVELY_APPLIED` |
-| **失败后处置说明** | 如果验证失败，该动物/样本如何处理（排除？补充？）？ | `VALIDATION_FAILURE_UNADDRESSED` |
-| **验证结果被报告** | 验证步骤的结果是否在结果节或方法节中呈现（而不是只在方法里声明了验证程序）？ | `VALIDATION_RESULT_UNREPORTED` |
+| Requirement | Check | Failure code |
+|-------------|-------|-------------|
+| **Concurrent with DETECTION** | Is the calibration run in the same experimental run as the samples? (Cross-run reuse of a standard curve is a common error.) | `CALIBRATION_NOT_CONCURRENT` |
+| **Range coverage** | Does the standard curve or reference range cover the expected concentration/signal of the samples? | `CALIBRATION_RANGE_INSUFFICIENT` |
+| **Reference material documented** | Are the source, concentration, and lot of the standard/reference antibody/positive control recorded? | `CALIBRATION_SOURCE_MISSING` |
+| **Linear range only** | Is interpolation confined to the linear range (no extrapolation beyond the curve)? | `EXTRAPOLATION_CONCERN` |
 
----
+### 1b.6 ANALYSIS requirements
 
-### 1b.5 `CALIBRATION` 的基础要求
+Transparency requirement: others can reproduce the same conclusion using the same rules.
 
-一个 CALIBRATION 步骤是 DETECTION 结果的"参照系"。没有参照系，数值就没有绝对意义。
-
-| 要求 | 检查方式 | 失败标记 |
-|------|----------|----------|
-| **与 DETECTION 同 run** | 校准步骤是否在与被测样品完全相同的实验 run 中执行？（跨 run 使用同一标准曲线是常见错误） | `CALIBRATION_NOT_CONCURRENT` |
-| **范围覆盖** | 标准曲线/参照范围是否覆盖了被测样品的预期浓度/信号范围？ | `CALIBRATION_RANGE_INSUFFICIENT` |
-| **参照物来源记录** | 标准品/参照抗体/阳性对照的来源、浓度、批号是否记录？ | `CALIBRATION_SOURCE_MISSING` |
-| **线性区使用** | 仅在标准曲线线性范围内插值（不在范围外外推）？ | `EXTRAPOLATION_CONCERN` |
-
----
-
-### 1b.6 `ANALYSIS` 的基础要求
-
-一个 ANALYSIS 步骤将数字转化为结论。透明性要求是：**他人可以用相同规则复现相同结论。**
-
-| 要求 | 检查方式 | 失败标记 |
-|------|----------|----------|
-| **软件+版本记录** | 分析软件名称与版本是否记录？ | `SOFTWARE_VERSION_MISSING` |
-| **参数/阈值记录** | ImageJ 阈值、分割参数、截断值等是否记录？ | `ANALYSIS_PARAMETER_UNDEFINED` |
-| **盲法（主观分析）** | 若分析步骤涉及主观判断（如病理切片评分），执行者是否对组别设盲？ | `SUBJECTIVITY_UNCONTROLLED` |
-| **多评分者一致性** | 若多人参与评分，是否报告了评分者间一致性（Cohen's κ 或 ICC）？ | `INTER_RATER_UNREPORTED` |
-| **预设而非数据驱动** | 分析参数是否在看到数据前预先定义（而非调整参数直到结果"好看"）？ | `POST_HOC_PARAMETER_TUNING` |
+| Requirement | Check | Failure code |
+|-------------|-------|-------------|
+| **Software + version recorded** | Name and version of analysis software stated? | `SOFTWARE_VERSION_MISSING` |
+| **Parameters / thresholds recorded** | ImageJ thresholds, segmentation parameters, cut-off values — all stated? | `ANALYSIS_PARAMETER_UNDEFINED` |
+| **Blinding (subjective analysis)** | If analysis involves subjective judgment (histology scoring), was the analyst blinded to group assignments? | `SUBJECTIVITY_UNCONTROLLED` |
+| **Inter-rater reliability** | If multiple scorers are involved, is inter-rater agreement (Cohen's κ or ICC) reported? | `INTER_RATER_UNREPORTED` |
+| **Pre-specified, not data-driven** | Were analysis parameters defined before looking at the data (not adjusted until results "look good")? | `POST_HOC_PARAMETER_TUNING` |
 
 ---
 
-### 1b.7 Phase 1b 汇总原则
+## Phase 2 · Method Provenance Tracing
 
-- 对每个步骤，将所有相关要求过一遍，在 `role_req_status` 中填写：
-  - `PASS`：所有适用要求均满足
-  - `PARTIAL`：部分满足，部分未报告（非致命）
-  - `FAIL`：至少一条关键要求明显违反
-  - `UNKNOWN`：信息不足以判断（方法节表述模糊）
-- FAIL / PARTIAL 的具体要求条目 → 进入候选账本，带标记代码（`CALIBRATION_MISSING` 等）
-- 在 Phase 5 汇总时，这些候选与 Phase 2–4 的候选一起接受 severity 标定
-- **防误报原则**：要求未报告 ≠ 要求未满足。只有「确认缺失」才进候选；「描述不清」先入 UNKNOWN，不立 finding
+For each step, determine whether the cited source actually describes the specific procedure attributed to it.
 
----
+**When a citation is present**:
+- Verify that the cited paper or protocol supports the specific method attributed to it, not a related but different procedure.
+- Check whether the experimental system, organism, assay format, and conditions are sufficiently comparable to the current study. A method validated in one system may not transfer without modification.
+- Identify any important modifications made by the current authors. If the modification is material to the result and undisclosed, enter `PROTOCOL_ADAPTED_UNDISCLOSED`.
+- Do not assume that a citation resolves details it does not contain.
+- If the cited protocol has multiple versions, identify which was available at the time of the study.
 
-## Phase 2 · 流程连接验证
+**When no adequate cited method is available**:
+- Search for an authoritative protocol or primary methods paper for context.
+- Use external material only to understand the method and expected controls — not to assume the authors performed unreported procedures.
+- If the procedure remains unavailable, record `PROTOCOL_MISSING` rather than inventing detail.
 
-完成 Phase 1 步骤表后，**按 step_id 顺序**检查每对相邻步骤（Sn → Sn+1）：
+**Candidate ledger entries from Phase 2**:
 
-### 2.1 连接合理性检查
-
-| 检查项 | 判据 | 候选账本标记 |
-|--------|------|------------|
-| **输出-输入匹配** | Sn 的 `step_purpose`（输出）是否是 Sn+1 的 `step_input`（所需输入） | `FLOW_BREAK` |
-| **样本完整性** | 样品在 Sn 和 Sn+1 之间是否经历了未描述的处理步骤（如洗涤、离心、转移） | `MISSING_INTERMEDIATE` |
-| **时序合理性** | 时间节点（培养时间、冷冻时间、处理间隔）是否符合生物学上的合理范围 | `TIMELINE_ANOMALY` |
-| **试剂兼容性** | Sn 中引入的试剂是否与 Sn+1 的反应条件兼容（如 DMSO 溶剂与后续水相反应） | `REAGENT_CARRY_OVER` |
-| **平行性** | 当多组样品同时处理时，操作是否能真正并行（单人操作的时间窗口是否现实） | `PARALLELISM_CONCERN` |
-
-**重要：FLOW_BREAK 是最高优先级候选。** 一个步骤如果其输出无法成为下一步的有效输入，整个实验链就断裂了。
-
-### 2.2 整体流程完整性
-
-- 实验是否有明确起点（动物/细胞/样本来源）？
-- 实验是否有明确终点（检测方法与被测物）？
-- 主要结局指标（primary endpoint）是否在流程中有对应的检测步骤？
-- 副结局指标的检测步骤是否也在流程中？
+| Code | Condition | Default severity |
+|------|-----------|-----------------|
+| `METHOD_CITATION_MISMATCH` | Cited paper does not describe the attributed method, or describes it only for a different organism/assay system | major |
+| `PROTOCOL_ADAPTED_UNDISCLOSED` | Authors made material changes to a cited protocol without disclosing modifications | minor |
+| `PROTOCOL_MISSING` | No traceable source for a non-trivial step | escalate to major if step is critical |
 
 ---
 
-## Phase 3 · 生物实体核查
+## Phase 3 · Step Connection Audit
 
-对方法节中出现的所有生物/化学实体，进行基础知识层面的核查。
-**这一层检查的是「专家的常识」，不需要数据库查询即可识别大多数问题；
-X1 层提供数据库确认。**
+After completing Phase 1, check every consecutive step pair (Sn → Sn+1) for logical and evidentiary continuity.
 
-### 3.1 动物/生物物种核查
+### 3.1 Connection validity checks
 
-| 检查项 | 关注点 | 典型错误 |
-|--------|--------|----------|
-| **物种-模型匹配** | 该物种/品系是否适合该疾病模型？ | 用 BALB/c（Th2 倾向）做需要 Th1 反应的模型；C. elegans 用于哺乳动物专用疾病 |
-| **年龄/性别-研究类型匹配** | 幼年/老年/雌雄是否符合研究目的？ | 激素相关研究未区分性别 |
-| **物种-药物反应** | 该物种对所用药物/化学品是否有已知的特殊反应或代谢差异？ | 猫对乙酰氨基酚极度敏感；豚鼠对组胺高度反应 |
-| **物种-行为特性** | 物种的正常行为特征（运动模式、社会性等）是否被正确理解？ | C. elegans 游泳（液体中）vs 爬行（琼脂上）混用参数（见已知问题）|
-| **数量与预期死亡率** | 每组 n 是否在实验设计期间考虑了预期失落率？ | n=5 无缓冲的行为学实验 |
+| Check | Criterion | Candidate code |
+|-------|-----------|----------------|
+| **Output–input match** | Does Sn's output become Sn+1's required input? Is the material identity, genotype, treatment state, tissue, and time point preserved? | `FLOW_BREAK` |
+| **Evidentiary level preserved** | Is a computational candidate being treated as an experimentally validated target? Is an association being treated as a causal mechanism? Is a qualitative screen used to justify quantitative downstream claims? | `FLOW_BREAK_EVIDENTIARY` |
+| **Selection bias** | Does selection at Sn introduce bias into Sn+1? Were thresholds or inclusion criteria defined before candidate follow-up, or derived from inspecting the results? | `POST_HOC_SELECTION` |
+| **Negative result interpretability** | Could a null result in Sn reflect technical failure rather than true biological absence? | `TECHNICAL_NEGATIVE_AMBIGUOUS` |
+| **Temporal plausibility** | Are intervals between steps consistent with the biology (incubation, wash, freeze, fixation timing)? | `TIMELINE_ANOMALY` |
+| **Reagent compatibility** | Does anything introduced in Sn interfere with Sn+1's chemistry (e.g. DMSO carry-over, ionic strength, competing substrates)? | `REAGENT_CARRY_OVER` |
+| **Independent confirmation** | Does the central inference have at least one independent confirmation step in the workflow? | flag if absent |
 
-### 3.2 细胞系核查
+`FLOW_BREAK` and `FLOW_BREAK_EVIDENTIARY` are the highest-priority candidate types. A broken output–input connection or an illicit evidentiary jump severs the experimental chain.
 
-| 检查项 | 关注点 | 候选账本标记 |
-|--------|--------|------------|
-| **细胞系来源** | 有无供应商+货号/ATCC/RRID？ | `CELL_LINE_SOURCE_MISSING` |
-| **支原体检测** | 是否声明 mycoplasma-free？ | `MYCOPLASMA_UNREPORTED` |
-| **STR 鉴定** | 是否提及 STR 验证？ | `STR_UNREPORTED` |
-| **培养条件匹配** | 培养基成分、血清浓度、CO₂ 浓度是否与该细胞系已知需求一致？ | `CULTURE_CONDITION_MISMATCH` |
-| **已知争议系** | 是否涉及已知误认/污染细胞系（HeLa 污染系、MDA-MB-435 等）？ | X1 via Cellosaurus；离线层记 `CELL_LINE_IDENTITY_UNVERIFIED` |
-| **传代数** | 原代细胞是否说明传代数？高传代是否可能影响结果？ | `PASSAGE_UNREPORTED` |
+### 3.2 Overall workflow completeness
 
-### 3.3 试剂/药物核查
-
-| 检查项 | 关注点 | 候选账本标记 |
-|--------|--------|------------|
-| **作用机制-模型匹配** | 该试剂的已知作用机制是否与实验的预期效应方向一致？ | `AGENT_MECHANISM_MISMATCH` |
-| **溶剂相容性** | 溶剂选择（DMSO、乙醇、PBS）是否适合该化合物；最终溶剂浓度是否在安全范围内？ | `SOLVENT_ISSUE` |
-| **试剂来源** | 厂商+货号是否给出？ | `REAGENT_NO_CATALOG` |
-| **稳定性** | 是否涉及不稳定成分（细胞因子、RNA、放射性物质）且未说明储存条件？ | `STABILITY_UNREPORTED` |
-
-### 3.4 交互合理性（Interaction Plausibility）
-
-对方法中涉及的**关键实体-实体交互**（药物-靶点、刺激-细胞、处理-模型），检查：
-
-1. **方向性**：处理的预期效果方向是否与生物学常识一致？
-   - 例：METH 40 mg/kg IP 对小鼠 → 接近 LD₅₀，不可能产生慢性行为模型
-   - 例：抑制 PI3K/AKT → 减少 Bcl-2 依赖的生存信号 → 促凋亡（合理）
-
-2. **量级**：剂量/浓度是否在已知活性范围内？
-   - 例：IC₅₀ 10 µM 的化合物，在 0.1 µM 下做 Western blot 测通路 → 可能低于有效范围
-
-3. **底物-环境匹配**：
-   - 动物行为测试的底物（液体 vs 琼脂）是否与所引用方法的底物一致？
-   - 温度、pH、离子强度是否在已知功能范围内？
-
-**交互合理性候选** → 标记 `INTERACTION_IMPLAUSIBLE` 或 `INTERACTION_CONTEXT_MISMATCH`；
-在 Phase 5 按证据质量和影响程度决定 severity。
+- Does the experiment have a defined starting material (animal, cell, sample source)?
+- Does it have a defined endpoint with a corresponding detection step?
+- Does every major claimed endpoint have a corresponding measurement step?
+- Is there a step that independently confirms the central inference?
 
 ---
 
-## Phase 4 · 实验逻辑核查
+## Phase 4 · Domain-Specific Sanity Checks
 
-### 4.1 剂量/处理合理性
+Apply only the checks relevant to the study type.
 
-| 检查项 | 判据 | 候选账本标记 |
-|--------|------|------------|
-| **剂量梯度** | 剂量-反应研究 < 4 个非零剂量点 | `DOSE_GRADIENT_INSUFFICIENT` |
-| **剂量依据** | 未说明剂量选择依据（预实验/文献/MTD/IC₅₀） | `DOSE_RATIONALE_MISSING` |
-| **剂量-物种适宜性** | 剂量在该物种该给药途径下是否合理（不超过 MTD/LD₁₀；DMSO <0.5%） | `DOSE_OUT_OF_RANGE` |
-| **时间点** | 只测单一时间点却下动力学结论 | 与 M7 联动 |
+### 4.1 Biological entity verification
 
-### 4.2 结局-假设连接
+For cells, organisms, viruses, animals, genes, proteins, or other biological entities, verify using curated databases (via X1 when available).
 
-核心问题：**论文的主假设（main hypothesis）能被方法节中的检测步骤所验证吗？**
+| Category | Checks | Candidate codes |
+|----------|--------|-----------------|
+| **Animal / organism** | Species/strain fits the disease model; age, sex, developmental stage suit the research question; species has known responses to the treatment or assay; behavioural norms correctly understood; group size accounts for expected attrition | `ORGANISM_MODEL_MISMATCH` |
+| **Cell line** | Supplier + catalogue/ATCC/RRID given; mycoplasma-free declared; STR validation mentioned; culture conditions match known requirements; line not on misidentification/contamination lists (Cellosaurus/ICLAC); passage number given for primary cells | `CELL_LINE_SOURCE_MISSING`, `MYCOPLASMA_UNREPORTED`, `STR_UNREPORTED`, `CULTURE_CONDITION_MISMATCH`, `CELL_LINE_IDENTITY_UNVERIFIED`, `PASSAGE_UNREPORTED` |
+| **Reagent / drug** | Mechanism consistent with intended effect; solvent compatible with downstream assay; final solvent concentration acceptable; source + catalogue given; unstable reagents have storage conditions stated | `AGENT_MECHANISM_MISMATCH`, `SOLVENT_ISSUE`, `REAGENT_NO_CATALOG`, `STABILITY_UNREPORTED` |
+| **Gene / protein annotation** | Known biological activity and localisation; expected interaction with treatment or assay; database annotations support assumed orthology, function, sequence, interaction, or regulatory relationship | verify via X1; note if modern annotations differ from those at time of study |
 
-- 列出主假设中的因果链：A → B → C
-- 对链中每个节点检查：方法节是否有对应的测量步骤？
-- 若某节点无对应测量步骤 → `ENDPOINT_MISSING`（major）
-- 若测量步骤测量的指标与假设节点不匹配 → `ENDPOINT_PROXY_QUESTIONABLE`（minor/major）
+When modern annotations differ from those available at the time of the study, report this as a **historical limitation** — not an original error.
 
-**例**：假设「药物 X 通过抑制 PI3K 诱导凋亡」
-- PI3K 活性（p-PI3K）→ 需 Western blot ✓
-- 下游 AKT 磷酸化 → 需 Western blot ✓
-- 凋亡结局 → 需 Annexin V、TUNEL 或 Caspase 活性 ✓
-- 若只测 p-PI3K 而不测凋亡指标 → `ENDPOINT_MISSING`
+### 4.2 Interaction plausibility
 
-### 4.3 干扰因素检查
+For every major entity–entity interaction in the method (drug–target, stimulus–cell, treatment–model), check:
 
-询问：**方法设计中是否存在会产生意外影响的因素，且论文未对此给出控制或说明？**
+1. **Direction**: Is the predicted effect direction consistent with established biology?
+2. **Magnitude**: Is the dose/concentration within the known active range? (A compound with IC₅₀ = 10 µM tested at 0.1 µM is likely below its effective range.)
+3. **Context match**: Does the substrate, environment (liquid vs. agar, temperature, pH, ionic strength) match the cited method and the assay's known requirements?
+4. **Toxicity mimicry**: Could the treatment produce toxicity, developmental delay, starvation, stress, reduced movement, or altered feeding that mimics the intended endpoint?
 
-常见干扰源（不限于此）：
-- 溶剂毒性（DMSO、乙醇、甲醇）未设溶剂对照
-- 同一批动物执行多个行为测试（顺序效应、疲劳、习惯化）
-- 造模操作本身的毒性（免疫抑制剂、化学品）影响所测生理指标
-- 灌胃应激对行为学结果的影响
-- 同一样本用于多个分析（多次冻融）
-- 检测操作的时间窗口（如免疫细胞功能的昼夜差异）
+Candidate codes: `INTERACTION_IMPLAUSIBLE`, `INTERACTION_CONTEXT_MISMATCH`.
 
-候选标记：`CONFOUND_UNREPORTED`（无控制也无说明）、`CONFOUND_CONTROLLED`（有说明，不产 finding）
+### 4.3 Dose and treatment reasonableness
 
-### 4.4 对照设置核查
+| Check | Criterion | Candidate code |
+|-------|-----------|----------------|
+| **Dose gradient** | Dose-response studies with fewer than 4 non-zero dose points | `DOSE_GRADIENT_INSUFFICIENT` |
+| **Dose rationale** | No stated basis for dose selection (pilot experiment, literature, MTD, IC₅₀) | `DOSE_RATIONALE_MISSING` |
+| **Species-appropriate dose** | Dose exceeds safe range for this species and route (near MTD/LD₁₀; DMSO > 0.5%) or is below the effective range | `DOSE_OUT_OF_RANGE` |
+| **Single time-point kinetics** | Single time-point used to draw kinetic or persistence conclusions | coordinate with M7 |
 
-| 情形 | 应有对照 | 缺失时 |
-|------|----------|--------|
-| 药物/化合物处理 | 溶剂对照（相同体积/浓度溶剂） | `MISSING_CONTROL`（critical） |
-| 基因敲低（siRNA/shRNA） | 非靶向对照（scrambled/NC） | `MISSING_CONTROL`（critical） |
-| 过表达 | 空载体对照 | `MISSING_CONTROL`（critical） |
-| 抗体类实验（IP/IHC/IF） | 同型 IgG / 一抗省略 | `MISSING_CONTROL`（major） |
-| 手术模型 | 假手术（sham） | `MISSING_CONTROL`（critical） |
-| 荧光染色 | 阴性对照（未染色 / 二抗单独） | `MISSING_CONTROL`（major） |
-| 行为学 | 未处理/空白对照 + 阳性药物对照（若评估治疗效果） | `MISSING_CONTROL`（major） |
+### 4.4 Controls
 
-**防误报规则**：`controls` 字段为 `parse_failed` 或 `ambiguous` 时不报（未读到 ≠ 不存在）。
+| Situation | Required control | If absent |
+|-----------|-----------------|-----------|
+| Drug / compound treatment | Vehicle control (same volume and concentration solvent) | `MISSING_CONTROL` (critical) |
+| Gene knockdown (siRNA/shRNA) | Non-targeting control (scrambled/NC) | `MISSING_CONTROL` (critical) |
+| Overexpression | Empty vector control | `MISSING_CONTROL` (critical) |
+| Antibody experiments (IP/IHC/IF) | Isotype IgG / primary antibody omission | `MISSING_CONTROL` (major) |
+| Surgical model | Sham surgery | `MISSING_CONTROL` (critical) |
+| Fluorescence staining | Negative control (unstained / secondary antibody only) | `MISSING_CONTROL` (major) |
+| Behavioural assay | Untreated/blank control + positive drug control (if evaluating treatment effect) | `MISSING_CONTROL` (major) |
 
-### 4.5 Assay 最低报告要素（v1 保留，补充完善）
+**Anti-false-positive rule**: if controls information is parse_failed or ambiguous, do not enter a candidate. Not read ≠ not present.
 
-每种 assay 仅对其所列要素检查，**不跨 assay 套用**。
+### 4.5 Confounders
 
-| assay | 必报要素（缺失 → major） | 建议报（缺失 → minor） |
-|-------|------------------------|----------------------|
-| **Western blot** | 抗体来源+货号、稀释比、上样量、内参蛋白 | 转膜条件、封闭液、凝胶浓度（跨宽分子量范围时必填）、曝光时间 |
-| **qPCR** | 引物序列或货号、内参基因、定量方法（2^-ΔΔCt 等） | 扩增效率、熔解曲线、RNA 质量（RIN） |
-| **ELISA** | 试剂盒厂商+货号、检测范围（线性范围）、标准曲线 | 批内/批间 CV、稀释倍数、保存条件 |
-| **IHC / IF** | 抗体货号+稀释、抗原修复方法、阳性/阴性对照 | 定量方法、是否盲法判读 |
-| **流式细胞术** | 抗体 panel（荧光素+克隆号）、门控策略、同型/FMO 对照 | 补偿方案、活死细胞染色、采集细胞数 |
-| **CCK-8 / MTT / MTS** | 接种密度、处理时长、读数波长、溶剂对照说明 | 复孔数、是否扣除背景 |
-| **组织学（HE/Masson/特殊染色）** | 固定方式、切片厚度、染色方案、评分标准 | 判读者数量、是否盲法、每样本视野数 |
-| **RNA-seq / ChIP-seq** | 平台、建库试剂盒、测序深度/读长、比对软件+版本、参考基因组版本 | 质控指标（Q20/Q30）、批次信息 |
-| **动物行为学** | 装置规格（尺寸/材质）、测试时长、环境条件（光照/噪声/温度）、判读是否盲法 | 适应期、测试顺序随机化、测试时间段（昼夜） |
-| **Co-IP / pulldown** | 抗体货号、裂解缓冲液配方、对照 IgG | 洗涤次数与强度、input 比例 |
-| **HPLC / LC-MS** | 色谱柱型号、流动相组成、流速、检测波长/质量范围、标准品来源 | 保留时间、响应因子、回收率 |
-| **分子对接（in silico）** | 靶蛋白 PDB ID 和分辨率、对接软件+版本、格点/搜索空间定义、评分函数 | 与已知配体的对比验证、结合口袋选取依据 |
-| **克隆形成** | 接种细胞数、培养时长、固定/染色方案、计数阈值（≥X 个细胞） | 每组孔数（生物重复 vs 技术重复的区分） |
-| **AO/EB 染色** | AO/EB 浓度或比例、染色时长、每组计数细胞数、分类标准（活/早凋/晚凋/坏死） | 是否盲法、采集视野数 |
+Ask: does the experimental design include factors that could produce unexpected influences on the result, with neither control nor disclosure given?
 
-> **溯源要求（跨所有 assay）**：关键试剂（抗体、化合物、细胞系）应给出来源+货号/批号。
-> 只写厂商不写货号 → `reagent_traceability_incomplete`（minor）。
+Common confounders (non-exhaustive):
+- Solvent toxicity (DMSO, ethanol, methanol) without a vehicle control
+- Sequential behavioural tests on the same cohort (order effects, fatigue, habituation)
+- Model-induction toxicity affecting the measured physiological endpoint
+- Gavage stress on behavioural outcomes
+- Multiple freeze-thaw cycles on a sample used across multiple assays
+- Time-of-day effects for immune cell functional assays
+- Known redundancies or compensatory pathways in the model system that could mask the intended effect
 
-### 4.6 随机化与盲法
+Candidate codes: `CONFOUND_UNREPORTED` (no control and no disclosure), `CONFOUND_CONTROLLED` (disclosed and controlled → no finding).
 
-| 状态 | 处理 |
-|------|------|
-| 报告了方法 | 不报 |
-| 未报告（`not_reported`） | `randomization_blinding_unreported`（minor；与 M6 ARRIVE 联动） |
-| 明确未做且给了理由 | 不报 |
-| 明确未做且无理由 | 同上（major） |
+### 4.6 Assay minimum reporting elements
 
----
+Check only the elements listed for the assay type; do not apply cross-assay requirements.
 
-## Phase 5 · Severity 标定与 Finding 产出
+| Assay | Required elements (absent → major) | Recommended elements (absent → minor) |
+|-------|-------------------------------------|---------------------------------------|
+| **Western blot** | antibody source + catalogue, dilution, loading amount, loading control | transfer conditions, blocking buffer, gel percentage (required when spanning wide MW range), exposure time |
+| **qPCR** | primer sequence or catalogue, reference gene, quantification method (2^−ΔΔCt etc.) | amplification efficiency, melt curve, RNA quality (RIN) |
+| **ELISA** | kit vendor + catalogue, detection range (linear range), standard curve | intra/inter-assay CV, dilution factor, storage conditions |
+| **IHC / IF** | antibody catalogue + dilution, antigen retrieval, positive/negative controls | quantification method, blinding of scoring |
+| **Flow cytometry** | antibody panel (fluorochrome + clone), gating strategy, isotype/FMO controls | compensation scheme, live/dead staining, cell count acquired |
+| **CCK-8 / MTT / MTS** | seeding density, treatment duration, absorbance wavelength, vehicle control | replicate count, background subtraction |
+| **Histology (H&E/Masson/special)** | fixation method, section thickness, staining protocol, scoring criteria | number of scorers, blinding, fields per sample |
+| **RNA-seq / ChIP-seq** | platform, library kit, sequencing depth/read length, alignment software + version, reference genome version | QC metrics (Q20/Q30), batch information |
+| **Animal behaviour** | apparatus dimensions/material, test duration, environmental conditions (light/noise/temperature), blinding of scoring | habituation period, test order randomisation, time of day |
+| **Co-IP / pulldown** | antibody catalogue, lysis buffer composition, IgG control | wash stringency, input proportion |
+| **HPLC / LC-MS** | column type, mobile phase composition, flow rate, detection wavelength or mass range, standard source | retention time, response factor, recovery rate |
+| **In silico docking** | target PDB ID and resolution, docking software + version, grid/search space definition, scoring function | validation against known ligand, binding pocket selection rationale |
+| **Colony formation** | seeding cell count, culture duration, fixation/staining protocol, counting threshold (≥X cells) | wells per group (distinguish biological vs. technical replicates) |
+| **Survival assay** | statistical test used (log-rank preferred over t-test for censored data), censoring criteria, n per group | daily scoring method, exclusion criteria |
+| **AO/EB staining** | AO/EB concentration or ratio, staining duration, cells counted per group, classification criteria (live/early/late apoptotic/necrotic) | blinding, fields acquired |
 
-### 5.1 标定规则（两步法）
+> **Across all assays**: key reagents (antibodies, compounds, cell lines) should have source + catalogue/lot. Vendor only without catalogue → `reagent_traceability_incomplete` (minor).
 
-**Step A：判断是否伤害实验基本逻辑**
+### 4.7 Randomisation, blinding, and replication
 
-| 类型 | 判断 |
-|------|------|
-| 缺失信息使实验**不可复现** | 可能是 major（依据 Step B 最终定） |
-| 缺失信息使**结果解释发生根本改变** | major 或 critical |
-| 存在/错误信息使实验**逻辑断裂**（FLOW_BREAK / INTERACTION_IMPLAUSIBLE） | major 或 critical |
-| 关键对照缺失（`MISSING_CONTROL`） | critical |
-| 缺失信息**不影响核心结论，只影响可重复性** | minor 或 informational |
-| 报告遗漏但**不影响解读或复现** | informational |
+| State | Action |
+|-------|--------|
+| Method reported | No finding |
+| Not reported | `randomization_blinding_unreported` (minor; coordinates with M6 ARRIVE) |
+| Explicitly absent with justification | No finding |
+| Explicitly absent without justification | major |
 
-**Step B：检查自消解条件（任一满足即降级）**
+### 4.8 Multiple testing and selection bias
 
-以下任何一条成立时，候选的 severity **下调一级**（critical→major / major→minor / minor→informational）：
-
-1. **Paper 已给出合理解释**：作者在方法节或讨论节对该偏差提供了说明，且说明在专业上合理
-2. **图表数据自支持**：该信息虽未文字说明，但图表中的数据（如含有内参的 WB 图、含标准曲线的 ELISA 图）已隐含该信息
-3. **领域通行惯例已覆盖**：该步骤遵循已被广泛知晓的行业标准，如商业试剂盒说明书
-4. **不影响组间可比性**：缺失信息对所有组的影响完全一致，不产生差异性偏差
-
-**Step C：最终 severity 边界**
-
-| 最终 severity | 含义 |
-|--------------|------|
-| `critical` | 实验设计根本性缺陷，不修正无法接受；核心结论可能错误 |
-| `major` | 影响结果可靠性或重要信息缺失，必须修改 |
-| `minor` | 报告不完整但不影响核心结论；建议完善 |
-| `informational` | 非必要信息缺失，或仅供改善透明度的建议 |
-
-### 5.2 Finding 产出格式
-
-每条 finding 必须包含：
-- `slug`（见 §5.3）
-- `severity`（经 Phase 5 Step A→B→C 标定）
-- `step_refs[]`（来自 Phase 1 的 step_id，必须至少有一个）
-- `evidence_refs[]`（来自 evidence_registry 的 present/absence 证据，符合 contracts §1）
-- `message`：一句话陈述问题本身
-- `impact`：一句话说明这如何影响实验或结论
-- `recommended_action`：作者应补充/修改什么
-
-**不允许没有 `step_refs` 的 finding。** 如果找不到对应的 step，说明 Phase 1 解构不完整，先补完 Phase 1。
-
-### 5.3 Category Slugs
-
-slugs 分为两组：**实验设计类**（Phase 2–4 产出）与**步骤角色要求类**（Phase 1b 产出）。
-
-#### 实验设计类
-
-| slug | 描述 | 默认 severity |
-|------|------|--------------|
-| `missing_control` | 关键对照缺失（整体设计层面） | critical |
-| `flow_break` | 步骤输出-输入不匹配，流程断裂 | major |
-| `interaction_implausible` | 实体-实体交互与已知生物学相悖 | major |
-| `interaction_context_mismatch` | 实体交互在参数/底物上下文不匹配 | major |
-| `dose_out_of_range` | 剂量超出合理范围（接近毒性剂量 / 低于有效剂量） | major |
-| `endpoint_missing` | 主假设中的某节点无对应检测方法 | major |
-| `confound_unreported` | 已知干扰因素存在但未控制也未说明 | major / minor |
-| `method_no_reference` | 非标准流程无方法学引用且无自述 | major |
-| `method_reporting_incomplete` | Assay 缺少必报要素（§4.5 清单） | major / minor |
-| `protocol_deviation_unexplained` | 偏离通用流程未说明 | major |
-| `animal_use_justification_unclear` | 未见动物实验必要性说明 | major |
-| `dose_gradient_insufficient` | 剂量-反应点数不足 | major |
-| `dose_rationale_missing` | 剂量选择依据缺失 | minor |
-| `replicate_type_unclear` | 未区分生物学/技术重复 | major |
-| `randomization_blinding_unreported` | 未报告随机化/盲法 | minor / major |
-| `cell_line_unauthenticated` | 细胞系来源/鉴定未报告 | minor |
-| `reagent_traceability_incomplete` | 关键试剂缺来源或货号 | minor |
-| `endpoint_proxy_questionable` | 测量指标与假设节点的对应关系存疑 | minor |
-| `timeline_anomaly` | 时间节点不符合生物学合理范围 | major / minor |
-| `missing_intermediate_step` | 流程中缺少必要的中间处理步骤 | major / minor |
-
-#### 步骤角色要求类（Phase 1b 产出）
-
-这些 slug 源自 Phase 1b 对单个步骤的 `step_role` 要求核查；
-**在 Phase 5 汇总时与实验设计类合并，避免双重计分同一问题。**
-
-| slug | step_role | 描述 | 默认 severity |
-|------|-----------|------|--------------|
-| `missing_paired_control` | INTERVENTION | 干预步骤无并行对照条件 | critical |
-| `confounded_variable` | INTERVENTION | 单步同时改变多变量而无拆分组 | major |
-| `intervention_underspecified` | INTERVENTION | 剂量/时长/途径/条件缺失 | major / minor |
-| `random_assignment_missing` | INTERVENTION | 受试者未随机分配到干预组 | major |
-| `calibration_missing` | DETECTION | DETECTION 步骤无配对 CALIBRATION | major |
-| `reproducibility_unreported` | DETECTION | 技术重复数或批内 CV 未报告 | minor |
-| `subjectivity_uncontrolled` | DETECTION / ANALYSIS | 主观判断步骤无盲法且无算法化 | major |
-| `quantification_criteria_undefined` | DETECTION | 截断值/评分阈值未预先定义 | major |
-| `detection_range_concern` | DETECTION | 被测物浓度超出检测线性范围 | major |
-| `batch_effect_uncontrolled` | PROCESSING | 各组样品非同批处理且未说明 | major |
-| `processing_underspecified` | PROCESSING | 关键处理参数（时间/温度/速度）缺失 | minor |
-| `stability_window_violated` | PROCESSING | 样品在稳定窗口外等待/处理 | major |
-| `validation_criteria_undefined` | VALIDATION | 造模/试剂验证无预先定义的成功标准 | major |
-| `validation_result_unreported` | VALIDATION | 验证步骤的结果未呈现 | minor |
-| `calibration_not_concurrent` | CALIBRATION | 校准步骤与 DETECTION 不同 run | major |
-| `calibration_range_insufficient` | CALIBRATION | 校准范围不覆盖被测样品浓度 | major |
-| `calibration_source_missing` | CALIBRATION | 标准品/参照物来源未记录 | minor |
-| `software_version_missing` | ANALYSIS | 分析软件版本未记录 | minor |
-| `inter_rater_unreported` | ANALYSIS | 多评分者时未报告一致性 | minor |
+| Situation | Check | Candidate code |
+|-----------|-------|----------------|
+| Multiple comparisons from a single dataset | Is an appropriate correction applied (Bonferroni, FDR, etc.)? | `MULTIPLE_TESTING_UNCORRECTED` |
+| Candidates selected for follow-up based on initial result inspection | Were selection criteria pre-specified, or chosen after inspecting the data? | `POST_HOC_SELECTION` |
+| Subset highlighted from a large initial screen | Is the statistical framing adjusted for the actual search space? | `POST_HOC_SELECTION` |
 
 ---
 
-## 6. 与其他模块的边界
+## Phase 5 · Measurement and Endpoint Validity
 
-| 情形 | 归属 | 理由 |
-|------|------|------|
-| 动物实验是否**必要** | **M3** | 方法学判断 |
-| 动物实验有无**伦理批件** | **M6** | 合规判断 |
-| 样本量是否**足够** | **M4** | 统计效能 |
-| 技术重复当作统计 n | **M4**（`pseudoreplication`）；M3 报「未区分」 | 统计推断问题 |
-| 方法描述**前后矛盾** | **M2** | 内部一致性 |
-| 结论**超出数据支持范围** | **M7** | 结论-证据对齐 |
-| 引物/登录号**格式错误** | 工具产 signal → **M3** 判定 | `sequence_identifier_audit.py` |
-| 数值**内部不一致**（如剂量两处不同） | **M2** + **M3** 联动 | M2 查一致性，M3 查哪个值在方法上正确 |
+For every major endpoint, clearly distinguish:
 
----
+1. **What was physically measured** — the raw instrument signal or observation
+2. **What biological construct the authors claim it represents** — the interpretation
+3. **What evidence connects the measurement to that construct** — the assay validation basis
 
-## 7. 联网增强（X1 connector **已交付**，非候选）
+**Construct validity check**: does this assay measure the biological variable it is claimed to measure? A visually clear or statistically significant difference does not validate an assay that may measure the wrong variable.
 
-> 本节原写作「候选／待接入」，实际 X1 外部核验层已实现并在真实论文运行中跑通
-> （`scripts/external_figure_validation.py`，12 个数据库，14 项 check）。
-> 下表各项**现在就该调用**，不要当作二期设想。调用方式见 SKILL.md §4。
+**Construct validity concern required when**:
+- The assay is used outside its validated conditions (species, sample type, treatment context)
+- Modern literature has identified the assay as unreliable for the claimed measurement in this system
+- The assay has known cross-reactivity or non-specific effects in this experimental context
 
-| 功能 | 数据源 | 新增 slug |
-|------|--------|----------|
-| 方法学引用核验（文献是否真包含该方法） | Crossref / PubMed via X1 | `method_citation_mismatch`（major） |
-| 细胞系误认/污染 | Cellosaurus / ICLAC via X1 | `cell_line_misidentified`（critical） |
-| 抗体 RRID 核验 | RRID Registry / Antibody Registry via X1 | `antibody_validation_issue`（major） |
-| 剂量落在同类文献分布区间外 | PubMed + ChEMBL via X1 | `dose_out_of_range`（产 external_validation_candidate，不直接立 finding） |
+**Do not reject a qualitative assay** solely because it lacks modern quantification, provided:
+- The claimed conclusion is explicitly qualitative
+- Adequate controls support the direction of the effect
+- The authors do not over-interpret the result as quantitatively precise
 
-外部源不可达时只产 `system_limitation`，不改变稿件风险分。
+For each major endpoint, produce a construct validity entry:
 
----
-
-## 8. 示例（正例/反例）
-
-### 8.1 `flow_break`（Phase 2 → Phase 5）
-
-**该报警**：
-> S03（细胞裂解 → 收集上清蛋白质）→ S04（Western blot，样品为组织匀浆）
-
-S03 输出是**细胞裂解液蛋白**，S04 却要求**组织蛋白**，两者来源不一致，
-流程断裂。severity: major。
-
-**不该报警**：
-> S03（离心 12000g 10 min → 收集上清）→ S04（BCA 蛋白定量）
-
-输出（蛋白上清）恰好是 S04 的输入，连接合理，不报。
-
-### 8.2 `dose_out_of_range`（Phase 3/4 → Phase 5）
-
-**该报警**：
-> "Methamphetamine ... administered by intraperitoneal injection to mice
-> in a concentration of 40 mg/kg"
-
-小鼠 METH i.p. LD₅₀ ≈ 57 mg/kg。40 mg/kg 接近 LD₅₀，
-会产生严重急性毒性，不能建立慢性行为学模型。
-同文件另一处写"5 mg/kg/day"存在直接矛盾（归 M2，但 M3 同时报剂量合理性问题）。
-severity: major（降级检查：无图表自支持，无作者解释 → 保持 major）。
-
-**不该报警**：
-> "Anethole 10.8 μM for CCK-8"
-
-文中 IC₅₀ = 10.8 µM，选取该浓度有明确依据 → 不报。
-
-### 8.3 `method_reporting_incomplete`（降级示例）
-
-**候选**：Western blot 中未给出 SDS-PAGE 凝胶浓度。
-- Step A：影响重复性，但通常不改变定性结论 → 候选 minor。
-- Step B 检查：图中条带位置和分子量标记可见，读者可推断大致凝胶范围 → 图表数据自支持 → 降至 **informational**。
-
-**候选**：ELISA 无试剂盒货号。
-- Step A：无法确认检测范围和标准曲线，直接影响绝对浓度值可信度 → 候选 major。
-- Step B 检查：文中无图表展示标准曲线，无其他自支持证据 → **保持 major**。
+```
+endpoint    : the measurement made
+construct   : the biological variable claimed
+link_type   : direct / proxy / indirect
+evidence    : what supports the assay→construct link
+concern     : any reason to doubt the link
+resolution  : whether the concern is resolved by controls, supplementary data, or citations
+```
 
 ---
 
-## 9. TODO（二期）
+## Phase 6 · Finding Synthesis
 
-- [ ] 补充中医药多成分方剂的特殊处理规则
-- [ ] 补充器械/影像类研究的方法学要素
-- [ ] 用 `tools/baseline_probe.py` 探针各 slug 的零-uplift 率
-- [ ] Peter 复核 §4.5 所有 assay 的必报要素
-- [ ] 联网后对已分析的 3 篇论文重跑 X1 层，验证离线层命中率
+### 6.1 Self-resolution criteria
+
+For each candidate, search the paper, supplement, cited methods, figures, tables, and legends for resolving information.
+
+**A concern may be cancelled or downgraded when**:
+- The missing detail is explicitly supplied elsewhere in the paper or supplement
+- A control directly rules out the alternative explanation
+- An independent assay confirms the same conclusion by a different method
+- Figure or table data adequately support an otherwise underexplained step
+- The authors appropriately limit the claim to what the method actually demonstrates
+
+**A concern may NOT be downgraded merely because**:
+- The method was common practice for its era — historical context explains why the gap exists but does not increase the evidentiary strength of the experiment
+- The result looks visually convincing
+- The P value is small
+- The authors acknowledge the limitation
+- A generic protocol could theoretically have included the missing control
+
+Era context is relevant to the `recommended_action` field (where a gap in a published study may be irreversible) and to the fairness of the framing. It does not alter the severity rating.
+
+### 6.2 Finding format
+
+Each finding must include:
+
+| Field | Content |
+|-------|---------|
+| `id` | F01, F02, … |
+| `severity` | critical / major / minor / informational |
+| `slug` | from §6.4 |
+| `step_refs` | step IDs from Phase 1 (at least one required) |
+| `evidence_refs` | explicit evidence for the presence or absence of the element |
+| `finding` | one sentence stating the problem |
+| `evidence` | what specifically supports this finding |
+| `impact` | how this changes the interpretation of the results |
+| `alternative_explanation` | the strongest alternative reading of the data given this gap |
+| `self_resolution` | whether and where the paper resolves this concern |
+| `scope` | `whole_paper` / `central_conclusion` / `specific_subclaim: [name]` |
+| `confidence` | `high` / `medium` / `low` |
+
+**No finding without `step_refs`.** If no corresponding step can be found, Phase 1 decomposition is incomplete — complete Phase 1 first.
+
+A finding at `confidence: low` must include a specific condition under which it would be upgraded or resolved (e.g. "resolved if SOM confirms fixed-worm Nile Red protocol").
+
+### 6.3 Severity calibration
+
+**Assign severity only after determining how the issue changes the interpretation.**
+
+Assess severity separately for:
+1. **The paper's overall conclusion** — could this issue reverse or remove the paper's principal claim?
+2. **The particular subclaim directly affected** — could this issue invalidate this specific result?
+
+A flaw may be major for one subclaim but minor for the paper as a whole. Report both assessments when they differ.
+
+| Severity | Definition |
+|----------|-----------|
+| `critical` | Breaks a necessary link in the core experimental logic; invalidates a central measurement; permits a strong alternative explanation; or could substantially reverse a central conclusion. Cannot be resolved by a reporting clarification alone. |
+| `major` | Weakens the reliability of a key result or introduces a significant validation gap; material and unlikely to be resolved by generic conventions. |
+| `minor` | Incomplete reporting or a localised gap unlikely to change the principal conclusion; readily correctable or indirectly supported by other evidence. |
+| `informational` | A reproducibility or transparency observation with little expected effect on conclusions. Do not use for a genuine validity problem. |
+| `no_finding` | The concern is adequately resolved by the paper, supplement, cited protocol, controls, or data. |
+
+**Do not use finding count as a proxy for overall quality.** Weight findings by their position in the causal chain and their likely effect on the results.
+
+### 6.4 Finding slug catalogue
+
+#### Experimental design slugs (Phases 3–5)
+
+| slug | Description | Default severity |
+|------|-------------|-----------------|
+| `missing_control` | Critical control absent at the whole-design level | critical |
+| `flow_break` | Step output–input mismatch; material or sample identity chain broken | major |
+| `flow_break_evidentiary` | Computational candidate treated as experimentally validated; association treated as causal | major |
+| `post_hoc_selection` | Candidate or parameter selected after inspecting results, without pre-specification | major |
+| `multiple_testing_uncorrected` | Multiple comparisons without statistical correction | major |
+| `construct_validity_concern` | Assay may not measure the biological construct it is claimed to measure | major |
+| `interaction_implausible` | Entity–entity interaction contradicts established biology | major |
+| `interaction_context_mismatch` | Interaction plausible but substrate, parameters, or environmental context do not match | major |
+| `dose_out_of_range` | Dose exceeds safe range or is below effective range | major |
+| `endpoint_missing` | A node in the main hypothesis has no corresponding detection step | major |
+| `endpoint_proxy_questionable` | Measurement does not directly represent the claimed biological variable | minor / major |
+| `confound_unreported` | Known confounder present with neither control nor disclosure | major / minor |
+| `method_citation_mismatch` | Cited method paper does not describe the attributed procedure | major |
+| `method_reporting_incomplete` | Assay minimum elements (§4.6) absent | major / minor |
+| `protocol_adapted_undisclosed` | Material protocol modification not disclosed | minor |
+| `protocol_missing` | No traceable source for a critical step | major |
+| `animal_use_justification_unclear` | Animal experiment necessity not justified | major |
+| `dose_gradient_insufficient` | Fewer than 4 non-zero dose points in a dose-response study | major |
+| `dose_rationale_missing` | No stated basis for dose selection | minor |
+| `replicate_type_unclear` | Biological vs. technical replicates not distinguished | major |
+| `randomization_blinding_unreported` | Randomisation or blinding not reported | minor / major |
+| `cell_line_unauthenticated` | Cell line source/authentication unreported | minor |
+| `reagent_traceability_incomplete` | Key reagent missing source or catalogue number | minor |
+| `technical_negative_ambiguous` | A null result cannot be distinguished from technical failure | minor / major |
+| `timeline_anomaly` | Interval between steps inconsistent with biology | major / minor |
+| `missing_intermediate_step` | A necessary intermediate processing step is absent from the workflow | major / minor |
+
+#### Per-role requirement slugs (Phase 1b)
+
+These arise from Phase 1b single-step role checks. At Phase 6, consolidate with experimental design slugs — do not double-count the same gap.
+
+| slug | Role | Description | Default severity |
+|------|------|-------------|-----------------|
+| `missing_paired_control` | INTERVENTION | Intervention step has no concurrent control condition | critical |
+| `confounded_variable` | INTERVENTION | Single step changes multiple variables without comparator groups | major |
+| `intervention_underspecified` | INTERVENTION | Dose/duration/route/conditions incomplete | major / minor |
+| `random_assignment_missing` | INTERVENTION | Subjects not randomly assigned to groups | major |
+| `calibration_missing` | DETECTION | DETECTION step has no paired CALIBRATION | major |
+| `reproducibility_unreported` | DETECTION | Technical replicate count or intra-run CV not reported | minor |
+| `subjectivity_uncontrolled` | DETECTION / ANALYSIS | Subjective judgment step lacks blinding or algorithmic evaluation | major |
+| `quantification_criteria_undefined` | DETECTION | Threshold/scoring criteria not pre-defined | major |
+| `detection_range_concern` | DETECTION | Analyte concentration outside assay linear range | major |
+| `batch_effect_uncontrolled` | PROCESSING | Groups processed in different batches without disclosure | major |
+| `processing_underspecified` | PROCESSING | Key parameters (time/temperature/speed) absent | minor |
+| `stability_window_violated` | PROCESSING | Sample held outside stability window | major |
+| `validation_criteria_undefined` | VALIDATION | No pre-defined pass/fail criteria for model or reagent validation | major |
+| `validation_result_unreported` | VALIDATION | Validation step outcome not presented | minor |
+| `calibration_not_concurrent` | CALIBRATION | Calibration not in same experimental run as samples | major |
+| `calibration_range_insufficient` | CALIBRATION | Standard curve does not cover sample concentration range | major |
+| `calibration_source_missing` | CALIBRATION | Standard/reference material source not documented | minor |
+| `software_version_missing` | ANALYSIS | Analysis software version not recorded | minor |
+| `inter_rater_unreported` | ANALYSIS | Multiple scorers; inter-rater agreement not reported | minor |
+
+---
+
+## Phase 7 · Final Synthesis
+
+Conclude with:
+
+1. **Workflow reconstruction**: a concise description of the complete experimental workflow as reconstructed (not merely as written), including steps that were incorporated by citation or reasonably inferred.
+2. **Strongest design elements**: which parts of the experimental design are well-controlled and provide reliable evidence.
+3. **Weakest transition**: the single most critical gap or unsupported inferential step in the evidence chain — the link where the experimental logic is most exposed.
+4. **Directly supported conclusions**: which specific claims are adequately supported by the methods as described.
+5. **Candidate-level conclusions**: which claims are associative, exploratory, or based on a single unvalidated inference step. These are not necessarily wrong, but they are not mechanistically established.
+6. **Contemporary vs. later limitations**: distinguish limitations that were recognisable and addressable at the time of publication from those that reflect methodological knowledge developed afterwards.
+7. **Overall assessment**: is the method exploratory, confirmatory, or mechanistically definitive? This assessment must be justified by the specific findings and their positions in the causal chain, not by the count of findings alone.
+
+---
+
+## Module Boundaries
+
+| Situation | Owner | Rationale |
+|-----------|-------|-----------|
+| Is animal experimentation **necessary**? | **M3** | methodological judgement |
+| Is there an **ethics approval**? | **M6** | compliance judgement |
+| Is the sample size **adequate**? | **M4** | statistical power |
+| Technical replicates used as statistical n | **M4** (`pseudoreplication`); M3 flags as "not distinguished" | statistical inference issue |
+| Method text **internally inconsistent** | **M2** | internal consistency |
+| Conclusion **exceeds data support** | **M7** | conclusion-evidence alignment |
+| Primer/accession number **format errors** | tool signal → **M3** judgement | `sequence_identifier_audit.py` |
+| Numeric **internal inconsistency** (e.g. dose stated differently in two places) | **M2** + **M3** linked | M2 checks consistency; M3 judges which value is methodologically correct |
+
+---
+
+## Online Enhancement — X1 is **DELIVERED**, not a candidate
+
+> **Status correction.** This section was originally written as "future candidates".
+> X1 is implemented and has run live against a real paper
+> (`scripts/external_figure_validation.py` — 12 databases, 14 checks;
+> verified 43 reference DOIs plus a Dryad dataset DOI in a real run).
+> **Call these now**; do not treat them as phase-2 ideas.
+> Invocation: see `SKILL.md` §4. Evidence: `docs/results/realpaper-pmc11856280-*`.
+
+| Function | Data source | New slug |
+|----------|-------------|---------|
+| Method citation verification | Crossref / PubMed via X1 | `method_citation_mismatch` (major) |
+| Cell line misidentification | Cellosaurus / ICLAC via X1 | `cell_line_misidentified` (critical) |
+| Antibody RRID verification | RRID Registry / Antibody Registry via X1 | `antibody_validation_issue` (major) |
+| Dose vs. literature distribution | PubMed + ChEMBL via X1 | `dose_out_of_range` (produces external_validation_candidate; no direct finding) |
+
+When an external source is unreachable, produce only `system_limitation`; do not change the manuscript risk score.
+
+---
+
+## Examples
+
+### E1 · `flow_break_evidentiary` (Phase 3 → Phase 6)
+
+**Report**:
+> S02 (bioinformatic screen identifies 947-candidate gene set) → S04 (RNAi knockdown of specific candidates to test lifespan phenotype)
+
+S02's output is a computationally predicted candidate set. S04 treats these as validated candidates without an intermediate experimental confirmation step. The evidentiary level is not preserved; a computational prediction and an experimentally confirmed target are not equivalent inputs for a mechanistic claim. The selection threshold is not pre-specified before follow-up. Severity: major for the claim that any observed RNAi phenotype reflects on-target activity.
+
+**Do not report**:
+> S03 (filter 947 candidates by conservation across species) → S04 (RNAi knockdown of conserved candidates)
+
+Bioinformatic filtering is appropriate for prioritising candidates for experimental follow-up. The issue is whether candidates are treated as validated targets versus exploratory candidates. If the paper explicitly frames them as exploratory, this transition is acceptable.
+
+### E2 · `dose_out_of_range` (Phase 4 → Phase 6)
+
+**Report**:
+> "Methamphetamine … administered by intraperitoneal injection to mice in a concentration of 40 mg/kg"
+
+Mouse METH i.p. LD₅₀ ≈ 57 mg/kg. 40 mg/kg is near-lethal and cannot establish a chronic behavioural model. A separate methods text in the same paper gives "5 mg/kg/day" — M2 inconsistency; M3 flags dose plausibility independently. Severity: major (no self-resolution: no author explanation, no figure support).
+
+**Do not report**:
+> "Anethole 10.8 µM for CCK-8 assay"
+
+Paper states IC₅₀ = 10.8 µM; concentration selection has explicit justification.
+
+### E3 · Severity scope separation (Phase 6)
+
+Finding: Western blot band quantification performed without blinding.
+- **Severity for the specific subclaim (fold-change values)**: major — subjective quantification without blinding can systematically overestimate fold differences.
+- **Severity for the paper's overall conclusion (directional claim: treatment reduces protein X)**: minor — the direction of the effect is unlikely to be reversed by blinding, and independent assays support the same directional conclusion.
+
+Report both assessments in the `scope` field.
+
+### E4 · Self-resolution restriction (era context, Phase 6)
+
+Finding: No epistasis experiment to confirm that a RNAi phenotype requires intact daf-16 function.
+- The authors do not address this gap.
+- This limitation was methodologically addressable at the time of publication.
+- Era context is noted in the `recommended_action` field.
+- Severity is NOT reduced because it was 2003. The epistemic gap — inability to distinguish downstream-of-DAF-16 from parallel-to-DAF-16 — is the same regardless of when the paper was written.
+
+---
+
+## TODO (next phase)
+
+- [ ] Supplement for TCM/multi-compound formulation special handling rules
+- [ ] Supplement for medical device/imaging study requirements
+- [ ] Run `tools/baseline_probe.py` to identify zero-uplift slugs across the 20-paper corpus
+- [ ] Peter: review §4.6 assay minimum reporting elements
+- [ ] Re-run X1 layer on the 3 PLOS papers post-analysis to validate offline hit rate
+- [ ] Add Phase 7 synthesis template to `SKILL.md` Stage 4 output contract
