@@ -12,7 +12,8 @@
 
   "properties": {
     "id": {"type": "string", "pattern": "^KD-[0-9]{3,}$"},
-    "metric_name": {"type": "string", "description": "如 IC50 / tumor volume / sensitivity"},
+    "metric_name": {"type": "string", "minLength": 1,
+                    "description": "如 IC50 / tumor volume / sensitivity"},
     "metric_family": {"$ref": "common.schema.json#/$defs/metric_family"},
 
     "grouping_key": {
@@ -222,7 +223,7 @@
 
       "allOf": [
         {
-          "description": "00-contracts.md §2.4：pixel_estimated 的五项强制约束（其中 M4 禁用与 finding confidence 上限由跨对象校验执行）",
+          "description": "00-contracts.md §2.4：pixel_estimated 的五项强制约束（interval 还必须为非零宽；数值大小关系、M4 禁用与 finding confidence 上限由契约校验器执行）",
           "if": {
             "properties": {"provenance": {"properties": {"source_type": {"const": "pixel_estimated"}},
                                           "required": ["source_type"]}},

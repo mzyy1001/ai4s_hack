@@ -65,7 +65,7 @@
         "groups": {"type": "array", "items": {"type": "string"}},
         "dose_levels": {"type": "array", "items": {"type": "string"}},
         "timepoints": {"type": "array", "items": {"type": "string"}},
-        "n_per_group": {"type": ["integer", "null"]},
+        "n_per_group": {"type": ["integer", "null"], "minimum": 1},
         "replicate_type": {
           "oneOf": [{"$ref": "common.schema.json#/$defs/replicate_type"}, {"type": "null"}]
         }
@@ -260,7 +260,27 @@
           "type": ["boolean", "null"],
           "description": "y 轴是否截断（不从 0 起）；截断会夸大组间差异，是 M5 的 finding 线索"
         }
-      }
+      },
+      "allOf": [
+        {
+          "description": "对数轴的显式范围只能包含正值。范围上下界的严格递增关系由契约校验器检查。",
+          "if": {
+            "properties": {"scale": {"enum": ["log10", "log2", "ln"]}},
+            "required": ["scale"]
+          },
+          "then": {
+            "properties": {
+              "range": {
+                "oneOf": [
+                  {"type": "array", "items": {"type": "number", "exclusiveMinimum": 0},
+                   "minItems": 2, "maxItems": 2},
+                  {"type": "null"}
+                ]
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

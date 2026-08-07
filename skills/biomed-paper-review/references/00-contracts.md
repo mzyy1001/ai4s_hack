@@ -270,8 +270,9 @@ visually_derived   = {axis_readable, pixel_estimated}
 
 `source_type: "pixel_estimated"` 时**同时**满足，缺一即为契约违规：
 
-1. `value.type` 必须为 `interval`，仅当图像可见范围把真实值截在边界外、只能支持
-   单侧约束时才可用 `lower_bound` / `upper_bound`；三者均**不得伪装成 `point`**；
+1. `value.type` 必须为 `interval` 且 `low < high`；仅当图像可见范围把真实值截在边界外、
+   只能支持单侧约束时才可用 `lower_bound` / `upper_bound`；不得用 `low == high` 的
+   零宽区间或单侧边界伪装 `point`；
 2. `extraction_confidence` 必须为 `low`；
 3. `manual_review_needed` 必须为 `true`；
 4. **不得**作为 M4 任何统计复算或一致性检验的输入；

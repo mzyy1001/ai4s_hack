@@ -288,7 +288,7 @@ Stage 5  聚合评分渲染       └─> all_extraction_signals[], all_system_l
 
 - Figure Parser 只记录**科学问题**、图型、条件、坐标与可见结果；**图型是否匹配、呈现是否规范只由 Stage 4 的 M5 判断**。
 - 从图中读出的数值必须带 `provenance`（含 `derivation`）。
-- **像素估读一律 `pixel_estimated` + `interval` + `low` + `manual_review_needed: true`**；仅图像边界只能支持单侧约束时可用 `lower_bound` / `upper_bound`，不得编造点值。
+- **像素估读一律 `pixel_estimated` + 非零宽 `interval` + `low` + `manual_review_needed: true`**；仅图像边界只能支持单侧约束时可用 `lower_bound` / `upper_bound`，不得用零宽区间伪装点值。
 - `curve_fit` 与 `significance_markers` 只是 panel 注释；任何拟合参数、p 值或其他定量结果若要进入审核，必须同时写入 `observations[]`。
 - 图像不可读产出 `stage3_system_limitations[]`（`figure_unreadable`），不是 finding。
 

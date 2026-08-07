@@ -341,6 +341,10 @@ def check_instance(rep, name, inst):
             val = node.get("value", {})
             if not isinstance(val, dict) or val.get("type") not in {"interval", "lower_bound", "upper_bound"}:
                 pixel_bad.append(f"{path}: pixel 值非区间")
+            elif val.get("type") == "interval":
+                low, high = val.get("low"), val.get("high")
+                if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low >= high:
+                    pixel_bad.append(f"{path}: pixel interval 必须非零宽（low < high）")
             if node.get("extraction_confidence") != "low":
                 pixel_bad.append(f"{path}: pixel 置信度非 low")
             if node.get("manual_review_needed") is not True:
@@ -354,6 +358,15 @@ def check_instance(rep, name, inst):
     figure_observations = {}
     for fig in inst.get("figure_records", []):
         fobs = fig.get("observations", [])
+        for axis_name, axis in (fig.get("axes") or {}).items():
+            axis_range = axis.get("range")
+            if isinstance(axis_range, list) and len(axis_range) == 2:
+                if not all(isinstance(value, (int, float)) for value in axis_range):
+                    fig_bad.append(f"{fig.get('figure_id')}/{axis_name}: axis range 端点必须为数值")
+                elif axis_range[0] >= axis_range[1]:
+                    fig_bad.append(f"{fig.get('figure_id')}/{axis_name}: axis range 必须严格递增")
+                elif axis.get("scale") in {"log10", "log2", "ln"} and axis_range[0] <= 0:
+                    fig_bad.append(f"{fig.get('figure_id')}/{axis_name}: 对数轴 range 必须全为正值")
         if any((o.get("provenance") or {}).get("source_type") == "pixel_estimated"
                for o in fobs):
             if fig.get("extraction_confidence") != "low":
