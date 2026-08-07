@@ -226,13 +226,15 @@ detail 写「未见动物实验必要性的说明，**建议作者补充**」，
 
 **不该报警**：设 0.1、1、10、100 μM 四个点覆盖两个数量级 → **不报**。
 
-### 9.5 `cell_line_unauthenticated`（体现一期边界）
+### 9.5 `cell_line_unauthenticated`（离线核查边界）
 
 **该报警**：使用 HeLa 细胞，未说明来源、未提 STR 鉴定 → **minor**。
 
 **不该报警**：写明「HeLa (ATCC CCL-2), STR-authenticated, mycoplasma-free」
 → **不报**。
-另：**不得**因为某细胞系「可能是误认细胞系」就报 —— 那需要 ICLAC 比对，属二期。
+另：**不得**因为某细胞系「可能是误认细胞系」就报。误认状态必须由 X1 对精确
+Cellosaurus accession / RRID 调取 Cellosaurus / ICLAC 记录；connector 未实现、未运行或
+外部源不可用时只记录 `system_limitation`，不得把数据库未核验当作稿件问题。
 
 ---
 
@@ -250,27 +252,31 @@ detail 写「未见动物实验必要性的说明，**建议作者补充**」，
 
 ---
 
-## 11. 二期扩展（本期不实现，规则先写下）
+## 11. 一期联网增强候选（connector 未实现）
 
-一期只看「有没有引用方法学文献、有没有写试剂来源」，二期核验这些引用与来源**是否成立**。
+离线层只看「有没有引用方法学文献、有没有写试剂来源」；X1 connector 落地后可核验这些
+引用与来源**是否成立**。外部失败按 `00-contracts.md §1.6/§6.3` 降级，不改变稿件风险分。
 
 ### 11.1 方法学引用核验
 
 - 数据源：Crossref / PubMed（经 X1 外部证据层）
 - 检查：被引文献是否真实存在？是否已撤稿？**是否真的包含该方法**？
-  论文声称「按文献 X 方法执行」但 X 用的是另一套流程 —— 一期完全查不出。
+  论文声称「按文献 X 方法执行」但 X 用的是另一套流程 —— 离线层完全查不出。
 - 新增 slug：`method_citation_mismatch`（major）
 
 ### 11.2 试剂与细胞系核验
 
 - 数据源：Cellosaurus / ICLAC / RRID Antibody Registry
-- 检查：细胞系是否在 ICLAC 误认列表中？抗体 RRID 是否存在、有无已知特异性问题？
+- 检查：细胞系是否在 ICLAC 误认列表中；抗体 RRID、厂商、货号、靶标、宿主、
+  反应物种与登记警示是否一致。登记记录未列某应用只表示未知，不能证明抗体无特异性。
 - 新增 slug：`cell_line_misidentified`（critical）、`antibody_validation_issue`（major）
-- **假阳性控制**：同名细胞系可能有多个来源；只有 accession 精确匹配才判定。
+- **假阳性控制**：同名细胞系可能有多个来源；只有 accession 精确匹配才进入 M3 判断。
+  RRID 无记录、未列应用或无登记警示不得自动转 finding。
 
 ### 11.3 惯例库外部化
 
-一期惯例库靠人工梳理；二期可按研究方向实时检索同类论文的方法参数分布，
+离线惯例库靠人工梳理；X1 connector 可按研究方向检索同类论文的方法参数分布，
 判断本文的剂量/时长/n 是否落在常规区间外。
 输出应为「偏离同类研究常规区间 + 分布位置」这类**事实描述**，
-**不要**直接判「方法错误」。新增 slug：`parameter_outside_norm`（minor）。
+只产无 severity 的 `external_validation_candidate` 并交 M3 人工判断；**不得**直接判
+「方法错误」或因分布位置自动创建 finding。
