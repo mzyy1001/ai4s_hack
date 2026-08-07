@@ -1,0 +1,123 @@
+{
+  "_doc": "植入式 A/B 基准的错误库。每条给出：错误描述（判定用的标准答案）与植入方式。由 tools/fault_injection_benchmark.py 消费。",
+  "_inject_modes": {
+    "append": "在正文约 position 处插入一段（用于加入新的错误陈述）",
+    "replace": "把 find 替换成 faulty（用于改动已有内容，最自然，但依赖宿主含有该串）"
+  },
+  "_note": "植入的错误会比天然错误显眼一些，绝对命中率偏高；但 uplift 是差值，该偏差对两臂同等作用。",
+
+  "faults": [
+    {
+      "id": "stat.p_value_inconsistent",
+      "description": "论文报告 t(10) = 2.228 对应 P = 0.001，但该统计量与自由度对应的双尾 P 值约为 0.05，统计量与 P 值对不上",
+      "inject": {
+        "mode": "append", "position": 0.55,
+        "faulty": "## Additional statistical comparison\n\n组间肿瘤体积差异用独立样本双尾 t 检验评价。治疗组与对照组差异显著（t(10) = 2.228, P = 0.001）。体重无组间差异（t(10) = 0.51, P = 0.62）。"
+      }
+    },
+    {
+      "id": "stat.grim_violation",
+      "description": "在 n=10 的整数量表（0–10 整数评分，每人一个分数）下报告均值 3.14，这在数学上不可能：10 个整数之和除以 10 只能得到一位小数",
+      "inject": {
+        "mode": "append", "position": 0.58,
+        "faulty": "## Symptom score assessment\n\n症状由每位受试者在 0–10 的整数数字评分量表上评分，每人恰好一个分数，共 10 名受试者（n = 10）完成评估。治疗组平均评分为 3.14（SD 1.20, n = 10），对照组为 5.70（SD 1.40, n = 10），差异有统计学意义（P = 0.002）。"
+      }
+    },
+    {
+      "id": "stat.ci_self_inconsistent",
+      "description": "报告的点估计 20.0 μM 落在其自身报告的 95% 置信区间 [9.8, 15.7] 之外，点估计与区间不自洽",
+      "inject": {
+        "mode": "append", "position": 0.6,
+        "faulty": "## Dose-response characterisation\n\n化合物的半数抑制浓度经四参数 logistic 拟合为 IC50 = 20.0 μM（95% CI 9.8–15.7 μM），拟合优度 R² = 0.98。"
+      }
+    },
+    {
+      "id": "stat.pseudoreplication",
+      "description": "伪重复：每组 6 只动物、每只取 10 个视野，却把 60 个视野当作统计学 n，技术重复冒充生物学重复",
+      "inject": {
+        "mode": "append", "position": 0.62,
+        "faulty": "## Histological quantification\n\n每组 6 只动物，每只动物取 10 个随机视野计数阳性细胞。阳性细胞比例组间差异显著（n = 60/组，独立样本 t 检验，P < 0.001）。"
+      }
+    },
+    {
+      "id": "stat.agreement_by_correlation",
+      "description": "用 Pearson 相关系数证明两种测量方法「一致」：r 高只说明线性相关，不说明一致，应做 Bland-Altman 分析",
+      "inject": {
+        "mode": "append", "position": 0.64,
+        "faulty": "## Method comparison\n\n比较新型无创检测法与现行金标准的测量结果，用 Pearson 相关分析评价两法一致性。两法测量值高度相关（r = 0.95, P < 0.001），提示新方法与金标准具有良好的一致性，可在临床替代使用。"
+      }
+    },
+    {
+      "id": "stat.censoring_ignored",
+      "description": "生存数据忽略删失：用独立样本 t 检验比较两组中位生存期，且明确存在失访，应用 Kaplan-Meier + log-rank",
+      "inject": {
+        "mode": "append", "position": 0.66,
+        "faulty": "## Survival analysis\n\n随访 36 个月记录总生存时间。两组中位生存期用独立样本 t 检验比较：治疗组 18.2 个月，对照组 14.6 个月，差异显著（P = 0.03）。随访期内治疗组 12 例、对照组 15 例失访。"
+      }
+    },
+    {
+      "id": "units.dimension_confusion",
+      "description": "剂量单位量纲混淆：方法节为 50 mg/kg/day 连续 14 天（累积 700 mg/kg），结果节却把它当作总暴露量 50 mg/kg 与 NOAEL 200 mg/kg 直接比较",
+      "inject": {
+        "mode": "append", "position": 0.68,
+        "faulty": "## Toxicology assessment\n\n高剂量组给予受试化合物 50 mg/kg/day，连续 14 天。高剂量组的总暴露量（50 mg/kg）远低于文献报道的无观察到有害作用剂量 200 mg/kg，提示安全窗宽。"
+      }
+    },
+    {
+      "id": "seq.variant_position_out_of_range",
+      "description": "变异 p.Arg273His 的位置 273 超出论文自己给出的 60 个残基的序列长度，位置越界",
+      "inject": {
+        "mode": "append", "position": 0.7,
+        "faulty": "## Site-directed mutagenesis\n\n本研究使用的截短蛋白片段完整氨基酸序列（60 个残基）为：\nMEEPQSDPSVEPPLSQETFSDLWKLLPENNVLSPLPSQAMDDLMLSPDDIEQWFTEDPGP\n\n用定点突变在该 60 残基片段中引入 p.Arg273His 替换，表达并纯化了突变蛋白。"
+      }
+    },
+    {
+      "id": "seq.gene_symbol_species_mismatch",
+      "description": "小鼠基因符号书写错误：小鼠基因应按 MGI 惯例首字母大写（Trp53、Brca1、Il6、Actb），论文却用了人类 HGNC 的全大写写法",
+      "inject": {
+        "mode": "append", "position": 0.72,
+        "faulty": "## Mouse validation cohort\n\n用 C57BL/6J 小鼠分离胚胎成纤维细胞，qPCR 定量小鼠基因 TP53、BRCA1 与 IL6 的表达，以小鼠 ACTB 归一化。"
+      }
+    },
+    {
+      "id": "seq.accession_format_invalid",
+      "description": "临床试验注册号格式非法：NCT 号应为 NCT 后接 8 位数字，论文写的 NCT123 位数不足",
+      "inject": {
+        "mode": "append", "position": 0.74,
+        "faulty": "## Trial registration\n\n本研究的临床验证部分已在 ClinicalTrials.gov 注册，注册号 NCT123。"
+      }
+    },
+    {
+      "id": "eth.animal_no_iacuc",
+      "description": "涉及小鼠在体实验，但全文未报告动物伦理委员会（IACUC）批准与批件号",
+      "inject": {
+        "mode": "append", "position": 0.76,
+        "faulty": "## In vivo validation\n\nC57BL/6 小鼠（雌性，6–8 周龄，每组 n = 8）经腹腔注射给予受试化合物或溶剂对照，连续 14 天后处死取材，取肿瘤组织行免疫组化分析。"
+      }
+    },
+    {
+      "id": "m3.missing_control",
+      "description": "关键对照缺失：siRNA 敲低实验只有敲低组与未处理组，缺少非靶向对照（scrambled / NC siRNA）",
+      "inject": {
+        "mode": "append", "position": 0.78,
+        "faulty": "## Knockdown experiment\n\n用靶向目标基因的 siRNA 转染细胞，48 小时后收集。对照组为未转染细胞。Western blot 显示 siRNA 组目标蛋白显著低于未处理组（P < 0.01），细胞增殖下降 40%。"
+      }
+    },
+    {
+      "id": "m7.claim_beyond_evidence",
+      "description": "结论层级越界：仅有细胞系体外数据，却直陈该化合物是有效的临床治疗药物并应尽快用于临床",
+      "inject": {
+        "mode": "append", "position": 0.92,
+        "faulty": "## Therapeutic implication\n\n综上，本研究在细胞系中证实了该化合物的抗增殖作用（IC50 = 12.4 μM）。该化合物是本病的有效治疗药物，应尽快用于临床。"
+      }
+    },
+    {
+      "id": "m7.negative_result_misread",
+      "description": "不显著误读为无差异：P = 0.31、每组 n = 8 且无效能分析，却结论「该化合物对肿瘤生长无影响」",
+      "inject": {
+        "mode": "append", "position": 0.94,
+        "faulty": "## Secondary endpoint\n\n每组 8 只动物，比较受试化合物与溶剂对照的肿瘤体积，未进行效能分析。两组差异无统计学意义（P = 0.31）。因此该化合物对肿瘤生长无影响。"
+      }
+    }
+  ]
+}
