@@ -1002,7 +1002,7 @@ M1 输出计算 `extraction_coverage` 所需的**原始计数**，
 | --- | --- | --- | --- |
 | 临床试验注册号 | ClinicalTrials.gov / ChiCTR / WHO ICTRP | 号码不存在、终点与注册不符、注册晚于入组 | **M6** |
 | 细胞系名称 | Cellosaurus / ICLAC | 已知误认或交叉污染细胞系 | **M3** |
-| 抗体 / 试剂 | RRID (Antibody Registry) | 货号不存在、抗体已被证实无特异性 | **M3** |
+| 抗体 / 试剂 | RRID (Antibody Registry) | RRID、厂商、货号、靶标、宿主、反应物种与登记警示是否一致；登记记录未列某应用只表示未知，不能证明缺乏特异性 | **M3** |
 | 基因 / 蛋白符号 | HGNC / UniProt | 符号已废弃或写错、物种不匹配 | **M2** |
 | 参考文献 | Crossref / PubMed / Retraction Watch | 文献不存在、已被撤稿或更正 | **M2** |
 | 方案注册号 | PROSPERO | 综述方案未注册或与已注册方案偏离 | **M2** |
