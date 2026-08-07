@@ -17,3 +17,8 @@ datasets/papers/*/paper.pdf
 secrets/
 loop/state/
 loop/logs/
+
+# 测试语料：不属于提交包，用脚本按需重建
+# python3 tools/fetch_papers.py           （10 篇分维度语料）
+# python3 tools/fetch_ground_truth_papers.py（12 篇外部核验 ground truth）
+datasets/
