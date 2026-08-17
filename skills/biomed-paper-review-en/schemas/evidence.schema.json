@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence.schema.json",
+  "title": "EvidenceRegistry",
+  "description": "Evidence registry. references/00-contracts.md §1. Evidence is canonically stored here; every other location writes only evidence_refs[] strings. Every evidence_ref must resolve to exactly one entry.",
+
+  "type": "object",
+  "required": ["evidence_registry"],
+  "additionalProperties": false,
+  "properties": {
+    "evidence_registry": {
+      "type": "object",
+      "description": "Keys are EV-ids and values are the entries; each key must equal the entry's id field",
+      "propertyNames": {"pattern": "^EV-[0-9]{3,}$"},
+      "additionalProperties": {"$ref": "#/$defs/evidence_entry"}
+    }
+  },
+
+  "$defs": {
+
+    "evidence_entry": {
+      "description": "One of three types: present (exists in the manuscript), absence (does not exist in the manuscript), or external (a traceable fact from an external public scientific data source)",
+      "oneOf": [
+        {"$ref": "#/$defs/present_evidence"},
+        {"$ref": "#/$defs/absence_evidence"},
+        {"$ref": "#/$defs/external_evidence"}
+      ]
+    },
+
+    "present_evidence": {
+      "type": "object",
+      "required": ["id", "type", "locator", "created_by"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^EV-[0-9]{3,}$"},
+        "type": {"const": "present"},
+        "locator": {"$ref": "common.schema.json#/$defs/locator"},
+        "quote": {"type": "string", "description": "Excerpt of the paper's original text, for manual verification"},
+        "created_by": {"$ref": "#/$defs/created_by"}
+      }
+    },
+
+    "absence_evidence": {
+      "type": "object",
+      "description": "Absence-type evidence. quote and locator are forbidden — never fabricate a quotation for content that does not exist.",
+      "required": ["id", "type", "scope", "searched_locations", "search_terms",
+                   "search_result", "created_by"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^EV-[0-9]{3,}$"},
+        "type": {"const": "absence"},
+        "scope": {"$ref": "common.schema.json#/$defs/locator_scope"},
+        "searched_locations": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Must reflect searches actually performed. Absence must not be claimed beyond the searched scope.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "section": {"$ref": "common.schema.json#/$defs/section_name"},
+              "supplement_id": {"type": "string"},
+              "figure": {"type": "string"},
+              "table": {"type": "string"},
+              "scope": {"$ref": "common.schema.json#/$defs/locator_scope"}
+            },
+            "required": ["scope"]
+          }
+        },
+        "search_terms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"},
+          "description": "Search terms in both Chinese and English"
+        },
+        "search_result": {
+          "enum": ["no_match", "partial_match_ambiguous"],
+          "description": "partial_match_ambiguous cannot support an absence conclusion; fields citing it must be judged ambiguous"
+        },
+        "created_by": {"$ref": "#/$defs/created_by"}
+      }
+    },
+
+    "external_evidence": {
+      "type": "object",
+      "description": "An external fact obtained by X1 from a public scientific data source. Do not create this object on API failure; produce a system_limitation instead. Storing credentials, cookies, Authorization headers, or the full response is forbidden.",
+      "required": ["id", "type", "database", "endpoint", "query", "record_id",
+                   "retrieved_at", "database_version", "http_status", "retrieval_status",
+                   "response_sha256", "parser_version", "assertions", "created_by"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^EV-[0-9]{3,}$"},
+        "type": {"const": "external"},
+        "database": {"type": "string", "minLength": 1},
+        "endpoint": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "not": {"pattern": "(api[_-]?key|authorization|cookie|access_token|secret)="},
+          "description": "The public HTTPS endpoint actually called; must not contain credentials or sensitive query parameters"
+        },
+        "query": {
+          "type": "object",
+          "required": ["query_kind", "normalized_input"],
+          "additionalProperties": false,
+          "properties": {
+            "query_kind": {"type": "string", "minLength": 1},
+            "normalized_input": {
+              "description": "Sorted and normalized public query parameters; API keys, cookies, and Authorization headers are forbidden",
+              "type": "string",
+              "minLength": 1,
+              "not": {"pattern": "(api[_-]?key|authorization|cookie|access_token|secret)="}
+            }
+          }
+        },
+        "record_id": {"type": ["string", "null"]},
+        "retrieved_at": {"type": "string", "format": "date-time"},
+        "database_version": {
+          "type": ["string", "null"],
+          "description": "The release/version/timestamp published by the data source; null when the source does not provide one — never guess"
+        },
+        "http_status": {"type": "integer", "minimum": 100, "maximum": 599},
+        "retrieval_status": {
+          "enum": ["resolved", "not_found", "not_addressed"],
+          "description": "not_found is limited to a well-formed exact identifier receiving an authoritative 404/explicit zero-record answer; zero hits for a semantic query is not_addressed"
+        },
+        "response_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "parser_version": {"type": "string", "minLength": 1},
+        "assertions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/external_assertion"}
+        },
+        "created_by": {"const": "stage_3c_external_validation"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"retrieval_status": {"const": "resolved"}},
+                 "required": ["retrieval_status"]},
+          "then": {
+            "properties": {
+              "record_id": {"type": "string", "minLength": 1},
+              "assertions": {"minItems": 1}
+            }
+          },
+          "else": {
+            "properties": {
+              "record_id": {"type": "null"},
+              "assertions": {"maxItems": 0}
+            }
+          }
+        }
+      ]
+    },
+
+    "external_assertion": {
+      "type": "object",
+      "description": "An atomic fact normalized from the external response; comparison conclusions against the manuscript are written only to extraction_signal.external_check.",
+      "required": ["predicate", "subject", "external_value", "unit", "source_path"],
+      "additionalProperties": false,
+      "properties": {
+        "predicate": {"type": "string", "minLength": 1},
+        "subject": {"type": "string", "minLength": 1},
+        "external_value": {},
+        "unit": {"type": ["string", "null"]},
+        "source_path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A verifiable field path within the response, e.g. protocolSection.statusModule.studyFirstSubmitDate"
+        }
+      }
+    },
+
+    "created_by": {
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b", "stage_3c_external_validation",
+               "M2", "M3", "M4", "M5", "M6", "M7"],
+      "description": "For troubleshooting; does not affect semantics"
+    },
+
+    "evidence_ref": {
+      "type": "string",
+      "pattern": "^EV-[0-9]{3,}$",
+      "description": "A key into the evidence_registry. Must resolve to exactly one entry."
+    },
+
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/evidence_ref"},
+      "description": "Array of evidence references. The canonical storage form; the rendering layer expands them into quotes and page numbers."
+    }
+  }
+}

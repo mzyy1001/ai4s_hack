@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "figure_record.schema.json",
+  "title": "FigureRecord",
+  "description": "Output of Stage 3 figure parsing. One record per independently interpretable panel; only an inseparable composite figure gets one record for the whole figure. The producer is the Figure Parser (a parsing role), not the M5 Reviewer (a Stage 4 review role) — the Figure Parser only interprets, never judges, and produces no findings. references/05-figures-and-charts.md.",
+
+  "type": "object",
+  "required": ["figure_id", "chart_type", "chart_type_confidence", "location",
+               "scientific_question", "interpretation", "observations",
+               "extraction_confidence", "manual_review_needed"],
+  "additionalProperties": false,
+
+  "properties": {
+    "figure_id": {"type": "string", "description": "Stable record id, e.g. fig:3B; use fig:3 only for an inseparable whole figure"},
+    "caption": {"type": ["string", "null"]},
+
+    "chart_type": {
+      "enum": ["dose_response", "statistical_plot", "survival", "workflow",
+               "micrograph", "blot", "heatmap", "flow_cytometry", "forest_plot",
+               "roc_curve", "schematic", "other"]
+    },
+    "chart_type_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"},
+
+    "location": {
+      "type": "object",
+      "required": ["figure_label", "placement"],
+      "additionalProperties": false,
+      "properties": {
+        "figure_label": {
+          "type": "string",
+          "description": "Keep the original label, including forms like Extended Data Fig. 1c"
+        },
+        "panel": {"type": ["string", "null"]},
+        "evidence_ref": {
+          "type": ["string", "null"],
+          "pattern": "^EV-[0-9]{3,}$",
+          "description": "Points to the figure's present evidence (with pdf_file_page). Required for PDF input."
+        },
+        "first_cited_at": {
+          "type": ["string", "null"],
+          "pattern": "^EV-[0-9]{3,}$",
+          "description": "evidence_ref of the first in-text citation; when it cannot be resolved, emit an unresolved_cross_reference signal"
+        },
+        "image_file": {"type": ["string", "null"]},
+        "placement": {
+          "enum": ["main_text", "supplementary", "unknown"],
+          "description": "The M5 Reviewer uses this to judge whether evidential weight matches placement"
+        }
+      }
+    },
+
+    "research_scene": {
+      "type": ["string", "null"],
+      "description": "The research scene this figure corresponds to, taken from the 05-figures-and-charts.md knowledge base"
+    },
+    "scientific_question": {
+      "type": "string",
+      "description": "The scientific question this figure/panel tries to answer. Determined as the very first parsing step; all subsequent judgments depend on it."
+    },
+
+    "experimental_conditions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "groups": {"type": "array", "items": {"type": "string"}},
+        "dose_levels": {"type": "array", "items": {"type": "string"}},
+        "timepoints": {"type": "array", "items": {"type": "string"}},
+        "n_per_group": {"type": ["integer", "null"], "minimum": 1},
+        "replicate_type": {
+          "oneOf": [{"$ref": "common.schema.json#/$defs/replicate_type"}, {"type": "null"}]
+        }
+      }
+    },
+
+    "axes": {
+      "type": "object",
+      "description": "Mistaking a log axis for linear corrupts every reading, so axes must be recorded explicitly",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "x": {"$ref": "#/$defs/axis"},
+        "y": {"$ref": "#/$defs/axis"}
+      }
+    },
+
+    "observations": {
+      "type": "array",
+      "description": "Observations read from the figure. Every quantitative result (including curve-fit parameters and significance p-values) may flow back only by entering this array. Stage 3b merges them into key_data by metric identity and target_grouping_key; the temporary routing fields are removed after grouping while observation_id, value, and provenance stay unchanged. The Figure Parser makes no merge decisions.",
+      "items": {
+        "allOf": [
+          {"$ref": "key_data.schema.json#/$defs/observation_core"},
+          {
+            "type": "object",
+            "properties": {
+              "target_grouping_key": {
+                "type": "object",
+                "description": "The five keys of the key_data group this observation is expected to join; merge into an existing group only when all five keys and the metric identity match exactly, otherwise create a new group — never guess a nearest match.",
+                "required": ["experiment_id", "group", "comparison", "timepoint", "endpoint"],
+                "additionalProperties": false,
+                "properties": {
+                  "experiment_id": {"type": ["string", "null"]},
+                  "group": {"type": ["string", "null"]},
+                  "comparison": {"type": ["string", "null"]},
+                  "timepoint": {"type": ["string", "null"]},
+                  "endpoint": {"type": ["string", "null"]}
+                }
+              },
+              "metric_name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The canonical name from the project metric vocabulary; the figure's original wording stays in the evidence quote and does not participate in grouping."
+              },
+              "metric_family": {"$ref": "common.schema.json#/$defs/metric_family"}
+            },
+            "required": ["target_grouping_key", "metric_name", "metric_family"]
+          }
+        ],
+        "unevaluatedProperties": false
+      }
+    },
+
+    "curve_fit": {
+      "type": ["object", "null"],
+      "description": "An auxiliary annotation filled only for dose_response / survival / roc_curve types; not a Stage 3b merge interface. Any fit parameter used by M2–M7 must also be written into observations[] with provenance; filling only this object to bypass the pixel-estimation constraints is forbidden.",
+      "additionalProperties": false,
+      "required": ["reported_in_manuscript"],
+      "properties": {
+        "model": {"type": ["string", "null"]},
+        "parameter_name": {"type": ["string", "null"], "description": "e.g. IC50 / EC50 / AUC"},
+        "value": {
+          "oneOf": [{"$ref": "common.schema.json#/$defs/numeric_value"}, {"type": "null"}]
+        },
+        "unit": {"type": ["string", "null"]},
+        "uncertainty": {
+          "oneOf": [{"$ref": "common.schema.json#/$defs/uncertainty"}, {"type": "null"}]
+        },
+        "hill_slope": {"type": ["number", "null"]},
+        "goodness_of_fit": {"type": ["string", "null"]},
+        "reported_in_manuscript": {
+          "type": "boolean",
+          "description": "false means we fitted it ourselves and the manuscript did not report it — must not be treated as a manuscript value"
+        }
+      }
+    },
+
+    "interpretation": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Natural-language figure interpretation: what question the figure answers, what it shows, and what it concludes. Pure interpretation, no judgment."
+    },
+
+    "significance_markers": {
+      "type": "array",
+      "description": "Auxiliary annotation of graphical markers; not a Stage 3b merge interface. Any p-value expressible numerically that will be used in review must also be written into observations[].",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["marker", "comparison", "p_value", "defined_in_caption"],
+        "properties": {
+          "marker": {"type": "string"},
+          "comparison": {"type": ["string", "null"]},
+          "p_value": {
+            "oneOf": [{"$ref": "common.schema.json#/$defs/numeric_value"}, {"type": "null"}]
+          },
+          "defined_in_caption": {"type": "boolean"}
+        }
+      }
+    },
+
+    "parse_limitations": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^SYS-[0-9]{3,}$"},
+      "description": "system_limitation ids triggered by this figure (e.g. figure_unreadable). Not findings."
+    },
+
+    "extraction_confidence": {
+      "$ref": "common.schema.json#/$defs/confidence_level",
+      "description": "Overall extraction confidence of this record. Capped at low when any observation's source is pixel_estimated."
+    },
+
+    "manual_review_needed": {"type": "boolean"}
+  },
+
+  "not": {
+    "anyOf": [
+      {"required": ["issues"]},
+      {"required": ["findings"]}
+    ],
+    "description": "Stage 3 produces no findings. Findings about figure-usage standards are produced by the Stage 4 M5 Reviewer and stored in m5_findings[]."
+  },
+
+  "allOf": [
+    {
+      "description": "Any pixel-estimated observation demotes the whole panel record to low and forces manual review.",
+      "if": {
+        "properties": {
+          "observations": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "provenance": {
+                  "type": "object",
+                  "properties": {"source_type": {"const": "pixel_estimated"}},
+                  "required": ["source_type"]
+                }
+              },
+              "required": ["provenance"]
+            }
+          }
+        },
+        "required": ["observations"]
+      },
+      "then": {
+        "properties": {
+          "extraction_confidence": {"const": "low"},
+          "manual_review_needed": {"const": true}
+        }
+      }
+    },
+    {
+      "description": "axis_readable means values can be read directly off the axes, so at least one axis with a scale must be registered.",
+      "if": {
+        "properties": {
+          "observations": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "provenance": {
+                  "type": "object",
+                  "properties": {"source_type": {"const": "axis_readable"}},
+                  "required": ["source_type"]
+                }
+              },
+              "required": ["provenance"]
+            }
+          }
+        },
+        "required": ["observations"]
+      },
+      "then": {"required": ["axes"]}
+    }
+  ],
+
+  "$defs": {
+    "axis": {
+      "type": "object",
+      "required": ["scale"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {"type": ["string", "null"]},
+        "unit": {"type": ["string", "null"]},
+        "scale": {"enum": ["linear", "log10", "log2", "ln", "unknown"]},
+        "range": {
+          "type": ["array", "null"],
+          "items": {"type": "number"},
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "truncated": {
+          "type": ["boolean", "null"],
+          "description": "Whether the y-axis is truncated (does not start at 0); truncation exaggerates between-group differences and is an M5 finding lead"
+        }
+      },
+      "allOf": [
+        {
+          "description": "An explicit range on a log axis may contain only positive values. The strict increase from lower to upper bound is checked by the contract validator.",
+          "if": {
+            "properties": {"scale": {"enum": ["log10", "log2", "ln"]}},
+            "required": ["scale"]
+          },
+          "then": {
+            "properties": {
+              "range": {
+                "oneOf": [
+                  {"type": "array", "items": {"type": "number", "exclusiveMinimum": 0},
+                   "minItems": 2, "maxItems": 2},
+                  {"type": "null"}
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

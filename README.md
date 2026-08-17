@@ -1,274 +1,288 @@
-# 生物医药论文 AI 审稿 Skill
+# AI Reviewer Skill for Biomedical Papers
 
-**交付物**：一个自包含的 Agent Skill 包 → [`skills/biomed-paper-review/`](skills/biomed-paper-review/)
+**English** | [中文](README.zh-CN.md)
 
-输入一篇生物医药论文（JATS XML / PDF / 纯文本），做两件事：
+**Deliverable**: a self-contained Agent Skill package, available in two language versions:
 
-1. **抽成可复用的结构化事实表** —— 研究设计、受试对象、干预分组、测量与终点、
-   关键数值、主张清单与各类声明，每个字段都带适用性、必要性、状态与原文证据引用。
-2. **审稿**：以资深同行评审身份通读全文，再由六本领域规则库分头复核，
-   并以**确定性计算**与**12 个外部权威数据库**交叉核验；
-   图谱模块在有视觉通道时**从原图**抽数值并定位回图号/面板/页码。
+- English version → [`skills/biomed-paper-review-en/`](skills/biomed-paper-review-en/)
+- Chinese version → [`skills/biomed-paper-review/`](skills/biomed-paper-review/)
 
-输出结构化结果表、可回溯到原文位置的分级发现、抽取覆盖率与复核置信度，
-以及分优先级的人工复核建议。抽取与审稿可分开用（`structured_extraction` 模式）。
+The two versions are functionally identical: scripts, schemas, and offline fixtures are equivalent; only the documentation language differs.
 
-> 本分支（`main`）只放交付物本体。开发工作区 —— 测试语料、评测工具、实验记录、
-> 设计文档与全部实跑产物 —— 在 [`dev`](../../tree/dev) 分支。
+Given a biomedical paper (JATS XML / PDF / plain text), it does two things:
+
+1. **Extracts a reusable structured fact table** — study design, subjects, intervention
+   arms, measurements and endpoints, key numeric values, the claim list, and all
+   declarations; every field carries applicability, requiredness, status, and evidence
+   citations back to the original text.
+2. **Reviews the paper**: reads the full text as a senior peer reviewer, then has six
+   domain rulebases re-examine it independently, cross-validated by **deterministic
+   computation** and **12 external authoritative databases**; when a visual channel is
+   available, the figure module extracts values **from the original images** and locates
+   them back to figure number / panel / page.
+
+It outputs a structured result table, severity-graded findings traceable to their
+location in the original text, extraction coverage and review confidence scores, and
+prioritized suggestions for human review. Extraction and review can be used separately
+(`structured_extraction` mode).
+
+> This branch (`main`) contains only the deliverable itself. The development
+> workspace — test corpora, evaluation tools, experiment records, design docs, and all
+> real-run artifacts — lives on the [`dev`](../../tree/dev) branch.
 
 ---
 
-## 一、它解决什么问题，以及为什么这样解决
+## 1. What problem it solves, and why it is built this way
 
-裸模型本身就是**很强的审稿人**。所以真正的问题不是「怎么让模型会审稿」，
-而是「**挂上 Skill 之后，怎么保证比不挂更好**」。
+A bare model is already a **strong reviewer**. So the real question is not "how do we
+make the model review papers," but "**once the Skill is attached, how do we guarantee
+it beats not attaching it**."
 
-这件事我们做砸过一次，值得写在最前面。
+We got this wrong once, and it is worth putting first.
 
-### 失败的那一版：把论文压成候选清单
+### The failed version: compressing the paper into a candidate list
 
-第一版架构是：发现层通读全文 → 压成候选问题清单 → 每个专家只拿按清单切出来的证据包。
-听起来很合理，实测却**比裸模型更差**：
+The first architecture was: a discovery layer reads the full text → compresses it into
+a candidate issue list → each specialist only receives an evidence bundle sliced
+according to that list. It sounds reasonable; in practice it was **worse than the bare
+model**:
 
-| 同一篇真实论文、同一模型、同一份全文 | 发现数 | critical |
+| Same real paper, same model, same full text | Findings | critical |
 | --- | --- | --- |
-| 裸模型（全文 + 开放提问） | 63 | 2 |
-| **旧架构**（发现层压候选 → 专家拿证据包） | 43 | **0** |
-| **现架构**（每层都拿全文） | **96** | **6** |
+| Bare model (full text + open-ended prompt) | 63 | 2 |
+| **Old architecture** (discovery compresses → specialists get bundles) | 43 | **0** |
+| **Current architecture** (every layer gets the full text) | **96** | **6** |
 
-失效机理是**两次压缩、且第二次由第一次决定**：发现层把论文压成清单，
-证据包又按清单去正文取片段 —— 于是**没人标注过的段落根本没有任何一层读得到**。
-裸模型抓到的最深两条（敲入等位基因同时是全长 RAGE-null，使所谓「独立遗传学验证」
-自带混杂；单一 7 dpi 时间点撑不起「加速再生」），旧架构一条都没有。
+The failure mechanism is **double compression, with the second determined by the
+first**: the discovery layer compresses the paper into a list, and the evidence bundles
+then pull passages according to that list — so **paragraphs nobody flagged are never
+read by any layer at all**. The two deepest issues the bare model caught (the knock-in
+allele is simultaneously a full-length RAGE-null, so the claimed "independent genetic
+validation" carries built-in confounding; a single 7 dpi time point cannot support
+"accelerated regeneration"), the old architecture caught neither.
 
-而且「隔离」本就是假的：切出来的统计包已占全文 71%，主张包 52% ——
-**付了召回的代价，却没真的隔离。**
+And the "isolation" was fake anyway: the sliced statistics bundle already covered 71%
+of the full text, the claims bundle 52% — **we paid the recall cost without getting
+real isolation.**
 
-### 现在的架构公理
+### The current architectural axiom
 
-> **分层隔离的是「审阅目标与推理上下文」，不是「论文正文」。**
+> **What the layers isolate is the "review objective and reasoning context," not the
+> "paper text."**
 
 ```
-L0   全局审阅    全文 + 极简提问，无规则库 / 无 schema / 无清单
-                 └ 这就是裸模型条件本身 → Skill 的下限被钉死在裸模型上
-L0b  测绘与路由  全文，只产地图与标识符，不找问题
-L1   M2–M7      **各拿全文** + 自己那一本规则；对 L0 的每一条必须表态
-L2   确定性工具 + X1 外部核验
-L3   同 task_id 续接，让专家看到确定性证据后复议
-L4   校正子会话  **也拿全文**；审计有没有 L0 条目不明不白消失
-L5   契约归一与报告渲染
+L0   Global review    Full text + minimal prompt, no rulebase / no schema / no checklist
+                      └ This IS the bare-model condition → the Skill's floor is pinned to the bare model
+L0b  Mapping & routing  Full text; produces only a map and identifiers, finds no issues
+L1   M2–M7            **Each gets the full text** + its own rulebase; must take a stance on every L0 item
+L2   Deterministic tools + X1 external validation
+L3   Continuation under the same task_id, letting specialists reconsider after seeing deterministic evidence
+L4   Correction subsession  **Also gets the full text**; audits whether any L0 item silently disappeared
+L5   Contract normalization and report rendering
 ```
 
-**加法保证**：最终结果 ⊇ L0 的结论，减去且仅减去被显式驳回并给出理由的条目。
-实测成立 —— L0 产出 70 条，60 条升为 finding、17 条合并、2 条因系统限制阻塞
-（均写明理由）、**0 条被驳回、0 条蒸发**。
+**Additivity guarantee**: the final result ⊇ L0's conclusions, minus only those items
+explicitly rejected with stated reasons. Verified in practice — L0 produced 70 items:
+60 promoted to findings, 17 merged, 2 blocked by system limitations (reasons stated),
+**0 rejected, 0 evaporated**.
 
-### 增益只可能来自两处
+### Uplift can only come from two places
 
-纯文本的内部一致性检查，裸模型本来就会做 —— 那部分的 uplift 结构上只能是零或负。
-真正的增益只能来自模型**结构上做不到**的事：
+Pure-text internal consistency checks are something the bare model already does — that
+part of the uplift is structurally zero or negative. Real gains can only come from
+things the model **structurally cannot do**:
 
-**1. 确定性计算。** 例：某临床 RCT 的 Table 5 标注 `*ITT`，但均值 43.68±3.5 在
-整数量表、n=39 下**数学上不可能**，只与 n=34/37/38 相容 —— 而 n=34 恰是完成者数。
-GRIM 类算术**证伪了一个方法学标签**，这是纯阅读做不到的。
+**1. Deterministic computation.** Example: Table 5 of a clinical RCT is labeled
+`*ITT`, but the mean 43.68±3.5 is **mathematically impossible** on an integer scale
+with n=39 — it is only compatible with n=34/37/38, and n=34 happens to be the
+completer count. GRIM-style arithmetic **falsified a methodological label**; pure
+reading cannot do that.
 
-**2. 外部权威数据。** 例：某论文 Introduction 引用 `10.1002/jcp.26311` 支撑主张，
-而该文献已于 **2024-08-26 撤稿**。撤稿晚于被审论文四年，稿件里没有、元数据里没有、
-模型训练语料里也不可能有 —— **只能靠查库**。
-（已用 Crossref `updated-by` 与 Europe PMC `Retraction in` 双向复核。）
+**2. External authoritative data.** Example: a paper's Introduction cites
+`10.1002/jcp.26311` in support of a claim, but that reference was **retracted on
+2024-08-26**. The retraction postdates the paper under review by four years — it is
+not in the manuscript, not in the metadata, and cannot be in the model's training
+corpus — **only a database lookup can find it**.
+(Cross-checked both ways via Crossref `updated-by` and Europe PMC `Retraction in`.)
 
-`scripts/external_figure_validation.py`（X1）按需查询 **12 个数据库、14 项检查**：
-Cellosaurus、ClinicalTrials.gov、Europe PMC、Crossref、UniProt、ChEMBL、PubChem、
-RCSB PDB、HGNC、SciCrunch/RRID、NCBI E-utilities、PRIDE。
-**不预置任何数据集**：稿件里真的出现某个标识符，才发起那一次查询。
+`scripts/external_figure_validation.py` (X1) queries **12 databases, 14 checks** on
+demand: Cellosaurus, ClinicalTrials.gov, Europe PMC, Crossref, UniProt, ChEMBL,
+PubChem, RCSB PDB, HGNC, SciCrunch/RRID, NCBI E-utilities, PRIDE.
+**No dataset is pre-bundled**: a query is issued only when an identifier actually
+appears in the manuscript.
 
-外部源不可达时一律产 `system_limitation`，**绝不**变成 finding ——
-「查不到」不等于「论文错」。
+When an external source is unreachable, it always produces a `system_limitation` and
+**never** turns into a finding — "not found in the database" does not mean "the paper
+is wrong."
 
-### 图表读取：有视觉通道就读原图，没有就诚实降级
+### Figure reading: read the original image when a visual channel exists, degrade honestly when it doesn't
 
-M5 的图谱解析（Stage 3 Figure Parser）**从图像本身**抽实验条件与关键数值，并定位回原图：
+M5's figure parsing (Stage 3 Figure Parser) extracts experimental conditions and key
+values **from the images themselves**, and locates them back to the original figure:
 
-- **图像来源优先级**：`original_figure_file > extracted_pdf_figure >
-  rendered_pdf_page > text_only_caption`；
-- **数值证据分级**：`explicit_main_text > explicit_table > explicit_figure_caption >
-  axis_readable > pixel_estimated`，且 `provenance.source_type` 如实标注；
-- **像素估读的硬性约束**：一律 `extraction_confidence: low`、**必须写成区间**
-  （禁止点值）、置 `manual_review_needed`；对数轴须先确认轴类型再读数；
-  误差棒不得直接当 SD/SEM；星号阈值必须回查图注定义；
-- **原图定位**：每条 `figure_record` 给出图号、面板、PDF 页码与首次引用位置。
+- **Image source priority**: `original_figure_file > extracted_pdf_figure >
+  rendered_pdf_page > text_only_caption`;
+- **Numeric evidence hierarchy**: `explicit_main_text > explicit_table >
+  explicit_figure_caption > axis_readable > pixel_estimated`, with
+  `provenance.source_type` labeled truthfully;
+- **Hard constraints on pixel estimation**: always `extraction_confidence: low`,
+  **must be written as an interval** (point values forbidden), sets
+  `manual_review_needed`; log axes require confirming the axis type before reading;
+  error bars must not be assumed to be SD/SEM; asterisk significance thresholds must
+  be checked against the caption definition;
+- **Original-figure locating**: every `figure_record` gives figure number, panel, PDF
+  page, and first-citation location.
 
-**图像确实取不到时不假装看过图**（未随稿提供、格式不可读等）：
-登记 `system_limitation(figure_unreadable)`，退化为图注 / 正文 / 源 XML 交叉核验 +
-`figure_integrity_audit.py` 的确定性像素审计（重复 / 拼接 / 异常均匀区块），
-并在报告中写明本次未覆盖像素级判据。该降级路径带专门自检。
+**When images genuinely cannot be obtained, it does not pretend to have seen them**
+(not provided with the manuscript, unreadable format, etc.): it registers
+`system_limitation(figure_unreadable)`, falls back to caption / main-text / source-XML
+cross-validation plus the deterministic pixel audit of `figure_integrity_audit.py`
+(duplication / splicing / abnormally uniform regions), and states in the report that
+pixel-level criteria were not covered in this run. This fallback path has its own
+selftest.
 
-### 结构化抽取：不只是审稿的前置，本身就是可复用产物
+### Structured extraction: not just a review precursor, a reusable product in itself
 
-`structured_result` 是一份**机器可消费的论文事实表**，按 `structured_result.schema.json`
-组织，实测一篇真实论文抽出约 16 KB：
+`structured_result` is a **machine-consumable fact table of the paper**, organized per
+`structured_result.schema.json`; on a real paper it extracts about 16 KB:
 
-| 字段族 | 内容 |
+| Field family | Content |
 | --- | --- |
-| `article_design` | 研究设计族/类型（如 `experimental` / `in_vivo_animal`）与判定依据 |
-| `population` | 受试对象、纳排、样本量口径 |
-| `design` | 分组、干预、对照、随机化与盲法 |
-| `measurement` | 测定方法、终点、时间点 |
-| `key_data` | 关键数值，带分组键（实验 / 组别 / 比较 / 时间点 / 终点）与规范观测 |
-| `conclusion.claims[]` | 逐条主张（`CLM-01`…），供 M7 做证据层级比对 |
-| `declarations` | 伦理、注册、知情同意、利益冲突、数据可得性 |
+| `article_design` | Study design family/type (e.g. `experimental` / `in_vivo_animal`) with the basis for the determination |
+| `population` | Subjects, inclusion/exclusion criteria, sample size accounting |
+| `design` | Arms, interventions, controls, randomization and blinding |
+| `measurement` | Assay methods, endpoints, time points |
+| `key_data` | Key numeric values with grouping keys (experiment / arm / comparison / time point / endpoint) and normalized observations |
+| `conclusion.claims[]` | Itemized claims (`CLM-01`…), for M7's evidence-hierarchy comparison |
+| `declarations` | Ethics, registration, informed consent, conflicts of interest, data availability |
 
-**每个字段都带四件套**：`applicability`（是否适用）、`requiredness`（是否必填）、
-`status`（reported / not_reported / parse_failed）、`evidence_refs`（原文出处）。
-所以「没写」与「我们没抽到」在数据结构层面就是两回事，不会混为一谈。
+**Every field carries a four-tuple**: `applicability` (does it apply),
+`requiredness` (is it required), `status` (reported / not_reported / parse_failed),
+and `evidence_refs` (source locations). So "not written in the paper" and "we failed
+to extract it" are two different things at the data-structure level and are never
+conflated.
 
-实测字段解析率 **22/23 = 95.7%**。`extraction_coverage` 总分会低于此值，
-因为它同时计入图像可读性与补充材料可得性 —— 那两项受运行环境限制，
-**不是抽取失败**，且各自单独列出，不与字段解析率混算。
+Measured field parse rate: **22/23 = 95.7%**. The overall `extraction_coverage` score
+is lower than this, because it also counts image readability and supplementary
+material availability — both constrained by the runtime environment, **not extraction
+failures**, and each is listed separately, never blended into the field parse rate.
 
 ---
 
-## 二、最小复现步骤
+## 2. Minimal reproduction steps
 
-### 1. 离线自检（无需网络、无需模型、无需安装）
+> Commands below use the English version `skills/biomed-paper-review-en/`;
+> substitute `skills/biomed-paper-review/` for the Chinese version — behavior is
+> identical.
+
+### 1. Offline selftest (no network, no model, no installation)
 
 ```bash
-cd skills/biomed-paper-review
+cd skills/biomed-paper-review-en
 for f in scripts/*.py; do python3 "$f" --selftest; done
 ```
 
-预期：七个脚本全部通过。**这一步不需要任何第三方依赖。**
+Expected: all seven scripts pass. **This step needs no third-party dependencies.**
 
-### 2. X1 外部核验的离线回放
+### 2. Offline replay of X1 external validation
 
 ```bash
 python3 scripts/external_figure_validation.py --offline --selftest
 ```
 
-严格回放已录制的真实响应；未命中即报错，**绝不回退到网络**。
-边界：离线全绿只证明解析与判定逻辑没坏，**不证明上游接口仍可用**。
+Strictly replays recorded real responses; any cache miss is an error, and it **never
+falls back to the network**. Boundary: all-green offline only proves the parsing and
+decision logic is intact — **it does not prove the upstream APIs are still available**.
 
-### 3. 联网核验单个标识符（可选，需白名单网络）
+### 3. Validate a single identifier online (optional, needs allowlisted network)
 
 ```bash
-# 细胞系误认（Cellosaurus）
+# Cell line misidentification (Cellosaurus)
 printf '%s' '[{"check":"cell_line","cell_line":"MDA-MB-435","evidence_refs":["EV-001"]}]' \
   | python3 scripts/external_figure_validation.py --input -
 
-# 被引文献是否已撤稿（Crossref / Europe PMC）
+# Is a cited reference retracted? (Crossref / Europe PMC)
 printf '%s' '[{"check":"cited_retracted","doi":"10.1002/jcp.26311","evidence_refs":["EV-001"]}]' \
   | python3 scripts/external_figure_validation.py --input -
 ```
 
-### 4. 只跑结构化抽取（不产 finding，分钟级）
+### 4. Run structured extraction only (no findings, minutes-scale)
 
 ```bash
-opencode run --dir . --model <统一模型> \
-  "请使用 biomed-paper-review skill，模式 structured_extraction：
-   只抽结构化结果，不做审核判定、不产 finding、不输出风险分。"
+opencode run --dir . --model <your model> \
+  "Use the biomed-paper-review-en skill in structured_extraction mode:
+   extract the structured result only — no review judgments, no findings,
+   no risk score."
 ```
 
-产出 `structured_result`（含字段解析率）与 `output_confidence`。
-**该模式不输出 `manuscript_risk_score`** —— 没跑审核模块就给风险分是无源之水。
+Produces `structured_result` (with the field parse rate) and `output_confidence`.
+**This mode does not output `manuscript_risk_score`** — issuing a risk score without
+running the review modules would be baseless.
 
-### 5. 跑一次完整审核（需 opencode + 模型凭据）
+### 5. Run a full review (needs opencode + model credentials)
 
 ```bash
 mkdir -p run && cd run
 curl -s "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11856280/fullTextXML" -o paper.xml
-mkdir -p .claude/skills && cp -R ../skills/biomed-paper-review .claude/skills/
-opencode run --dir . --model <统一模型> \
-  "请使用 biomed-paper-review skill 对当前目录的论文做完整审核（full_review）。"
+mkdir -p .claude/skills && cp -R ../skills/biomed-paper-review-en .claude/skills/
+opencode run --dir . --model <your model> \
+  "Use the biomed-paper-review-en skill to run a full review (full_review)
+   of the paper in the current directory."
 ```
 
-产出 `review_report.json`（机器可校验）与 `review_report.md`（人读）。
+Produces `review_report.json` (machine-validatable) and `review_report.md`
+(human-readable).
 
-**运行特征（实测，qwen3.8-max）**：完整审核一篇真实论文约 80–110 分钟，
-其中六个专家子会话**并行**约 7 分钟（串行约需 60 分钟）——
-关键路径是 `max(各波次)` 而非求和，并行化把总耗时从 2h20m 压到 1h48m。
-定向核查与图表解析模式为分钟级。
+**Runtime profile (measured on qwen3.8-max)**: a full review of a real paper takes
+about 80–110 minutes, of which the six specialist subsessions run **in parallel** in
+about 7 minutes (serial would take ~60 minutes) — the critical path is
+`max(per-wave)` rather than the sum, and parallelization cut total time from 2h20m to
+1h48m. Targeted-check and figure-analysis modes return in minutes.
 
 ---
 
-## 三、包内结构
+## 3. Package layout
 
 ```
-skills/biomed-paper-review/
-├── SKILL.md                    唯一入口：编排流程、模块路由、共享契约（499 行）
-├── references/                 11 份规则库（00 契约 / 路由 / 运行时；01 抽取；02–07 六个审核模块）
-├── scripts/                    7 个确定性工具，全部带 --selftest
-│   ├── statistical_forensics.py      5 项统计取证（table_total / GRIM / p 反算 / CI / 计数）
-│   ├── external_figure_validation.py X1 外部核验：12 库 / 14 检查
-│   ├── ethics_compliance_check.py    伦理规范库筛查（三法域）
-│   ├── animal_model_compliance.py    动物福利红线与 3R 审计
-│   ├── sequence_identifier_audit.py  序列 / HGVS / 登录号 / 引物
-│   ├── figure_integrity_audit.py     图像重复 / 拼接 / 异常均匀区块
-│   └── normalize_biomed_units.py     单位归一化，fail-closed
-├── schemas/                    12 份 JSON Schema（模块间集成契约）
-├── resources/                  伦理规范库 + X1 离线回放 fixture
-└── templates/review_report.md  报告渲染模板
+skills/biomed-paper-review-en/     English version (skills/biomed-paper-review/ is the equivalent Chinese version)
+├── SKILL.md                    Single entry point: orchestration, module routing, shared contracts (~500 lines)
+├── references/                 11 rulebases (00 contracts / routing / runtime; 01 extraction; 02–07 six review modules)
+├── scripts/                    7 deterministic tools, all with --selftest
+│   ├── statistical_forensics.py      5 statistical forensics checks (table_total / GRIM / p recomputation / CI / counts)
+│   ├── external_figure_validation.py X1 external validation: 12 databases / 14 checks
+│   ├── ethics_compliance_check.py    Ethics rulebase screening (three jurisdictions)
+│   ├── animal_model_compliance.py    Animal welfare red lines and 3R audit
+│   ├── sequence_identifier_audit.py  Sequences / HGVS / accession numbers / primers
+│   ├── figure_integrity_audit.py     Image duplication / splicing / abnormally uniform regions
+│   └── normalize_biomed_units.py     Unit normalization, fail-closed
+├── schemas/                    12 JSON Schemas (inter-module integration contracts)
+├── resources/                  Ethics rulebase + X1 offline replay fixtures
+└── templates/review_report.md  Report rendering template
 ```
 
-**自包含**：包内不引用任何包外路径，全部内部引用可解析。
+**Self-contained**: the package references no paths outside itself; all internal
+references resolve.
 
-**依赖：不提供 `requirements.txt`，且这是有意的。**
-六个脚本纯标准库；`figure_integrity_audit.py` 可选用 `numpy` + `Pillow`
-（仅像素级审计需要），缺失时登记 `system_limitation(figure_unreadable)` 后
-**正常退出（exit 0）**，其余审核不受影响 —— 该降级路径带专门自检。
-给了 `requirements.txt` 反而等于请求沙箱执行一次 pip 安装：
-白名单网络下安装失败会把「一个可选检查降级」升级成「整次运行的风险」。
+**Dependencies: no `requirements.txt`, and that is deliberate.**
+Six scripts are pure standard library; `figure_integrity_audit.py` optionally uses
+`numpy` + `Pillow` (needed only for the pixel-level audit) and, when they are missing,
+registers `system_limitation(figure_unreadable)` and **exits normally (exit 0)** with
+the rest of the review unaffected — this fallback path has its own selftest.
+Shipping a `requirements.txt` would amount to requesting a pip install in the sandbox:
+under an allowlisted network, an install failure would escalate "one optional check
+degraded" into "the whole run is at risk."
 
 ---
 
-## 四、提交合规自查
+## 4. Boundary statement (must be written verbatim into every report)
 
-对照 `04-提交规范` 与 `05-自动评审规则说明`：
-
-### L0 合规硬筛
-
-| 检查项 | 状态 |
-| --- | --- |
-| `skills/` 下有且仅有一个 skill 目录 | ✅ `biomed-paper-review` |
-| `SKILL.md` frontmatter `name` 合法 | ✅ `biomed-paper-review`，19 字符，小写连字符（≤64） |
-| `SKILL.md` frontmatter `description` 合法 | ✅ 499 字符（≤1024），第三人称，写清「做什么 + 何时使用」，覆盖六个审核维度与全部四种模式，含触发关键词 |
-| 提交包大小 | ✅ **936 KB**，最大单文件 136 KB |
-| 依赖可装 | ✅ 无 `requirements.txt` → 使用预装科学栈（见 §三） |
-| 安全红线：无诱导评分 / 无注入语句 | ✅ |
-| 原创性 / 课题相关性 | ✅ 自建架构与规则库，非改写公开 skill |
-| 课题匹配 | ✅ 已在提交表单选定官方课题 |
-| 仓库为私有 + 邀请 `synmatai-hackathon` | ✅ 已完成 |
-
-### L1 静态质量
-
-| 检查项 | 状态 |
-| --- | --- |
-| 正文 <500 行 | ✅ **499 行** |
-| 引用只一层深（渐进披露） | ✅ SKILL.md 直接索引全部 reference，无二级跳转 |
-| 输入/输出 Schema 明确 | ✅ 12 份 JSON Schema；`structured_result` 为可被他项目直接消费的事实表（字段解析率 22/23） |
-| 工程健壮性：无硬编码路径 | ✅ 已在隔离目录验证（无仓库上下文亦可跑通自检） |
-| 正文语言建议中文 | ✅ SKILL.md 与多数规则库为中文（M3 与 06b 为英文） |
-| 具体使用示例 | ✅ 见 §二最小复现步骤 |
-
-### L2 沙箱实战（uplift 消融）
-
-评分看的是**相对无 skill 基线的提升**。本架构对此做了一条结构性设计：
-**L0 全局审阅就是裸模型条件本身**（全文 + 极简提问、无任何规则与清单），
-再由加法保证约束「只能加、不能凭空减」。
-换言之，**Skill 的下限被钉死在基线上**，增益来自 L1–L4 之上叠加的部分。
-
-**已知局限（如实声明）**：
-
-- 实测均在 `qwen3.8-max` 上完成；跨模型行为未逐一验证。
-- 完整审核耗时约 80–110 分钟（并行后）；时间受限时可用
-  `targeted_check` / `figure_analysis` 等分级模式，分钟级返回。
-
----
-
-## 五、边界声明（必须原样写入每份报告）
-
-- 本工具**不替代同行评审**，不产出录用/退稿决定；
-- 每条发现必须可回溯到论文原文位置，**不得**凭生成内容立论；
-- 「未报告」不等于「未实施」；「我们没拿到」不等于「稿件没写」；
-- 工具失败、外部源不可达、图像无法读取，一律登记 `system_limitation`，**不归责稿件**；
-- 三项评分（稿件风险分 / 抽取覆盖率 / 复核置信度）**互不替代**，不得合并为单一数字；
-  partial 分数不得与完整审核分数并列比较。
+- This tool **does not replace peer review** and produces no accept/reject decisions;
+- Every finding must be traceable to a location in the original paper text; arguments
+  **must not** be built on generated content;
+- "Not reported" does not mean "not performed"; "we did not obtain it" does not mean
+  "the manuscript did not state it";
+- Tool failures, unreachable external sources, and unreadable images are always
+  registered as `system_limitation` and **never blamed on the manuscript**;
+- The three scores (manuscript risk score / extraction coverage / review confidence)
+  **do not substitute for one another** and must not be merged into a single number;
+  partial scores must not be compared side by side with full-review scores.

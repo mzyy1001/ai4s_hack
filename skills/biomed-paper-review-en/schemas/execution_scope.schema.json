@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "execution_scope.schema.json",
+  "title": "ExecutionScope",
+  "description": "Execution scope and coverage breakdown. references/00-contracts.md §7. Not a record of issues: entries must not be called findings and must not carry a severity. Every coverage and confidence denominator is taken from this object. Required in all modes.",
+
+  "type": "object",
+  "required": ["execution_scope", "coverage_breakdown"],
+  "additionalProperties": false,
+
+  "properties": {
+
+    "execution_scope": {
+      "type": "object",
+      "required": ["mode", "submode", "executed_stages", "executed_modules",
+                   "skipped_modules", "fields", "assets", "observations", "supplements"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": ["full_review", "structured_extraction", "figure_analysis", "targeted_check"]
+        },
+        "submode": {
+          "oneOf": [
+            {"enum": ["interpretation_only", "figure_review"]},
+            {"type": "null"}
+          ],
+          "description": "Used only by figure_analysis; must be null in all other modes"
+        },
+        "executed_stages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "common.schema.json#/$defs/stage_id"},
+          "description": "Consumption allowlist: no stage may consume upstream outputs not declared here"
+        },
+        "executed_modules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
+          "description": "Review modules actually run; an empty array in non-review modes"
+        },
+        "skipped_modules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
+          "description": "An empty array under full_review"
+        },
+        "fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string"},
+          "description": "The full set of field paths entering the coverage denominator"
+        },
+        "assets": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string"},
+          "description": "Figure/table ids entering the asset_readability_rate denominator"
+        },
+        "observations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"},
+          "description": "The full set of observation_ids entering the pixel/OCR-ratio and conflict-count denominators"
+        },
+        "supplements": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string"},
+          "description": "Supplement ids entering the supplement_accessibility denominator"
+        },
+        "scope_rationale": {"type": "string"},
+        "stage_3b_executed": {"type": "boolean"}
+      },
+
+      "allOf": [
+        {
+          "description": "submode is non-null only under figure_analysis",
+          "if": {"properties": {"mode": {"const": "figure_analysis"}}, "required": ["mode"]},
+          "then": {"properties": {"submode": {"enum": ["interpretation_only", "figure_review"]}}},
+          "else": {"properties": {"submode": {"type": "null"}}}
+        },
+        {
+          "description": "full_review must run all six review modules with none skipped",
+          "if": {"properties": {"mode": {"const": "full_review"}}, "required": ["mode"]},
+          "then": {
+            "properties": {
+              "executed_modules": {"minItems": 6},
+              "skipped_modules": {"maxItems": 0},
+              "executed_stages": {"contains": {"const": "stage_3"}}
+            }
+          }
+        },
+        {
+          "description": "interpretation_only and structured_extraction run no review modules",
+          "if": {
+            "anyOf": [
+              {"properties": {"mode": {"const": "structured_extraction"}}, "required": ["mode"]},
+              {"properties": {"submode": {"const": "interpretation_only"}}, "required": ["submode"]}
+            ]
+          },
+          "then": {"properties": {"executed_modules": {"maxItems": 0}}}
+        },
+        {
+          "description": "structured_extraction executes at least Stage 1 and Stage 2",
+          "if": {"properties": {"mode": {"const": "structured_extraction"}}, "required": ["mode"]},
+          "then": {"properties": {"executed_stages": {
+            "allOf": [
+              {"contains": {"const": "stage_1"}},
+              {"contains": {"const": "stage_2"}}
+            ]
+          }}}
+        },
+        {
+          "description": "interpretation_only executes at least Stage 1 and a scoped Stage 3",
+          "if": {"properties": {"submode": {"const": "interpretation_only"}}, "required": ["submode"]},
+          "then": {"properties": {"executed_stages": {
+            "allOf": [
+              {"contains": {"const": "stage_1"}},
+              {"contains": {"const": "stage_3"}}
+            ]
+          }}}
+        },
+        {
+          "description": "figure_review runs only M5",
+          "if": {"properties": {"submode": {"const": "figure_review"}}, "required": ["submode"]},
+          "then": {"properties": {
+            "executed_modules": {"const": ["M5"]},
+            "executed_stages": {"contains": {"const": "stage_3"}}
+          }}
+        },
+        {
+          "description": "Stage 2 depends on Stage 1's normalized_document",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_2"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_1"}}}}
+        },
+        {
+          "description": "Stage 3 depends on Stage 1's asset_inventory",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_3"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_1"}}}}
+        },
+        {
+          "description": "Stage 3b depends on Stage 2's structured_result_v1",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_3b"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_2"}}}}
+        },
+        {
+          "description": "Stage 4 depends on Stage 3b's structured_result_v2",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_4"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_3b"}}}}
+        },
+        {
+          "description": "Optional X1 depends on Stage 3b's structured_result_v2; Stage 4 does not force X1 to run",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_3c_external_validation"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_3b"}}}}
+        },
+        {
+          "description": "Stage 5 aggregation depends on Stage 4; non-review modes use output assembly instead of Stage 5",
+          "if": {
+            "properties": {"executed_stages": {"contains": {"const": "stage_5"}}},
+            "required": ["executed_stages"]
+          },
+          "then": {"properties": {"executed_stages": {"contains": {"const": "stage_4"}}}}
+        },
+        {
+          "description": "Executing any review module requires declaring Stage 4 and Stage 5",
+          "if": {
+            "properties": {"executed_modules": {"minItems": 1}},
+            "required": ["executed_modules"]
+          },
+          "then": {"properties": {"executed_stages": {
+            "allOf": [
+              {"contains": {"const": "stage_4"}},
+              {"contains": {"const": "stage_5"}}
+            ]
+          }}}
+        }
+      ]
+    },
+
+    "coverage_breakdown": {
+      "type": "object",
+      "description": "Coverage breakdown. Entries are not findings, do not enter issue_clusters[], and do not affect manuscript_risk_score.",
+      "required": ["resolved_fields", "unresolved_required_fields", "unreadable_assets",
+                   "inaccessible_supplements", "scope_denominators"],
+      "additionalProperties": false,
+      "properties": {
+        "resolved_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string"},
+          "description": "Conditionally required fields with status ∈ {reported, not_reported}. not_reported counts as resolved."
+        },
+        "unresolved_required_fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field_path", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "field_path": {"type": "string"},
+              "status": {"enum": ["ambiguous", "conflicting", "parse_failed", "unresolved"]},
+              "reason_ref": {
+                "type": ["string", "null"],
+                "pattern": "^(SYS|SIG)-[0-9]{3,}$",
+                "description": "Points to a system_limitation.id or extraction_signal.id"
+              }
+            }
+          }
+        },
+        "unreadable_assets": {"type": "array", "items": {"type": "string"}},
+        "inaccessible_supplements": {"type": "array", "uniqueItems": true,
+                                     "items": {"type": "string"}},
+        "scope_denominators": {
+          "type": "object",
+          "required": ["required_fields_total", "assets_total", "supplements_total"],
+          "additionalProperties": false,
+          "properties": {
+            "required_fields_total": {
+              "type": "integer", "minimum": 0,
+              "description": "Must equal the combined lengths of resolved_fields and unresolved_required_fields"
+            },
+            "assets_total": {"type": "integer", "minimum": 0},
+            "supplements_total": {"type": "integer", "minimum": 0},
+            "recommended_fields_total": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.schema.json",
+  "title": "CommonDefs",
+  "description": "Atomic definitions shared by all schemas. Corresponds to references/00-contracts.md §1.7 / §2 / §3. This file defines no top-level object and only provides $defs.",
+
+  "$defs": {
+
+    "confidence_level": {
+      "enum": ["high", "medium", "low"],
+      "description": "Shared by extraction_confidence and finding.review_confidence"
+    },
+
+    "applicability": {
+      "enum": ["applicable", "not_applicable", "applicability_uncertain"],
+      "description": "00-contracts.md §3.1: does this concept even make sense for this study"
+    },
+
+    "requiredness": {
+      "enum": ["required", "recommended", "optional"],
+      "description": "00-contracts.md §3.1: to what degree this design should report it"
+    },
+
+    "field_status": {
+      "enum": ["reported", "not_reported", "not_applicable", "ambiguous",
+               "conflicting", "parse_failed", "unresolved"],
+      "description": "00-contracts.md §3.1. unresolved is only allowed to appear in structured_result_v1"
+    },
+
+    "locator_scope": {
+      "enum": ["document", "section", "paragraph", "figure", "panel", "table", "supplement"]
+    },
+
+    "section_name": {
+      "enum": ["title", "abstract", "introduction", "methods", "results", "discussion",
+               "conclusion", "declarations", "ethics", "funding", "conflict_of_interest",
+               "data_availability", "references", "supplement"]
+    },
+
+    "locator": {
+      "type": "object",
+      "description": "00-contracts.md §1.7. Structured object; using free text as the sole storage form is forbidden.",
+      "required": ["scope"],
+      "additionalProperties": false,
+      "properties": {
+        "section": {"oneOf": [{"$ref": "#/$defs/section_name"}, {"type": "null"}]},
+        "subsection": {"type": ["string", "null"]},
+        "paragraph_id": {"type": ["string", "null"]},
+        "pdf_file_page": {"type": ["integer", "null"], "minimum": 1,
+                          "description": "PDF physical page number; required for PDF input"},
+        "printed_page": {"type": ["integer", "null"]},
+        "supplement_page": {"type": ["integer", "null"]},
+        "figure": {"type": ["string", "null"]},
+        "panel": {"type": ["string", "null"]},
+        "table": {"type": ["string", "null"]},
+        "supplement_id": {"type": ["string", "null"]},
+        "xml_id": {"type": ["string", "null"], "description": "Required for JATS/XML input"},
+        "scope": {"$ref": "#/$defs/locator_scope"}
+      }
+    },
+
+    "numeric_value": {
+      "description": "00-contracts.md §2.1. Bare numbers and string intervals are forbidden.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type", "number"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "point"},
+            "number": {"type": "number"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "low", "high"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "interval"},
+            "low": {"type": "number"},
+            "high": {"type": "number"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "low"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "lower_bound"},
+            "low": {"type": "number"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "high"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "upper_bound"},
+            "high": {"type": "number"}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "label"],
+          "additionalProperties": false,
+          "properties": {
+            "type": {"const": "categorical"},
+            "label": {"type": "string"}
+          }
+        }
+      ]
+    },
+
+    "uncertainty": {
+      "type": "object",
+      "description": "00-contracts.md §2.2. SD/SEM use value; interval types use low/high.",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {"enum": ["SD", "SEM", "95CI", "IQR", "range", "none"]},
+        "value": {"type": "number", "minimum": 0},
+        "low": {"type": "number"},
+        "high": {"type": "number"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"type": {"enum": ["95CI", "IQR", "range"]}}, "required": ["type"]},
+          "then": {
+            "required": ["low", "high"],
+            "not": {"required": ["value"]}
+          }
+        },
+        {
+          "if": {"properties": {"type": {"enum": ["SD", "SEM"]}}, "required": ["type"]},
+          "then": {
+            "required": ["value"],
+            "not": {"anyOf": [{"required": ["low"]}, {"required": ["high"]}]}
+          }
+        },
+        {
+          "if": {"properties": {"type": {"const": "none"}}, "required": ["type"]},
+          "then": {"not": {"anyOf": [
+            {"required": ["value"]}, {"required": ["low"]}, {"required": ["high"]}
+          ]}}
+        }
+      ]
+    },
+
+    "source_type": {
+      "enum": ["explicit_main_text", "explicit_table", "explicit_figure_caption",
+               "axis_readable", "pixel_estimated"],
+      "description": "00-contracts.md §2.3. explicit_reported = the first three; visually_derived = the last two. Legacy values text/table/figure/figure_caption/figure_axis/figure_pixel are deprecated."
+    },
+
+    "extraction_method": {
+      "enum": ["text_parse", "table_parse", "caption_parse", "axis_read",
+               "visual_estimation", "ocr_text"]
+    },
+
+    "derivation": {
+      "type": "object",
+      "description": "00-contracts.md §2.3. Required — otherwise the pixel/OCR dependency rates in §8.3 cannot be computed.",
+      "required": ["extraction_method", "ocr_used"],
+      "additionalProperties": false,
+      "properties": {
+        "extraction_method": {"$ref": "#/$defs/extraction_method"},
+        "ocr_used": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"extraction_method": {"const": "ocr_text"}},
+                 "required": ["extraction_method"]},
+          "then": {"properties": {"ocr_used": {"const": true}}}
+        },
+        {
+          "if": {"properties": {"ocr_used": {"const": true}}, "required": ["ocr_used"]},
+          "then": {"properties": {"extraction_method": {"const": "ocr_text"}}}
+        }
+      ]
+    },
+
+    "provenance": {
+      "type": "object",
+      "description": "00-contracts.md §2.3. The locator is not inlined; it is resolved via evidence_ref instead.",
+      "required": ["source_type", "source_id", "evidence_ref", "derivation"],
+      "additionalProperties": false,
+      "properties": {
+        "source_type": {"$ref": "#/$defs/source_type"},
+        "source_id": {"type": "string", "description": "e.g. fig:2C / results-p8 / table:3"},
+        "evidence_ref": {"type": "string", "pattern": "^EV-[0-9]{3,}$"},
+        "derivation": {"$ref": "#/$defs/derivation"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"source_type": {"const": "pixel_estimated"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"const": "visual_estimation"}}}}}
+        },
+        {
+          "if": {"properties": {"source_type": {"const": "axis_readable"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"const": "axis_read"}}}}}
+        },
+        {
+          "if": {"properties": {"source_type": {"const": "explicit_main_text"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"enum": ["text_parse", "ocr_text"]}}}}}
+        },
+        {
+          "if": {"properties": {"source_type": {"const": "explicit_table"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"enum": ["table_parse", "ocr_text"]}}}}}
+        },
+        {
+          "if": {"properties": {"source_type": {"const": "explicit_figure_caption"}}, "required": ["source_type"]},
+          "then": {"properties": {"derivation": {"properties": {"extraction_method": {"enum": ["caption_parse", "ocr_text"]}}}}}
+        }
+      ]
+    },
+
+    "reporting_completeness": {
+      "enum": ["complete", "incomplete", "not_assessed"],
+      "description": "00-contracts.md §3.5. Orthogonal to extraction_confidence; the two must not contaminate each other."
+    },
+
+    "metric_family": {
+      "enum": ["continuous_summary", "effect_estimate", "count", "proportion", "p_value",
+               "correlation", "time_to_event", "dose_response", "classification_metric",
+               "diagnostic_accuracy"],
+      "description": "01-structured-extraction.md §6.3"
+    },
+
+    "replicate_type": {
+      "enum": ["biological", "technical", "unspecified"],
+      "description": "When the manuscript does not state it, use unspecified and emit a partial_extraction signal; defaulting to biological is forbidden"
+    },
+
+    "module_id_review": {
+      "enum": ["M2", "M3", "M4", "M5", "M6", "M7"],
+      "description": "Review modules. M1 is the upstream extraction layer and must not produce findings."
+    },
+
+    "stage_id": {
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b",
+               "stage_3c_external_validation", "stage_4", "stage_5"]
+    }
+  }
+}

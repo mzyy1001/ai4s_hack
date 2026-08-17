@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "table_record.schema.json",
+  "title": "TableRecord",
+  "description": "A structured record parsed by the Stage 3 Figure Parser from a manuscript table. Parallel to figure_record: interpretation only, no judgment, no findings produced. Previously table_records[] was referenced in SKILL.md and the report template with no contract at all (review_report.schema.json only wrote {type: object}) — promised but never defined. This file completes that contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "table_id",
+    "location",
+    "scientific_question",
+    "columns",
+    "observations",
+    "extraction_confidence",
+    "manual_review_needed"
+  ],
+  "properties": {
+    "table_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The manuscript's original label, e.g. Table 1 / Supplementary Table S2; keep the original wording"
+    },
+    "caption": {
+      "type": "string",
+      "description": "The table title and footnotes verbatim"
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["table_label", "placement", "locator"],
+      "properties": {
+        "table_label": { "type": "string", "minLength": 1 },
+        "placement": { "enum": ["main_text", "supplement"] },
+        "locator": { "$ref": "common.schema.json#/$defs/locator" },
+        "first_cited_at": { "$ref": "common.schema.json#/$defs/locator" }
+      }
+    },
+    "scientific_question": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What question this table is meant to answer. Judge the question first, then whether the presentation suffices to support it — the same principle as figure_record"
+    },
+    "table_kind": {
+      "enum": [
+        "baseline_characteristics",
+        "outcome_summary",
+        "adverse_events",
+        "reagent_or_material",
+        "model_parameters",
+        "other"
+      ],
+      "description": "The table's purpose. baseline_characteristics and outcome_summary are the main sources for statistical forensics"
+    },
+    "columns": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Column definitions. Denominators, units, and group membership must be made explicit here; otherwise downstream consumers cannot judge whether counts are self-consistent",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "unit": { "type": ["string", "null"] },
+          "group": {
+            "type": ["string", "null"],
+            "description": "Which trial arm/cohort this column belongs to; null when there is no grouping semantics"
+          },
+          "denominator": {
+            "type": ["integer", "null"],
+            "minimum": 0,
+            "description": "The denominator underlying this column's percentages. **Must be null when not explicitly written in the table; never back-derive it from row values** — a back-derived denominator produces false positives in statistical_forensics count checks"
+          }
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "description": "Values extracted cell by cell. The numeric shape and provenance reuse the global definitions, consistent with figure_record.observations",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["row_label", "column", "value", "provenance"],
+        "properties": {
+          "row_label": { "type": "string", "minLength": 1 },
+          "column": { "type": "string", "minLength": 1 },
+          "value": { "$ref": "common.schema.json#/$defs/numeric_value" },
+          "provenance": { "$ref": "common.schema.json#/$defs/provenance" },
+          "evidence_refs": { "$ref": "evidence.schema.json#/$defs/evidence_refs" }
+        }
+      }
+    },
+    "footnote_definitions": {
+      "type": "array",
+      "description": "Abbreviations, asterisk thresholds, and statistic meanings defined in the footnotes. Asterisk thresholds vary by journal; always check the footnotes instead of applying convention",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "parse_limitations": {
+      "type": "array",
+      "description": "Parse limitations caused by merged cells, cross-page breaks, image-based tables, etc. **Registering one here does not mean the manuscript has a problem** — it means we could not read it, by the same logic as parse_failed != not_reported",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "extraction_confidence": { "enum": ["high", "medium", "low"] },
+    "manual_review_needed": { "type": "boolean" },
+    "manual_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "action": { "type": "string", "minLength": 1 },
+        "who": { "enum": ["reviewer", "editor", "statistician"] }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "When flagged for manual review, what to review must be stated — setting true without an action is as good as no hint",
+      "if": {
+        "properties": { "manual_review_needed": { "const": true } },
+        "required": ["manual_review_needed"]
+      },
+      "then": { "required": ["manual_review"] }
+    }
+  ]
+}

@@ -1,0 +1,786 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "extraction_signal.schema.json",
+  "title": "ExtractionSignal",
+  "description": "A machine-level observation. references/00-contracts.md §6.2. A signal is not a conclusion, has no severity, and does not directly affect manuscript_risk_score. Produced by Stage 2, Stage 3, Stage 3b, or the optional X1, and routed to downstream review modules for judgment.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "target",
+    "detail",
+    "evidence_refs",
+    "routed_to",
+    "produced_by"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^SIG-[0-9]{3,}$"
+    },
+    "type": {
+      "enum": [
+        "source_value_conflict",
+        "claim_without_resolved_evidence_link",
+        "ambiguous_study_design",
+        "unresolved_cross_reference",
+        "partial_extraction",
+        "ambiguous_extraction",
+        "test_statistic_p_mismatch",
+        "ci_estimate_mismatch",
+        "count_percentage_mismatch",
+        "grim_incompatible_mean",
+        "table_total_mismatch",
+        "ethics_requirement_unmet",
+        "sequence_identifier_inconsistent",
+        "figure_integrity_candidate",
+        "external_validation_candidate"
+      ],
+      "description": "Fifteen values. external_validation_candidate is produced only by X1; the legacy value parse_failure is abolished — a parse failure is a system_limitation, not a signal."
+    },
+    "target": {
+      "description": "The object the signal points at. The string form is a field path or entity id; the object form carries type-specific metadata.",
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "e.g. key_data.KD-007 / article_design.primary_design"
+        },
+        {
+          "$ref": "#/$defs/claim_target"
+        },
+        {
+          "$ref": "#/$defs/external_target"
+        }
+      ]
+    },
+    "detail": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observation_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^OBS-[0-9]{3,}$"
+      },
+      "description": "Points to key_data.observations[].observation_id"
+    },
+    "evidence_refs": {
+      "$ref": "evidence.schema.json#/$defs/evidence_refs"
+    },
+    "routed_to": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "common.schema.json#/$defs/module_id_review"
+      },
+      "description": "The downstream judging modules. The signal itself draws no conclusion."
+    },
+    "produced_by": {
+      "enum": [
+        "stage_2",
+        "stage_3",
+        "stage_3b",
+        "stage_3c_external_validation"
+      ],
+      "description": "stage_3 is used only for image-integrity audit; stage_3c_external_validation only for X1"
+    },
+    "external_check": {
+      "type": "object",
+      "description": "Used only by external_validation_candidate. Stores a recomputable comparison between manuscript facts and external evidence; not a manuscript conclusion.",
+      "required": [
+        "connector",
+        "query_kind",
+        "check_type",
+        "manuscript_value",
+        "external_value",
+        "comparison_result",
+        "comparability",
+        "manuscript_evidence_refs",
+        "external_evidence_refs",
+        "rule_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "connector": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "query_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "check_type": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "manuscript_value": {},
+        "external_value": {},
+        "comparison_result": {
+          "enum": [
+            "match",
+            "mismatch",
+            "not_comparable",
+            "needs_manual_review"
+          ]
+        },
+        "comparability": {
+          "enum": [
+            "complete",
+            "partial",
+            "none"
+          ]
+        },
+        "manuscript_evidence_refs": {
+          "$ref": "evidence.schema.json#/$defs/evidence_refs",
+          "minItems": 1,
+          "description": "Must all resolve to present evidence inside the manuscript"
+        },
+        "external_evidence_refs": {
+          "$ref": "evidence.schema.json#/$defs/evidence_refs",
+          "minItems": 1,
+          "description": "Must all resolve to external evidence with retrieval_status=resolved; cross-registry constraints are enforced by the contract validator"
+        },
+        "noncomparability_reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "rule_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "comparison_result": {
+                "enum": [
+                  "match",
+                  "mismatch"
+                ]
+              }
+            },
+            "required": [
+              "comparison_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "comparability": {
+                "const": "complete"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "comparison_result": {
+                "const": "not_comparable"
+              }
+            },
+            "required": [
+              "comparison_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "comparability": {
+                "const": "none"
+              },
+              "noncomparability_reasons": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "noncomparability_reasons"
+            ]
+          }
+        }
+      ]
+    },
+    "image_audit": {
+      "type": "object",
+      "description": "Used only by figure_integrity_candidate. Produced by scripts/figure_integrity_audit.py. severity_hint is always null — the contract forbids automatically characterizing image duplication as misconduct.",
+      "required": [
+        "check",
+        "candidate",
+        "severity_hint",
+        "manual_review_required",
+        "rule_version"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "check": {
+          "enum": [
+            "duplicated_region_candidate",
+            "splice_discontinuity_candidate",
+            "uniform_patch_candidate"
+          ]
+        },
+        "candidate": {
+          "const": true,
+          "description": "Always true: the image audit produces candidates only"
+        },
+        "severity_hint": {
+          "type": "null",
+          "description": "Always null: automatic characterization is forbidden"
+        },
+        "manual_review_required": {
+          "const": true
+        },
+        "rule_version": {
+          "type": "string"
+        }
+      }
+    },
+    "sequence_audit": {
+      "type": "object",
+      "description": "Used only by sequence_identifier_inconsistent. Records the criterion and whether it is a candidate. Produced by scripts/sequence_identifier_audit.py.",
+      "required": [
+        "check",
+        "candidate",
+        "rule_version"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "check": {
+          "enum": [
+            "hgvs_syntax_invalid",
+            "hgvs_syntax_unresolved",
+            "reference_context_incomplete",
+            "variant_position_out_of_range",
+            "variant_reference_mismatch",
+            "gene_symbol_species_mismatch",
+            "accession_format_invalid",
+            "primer_qc_out_of_range",
+            "sequence_alphabet_invalid"
+          ]
+        },
+        "candidate": {
+          "type": "boolean",
+          "description": "true = convention deviation or parser gap, handed to a human as a candidate only; false = a definite deterministic syntax/range violation"
+        },
+        "rule_version": {
+          "type": "string"
+        }
+      }
+    },
+    "forensics": {
+      "type": "object",
+      "description": "Used only by statistical-forensics signals. Records the recomputation inputs and results so M4 can reproduce the judgment independently. Produced by scripts/statistical_forensics.py, relative to the Skill root.",
+      "required": [
+        "check",
+        "ran",
+        "rule_version"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "check": {
+          "enum": [
+            "test_statistic_p_mismatch",
+            "ci_estimate_mismatch",
+            "count_percentage_mismatch",
+            "grim_incompatible_mean",
+            "table_total_mismatch"
+          ]
+        },
+        "ran": {
+          "type": "boolean",
+          "description": "false means the applicability precondition was unmet and this check did not run — in that case type must be partial_extraction"
+        },
+        "rule_version": {
+          "type": "string"
+        },
+        "test_family": {
+          "enum": [
+            "t",
+            "F",
+            "chi2",
+            "z"
+          ]
+        },
+        "statistic": {
+          "type": "number"
+        },
+        "df": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "df1": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "df2": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "tail": {
+          "enum": [
+            "one",
+            "two"
+          ]
+        },
+        "recomputed_p": {
+          "type": "number"
+        },
+        "reported_p": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "reported_bound": {
+          "type": "number"
+        },
+        "reported_operator": {
+          "enum": [
+            "<",
+            "≤"
+          ]
+        },
+        "expected_interval": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          },
+          "description": "The rounding interval implied by the reported precision; comparison uses the interval, not point equality"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "test_statistic_p_mismatch"
+              },
+              "ran": {
+                "const": true
+              }
+            },
+            "required": [
+              "check",
+              "ran"
+            ]
+          },
+          "then": {
+            "required": [
+              "test_family",
+              "statistic",
+              "tail",
+              "recomputed_p",
+              "reported_p"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "test_statistic_p_mismatch"
+              },
+              "ran": {
+                "const": true
+              },
+              "test_family": {
+                "enum": [
+                  "t",
+                  "chi2"
+                ]
+              }
+            },
+            "required": [
+              "check",
+              "ran",
+              "test_family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "df": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "df"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "test_statistic_p_mismatch"
+              },
+              "ran": {
+                "const": true
+              },
+              "test_family": {
+                "const": "F"
+              }
+            },
+            "required": [
+              "check",
+              "ran",
+              "test_family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "df1": {
+                "type": "number"
+              },
+              "df2": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "df1",
+              "df2"
+            ]
+          }
+        }
+      ]
+    },
+    "ethics": {
+      "type": "object",
+      "description": "Rulebase-hit trace used only by ethics_requirement_unmet; carries no severity — severity is judged entirely by M6.",
+      "required": [
+        "rule_id",
+        "domain",
+        "citations",
+        "manuscript_must_report",
+        "rulebase_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "pattern": "^ETH-[A-Z]+-[0-9]{3}$"
+        },
+        "domain": {
+          "enum": [
+            "animal",
+            "biosafety",
+            "cell_line_general",
+            "clinical_trial_registration",
+            "data_privacy",
+            "genetic_resources",
+            "human_clinical",
+            "human_derived_cells_tissue",
+            "stem_cell_embryo"
+          ]
+        },
+        "citations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "instrument",
+              "locus",
+              "citation_confidence"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "instrument": {
+                "type": "string",
+                "minLength": 1
+              },
+              "locus": {
+                "type": "string",
+                "minLength": 1
+              },
+              "citation_confidence": {
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              }
+            }
+          }
+        },
+        "manuscript_must_report": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "rulebase_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "not": {
+    "required": [
+      "severity"
+    ],
+    "description": "A signal must not carry a severity"
+  },
+  "allOf": [
+    {
+      "description": "source_value_conflict may only be produced by Stage 3b — compatibility judgment is Stage 3b's responsibility, not M1's",
+      "if": {
+        "properties": {
+          "type": {
+            "const": "source_value_conflict"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "produced_by": {
+            "const": "stage_3b"
+          },
+          "observation_refs": {
+            "minItems": 2
+          }
+        },
+        "required": [
+          "observation_refs"
+        ]
+      }
+    },
+    {
+      "description": "Claim-link signals must carry claim metadata",
+      "if": {
+        "properties": {
+          "type": {
+            "const": "claim_without_resolved_evidence_link"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "$ref": "#/$defs/claim_target"
+          }
+        }
+      }
+    },
+    {
+      "description": "Image-integrity signals must carry image_audit and may only be produced by Stage 3",
+      "if": {
+        "properties": {
+          "type": {
+            "const": "figure_integrity_candidate"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "image_audit"
+        ],
+        "properties": {
+          "produced_by": {
+            "const": "stage_3"
+          },
+          "routed_to": {
+            "const": [
+              "M5"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "Sequence/identifier-audit signals must carry a sequence_audit criterion record",
+      "if": {
+        "properties": {
+          "type": {
+            "const": "sequence_identifier_inconsistent"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "sequence_audit"
+        ],
+        "properties": {
+          "produced_by": {
+            "const": "stage_2"
+          }
+        }
+      }
+    },
+    {
+      "description": "Statistical-forensics signals must carry a forensics recomputation record and may only be produced by Stage 2",
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "test_statistic_p_mismatch",
+              "ci_estimate_mismatch",
+              "count_percentage_mismatch",
+              "grim_incompatible_mean",
+              "table_total_mismatch"
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "forensics"
+        ],
+        "properties": {
+          "produced_by": {
+            "const": "stage_2"
+          },
+          "forensics": {
+            "properties": {
+              "ran": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "An ethics rulebase hit must carry an auditable rule trace",
+      "if": {
+        "properties": {
+          "type": {
+            "const": "ethics_requirement_unmet"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "ethics"
+        ],
+        "properties": {
+          "produced_by": {
+            "const": "stage_2"
+          }
+        }
+      }
+    },
+    {
+      "description": "An external-validation candidate must be produced by X1, cite both manuscript present evidence and external evidence, and route only to M2–M7 (never M1: M1 only extracts identifiers for X1 and produces no findings itself)",
+      "if": {
+        "properties": {
+          "type": {
+            "const": "external_validation_candidate"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "required": [
+          "external_check"
+        ],
+        "properties": {
+          "produced_by": {
+            "const": "stage_3c_external_validation"
+          },
+          "target": {
+            "$ref": "#/$defs/external_target"
+          },
+          "evidence_refs": {
+            "minItems": 2
+          },
+          "routed_to": {
+            "items": {
+              "enum": [
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "claim_target": {
+      "type": "object",
+      "description": "Replaces the abolished unresolved_evidence_links[] array (00-contracts.md §10)",
+      "required": [
+        "claim_id",
+        "unresolved_refs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "type": "string",
+          "pattern": "^CLM-[0-9]{2,}$"
+        },
+        "unresolved_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Verbatim entries in claims[].supported_by that resolve to no entity, e.g. [\"Fig 5D\"]"
+        }
+      }
+    },
+    "external_target": {
+      "type": "object",
+      "required": [
+        "lookup_request_id",
+        "entity_type",
+        "entity_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "lookup_request_id": {
+          "type": "string",
+          "pattern": "^XREQ-[0-9]{3,}$"
+        },
+        "entity_type": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "entity_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

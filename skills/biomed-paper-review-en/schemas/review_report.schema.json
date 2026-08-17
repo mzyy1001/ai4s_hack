@@ -1,0 +1,661 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review_report.schema.json",
+  "title": "ReviewReport",
+  "description": "The Skill's top-level output. The Markdown report is rendered from this object (see templates/review_report.md). It must embed the complete evidence_registry so that all evidence_refs are self-consistent and verifiable.",
+  "type": "object",
+  "required": [
+    "paper",
+    "execution_scope",
+    "coverage_breakdown",
+    "evidence_registry",
+    "all_extraction_signals",
+    "all_system_limitations",
+    "extraction_coverage",
+    "disclaimer"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "paper": {
+      "type": "object",
+      "required": [
+        "title",
+        "input_format"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "doi": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "journal": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "input_format": {
+          "enum": [
+            "jats_xml",
+            "pdf",
+            "plain_text"
+          ]
+        }
+      }
+    },
+    "execution_scope": {
+      "$ref": "execution_scope.schema.json#/properties/execution_scope"
+    },
+    "coverage_breakdown": {
+      "$ref": "execution_scope.schema.json#/properties/coverage_breakdown"
+    },
+    "evidence_registry": {
+      "$ref": "evidence.schema.json#/properties/evidence_registry"
+    },
+    "structured_result": {
+      "$ref": "structured_result.schema.json",
+      "description": "v1 or v2, indicated by its version field. v1 when structured_extraction has no visual needs."
+    },
+    "figure_records": {
+      "type": "array",
+      "items": {
+        "$ref": "figure_record.schema.json"
+      }
+    },
+    "table_records": {
+      "type": "array",
+      "items": {
+        "$ref": "table_record.schema.json"
+      }
+    },
+    "issue_clusters": {
+      "type": "array",
+      "description": "Stage 5 clustering output; the sole scoring unit of manuscript_risk_score",
+      "items": {
+        "$ref": "#/$defs/issue_cluster"
+      }
+    },
+    "all_findings": {
+      "type": "array",
+      "items": {
+        "$ref": "finding.schema.json"
+      },
+      "description": "Stage 5 aggregation of m2_findings[]…m7_findings[]. M1 produces no findings."
+    },
+    "all_extraction_signals": {
+      "type": "array",
+      "items": {
+        "$ref": "extraction_signal.schema.json"
+      },
+      "description": "Stage 5 aggregation of the stage-local extraction signals from Stage 2/3/3b and the optional X1"
+    },
+    "all_system_limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "system_limitation.schema.json"
+      },
+      "description": "Stage 5 aggregation of the stage-local arrays from Stage 1/2/3/3b and the optional X1. Must get its own section in the report."
+    },
+    "manuscript_risk_score": {
+      "type": "object",
+      "description": "Output only when at least one review module has run. This field must not appear when executed_modules is empty.",
+      "required": [
+        "value",
+        "partial",
+        "executed_modules",
+        "skipped_modules",
+        "comparable_to_full_review",
+        "band",
+        "priority_manual_review",
+        "threshold_caveat"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "partial": {
+          "type": "boolean"
+        },
+        "executed_modules": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/module_id_review"
+          }
+        },
+        "skipped_modules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/module_id_review"
+          }
+        },
+        "comparable_to_full_review": {
+          "type": "boolean"
+        },
+        "band": {
+          "enum": [
+            "routine_review",
+            "clarification_needed",
+            "major_revision_suggested",
+            "partial_not_classified"
+          ],
+          "description": "Fixed to partial_not_classified when partial=true, and must not be compared or ranked against any other report's risk score; only a full review uses the 0–19 / 20–49 / 50+ bands."
+        },
+        "priority_manual_review": {
+          "type": "boolean",
+          "description": "Always true when any critical cluster exists, regardless of the score"
+        },
+        "threshold_caveat": {
+          "type": "string",
+          "const": "Band thresholds are unvalidated initial heuristics and must not be presented as an automated accept/reject decision."
+        }
+      },
+      "allOf": [
+        {
+          "description": "When fewer than all six review modules ran, it must be flagged partial and non-comparable",
+          "if": {
+            "properties": {
+              "partial": {
+                "const": true
+              }
+            },
+            "required": [
+              "partial"
+            ]
+          },
+          "then": {
+            "properties": {
+              "comparable_to_full_review": {
+                "const": false
+              },
+              "band": {
+                "const": "partial_not_classified"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "comparable_to_full_review": {
+                "const": true
+              },
+              "band": {
+                "enum": [
+                  "routine_review",
+                  "clarification_needed",
+                  "major_revision_suggested"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "executed_modules": {
+                "maxItems": 5
+              }
+            },
+            "required": [
+              "executed_modules"
+            ]
+          },
+          "then": {
+            "properties": {
+              "partial": {
+                "const": true
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "partial": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "extraction_coverage": {
+      "type": "object",
+      "description": "The three sub-rates must each list an explicit numerator and denominator — a coverage of 0.6 from missing fields means something entirely different from 0.6 from unreadable images.",
+      "required": [
+        "value",
+        "field_resolution",
+        "asset_readability",
+        "supplement_accessibility"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "field_resolution": {
+          "$ref": "#/$defs/rate"
+        },
+        "asset_readability": {
+          "$ref": "#/$defs/rate"
+        },
+        "supplement_accessibility": {
+          "$ref": "#/$defs/rate"
+        },
+        "recommended_field_coverage": {
+          "$ref": "#/$defs/rate",
+          "description": "An optional side metric, not weighted into extraction_coverage"
+        }
+      }
+    },
+    "review_confidence": {
+      "type": "object",
+      "description": "Output only when at least one review module has run. Mutually exclusive with output_confidence.",
+      "required": [
+        "value",
+        "pixel_dependency_rate",
+        "ocr_dependency_rate",
+        "low_conf_finding_rate",
+        "unresolved_conflict_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pixel_dependency_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ocr_dependency_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "low_conf_finding_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unresolved_conflict_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "weak_evidence_warning": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Required when value < 0.5, with the fixed contract string: This review's evidence base is weak; conclusions are for reference only."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "exclusiveMaximum": 0.5
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "then": {
+            "required": [
+              "weak_evidence_warning"
+            ],
+            "properties": {
+              "weak_evidence_warning": {
+                "const": "This review's evidence base is weak; conclusions are for reference only."
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "weak_evidence_warning": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "output_confidence": {
+      "type": "object",
+      "description": "Output only when no review module ran (structured_extraction / interpretation_only). Mutually exclusive with review_confidence.",
+      "required": [
+        "value",
+        "pixel_share",
+        "ocr_share"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pixel_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ocr_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "manual_review_plan": {
+      "type": "array",
+      "description": "Every finding with severity >= major must map to an actionable review step; minor/info findings carrying a P2 priority must also enter. Rendered in P0→P1→P2 order.",
+      "items": {
+        "type": "object",
+        "required": [
+          "finding_ids",
+          "action",
+          "who",
+          "priority"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "finding_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^M[2-7]-[0-9]{3}$"
+            }
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "who": {
+            "enum": [
+              "statistical_reviewer",
+              "domain_reviewer",
+              "ethics_committee",
+              "editor",
+              "author"
+            ]
+          },
+          "priority": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2"
+            ]
+          }
+        }
+      }
+    },
+    "disclaimer": {
+      "type": "string",
+      "const": "This Skill automates and assists the foundational stages of paper review, including structured evidence extraction, figure interpretation, reporting-standard checks, and prioritization for human review. It does not replace the scientific, statistical, clinical, or ethical judgment of qualified reviewers. Any score produced by this Skill is a screening signal and does not constitute a decision to accept, reject, or publish."
+    },
+    "runtime_utilization": {
+      "$ref": "discovery.schema.json#/$defs/runtime_utilization"
+    },
+    "candidate_resolution_log": {
+      "type": "array",
+      "items": {
+        "$ref": "discovery.schema.json#/$defs/resolution"
+      },
+      "description": "Candidate lifecycle ledger. Every Layer 1 candidate must be settled, preventing silent loss between discovery and rendering."
+    },
+    "cross_section_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Cross-section finding ids produced by Layer 4 global reconciliation. Invisible to any single specialist."
+    }
+  },
+  "allOf": [
+    {
+      "description": "review_confidence and output_confidence are mutually exclusive and must not appear together",
+      "not": {
+        "required": [
+          "review_confidence",
+          "output_confidence"
+        ]
+      }
+    },
+    {
+      "description": "When review modules ran, review_confidence is required and output_confidence is forbidden",
+      "if": {
+        "properties": {
+          "execution_scope": {
+            "properties": {
+              "executed_modules": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "executed_modules"
+            ]
+          }
+        },
+        "required": [
+          "execution_scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "structured_result",
+          "all_findings",
+          "issue_clusters",
+          "manual_review_plan",
+          "review_confidence",
+          "manuscript_risk_score"
+        ],
+        "not": {
+          "required": [
+            "output_confidence"
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "output_confidence"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "review_confidence"
+              ]
+            },
+            {
+              "required": [
+                "manuscript_risk_score"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "Every primary mode except pure figure interpretation must output a structured result",
+      "if": {
+        "properties": {
+          "execution_scope": {
+            "properties": {
+              "mode": {
+                "enum": [
+                  "full_review",
+                  "structured_extraction",
+                  "targeted_check"
+                ]
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          }
+        },
+        "required": [
+          "execution_scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "structured_result"
+        ]
+      }
+    },
+    {
+      "description": "figure_review must output the merged structured result",
+      "if": {
+        "properties": {
+          "execution_scope": {
+            "properties": {
+              "submode": {
+                "const": "figure_review"
+              }
+            },
+            "required": [
+              "submode"
+            ]
+          }
+        },
+        "required": [
+          "execution_scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "structured_result"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "rate": {
+      "type": "object",
+      "required": [
+        "resolved",
+        "total",
+        "rate"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "resolved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "When total is 0, rate is recorded as 1.0"
+        }
+      }
+    },
+    "issue_cluster": {
+      "type": "object",
+      "required": [
+        "cluster_id",
+        "representative_finding",
+        "member_findings",
+        "categories",
+        "max_severity",
+        "anchor",
+        "evidence_refs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "cluster_id": {
+          "type": "string",
+          "pattern": "^CL-[0-9]{3,}$"
+        },
+        "representative_finding": {
+          "type": "string"
+        },
+        "member_findings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "max_severity": {
+          "enum": [
+            "critical",
+            "major",
+            "minor",
+            "info"
+          ]
+        },
+        "anchor": {
+          "type": "object",
+          "description": "Primary anchor: the figure+panel / paragraph_id / table resolved from evidence_refs[0]",
+          "additionalProperties": false,
+          "properties": {
+            "figure": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "panel": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "table": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "paragraph_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "evidence_ref": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^EV-[0-9]{3,}$",
+              "description": "Deterministic fallback anchor for absence evidence or when no fine-grained locator exists"
+            }
+          }
+        },
+        "evidence_refs": {
+          "$ref": "evidence.schema.json#/$defs/evidence_refs"
+        }
+      }
+    }
+  }
+}

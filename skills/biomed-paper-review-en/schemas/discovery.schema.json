@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "discovery.schema.json",
+  "title": "DiscoveryObjects",
+  "description": "Intermediate outputs of Layer 1 global discovery and Layer 2 specialists. **Deliberately looser than finding** — the discovery stage prioritizes high recall, and an issue must not be dropped just because evidence_refs cannot be provided yet. Only final findings after Layer 4 must satisfy the full evidence contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "paper_map": { "$ref": "#/$defs/paper_map" },
+    "experiment_map": { "type": "array", "items": { "$ref": "#/$defs/experiment" } },
+    "claim_map": { "type": "array", "items": { "$ref": "#/$defs/claim" } },
+    "candidate_issues": { "type": "array", "items": { "$ref": "#/$defs/candidate_issue" } },
+    "review_routing_plan": { "type": "array", "items": { "$ref": "#/$defs/routing_entry" } },
+    "candidate_resolution_log": { "type": "array", "items": { "$ref": "#/$defs/resolution" } },
+    "tool_tasks": { "type": "array", "items": { "$ref": "#/$defs/tool_task" } },
+    "runtime_utilization": { "$ref": "#/$defs/runtime_utilization" }
+  },
+  "$defs": {
+    "paper_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sections"],
+      "properties": {
+        "sections": { "type": "array", "items": { "type": "string" } },
+        "tables": { "type": "array", "items": { "type": "string" } },
+        "figures": { "type": "array", "items": { "type": "string" } },
+        "supplements": { "type": "array", "items": { "type": "string" } },
+        "declarations": { "type": "array", "items": { "type": "string" } },
+        "reference_count": { "type": ["integer", "null"], "minimum": 0 },
+        "registration_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "experiment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["experiment_id", "study_design"],
+      "description": "Never force a paper into a single experiment. One paper often contains in vitro, animal, and human components at the same time.",
+      "properties": {
+        "experiment_id": { "type": "string", "pattern": "^EXP-[0-9]{2,}$" },
+        "study_design": { "type": "string", "minLength": 1 },
+        "methods_locations": { "type": "array", "items": { "type": "string" } },
+        "results_locations": { "type": "array", "items": { "type": "string" } },
+        "figures": { "type": "array", "items": { "type": "string" } },
+        "tables": { "type": "array", "items": { "type": "string" } },
+        "claims": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "statement", "source_location"],
+      "properties": {
+        "claim_id": { "type": "string", "pattern": "^CL-[0-9]{2,}$" },
+        "statement": { "type": "string", "minLength": 1 },
+        "claim_scope": {
+          "type": "string",
+          "description": "The scope the claim covers: population, time window, endpoints. The basis for judging overreach"
+        },
+        "source_location": { "type": "string", "minLength": 1 },
+        "expected_evidence": { "type": "array", "items": { "type": "string" } },
+        "linked_results": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "candidate_issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "type", "description", "suggested_modules"],
+      "description": "A discovery-stage candidate. **evidence_refs is not required** — requiring it would turn discovery into evidence collection, which in practice suppresses the number of discoveries.",
+      "properties": {
+        "candidate_id": { "type": "string", "pattern": "^CAND-[0-9]{3,}$" },
+        "type": { "type": "string", "pattern": "^possible_[a-z_]+$" },
+        "description": { "type": "string", "minLength": 1 },
+        "locations": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "suggested_modules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["M2", "M3", "M4", "M5", "M6", "M7", "RECONCILE"] },
+          "description": "RECONCILE marks a cross-section issue invisible to any single specialist; it goes directly to Layer 4"
+        },
+        "origin": {
+          "enum": ["global_discovery", "specialist", "deterministic_tool",
+                   "external_validation", "reconciliation"]
+        }
+      }
+    },
+    "routing_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module", "packet", "rulebook", "candidate_ids"],
+      "properties": {
+        "module": { "enum": ["M2", "M3", "M4", "M5", "M6", "M7"] },
+        "packet": { "type": "string", "minLength": 1 },
+        "rulebook": { "type": "string", "minLength": 1 },
+        "candidate_ids": { "type": "array", "items": { "type": "string" } },
+        "tools": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tool_task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_task_id", "tool", "target", "requested_checks", "status"],
+      "description": "Tool invocations must be explicitly registered. **A tool run that should have happened must never vanish silently** — skipping and never triggering are different things, and the former requires a reason.",
+      "properties": {
+        "tool_task_id": { "type": "string", "pattern": "^TOOL-[0-9]{2,}$" },
+        "tool": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "requested_checks": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "triggered_by": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Candidate ids; an empty array when triggered by a proactive scan, with proactive=true set"
+        },
+        "proactive": {
+          "type": "boolean",
+          "description": "true means automatically triggered by structured objects without depending on any candidate. The real uplift often comes from this class."
+        },
+        "status": { "enum": ["executed", "not_applicable", "failed", "skipped"] },
+        "skip_reason": { "type": "string" },
+        "signal_ids": { "type": "array", "items": { "type": "string" } }
+      },
+      "allOf": [
+        {
+          "description": "skipped and failed must give a reason; otherwise 'should not have run' and 'was missed' cannot be distinguished",
+          "if": {
+            "properties": { "status": { "enum": ["skipped", "failed"] } },
+            "required": ["status"]
+          },
+          "then": { "required": ["skip_reason"] }
+        }
+      ]
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "origin", "status"],
+      "description": "Candidate lifecycle ledger. **Every candidate must have a final disposition** — earlier implementations silently dropped valid issues between discovery and rendering, and this table exists to make such loss visible.",
+      "properties": {
+        "candidate_id": { "type": "string", "pattern": "^CAND-[0-9]{3,}$" },
+        "origin": {
+          "enum": ["global_discovery", "specialist", "deterministic_tool",
+                   "external_validation", "reconciliation"]
+        },
+        "status": {
+          "enum": ["pending", "promoted_to_finding", "merged", "rejected",
+                   "unresolved", "blocked_by_system_limitation"]
+        },
+        "final_finding_id": { "type": ["string", "null"] },
+        "merged_into": { "type": ["string", "null"] },
+        "specialists_consulted": { "type": "array", "items": { "type": "string" } },
+        "tools_used": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string" },
+        "rejection_reason": { "type": "string" },
+        "routing_fallback": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "description": "rejected must give a reason — a rejection without one is a silent drop",
+          "if": {
+            "properties": { "status": { "const": "rejected" } },
+            "required": ["status"]
+          },
+          "then": { "required": ["rejection_reason"] }
+        },
+        {
+          "description": "promoted must point to the final finding",
+          "if": {
+            "properties": { "status": { "const": "promoted_to_finding" } },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["final_finding_id"],
+            "properties": { "final_finding_id": { "type": "string", "minLength": 1 } }
+          }
+        },
+        {
+          "description": "merged must point to the merge destination",
+          "if": {
+            "properties": { "status": { "const": "merged" } },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["merged_into"],
+            "properties": { "merged_into": { "type": "string", "minLength": 1 } }
+          }
+        }
+      ]
+    },
+    "runtime_utilization": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Runtime utilization telemetry. It answers not 'did the Skill win' but 'which parts of the Skill were actually used' — without this there is no way to judge whether a five-thousand-line rulebook is worth keeping.",
+      "required": ["references_required", "references_read",
+                   "scripts_required", "scripts_executed"],
+      "properties": {
+        "references_required": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "References this routing **requires** to be read. The goal is not to read all eight, but to miss none in this column"
+        },
+        "references_read": { "type": "array", "items": { "type": "string" } },
+        "scripts_required": { "type": "array", "items": { "type": "string" } },
+        "scripts_executed": { "type": "array", "items": { "type": "string" } },
+        "scripts_failed": { "type": "array", "items": { "type": "string" } },
+        "candidate_count_discovery": { "type": "integer", "minimum": 0 },
+        "candidate_count_promoted": { "type": "integer", "minimum": 0 },
+        "candidate_count_rejected": { "type": "integer", "minimum": 0 },
+        "candidate_count_unresolved": { "type": "integer", "minimum": 0 },
+        "tool_generated_signals": { "type": "integer", "minimum": 0 },
+        "rule_generated_findings": { "type": "integer", "minimum": 0 },
+        "cross_section_findings": { "type": "integer", "minimum": 0 },
+        "finding_origin_breakdown": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 },
+          "description": "Counts keyed by discovery / specialist_rule / deterministic_tool / external_validation / multiple_sources"
+        }
+      }
+    }
+  }
+}

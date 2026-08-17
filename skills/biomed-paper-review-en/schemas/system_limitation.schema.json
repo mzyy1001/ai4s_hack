@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "system_limitation.schema.json",
+  "title": "SystemLimitation",
+  "description": "A system-capability or input-accessibility issue. references/00-contracts.md §6.3. Carries no severity — it is not a manuscript issue. It lowers extraction_coverage and confidence, not manuscript_risk_score. It must not be converted into a manuscript defect without independent manuscript evidence.",
+
+  "type": "object",
+  "required": ["id", "category", "impact", "affected_modules", "evidence_refs",
+               "recommended_action", "produced_by"],
+  "additionalProperties": false,
+
+  "properties": {
+    "id": {"type": "string", "pattern": "^SYS-[0-9]{3,}$"},
+
+    "category": {
+      "enum": ["parse_failed", "figure_unreadable", "table_unparseable",
+               "supplement_inaccessible", "section_missing_from_input",
+               "ocr_low_quality", "encoding_error", "input_truncated",
+               "external_source_unavailable", "external_access_denied",
+               "external_rate_limited", "external_response_unparseable"]
+    },
+
+    "impact": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Explains which parts of the review are incomplete as a result, i.e. 'where we could not see clearly'"
+    },
+
+    "affected_modules": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/module_id_review"},
+      "description": "May be an empty array: when the impact surface is not yet certain"
+    },
+
+    "affected_targets": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Affected entities, e.g. fig:4B / table:2 / S1"
+    },
+
+    "affected_fields": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Field paths judged parse_failed because of this"
+    },
+
+    "evidence_refs": {
+      "$ref": "evidence.schema.json#/$defs/evidence_refs",
+      "description": "May be an empty array — cases like input_truncated have nothing to point at"
+    },
+
+    "recommended_action": {
+      "type": "string",
+      "minLength": 1,
+      "description": "How to regain visibility, e.g. 'obtain the original high-resolution figure or vector PDF and re-parse'"
+    },
+
+    "produced_by": {
+      "enum": ["stage_1", "stage_2", "stage_3", "stage_3b",
+               "stage_3c_external_validation"]
+    }
+  },
+
+  "not": {
+    "anyOf": [
+      {"required": ["severity"]},
+      {"required": ["manual_review"]}
+    ],
+    "description": "system_limitation must not carry a severity, nor produce manual review actions (that is the finding's responsibility)"
+  },
+
+  "allOf": [
+    {
+      "description": "External-source-failure limitations may only be produced by X1",
+      "if": {
+        "properties": {
+          "category": {
+            "enum": ["external_source_unavailable", "external_access_denied",
+                     "external_rate_limited", "external_response_unparseable"]
+          }
+        },
+        "required": ["category"]
+      },
+      "then": {"properties": {"produced_by": {"const": "stage_3c_external_validation"}}}
+    }
+  ]
+}

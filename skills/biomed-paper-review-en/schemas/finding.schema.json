@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "finding.schema.json",
+  "title": "Finding",
+  "description": "A manuscript-level review judgment. references/00-contracts.md §6.1. Only M2–M7 may produce these — M1 is the upstream extraction layer and must not produce findings. Any output not conforming to this schema is invalid and discarded.",
+
+  "type": "object",
+  "required": ["id", "module", "category", "severity", "title", "detail",
+               "evidence_refs", "review_confidence", "manual_review"],
+  "additionalProperties": false,
+
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^M[2-7]-[0-9]{3}$",
+      "description": "Module prefix + three-digit sequence number, e.g. M4-003. The M1- prefix is invalid."
+    },
+
+    "module": {
+      "$ref": "common.schema.json#/$defs/module_id_review",
+      "description": "M1 is invalid — extraction-layer observations go through extraction_signal or coverage_breakdown"
+    },
+
+    "category": {
+      "type": "string",
+      "description": "A slug registered in the module's reference file; inventing new ones is forbidden"
+    },
+
+    "severity": {
+      "enum": ["critical", "major", "minor", "info"],
+      "description": "critical=conclusion does not hold / ethics violation / suspected misconduct; major=authors must supply materials or redo analyses; minor=wording and reporting-standard issues; info=advisory note"
+    },
+
+    "title": {"type": "string", "maxLength": 80},
+    "detail": {"type": "string", "minLength": 1},
+
+    "evidence_refs": {
+      "allOf": [
+        {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+        {"minItems": 1}
+      ],
+      "description": "Must be non-empty, and each item must resolve to exactly one entry in the evidence_registry. The canonical storage form; inlining an evidence[] object array is forbidden."
+    },
+
+    "rule_ref": {
+      "type": "string",
+      "description": "Anchor of the rule that triggered this finding, e.g. 04-statistics#sample-size-reporting"
+    },
+
+    "review_confidence": {
+      "$ref": "common.schema.json#/$defs/confidence_level",
+      "description": "How reliable this judgment itself is. Capped at medium when the evidence contains pixel_estimated values or points to ambiguous fields."
+    },
+
+    "derived_from_signals": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^SIG-[0-9]{3,}$"},
+      "description": "For provenance. Must not replace evidence_refs — establishing a finding on a signal id alone is a contract violation."
+    },
+
+    "related_findings": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Ids of other findings merged under this one during de-duplication clustering"
+    },
+
+    "manual_review": {
+      "type": "object",
+      "required": ["action", "who"],
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "An actionable review step: where to look, what to verify, and what to supply if confirmed"
+        },
+        "who": {
+          "enum": ["statistical_reviewer", "domain_reviewer", "ethics_committee",
+                   "editor", "author"],
+          "description": "English enum; the rendering layer handles localized display"
+        },
+        "priority": {"enum": ["P0", "P1", "P2"]}
+      }
+    }
+  },
+
+  "allOf": [
+    {
+      "description": "00-contracts.md §6.1 rule 2: severity >= major must have a non-empty actionable step",
+      "if": {"properties": {"severity": {"enum": ["critical", "major"]}}, "required": ["severity"]},
+      "then": {
+        "properties": {
+          "manual_review": {
+            "properties": {"action": {"type": "string", "minLength": 1}},
+            "required": ["action", "priority"]
+          }
+        }
+      }
+    },
+    {
+      "description": "critical blocks the review conclusion; manual review is always P0",
+      "if": {"properties": {"severity": {"const": "critical"}}, "required": ["severity"]},
+      "then": {"properties": {"manual_review": {
+        "required": ["priority"],
+        "properties": {"priority": {"const": "P0"}}
+      }}}
+    },
+    {
+      "description": "minor/info may enter the report-level manual review plan only as P2",
+      "if": {"properties": {"severity": {"enum": ["minor", "info"]}},
+             "required": ["severity"]},
+      "then": {"properties": {"manual_review": {
+        "properties": {"priority": {"const": "P2"}}
+      }}}
+    }
+  ]
+}

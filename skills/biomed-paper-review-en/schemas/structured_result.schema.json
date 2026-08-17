@@ -1,0 +1,521 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "structured_result.schema.json",
+  "title": "StructuredResult",
+  "description": "The output of M1 structured extraction. v1 is produced by Stage 2 (text sources only, may contain unresolved); v2 is produced by Stage 3b (figure/table sources merged and conflicts resolved, no unresolved may remain). M2–M7 always consume v2. references/01-structured-extraction.md.",
+
+  "type": "object",
+  "required": ["version", "stage_3b_executed", "meta", "article_design", "objective",
+               "population", "design", "measurement", "conclusion", "declarations",
+               "key_data", "evaluation_matrix", "coverage_inputs"],
+  "additionalProperties": false,
+
+  "properties": {
+
+    "version": {"enum": ["v1", "v2"]},
+    "stage_3b_executed": {"type": "boolean"},
+
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string"},
+        "journal": {"type": ["string", "null"]},
+        "year": {"type": ["integer", "null"]},
+        "doi": {"type": ["string", "null"]},
+        "article_type": {"type": ["string", "null"]},
+        "input_format": {"enum": ["jats_xml", "pdf", "plain_text"]},
+        "page_count": {"type": ["integer", "null"]}
+      }
+    },
+
+    "article_design": {
+      "type": "object",
+      "description": "01-structured-extraction.md §4.2. Distinguish 'the paper genuinely contains multiple designs' (design_components) from 'the extractor is uncertain' (primary_design.alternatives). The two must never be conflated.",
+      "required": ["primary_design", "design_components"],
+      "additionalProperties": false,
+      "properties": {
+        "primary_design": {
+          "type": "object",
+          "required": ["family", "type", "status", "evidence_refs", "extraction_confidence"],
+          "additionalProperties": false,
+          "properties": {
+            "family": {"$ref": "#/$defs/design_family"},
+            "type": {"$ref": "#/$defs/design_type"},
+            "status": {"$ref": "common.schema.json#/$defs/field_status"},
+            "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+            "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"},
+            "other_description": {
+              "type": ["string", "null"],
+              "description": "Required when family = other"
+            },
+            "alternatives": {
+              "type": "array",
+              "description": "Used when the extractor is uncertain between several readings; when non-empty, an ambiguous_study_design signal must also be produced",
+              "items": {
+                "type": "object",
+                "required": ["family", "type", "evidence_refs"],
+                "additionalProperties": false,
+                "properties": {
+                  "family": {"$ref": "#/$defs/design_family"},
+                  "type": {"$ref": "#/$defs/design_type"},
+                  "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
+                },
+                "allOf": [{"$ref": "#/$defs/design_pair_constraint"}]
+              }
+            }
+          },
+          "allOf": [
+            {"$ref": "#/$defs/design_pair_constraint"},
+            {
+              "if": {"properties": {"family": {"const": "other"}}, "required": ["family"]},
+              "then": {"required": ["other_description"],
+                       "properties": {"other_description": {"type": "string", "minLength": 1}}}
+            }
+          ]
+        },
+        "design_components": {
+          "type": "array",
+          "description": "When the paper factually contains multiple designs: one entry per experiment_id, each with its own routing rules",
+          "items": {
+            "type": "object",
+            "required": ["experiment_id", "family", "type", "evidence_refs",
+                         "extraction_confidence"],
+            "additionalProperties": false,
+            "properties": {
+              "experiment_id": {"type": "string", "pattern": "^EXP-[0-9]{2,}$"},
+              "family": {"$ref": "#/$defs/design_family"},
+              "type": {"$ref": "#/$defs/design_type"},
+              "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+              "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"}
+            },
+            "allOf": [
+              {"$ref": "#/$defs/design_pair_constraint"},
+              {"properties": {"type": {"not": {"enum": ["preclinical_mixed", "mixed_multi_family"]}}}}
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "description": "01-structured-extraction.md §4.4: mixed requires >=2 components",
+          "if": {
+            "properties": {"primary_design": {"properties": {"family": {"const": "mixed"}},
+                                              "required": ["family"]}},
+            "required": ["primary_design"]
+          },
+          "then": {"properties": {"design_components": {"minItems": 2}}}
+        },
+        {
+          "description": "preclinical_mixed must expand into at least two experimental components",
+          "if": {
+            "properties": {"primary_design": {"properties": {"type": {"const": "preclinical_mixed"}},
+                                              "required": ["type"]}},
+            "required": ["primary_design"]
+          },
+          "then": {"properties": {"design_components": {
+            "minItems": 2,
+            "items": {"properties": {"family": {"const": "experimental"}}}
+          }}}
+        }
+      ]
+    },
+
+    "objective": {
+      "type": "object",
+      "required": ["research_question", "hypothesis", "primary_endpoint", "secondary_endpoints"],
+      "additionalProperties": false,
+      "properties": {
+        "research_question": {"$ref": "#/$defs/extracted_field"},
+        "hypothesis": {"$ref": "#/$defs/extracted_field"},
+        "primary_endpoint": {"$ref": "#/$defs/extracted_field"},
+        "secondary_endpoints": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "population": {
+      "type": "object",
+      "required": ["subjects", "inclusion_criteria", "exclusion_criteria"],
+      "additionalProperties": false,
+      "properties": {
+        "subjects": {"$ref": "#/$defs/extracted_field"},
+        "inclusion_criteria": {"$ref": "#/$defs/extracted_field"},
+        "exclusion_criteria": {"$ref": "#/$defs/extracted_field"},
+        "participant_spectrum": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "design": {
+      "type": "object",
+      "description": "The legacy allocation field is abolished, split into randomization + allocation_concealment (two mutually independent CONSORT items)",
+      "required": ["arms", "interventions", "controls", "randomization",
+                   "allocation_concealment", "blinding"],
+      "additionalProperties": false,
+      "properties": {
+        "arms": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/arm"}
+        },
+        "interventions": {"$ref": "#/$defs/extracted_field"},
+        "controls": {"$ref": "#/$defs/extracted_field"},
+        "exposure": {"$ref": "#/$defs/extracted_field"},
+        "confounders": {"$ref": "#/$defs/extracted_field"},
+        "follow_up": {"$ref": "#/$defs/extracted_field"},
+        "randomization": {"$ref": "#/$defs/extracted_field"},
+        "allocation_concealment": {"$ref": "#/$defs/extracted_field"},
+        "blinding": {"$ref": "#/$defs/extracted_field"},
+        "registration": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "measurement": {
+      "type": "object",
+      "required": ["assays", "statistical_methods", "sample_size_justification"],
+      "additionalProperties": false,
+      "properties": {
+        "assays": {"$ref": "#/$defs/extracted_field"},
+        "index_test": {"$ref": "#/$defs/extracted_field"},
+        "reference_standard": {"$ref": "#/$defs/extracted_field"},
+        "target_condition": {
+          "$ref": "#/$defs/extracted_field",
+          "description": "The target condition of a diagnostic accuracy study. Semantically different from primary_endpoint (the accuracy metric); one must never substitute for the other."
+        },
+        "statistical_methods": {"$ref": "#/$defs/extracted_field"},
+        "sample_size_justification": {"$ref": "#/$defs/extracted_field"},
+        "missing_data_handling": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "design_specific": {
+      "type": "object",
+      "description": "01-structured-extraction.md §5.2. Fields applicable only to specific design families.",
+      "additionalProperties": false,
+      "properties": {
+        "databases_searched": {"$ref": "#/$defs/extracted_field"},
+        "search_date": {"$ref": "#/$defs/extracted_field"},
+        "search_strategy": {"$ref": "#/$defs/extracted_field"},
+        "risk_of_bias_method": {"$ref": "#/$defs/extracted_field"},
+        "synthesis_method": {"$ref": "#/$defs/extracted_field"},
+        "protocol_registration": {"$ref": "#/$defs/extracted_field"},
+        "dataset": {"$ref": "#/$defs/extracted_field"},
+        "split_strategy": {"$ref": "#/$defs/extracted_field"},
+        "baselines": {"$ref": "#/$defs/extracted_field"},
+        "metrics": {"$ref": "#/$defs/extracted_field"},
+        "validation_protocol": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "conclusion": {
+      "type": "object",
+      "required": ["claims", "limitations", "generalization_scope"],
+      "additionalProperties": false,
+      "properties": {
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["claim_id", "statement", "supported_by", "evidence_refs"],
+            "additionalProperties": false,
+            "properties": {
+              "claim_id": {"type": "string", "pattern": "^CLM-[0-9]{2,}$"},
+              "statement": {"type": "string"},
+              "scope": {"type": ["string", "null"]},
+              "supported_by": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "A key_data.id or evidence_ref. When none of them resolves, produce a claim_without_resolved_evidence_link signal (handed to M7 for judgment); neither M1 nor Stage 3b draws a conclusion."
+              },
+              "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
+            }
+          }
+        },
+        "limitations": {"$ref": "#/$defs/extracted_field"},
+        "generalization_scope": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "declarations": {
+      "type": "object",
+      "required": ["ethics_statement", "informed_consent", "funding",
+                   "conflict_of_interest", "data_availability"],
+      "additionalProperties": false,
+      "properties": {
+        "ethics_statement": {"$ref": "#/$defs/extracted_field"},
+        "informed_consent": {"$ref": "#/$defs/extracted_field"},
+        "funding": {"$ref": "#/$defs/extracted_field"},
+        "conflict_of_interest": {"$ref": "#/$defs/extracted_field"},
+        "data_availability": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "key_data": {
+      "type": "array",
+      "items": {"$ref": "key_data.schema.json"}
+    },
+
+    "evaluation_matrix": {
+      "type": "object",
+      "description": "A routing and indexing tool. Never establish a finding from it alone — M2–M7 must go back to the evidence_refs and independently present evidence in their own findings.",
+      "additionalProperties": {
+        "oneOf": [
+          {"$ref": "#/$defs/matrix_entry"},
+          {"type": "array", "items": {"$ref": "#/$defs/matrix_entry"}},
+          {"type": "integer"},
+          {"type": "array", "items": {"$ref": "#/$defs/group_size"}}
+        ]
+      }
+    },
+
+    "coverage_inputs": {
+      "type": "object",
+      "description": "01-structured-extraction.md §12.2. The raw counts for computing extraction_coverage, assembled by Stage 5 into coverage_breakdown.",
+      "required": ["fields_in_scope", "resolved", "unresolved", "required_applicable_total"],
+      "additionalProperties": false,
+      "properties": {
+        "fields_in_scope": {"type": "array", "items": {"type": "string"}},
+        "resolved": {"type": "array", "items": {"type": "string"}},
+        "unresolved": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["field_path", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "field_path": {"type": "string"},
+              "status": {"enum": ["ambiguous", "conflicting", "parse_failed", "unresolved"]},
+              "reason_ref": {"type": ["string", "null"], "pattern": "^(SYS|SIG)-[0-9]{3,}$"}
+            }
+          }
+        },
+        "required_applicable_total": {"type": "integer", "minimum": 0},
+        "recommended_applicable_total": {"type": "integer", "minimum": 0}
+      }
+    },
+
+    "gaps": {
+      "type": "array",
+      "description": "An operational log; not a record, not a finding, and enters no score",
+      "items": {
+        "type": "object",
+        "required": ["field_path", "status_assigned", "resolution"],
+        "additionalProperties": false,
+        "properties": {
+          "field_path": {"type": "string"},
+          "status_assigned": {"$ref": "common.schema.json#/$defs/field_status"},
+          "attempts": {"type": "array", "items": {"type": "string"}},
+          "search_terms": {"type": "array", "items": {"type": "string"}},
+          "resolution": {
+            "enum": ["confirmed_absent", "unresolved", "resolved_in_stage3b",
+                     "blocked_by_system_limitation"]
+          },
+          "note": {"type": "string"}
+        }
+      }
+    }
+  },
+
+  "allOf": [
+    {
+      "description": "00-contracts.md §4 rule 5 + §11 lint: no unresolved may remain in v2",
+      "if": {"properties": {"version": {"const": "v2"}}, "required": ["version"]},
+      "then": {
+        "properties": {
+          "key_data": {
+            "items": {"properties": {"status": {"not": {"const": "pending_visual_resolution"}}}}
+          },
+          "stage_3b_executed": {"const": true}
+        }
+      }
+    }
+  ],
+
+  "$defs": {
+
+    "design_family": {
+      "enum": ["experimental", "human_interventional", "human_observational",
+               "evidence_synthesis", "computational", "mixed", "other"]
+    },
+
+    "design_type": {
+      "enum": ["in_vitro", "ex_vivo", "organoid", "in_vivo_animal", "preclinical_mixed",
+               "randomized_controlled_trial", "nonrandomized_trial", "single_arm_trial",
+               "cohort", "case_control", "cross_sectional", "diagnostic_accuracy",
+               "case_series", "case_report",
+               "systematic_review", "meta_analysis", "scoping_review",
+               "bioinformatics", "prediction_model", "simulation", "method_development",
+               "benchmark_study",
+               "mixed_multi_family", "other_unclassified"]
+    },
+
+    "design_pair_constraint": {
+      "description": "family/type must pair per 01 §4.1; cross-family combinations such as human_observational + randomized_controlled_trial are forbidden.",
+      "oneOf": [
+        {"properties": {"family": {"const": "experimental"},
+                        "type": {"enum": ["in_vitro", "ex_vivo", "organoid", "in_vivo_animal", "preclinical_mixed"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "human_interventional"},
+                        "type": {"enum": ["randomized_controlled_trial", "nonrandomized_trial", "single_arm_trial"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "human_observational"},
+                        "type": {"enum": ["cohort", "case_control", "cross_sectional", "diagnostic_accuracy", "case_series", "case_report"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "evidence_synthesis"},
+                        "type": {"enum": ["systematic_review", "meta_analysis", "scoping_review"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "computational"},
+                        "type": {"enum": ["bioinformatics", "prediction_model", "simulation", "method_development", "benchmark_study"]}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "mixed"}, "type": {"const": "mixed_multi_family"}},
+         "required": ["family", "type"]},
+        {"properties": {"family": {"const": "other"}, "type": {"const": "other_unclassified"}},
+         "required": ["family", "type"]}
+      ]
+    },
+
+    "extracted_field": {
+      "type": "object",
+      "description": "00-contracts.md §3.3. The three orthogonal dimensions applicability / requiredness / status must each be given explicitly; encoding multiple kinds of missingness as a bare null is forbidden.",
+      "required": ["applicability", "requiredness", "status", "value", "evidence_refs",
+                   "extraction_confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "field_path": {"type": "string"},
+        "applicability": {"$ref": "common.schema.json#/$defs/applicability"},
+        "requiredness": {"$ref": "common.schema.json#/$defs/requiredness"},
+        "status": {"$ref": "common.schema.json#/$defs/field_status"},
+        "value": {
+          "description": "Numeric values must use common.schema.json#/$defs/numeric_value; structured or textual values follow the field's semantics",
+          "anyOf": [
+            {"$ref": "common.schema.json#/$defs/numeric_value"},
+            {"type": ["string", "array", "object", "null"]}
+          ]
+        },
+        "unit": {"type": ["string", "null"]},
+        "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+        "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"},
+        "na_reason": {"type": ["string", "null"]},
+        "system_limitation_ref": {"type": ["string", "null"], "pattern": "^SYS-[0-9]{3,}$"},
+        "resolution_state": {
+          "type": ["object", "null"],
+          "required": ["state", "pending_stage", "expected_sources"],
+          "additionalProperties": false,
+          "properties": {
+            "state": {"const": "pending_visual_resolution"},
+            "pending_stage": {"const": "stage_3"},
+            "expected_sources": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+          }
+        },
+        "candidate_refs": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^OBS-[0-9]{3,}$"}
+        },
+        "alternatives": {
+          "type": "array",
+          "description": "The extractor's different readings of the same fact (we are uncertain)",
+          "items": {
+            "type": "object",
+            "required": ["value", "evidence_refs"],
+            "additionalProperties": false,
+            "properties": {
+              "value": {},
+              "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
+            }
+          }
+        }
+      },
+
+      "allOf": [
+        {
+          "description": "value must be null in any non-reported status",
+          "if": {
+            "properties": {
+              "status": {"enum": ["not_reported", "not_applicable", "ambiguous",
+                                  "conflicting", "parse_failed", "unresolved"]}
+            },
+            "required": ["status"]
+          },
+          "then": {"properties": {"value": {"type": "null"}}}
+        },
+        {
+          "description": "not_applicable must state its basis",
+          "if": {"properties": {"status": {"const": "not_applicable"}}, "required": ["status"]},
+          "then": {"required": ["na_reason"],
+                   "properties": {"na_reason": {"type": "string", "minLength": 1}}}
+        },
+        {
+          "description": "not_reported must be backed by absence evidence (non-empty refs)",
+          "if": {"properties": {"status": {"const": "not_reported"}}, "required": ["status"]},
+          "then": {"properties": {"evidence_refs": {"minItems": 1}}}
+        },
+        {
+          "description": "parse_failed must link a system_limitation",
+          "if": {"properties": {"status": {"const": "parse_failed"}}, "required": ["status"]},
+          "then": {"required": ["system_limitation_ref"],
+                   "properties": {"system_limitation_ref": {"type": "string"}}}
+        },
+        {
+          "description": "unresolved must carry a resolution_state and must not fill system_limitation_ref (it is not a system limitation)",
+          "if": {"properties": {"status": {"const": "unresolved"}}, "required": ["status"]},
+          "then": {
+            "required": ["resolution_state"],
+            "properties": {
+              "resolution_state": {"type": "object"},
+              "system_limitation_ref": {"type": "null"}
+            }
+          }
+        },
+        {
+          "description": "reported must have evidence",
+          "if": {"properties": {"status": {"const": "reported"}}, "required": ["status"]},
+          "then": {"properties": {"evidence_refs": {"minItems": 1}}}
+        }
+      ]
+    },
+
+    "arm": {
+      "type": "object",
+      "required": ["experiment_id", "arm_name", "n", "replicate_type"],
+      "additionalProperties": false,
+      "properties": {
+        "experiment_id": {"type": "string", "pattern": "^EXP-[0-9]{2,}$"},
+        "arm_name": {"type": "string"},
+        "n": {"$ref": "#/$defs/extracted_field"},
+        "replicate_type": {"$ref": "common.schema.json#/$defs/replicate_type"},
+        "intervention": {"$ref": "#/$defs/extracted_field"},
+        "dose": {"$ref": "#/$defs/extracted_field"},
+        "route": {"$ref": "#/$defs/extracted_field"},
+        "duration": {"$ref": "#/$defs/extracted_field"}
+      }
+    },
+
+    "matrix_entry": {
+      "type": "object",
+      "description": "A status-aware object, not a bare boolean. When different experiments have different statuses, split into multiple entries rather than OR-ing them.",
+      "required": ["applicability", "requiredness", "status", "applies_to",
+                   "evidence_refs", "extraction_confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "applicability": {"$ref": "common.schema.json#/$defs/applicability"},
+        "requiredness": {"$ref": "common.schema.json#/$defs/requiredness"},
+        "status": {"$ref": "common.schema.json#/$defs/field_status"},
+        "applies_to": {"type": "array", "items": {"type": "string"}},
+        "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"},
+        "extraction_confidence": {"$ref": "common.schema.json#/$defs/confidence_level"}
+      }
+    },
+
+    "group_size": {
+      "type": "object",
+      "description": "Replaces the abolished single-integer min_group_n. M4 computes minimums and distributions per experiment group itself.",
+      "required": ["experiment_id", "group", "n", "replicate_type", "evidence_refs"],
+      "additionalProperties": false,
+      "properties": {
+        "experiment_id": {"type": "string"},
+        "group": {"type": "string"},
+        "n": {"type": "integer", "minimum": 0},
+        "replicate_type": {"$ref": "common.schema.json#/$defs/replicate_type"},
+        "evidence_refs": {"$ref": "evidence.schema.json#/$defs/evidence_refs"}
+      }
+    }
+  }
+}
